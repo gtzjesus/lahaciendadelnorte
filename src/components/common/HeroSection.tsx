@@ -17,18 +17,23 @@ const HeroSection: FC = () => {
 
   return (
     <>
-      <div className="absolute top-24 left-10 z-10">
-        <p className="uppercase font-black barlow-condensed-regular tracking-very-wide text-1xl sm:text-xl md:text-2xl  text-white">
+      <div className="absolute top-24 left-5 z-10">
+        <p className="uppercase font-black barlow-condensed-regular tracking-very-wide text-sm sm:text-xl md:text-2xl  text-white">
           el paso kaboom
         </p>
       </div>
       {/* Title in top-left */}
-      <div className="absolute top-32 left-10 z-10">
-        <p className="uppercase font-black barlow-condensed-regular tracking-very-wide text-7xl sm:text-xl md:text-2xl  text-white">
+      <div className="absolute top-32 left-5 z-10">
+        <p className="uppercase font-black barlow-condensed-regular tracking-very-wide text-6xl sm:text-xl md:text-2xl  text-white">
           light
           <br /> up <br />
           the
           <br /> sky!
+        </p>
+      </div>
+      <div className="absolute top-96 left-5 z-10">
+        <p className="uppercase font-black barlow-condensed-regular tracking-very-wide text-sm sm:text-xl md:text-2xl  text-white">
+          4th of july sale!
         </p>
       </div>
 
