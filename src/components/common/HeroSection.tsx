@@ -17,13 +17,13 @@ const HeroSection: FC = () => {
 
   return (
     <>
-      <div className="absolute top-24 left-5 lg:left-64 z-10">
+      <div className="absolute top-24 left-5 2xl:left-64 z-10">
         <p className="uppercase font-black barlow-condensed-regular tracking-very-wide text-sm  lg:text-xl  text-white">
           el paso kaboom
         </p>
       </div>
       {/* Title in top-left */}
-      <div className="absolute top-32 left-5 lg:left-64 lg:top-40 z-10">
+      <div className="absolute top-32 left-5 2xl:left-64 lg:top-40 z-10">
         <p className="uppercase font-black barlow-condensed-regular tracking-very-wide text-6xl  lg:text-9xl  text-white">
           light
           <br /> up <br />
@@ -31,7 +31,7 @@ const HeroSection: FC = () => {
           <br /> sky!
         </p>
       </div>
-      <div className="absolute top-96 left-5 lg:left-64 lg:top-32 z-10">
+      <div className="absolute top-96 left-5 2xl:left-64 lg:top-32 z-10">
         <p className="uppercase text-flag-red font-black barlow-condensed-regular tracking-very-wide text-sm  lg:text-md lg:top-96  ">
           4th of july sale
         </p>
