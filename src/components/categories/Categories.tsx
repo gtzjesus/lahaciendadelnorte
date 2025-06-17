@@ -47,38 +47,40 @@ interface CategoriesProps {
  */
 const Categories: React.FC<CategoriesProps> = ({ categories }) => {
   return (
-    <div className="w-full mx-auto bg-gradient-to-br from-white via-white-500 to-flag-blue pb-10">
-      <h2 className="uppercase barlow-condensed-regular text-lg tracking-very-wide font-semibold text-center text-black py-6">
-        party Inventory
+    <div className="w-full mx-auto bg-gradient-to-br from-white via-white-500 to-flag-blue pb-10 ">
+      <h2 className="uppercase barlow-condensed-regular text-lg tracking-very-wide lg:text-3xl font-semibold text-center text-black py-6">
+        fire Inventory
       </h2>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4">
-        {categories.map((category) => (
-          <Link
-            key={category._id}
-            href={`/categories/${category.slug.current}`}
-          >
-            <div className="flex flex-col items-center  shadow-xl  transition  overflow-hidden">
-              <div className="relative w-full h-0 pb-[100%]">
-                <Image
-                  src={
-                    category.image
-                      ? urlFor(category.image).url()
-                      : '/default-image.jpg'
-                  }
-                  alt={category.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 25vw"
-                  priority
-                />
+      <div className="px-4 lg:px-0 lg:max-w-7xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {categories.map((category) => (
+            <Link
+              key={category._id}
+              href={`/categories/${category.slug.current}`}
+            >
+              <div className="flex flex-col items-center shadow-xl transition overflow-hidden">
+                <div className="relative w-full h-0 pb-[100%]">
+                  <Image
+                    src={
+                      category.image
+                        ? urlFor(category.image).url()
+                        : '/default-image.jpg'
+                    }
+                    alt={category.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 25vw"
+                    priority
+                  />
+                </div>
+                <h3 className="barlow-condensed-regular text-sm tracking-very-wide font-light text-center text-black py-2">
+                  {capitalizeFirstWord(category.title)}
+                </h3>
               </div>
-              <h3 className="barlow-condensed-regular text-sm tracking-very-wide font-light text-center text-black py-2">
-                {capitalizeFirstWord(category.title)}
-              </h3>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
