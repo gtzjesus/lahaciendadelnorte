@@ -49,7 +49,7 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
   return (
     <div className="w-full mx-auto bg-gradient-to-br from-white via-white-500 to-flag-blue pb-10">
       <h2 className="uppercase barlow-condensed-regular text-lg tracking-very-wide font-semibold text-center text-black py-6">
-        fire Inventory
+        party Inventory
       </h2>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4">
@@ -58,7 +58,7 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
             key={category._id}
             href={`/categories/${category.slug.current}`}
           >
-            <div className="flex flex-col items-center bg-white shadow-md hover:shadow-lg transition rounded overflow-hidden">
+            <div className="flex flex-col items-center  shadow-xl  transition  overflow-hidden">
               <div className="relative w-full h-0 pb-[100%]">
                 <Image
                   src={
