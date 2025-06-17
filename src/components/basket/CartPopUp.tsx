@@ -48,16 +48,16 @@ const CartPopup: React.FC<CartPopupProps> = ({ onClose }) => {
   }, [onClose]);
 
   return (
-    <div className="fixed top-12 left-0 w-full h-full bg-gray-700 bg-opacity-50 z-[9999]">
+    <div className="fixed top-12 left-0 w-full h-full bg-black bg-opacity-50 z-[9999]">
       <div
         ref={popupRef}
-        className="bg-white  p-4 w-full h-[75vh] max-w-[325px] lg:h-[95vh] lg:max-w-[525px] overflow-hidden relative flex flex-col"
+        className="bg-flag-red  p-4 w-full h-[75vh] max-w-[325px] lg:h-[95vh] lg:max-w-[525px] overflow-hidden relative flex flex-col"
       >
         {hasItems ? (
           <div className="flex-1 overflow-y-auto max-h-[calc(100vh-200px)]">
             {/* Header */}
             <div className="flex items-center justify-between border-b py-2 px-2">
-              <p className="uppercase text-xs font-light text-gray-800">
+              <p className="uppercase text-xs font-light text-white">
                 Added to shopping bag
               </p>
               <button
@@ -122,10 +122,10 @@ const CartPopup: React.FC<CartPopupProps> = ({ onClose }) => {
         {/* Footer CTA */}
         <Link
           href={hasItems ? '/basket' : '/search?q=*'}
-          className="absolutebottom-0 inline-block border-none bg-black  py-4 px-4 text-xs font-light text-center text-white uppercase"
+          className="absolute left-20 bottom-10 inline-block border-none bg-flag-blue  py-4 px-4 text-xs font-light text-center text-white uppercase"
           onClick={onClose}
         >
-          {hasItems ? 'View shopping bag' : 'Start shopping'}
+          {hasItems ? 'View shopping bag' : 'shop fireworks'}
         </Link>
       </div>
     </div>

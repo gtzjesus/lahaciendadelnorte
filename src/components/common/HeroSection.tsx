@@ -40,7 +40,7 @@ const HeroSection: FC = () => {
       {/* Fixed CTA button at bottom center */}
       <Link
         href="/search?q=*"
-        className={`fixed bottom-10 border-none left-1/2 lg:text-lg lg:p-4 transform -translate-x-1/2 p-4 block border transition-all uppercase text-xs z-[9999] font-light text-center  ${
+        className={`fixed bottom-10 border-none left-1/2 lg:text-lg lg:p-4 transform -translate-x-1/2 p-4 block border transition-all uppercase text-xs z-[10] font-light text-center  ${
           scrolled
             ? 'bg-flag-blue text-white hover:bg-blue-600'
             : 'bg-white text-gray-800 hover:bg-gray-200'
