@@ -42,7 +42,7 @@ const VideoBackground: React.FC = () => {
         onCanPlay={handleVideoReady}
       >
         <source src="/videos/background-vertical.mp4" type="video/mp4" />
-        <source src="/videos/background-vertical.webm" type="video/webm" />
+        {/* Removed webm for Safari compatibility */}
         Your browser does not support the video tag.
       </video>
 
@@ -62,7 +62,7 @@ const VideoBackground: React.FC = () => {
         onCanPlay={handleVideoReady}
       >
         <source src="/videos/background-horizontal.mp4" type="video/mp4" />
-        <source src="/videos/background-horizontal.webm" type="video/webm" />
+        {/* Removed webm for Safari compatibility */}
         Your browser does not support the video tag.
       </video>
 
