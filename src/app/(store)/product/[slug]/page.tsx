@@ -86,7 +86,7 @@ async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
       <Header />
 
       {/* Product title */}
-      <div className="container mx-auto max-w-3xl bg-flag-red">
+      <div className="w-full bg-flag-red ">
         <h1 className="uppercase text-sm font-light text-center p-5 text-white">
           {product.name}
         </h1>

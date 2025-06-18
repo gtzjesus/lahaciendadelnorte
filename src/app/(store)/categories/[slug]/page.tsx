@@ -57,34 +57,29 @@ export default async function CategoryPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  // Resolving the 'params' promise to get the category slug
   const { slug } = await params;
-
-  // Fetch products associated with the category slug
   const products = await getProductsByCategory(slug);
-
-  // Fetch all categories for fallback or additional use in the view
   const categories = await getAllCategories();
 
-  // If no products are found for the category, show a 404 page
-  if (!products || products.length === 0) {
-    return notFound(); // Built-in method to handle 404 page in Next.js
-  }
+  if (!products || products.length === 0) return notFound();
 
-  // Render the category page with a header, category title, and product grid
+  const formattedTitle = slug
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
   return (
-    <div className="container bg-flag-red">
-      <Header />
-      <h1 className="uppercase text-sm font-light text-center p-5 text-white">
-        {/* Format the category title by capitalizing words in the slug */}
-        {slug
-          .split('-')
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ')}{' '}
-      </h1>
+    <>
+      <div className="w-full bg-flag-red">
+        <Header />
+        <h1 className="uppercase text-sm font-light text-center p-5 text-white">
+          {formattedTitle}
+        </h1>
+      </div>
 
-      {/* Display the products for this category using the ProductsView component */}
-      <ProductsView products={products} categories={categories} />
-    </div>
+      <div className="container mx-auto px-4">
+        <ProductsView products={products} categories={categories} />
+      </div>
+    </>
   );
 }
