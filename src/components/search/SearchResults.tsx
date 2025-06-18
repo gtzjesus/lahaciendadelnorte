@@ -24,7 +24,7 @@ const SearchResults = ({
   products: Product[];
 }) => {
   return (
-    <div className="container bg-flag-red">
+    <div className="w-full bg-flag-red">
       {/* Header section */}
       <Header />
 
