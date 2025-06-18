@@ -32,11 +32,21 @@ export async function createCheckoutSession(
       limit: 1,
     });
 
-    let customerId: string | undefined;
-    const customerExists = customers.data.length > 0;
+    let customerId: string;
 
-    if (customerExists) {
+    if (customers.data.length > 0) {
+      // ✅ Use existing customer
       customerId = customers.data[0].id;
+    } else {
+      // 🆕 Create new customer
+      const newCustomer = await stripe.customers.create({
+        email: metadata.customerEmail,
+        name: metadata.customerName,
+        metadata: {
+          clerkUserId: metadata.clerkUserId,
+        },
+      });
+      customerId = newCustomer.id;
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
@@ -44,7 +54,7 @@ export async function createCheckoutSession(
     const successUrl = `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}&orderNumber=${metadata.orderNumber}`;
     const cancelUrl = `${baseUrl}/basket`;
 
-    // 🧾 Create the checkout session
+    // 🧾 Create the Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       success_url: successUrl,
@@ -53,22 +63,11 @@ export async function createCheckoutSession(
       billing_address_collection: 'required',
       automatic_tax: { enabled: true },
 
-      ...(customerExists
-        ? {
-            customer: customerId,
-            customer_update: {
-              name: 'auto',
-              address: 'auto',
-            },
-          }
-        : {
-            customer_creation: 'always',
-            customer_email: metadata.customerEmail,
-            customer_update: {
-              name: 'auto',
-              address: 'auto',
-            },
-          }),
+      customer: customerId,
+      customer_update: {
+        name: 'auto',
+        address: 'auto',
+      },
 
       line_items: items.map((item) => ({
         price_data: {
