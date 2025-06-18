@@ -105,13 +105,13 @@ export default function BasketPage() {
       <Header />
 
       {/* Page title */}
-      <div className="container mx-auto max-w-3xl bg-flag-red">
+      <div className="w-full  bg-flag-red">
         <h1 className="uppercase text-sm font-light text-center p-5 text-white">
           Shopping Bag
         </h1>
       </div>
 
-      <div className="container mx-auto w-full px-2 lg:px-2 grid grid-cols-1 lg:grid-cols-3 ">
+      <div className="container mx-auto w-full px-2 lg:px-2 grid grid-cols-1  ">
         {/* Product Items */}
         <div className="col-span-2 pb-80">
           {groupedItems.map((item) => (
