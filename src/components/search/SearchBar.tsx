@@ -145,7 +145,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         >
           what are you looking for?
         </h1>
-        <div className="relative flex items-center w-full bg-white shadow-md rounded-lg">
+        <div className="relative flex items-center w-full bg-flag-red shadow-md rounded-lg">
           <input
             ref={inputRef}
             type="text"

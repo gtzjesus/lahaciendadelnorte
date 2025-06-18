@@ -2,7 +2,9 @@
 
 import React from 'react';
 import type { Metadata } from 'next';
-import './globals.css'; // ✅ critical for Tailwind to work
+import './globals.css';
+import { ClerkProvider } from '@clerk/nextjs';
+import { SanityLive } from '@/sanity/lib/live'; // Optional if you want global live updates
 
 export const metadata: Metadata = {
   title: {
@@ -71,7 +73,13 @@ export default function RootLayout({
         <meta charSet="UTF-8" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="min-h-screen bg-white text-black">{children}</body>
+      <body className="min-h-screen bg-white text-black">
+        <ClerkProvider>
+          {children}
+          <SanityLive />{' '}
+          {/* Optional: only if you want global Sanity live updates */}
+        </ClerkProvider>
+      </body>
     </html>
   );
 }

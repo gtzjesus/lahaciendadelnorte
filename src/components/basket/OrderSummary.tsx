@@ -44,17 +44,17 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   onCheckout,
 }) => {
   return (
-    <div className="w-full lg:w-auto lg:sticky h-fit bg-white p-6 lg:p-12 fixed bottom-0 left-0 lg:left-auto lg:bottom-0 lg:order-last shadow-md">
-      <h3 className="uppercase text-xs font-light text-center text-gray-800 border-b pb-1">
+    <div className="w-full lg:w-auto lg:sticky h-fit bg-flag-blue p-6 lg:p-12 fixed bottom-0 left-0 lg:left-auto lg:bottom-0 lg:order-last shadow-md">
+      <h3 className="uppercase text-xs font-light text-center text-white border-b pb-1">
         Order Summary
       </h3>
 
       <div className="pt-1 space-y-1">
-        <p className="flex justify-between uppercase text-xs font-light text-gray-800">
+        <p className="flex justify-between uppercase text-xs font-light text-white">
           <span>Total items:</span>
           <span>{totalItems}</span>
         </p>
-        <p className="flex justify-between uppercase text-xs font-light text-gray-800">
+        <p className="flex justify-between uppercase text-xs font-light text-white">
           <span>
             Subtotal <span className="lowercase">(tax at checkout)</span>:
           </span>
@@ -76,7 +76,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         <div className="flex items-center justify-center mt-3">
           <SignInButton mode="modal">
             <button
-              className="w-full text-sm bg-black border uppercase py-3 text-white font-light hover:bg-opacity-90 transition"
+              className="w-full text-sm bg-blue-500 border uppercase py-3 text-white font-light hover:bg-opacity-90 transition"
               onClick={() => {
                 // Set a flag to run checkout after login
                 sessionStorage.setItem('checkoutAfterLogin', 'true');
