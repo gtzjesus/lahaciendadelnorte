@@ -24,12 +24,12 @@ const SearchResults = ({
   products: Product[];
 }) => {
   return (
-    <div className="container bg-white">
+    <div className="container bg-flag-red">
       {/* Header section */}
       <Header />
 
       {/* Search query and result count display */}
-      <h1 className="uppercase text-sm font-light text-center p-5 text-gray-800">
+      <h1 className="uppercase text-sm font-light text-center p-5 text-white">
         &ldquo;{query}&rdquo; ({resultCount})
       </h1>
 

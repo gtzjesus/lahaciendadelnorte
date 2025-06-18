@@ -24,19 +24,19 @@ type ProductSummaryProps = {
 const ProductSummary = ({ product, isOutOfStock }: ProductSummaryProps) => {
   return (
     <div
-      className={`w-full lg:w-50 lg:fixed h-fit bg-white p-6 lg:p-12 order-first lg:order-last fixed bottom-0 left-0 lg:bottom-0 lg:left-auto ${
+      className={`w-full lg:w-50 lg:fixed h-fit bg-flag-blue p-6 lg:p-12 order-first lg:order-last fixed bottom-0 left-0 lg:bottom-0 lg:left-auto ${
         isOutOfStock ? 'opacity-50' : '' // Reduce opacity when the product is out of stock
       }`}
     >
       {/* Product Name and Price */}
       <div className="flex justify-center items-center gap-1">
-        <h1 className="uppercase text-md font-semibold text-center text-gray-800">
+        <h1 className="uppercase text-md font-semibold text-center text-white">
           {product.name}
         </h1>
-        <h1 className="uppercase text-xs font-light text-center text-gray-800">
+        <h1 className="uppercase text-xs font-light text-center text-white">
           |
         </h1>
-        <h1 className="uppercase text-md font-light text-center text-gray-800">
+        <h1 className="uppercase text-md font-light text-center text-white">
           ${product.price?.toFixed(0)}
         </h1>
       </div>

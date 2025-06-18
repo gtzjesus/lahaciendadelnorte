@@ -101,12 +101,12 @@ export default function BasketPage() {
   };
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-red min-h-screen">
       <Header />
 
       {/* Page title */}
-      <div className="container mx-auto max-w-3xl bg-white">
-        <h1 className="uppercase text-sm font-light text-center p-5 text-gray-800">
+      <div className="container mx-auto max-w-3xl bg-flag-red">
+        <h1 className="uppercase text-sm font-light text-center p-5 text-white">
           Shopping Bag
         </h1>
       </div>

@@ -32,7 +32,7 @@ const HeroSection: FC = () => {
         </p>
       </div>
       <div className="absolute top-96 left-5 2xl:left-64 lg:top-32 z-10">
-        <p className="uppercase text-flag-red font-black barlow-condensed-regular tracking-very-wide text-sm  lg:text-md lg:top-96  ">
+        <p className="uppercase text-white font-black barlow-condensed-regular tracking-very-wide text-sm  lg:text-md lg:top-96  ">
           4th of july sale
         </p>
       </div>
