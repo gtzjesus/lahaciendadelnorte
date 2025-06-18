@@ -19,7 +19,7 @@ import { SanityLive } from '@/sanity/lib/live';
  * - `ClerkProvider`: Handles authentication and session context from Clerk.
  * - `SanityLive`: Enables live-editing capabilities from Sanity Studio.
  * - `VisualEditing`: Allows Sanity Studio users to visually edit content when in draft mode.
- * - `DisableDraftMode`: UI control to disable draft mode from the frontend.
+ * - `DisableDraftMode`: UI ccontrol to disable draft mode from the frontend.
  *
  * Features:
  * - Dynamically checks if draft mode is active and conditionally renders visual editing tools.
