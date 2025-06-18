@@ -35,10 +35,8 @@ export async function createCheckoutSession(
     let customerId: string;
 
     if (customers.data.length > 0) {
-      // ✅ Use existing customer
       customerId = customers.data[0].id;
     } else {
-      // 🆕 Create new customer
       const newCustomer = await stripe.customers.create({
         email: metadata.customerEmail,
         name: metadata.customerName,
@@ -50,17 +48,15 @@ export async function createCheckoutSession(
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-
     const successUrl = `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}&orderNumber=${metadata.orderNumber}`;
     const cancelUrl = `${baseUrl}/basket`;
 
-    // 🧾 Create the Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       success_url: successUrl,
       cancel_url: cancelUrl,
-      allow_promotion_codes: true,
       billing_address_collection: 'required',
+      allow_promotion_codes: true,
       automatic_tax: { enabled: true },
 
       customer: customerId,
@@ -88,12 +84,24 @@ export async function createCheckoutSession(
         quantity: item.quantity,
       })),
 
+      payment_intent_data: {
+        description: `Order #${metadata.orderNumber} for ${metadata.customerEmail}`,
+        statement_descriptor: 'ELPASO KABOOM',
+        metadata: {
+          ...metadata,
+          riskNote: 'Low risk – manually verified customer',
+          purpose: 'Fireworks purchase',
+        },
+      },
+
       metadata: {
         ...metadata,
-        items: JSON.stringify(
+        source: 'ElPasoKaBoom',
+        basketItems: JSON.stringify(
           items.map((item) => ({
             id: item.product._id,
             quantity: item.quantity,
+            name: item.product.name,
           }))
         ),
       },
