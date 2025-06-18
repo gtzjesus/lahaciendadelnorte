@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 const VideoBackground: React.FC = () => {
   const [videoReady, setVideoReady] = useState(false);
-  const [shouldLoad, setShouldLoad] = useState(false);
+  const [sourcesLoaded, setSourcesLoaded] = useState(false);
 
   const mobileRef = useRef<HTMLVideoElement>(null);
   const desktopRef = useRef<HTMLVideoElement>(null);
@@ -14,14 +14,11 @@ const VideoBackground: React.FC = () => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setShouldLoad(true);
+          setSourcesLoaded(true); // now insert <source> tags
           observer.disconnect();
         }
       },
-      {
-        root: null,
-        threshold: 0.1,
-      }
+      { threshold: 0.1 }
     );
 
     if (mobileRef.current) observer.observe(mobileRef.current);
@@ -30,9 +27,7 @@ const VideoBackground: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleVideoReady = () => {
-    setVideoReady(true);
-  };
+  const handleVideoReady = () => setVideoReady(true);
 
   return (
     <div className="relative w-full h-screen">
@@ -56,18 +51,18 @@ const VideoBackground: React.FC = () => {
         className={`absolute inset-0 w-full h-full object-cover md:hidden z-0 transition-opacity duration-700 ${
           videoReady ? 'opacity-100' : 'opacity-0'
         }`}
-        autoPlay={shouldLoad}
+        autoPlay
         muted
         loop
         playsInline
-        preload="none"
+        preload="auto"
         poster="/images/elpaso.webp"
         disableRemotePlayback
         controlsList="nodownload nofullscreen noremoteplayback"
         aria-hidden="true"
         onCanPlay={handleVideoReady}
       >
-        {shouldLoad && (
+        {sourcesLoaded && (
           <>
             <source src="/videos/background-vertical.webm" type="video/webm" />
             <source src="/videos/background-vertical.mp4" type="video/mp4" />
@@ -82,18 +77,18 @@ const VideoBackground: React.FC = () => {
         className={`absolute inset-0 w-full h-full object-cover hidden md:block z-0 transition-opacity duration-700 ${
           videoReady ? 'opacity-100' : 'opacity-0'
         }`}
-        autoPlay={shouldLoad}
+        autoPlay
         muted
         loop
         playsInline
-        preload="none"
+        preload="auto"
         poster="/images/elpaso.webp"
         disableRemotePlayback
         controlsList="nodownload nofullscreen noremoteplayback"
         aria-hidden="true"
         onCanPlay={handleVideoReady}
       >
-        {shouldLoad && (
+        {sourcesLoaded && (
           <>
             <source
               src="/videos/background-horizontal.webm"
