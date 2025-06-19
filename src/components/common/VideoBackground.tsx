@@ -6,6 +6,7 @@ import Image from 'next/image';
 export default function VideoBackground() {
   const [videoReady, setVideoReady] = useState(false);
   const [sourcesLoaded, setSourcesLoaded] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const mobileRef = useRef<HTMLVideoElement>(null);
   const desktopRef = useRef<HTMLVideoElement>(null);
 
@@ -19,15 +20,15 @@ export default function VideoBackground() {
       },
       { threshold: 0.1 }
     );
-    if (mobileRef.current) observer.observe(mobileRef.current);
-    if (desktopRef.current) observer.observe(desktopRef.current);
+    if (wrapperRef.current) observer.observe(wrapperRef.current);
     return () => observer.disconnect();
   }, []);
 
   const handleVideoReady = () => setVideoReady(true);
 
   return (
-    <div className="relative w-full h-screen">
+    <div ref={wrapperRef} className="relative w-full h-screen">
+      {/* Fallback Image */}
       {!videoReady && (
         <div className="absolute inset-0 z-0">
           <Image
@@ -43,20 +44,21 @@ export default function VideoBackground() {
 
       {sourcesLoaded && (
         <>
+          {/* Mobile Video */}
           <video
             ref={mobileRef}
             className={`absolute inset-0 w-full h-full object-cover md:hidden transition-opacity duration-700 ${
               videoReady ? 'opacity-100' : 'opacity-0'
             }`}
-            controls={false}
-            tabIndex={-1}
-            style={{ pointerEvents: 'none' }}
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
             poster="/images/elpaso.webp"
+            controls={false}
+            tabIndex={-1}
+            style={{ pointerEvents: 'none' }}
             disableRemotePlayback
             aria-hidden="true"
             onCanPlay={handleVideoReady}
@@ -65,20 +67,21 @@ export default function VideoBackground() {
             <source src="/videos/background-vertical.mp4" type="video/mp4" />
           </video>
 
+          {/* Desktop Video */}
           <video
             ref={desktopRef}
             className={`absolute inset-0 w-full h-full object-cover hidden md:block transition-opacity duration-700 ${
               videoReady ? 'opacity-100' : 'opacity-0'
             }`}
-            controls={false}
-            tabIndex={-1}
-            style={{ pointerEvents: 'none' }}
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
             poster="/images/elpaso.webp"
+            controls={false}
+            tabIndex={-1}
+            style={{ pointerEvents: 'none' }}
             disableRemotePlayback
             aria-hidden="true"
             onCanPlay={handleVideoReady}
@@ -94,6 +97,7 @@ export default function VideoBackground() {
 
       <div className="absolute inset-0 bg-black opacity-50 z-10" />
 
+      {/* Hides forced play buttons */}
       <style jsx global>{`
         video::-webkit-media-controls,
         video::-webkit-media-controls-start-playback-button {
