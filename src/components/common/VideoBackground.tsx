@@ -46,61 +46,74 @@ const VideoBackground: React.FC = () => {
       )}
 
       {/* Mobile Video */}
-      <video
-        ref={mobileRef}
-        className={`absolute inset-0 w-full h-full object-cover md:hidden z-0 transition-opacity duration-700 ${
-          videoReady ? 'opacity-100' : 'opacity-0'
-        }`}
-        controls={false}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        poster="/images/elpaso.webp"
-        disableRemotePlayback
-        controlsList="nodownload nofullscreen noremoteplayback"
-        aria-hidden="true"
-        onCanPlay={handleVideoReady}
-      >
-        {sourcesLoaded && (
-          <>
-            <source src="/videos/background-vertical.webm" type="video/webm" />
-            <source src="/videos/background-vertical.mp4" type="video/mp4" />
-          </>
-        )}
-        Your browser does not support the video tag.
-      </video>
-
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <video
+          ref={mobileRef}
+          className={`absolute inset-0 w-full h-full object-cover md:hidden z-0 transition-opacity duration-700 ${
+            videoReady ? 'opacity-100' : 'opacity-0'
+          }`}
+          controls={false}
+          tabIndex={-1}
+          style={{ pointerEvents: 'none' }}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/images/elpaso.webp"
+          disableRemotePlayback
+          controlsList="nodownload nofullscreen noremoteplayback"
+          aria-hidden="true"
+          onCanPlay={handleVideoReady}
+        >
+          {sourcesLoaded && (
+            <>
+              <source
+                src="/videos/background-vertical.webm"
+                type="video/webm"
+              />
+              <source src="/videos/background-vertical.mp4" type="video/mp4" />
+            </>
+          )}
+          Your browser does not support the video tag.
+        </video>
+      </div>
       {/* Desktop Video */}
-      <video
-        ref={desktopRef}
-        className={`absolute inset-0 w-full h-full object-cover hidden md:block z-0 transition-opacity duration-700 ${
-          videoReady ? 'opacity-100' : 'opacity-0'
-        }`}
-        controls={false}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        poster="/images/elpaso.webp"
-        disableRemotePlayback
-        controlsList="nodownload nofullscreen noremoteplayback"
-        aria-hidden="true"
-        onCanPlay={handleVideoReady}
-      >
-        {sourcesLoaded && (
-          <>
-            <source
-              src="/videos/background-horizontal.webm"
-              type="video/webm"
-            />
-            <source src="/videos/background-horizontal.mp4" type="video/mp4" />
-          </>
-        )}
-        Your browser does not support the video tag.
-      </video>
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <video
+          ref={desktopRef}
+          className={`absolute inset-0 w-full h-full object-cover hidden md:block z-0 transition-opacity duration-700 ${
+            videoReady ? 'opacity-100' : 'opacity-0'
+          }`}
+          controls={false}
+          tabIndex={-1}
+          style={{ pointerEvents: 'none' }}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/images/elpaso.webp"
+          disableRemotePlayback
+          controlsList="nodownload nofullscreen noremoteplayback"
+          aria-hidden="true"
+          onCanPlay={handleVideoReady}
+        >
+          {sourcesLoaded && (
+            <>
+              <source
+                src="/videos/background-horizontal.webm"
+                type="video/webm"
+              />
+              <source
+                src="/videos/background-horizontal.mp4"
+                type="video/mp4"
+              />
+            </>
+          )}
+          Your browser does not support the video tag.
+        </video>
+      </div>
 
       {/* Overlay */}
       <div className="absolute inset-0 bg-black opacity-50 z-10" />
