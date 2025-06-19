@@ -51,6 +51,7 @@ const VideoBackground: React.FC = () => {
         className={`absolute inset-0 w-full h-full object-cover md:hidden z-0 transition-opacity duration-700 ${
           videoReady ? 'opacity-100' : 'opacity-0'
         }`}
+        controls={false}
         autoPlay
         muted
         loop
@@ -77,6 +78,7 @@ const VideoBackground: React.FC = () => {
         className={`absolute inset-0 w-full h-full object-cover hidden md:block z-0 transition-opacity duration-700 ${
           videoReady ? 'opacity-100' : 'opacity-0'
         }`}
+        controls={false}
         autoPlay
         muted
         loop
