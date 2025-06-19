@@ -8,6 +8,7 @@ import { draftMode } from 'next/headers';
 import { DisableDraftMode } from '@/components/auth/DisableDraftMode';
 import { VisualEditing } from 'next-sanity';
 import { SanityLive } from '@/sanity/lib/live';
+import ScrollToTop from '@/components/common/ScrollToTop';
 
 /**
  * 📦 Store Layout
@@ -82,6 +83,8 @@ export default async function StoreLayout({
           <VisualEditing />
         </>
       )}
+
+      <ScrollToTop />
 
       {/* Page content rendered inside main tag */}
       <main>{children}</main>
