@@ -103,3 +103,11 @@ body {
 .header {
   @apply sticky top-0 z-10 bg-black transition-colors duration-300;
 }
+
+/* ============================================================================
+   Video OVERRIDES
+============================================================================ */
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
