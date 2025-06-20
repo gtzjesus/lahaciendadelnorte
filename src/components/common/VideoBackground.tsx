@@ -31,7 +31,6 @@ export default function VideoBackground() {
         disableRemotePlayback
         aria-hidden="true"
       >
-        <source src="/videos/background-vertical.webm" type="video/webm" />
         <source src="/videos/background-vertical.mp4" type="video/mp4" />
       </video>
 
@@ -48,7 +47,6 @@ export default function VideoBackground() {
         disableRemotePlayback
         aria-hidden="true"
       >
-        <source src="/videos/background-horizontal.webm" type="video/webm" />
         <source src="/videos/background-horizontal.mp4" type="video/mp4" />
       </video>
 
