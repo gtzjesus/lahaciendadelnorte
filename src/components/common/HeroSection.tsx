@@ -51,7 +51,7 @@ const HeroSection: FC = () => {
         className="absolute inset-0 pointer-events-none z-[1]"
       />
 
-      <div className="absolute top-1/2 left-5 2xl:left-64 -translate-y-1/2 z-10 max-w-[90vw] lg:max-w-xl">
+      <div className="absolute top-64 left-5 2xl:left-64 -translate-y-1/2 z-10 max-w-[90vw] lg:max-w-xl">
         <p className="uppercase font-black text-sm lg:text-xl text-white tracking-widest mb-2">
           el paso kaboom
         </p>
@@ -60,10 +60,14 @@ const HeroSection: FC = () => {
           Light up <br />
           the sky!
         </h1>
-
-        <p className="uppercase text-white text-xs sm:text-sm font-semibold tracking-wider bg-flag-red px-3 py-2 inline-block rounded shadow-md">
-          Use code <strong>KABOOM</strong> at checkout — 4th of July sale on
-          now!
+        <p className="uppercase font-black text-xs lg:text-xl text-white tracking-widest mb-2">
+          4th of July sale on now! <br />
+          use code
+          <strong className="uppercase text-white text-xs sm:text-sm font-semibold tracking-wider m-1 bg-flag-red px-2 py-1 inline-block shadow-md">
+            KABOOM
+          </strong>
+          <br />
+          at checkout
         </p>
       </div>
 
