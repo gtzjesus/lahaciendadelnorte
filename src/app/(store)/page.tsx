@@ -1,12 +1,12 @@
 // app/(store)/page.tsx
 
 import { client } from '@/sanity/lib/client';
-import VideoBackground from '@/components/common/VideoBackground';
 import HeroSection from '@/components/common/HeroSection';
 import BlackFridayBanner from '@/components/common/BlackFridayBanner';
 import Footer from '@/components/common/Footer';
 import Categories from '@/components/categories/Categories';
 import Header from '@/components/common/header';
+import Background from '@/components/common/Background';
 import { Category } from '@/types';
 import Script from 'next/script';
 
@@ -92,7 +92,7 @@ const Home = async () => {
   return (
     <div>
       <Header />
-      <VideoBackground />
+      <Background />
       <HeroSection />
       <BlackFridayBanner />
       <Categories categories={categories} />
