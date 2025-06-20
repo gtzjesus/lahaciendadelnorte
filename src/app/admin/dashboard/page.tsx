@@ -7,28 +7,8 @@ import { useDashboardStats } from '@/hooks/dashboard/useDashboardStats';
 import { useRecentOrders } from '@/hooks/dashboard/useRecentOrders';
 import { useRevenueStats } from '@/hooks/dashboard/useRevenueStats';
 import RevenueIntervalToggle from '@/components/dashboard/RevenueIntervalToggle';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import NewOrderToast from '@/components/orders/NewOrderToast';
-
-// Util functions for persistent seen order tracking
-const getSeenOrders = (): string[] => {
-  if (typeof window === 'undefined') return [];
-  return JSON.parse(localStorage.getItem('seenOrders') || '[]');
-};
-
-const markOrderAsSeen = (orderId: string) => {
-  const seen = getSeenOrders();
-  if (!seen.includes(orderId)) {
-    seen.push(orderId);
-    localStorage.setItem('seenOrders', JSON.stringify(seen));
-  }
-};
-
-const isOrderSeen = (orderId: string): boolean => {
-  const seen = getSeenOrders();
-  return seen.includes(orderId);
-};
+import OrderNotifications from '@/components/orders/OrderNotifications';
+import { useState } from 'react';
 
 export default function AdminDashboardPage() {
   const [interval, setInterval] = useState<'daily' | 'weekly' | 'monthly'>(
@@ -42,27 +22,6 @@ export default function AdminDashboardPage() {
     loading: revenueLoading,
     error: revenueError,
   } = useRevenueStats(interval);
-
-  useEffect(() => {
-    if (recentOrders && recentOrders.length > 0) {
-      const latest = recentOrders[0];
-
-      if (!isOrderSeen(latest.id)) {
-        toast.custom((t) => (
-          <NewOrderToast
-            t={t}
-            orderNumber={latest.orderNumber || ''}
-            customerName={latest.customerName}
-            totalPrice={latest.totalPrice}
-            onView={() => {
-              markOrderAsSeen(latest.id);
-              window.location.href = `/admin/orders/${latest.orderNumber || ''}`;
-            }}
-          />
-        ));
-      }
-    }
-  }, [recentOrders]);
 
   if (statsError) {
     return <p className="text-flag-red">Error loading stats.</p>;
@@ -81,6 +40,7 @@ export default function AdminDashboardPage() {
         ordersLoading={ordersLoading}
         ordersError={ordersError}
       />
+      <OrderNotifications recentOrders={recentOrders} />
     </>
   );
 }
