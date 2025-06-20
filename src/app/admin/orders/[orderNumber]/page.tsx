@@ -23,7 +23,7 @@ interface Order {
   products?: ProductItem[];
 }
 
-export default async function OrderDetailPage({ params }: { params: unknown }) {
+export default async function OrderDetailPage({ params }: any) {
   const { orderNumber } = params as { orderNumber: string };
   const order: Order | null = await getOrderByOrderNumber(orderNumber);
 
