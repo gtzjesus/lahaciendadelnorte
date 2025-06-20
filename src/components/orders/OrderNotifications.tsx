@@ -34,30 +34,34 @@ const isOrderSeen = (orderId: string): boolean => {
   return seen.includes(orderId);
 };
 
+const shownToasts = new Set<string>();
+
 export default function OrderNotifications({
   recentOrders,
 }: OrderNotificationsProps) {
   useEffect(() => {
-    if (recentOrders && recentOrders.length > 0) {
-      const latest = recentOrders[0];
+    if (!recentOrders || recentOrders.length === 0) return;
 
-      if (!isOrderSeen(latest.id)) {
+    // Loop through all unseen recent orders
+    recentOrders.forEach((order) => {
+      if (!isOrderSeen(order.id) && !shownToasts.has(order.id)) {
+        shownToasts.add(order.id);
         toast.custom((t) => (
           <NewOrderToast
             t={t}
-            orderId={latest.id}
-            orderNumber={latest.orderNumber?.toString() || ''}
-            customerName={latest.customerName}
-            totalPrice={latest.totalPrice || 0}
+            orderId={order.id}
+            orderNumber={order.orderNumber?.toString() || ''}
+            customerName={order.customerName}
+            totalPrice={order.totalPrice || 0}
             onView={() => {
-              markOrderAsSeen(latest.id);
+              markOrderAsSeen(order.id);
               toast.dismiss(t);
-              window.location.href = `/admin/orders/${latest.orderNumber || ''}`;
+              window.location.href = `/admin/orders/${order.orderNumber || ''}`;
             }}
           />
         ));
       }
-    }
+    });
   }, [recentOrders]);
 
   return null; // This component does not render anything visible itself
