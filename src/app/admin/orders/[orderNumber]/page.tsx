@@ -22,9 +22,10 @@ interface Order {
   orderDate?: string;
   products?: ProductItem[];
 }
-
 export default async function OrderDetailPage({ params }: any) {
-  const { orderNumber } = params as { orderNumber: string };
+  const awaitedParams = await params;
+  const { orderNumber } = awaitedParams as { orderNumber: string };
+
   const order: Order | null = await getOrderByOrderNumber(orderNumber);
 
   if (!order) return notFound();
