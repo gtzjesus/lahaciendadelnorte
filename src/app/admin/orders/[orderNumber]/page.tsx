@@ -31,17 +31,15 @@ export default async function OrderDetailPage({ params }: any) {
 
   return (
     <div className="bg-[#fff] m-4 p-8 max-w-3xl mx-auto">
-      <div className="uppercase flex justify-between">
-        <h1 className="text-xl text-[#2E8B57] font-bold">
-          Order #{order.orderNumber}
-        </h1>
-        <p className="text-flag-red">
-          Date:{' '}
-          {order.orderDate
-            ? new Date(order.orderDate).toLocaleDateString()
-            : 'n/a'}
-        </p>
-      </div>
+      <h1 className="text-xl text-[#2E8B57] font-bold">
+        Order #{order.orderNumber}
+      </h1>
+      <p className="text-flag-red">
+        Date:{' '}
+        {order.orderDate
+          ? new Date(order.orderDate).toLocaleDateString()
+          : 'n/a'}
+      </p>
 
       <div className="uppercase text-md mt-6">
         <p className="text-flag-blue">Customer: {order.customerName}</p>
