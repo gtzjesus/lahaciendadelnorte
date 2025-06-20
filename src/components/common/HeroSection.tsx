@@ -16,20 +16,20 @@ const HeroSection: FC = () => {
 
     if (fireworksRef.current) {
       const fireworks = new Fireworks(fireworksRef.current, {
-        opacity: 0.6,
-        acceleration: 1.05,
-        friction: 0.95,
-        gravity: 1.5,
-        explosion: 6,
-        particles: 80,
-        traceLength: 4,
-        traceSpeed: 8,
-        flickering: 40,
+        opacity: 0.8,
+        acceleration: 1.02,
+        friction: 0.97,
+        gravity: 1.2,
+        explosion: 12,
+        particles: 120,
+        traceLength: 6,
+        traceSpeed: 3,
+        flickering: 15,
         lineStyle: 'round',
-        hue: { min: 0, max: 360 },
-        delay: { min: 30, max: 60 },
-        rocketsPoint: { min: 30, max: 70 },
-        brightness: { min: 60, max: 90 },
+        hue: { min: 20, max: 40 }, // naranja natural
+        brightness: { min: 80, max: 100 }, // naranja claro a casi blanco
+        delay: { min: 50, max: 100 },
+        rocketsPoint: { min: 40, max: 80 },
         autoresize: true,
         sound: { enabled: false },
       });
