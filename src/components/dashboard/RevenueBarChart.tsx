@@ -76,10 +76,10 @@ export default function RevenueBarChart({
                 return (
                   <text
                     x={xPos + w / 2}
-                    y={yPos - 5}
+                    y={yPos - 10}
                     fill="#fff"
                     fontSize={10}
-                    fontWeight="bold"
+                    fontWeight="light"
                     textAnchor="middle"
                   >
                     ${revenue}

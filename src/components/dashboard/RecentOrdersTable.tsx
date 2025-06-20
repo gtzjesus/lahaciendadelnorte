@@ -18,7 +18,7 @@ export default function RecentOrdersTable({
   }
 
   if (ordersError) {
-    return <p className="text-red-500">Error loading orders.</p>;
+    return <p className="text-flag-red">Error loading orders.</p>;
   }
 
   return (
@@ -36,9 +36,9 @@ export default function RecentOrdersTable({
       <div className="overflow-x-auto">
         <table
           className="min-w-full"
-          style={{ backgroundColor: '#F1F0E1', color: '#333' }} // base text color
+          style={{ backgroundColor: '#F1F0E1', color: '#0A3161' }} // base text color
         >
-          <thead className="" style={{ backgroundColor: '#aabee0' }}>
+          <thead className="" style={{ backgroundColor: '#B22234' }}>
             <tr className="uppercase text-xs">
               <th className="text-left p-2">Order #</th>
               <th className="text-left p-2">Customer</th>

@@ -2,7 +2,6 @@
 
 import ProductGrid from '@/components/products/ProductGrid';
 import { Product } from '@/types';
-import Header from '../common/header';
 
 /**
  * `SearchResults` is a component that displays the results of a product search.
@@ -24,9 +23,8 @@ const SearchResults = ({
   products: Product[];
 }) => {
   return (
-    <div className="w-full bg-flag-red">
+    <div className="w-full">
       {/* Header section */}
-      <Header />
 
       {/* Search query and result count display */}
       <h1 className="uppercase text-sm font-light text-center p-5 text-white">

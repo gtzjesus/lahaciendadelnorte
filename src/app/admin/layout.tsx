@@ -34,7 +34,7 @@ export default function AdminLayout({
           {/* Sidebar */}
           <aside
             className={clsx(
-              'fixed inset-y-0 left-0 z-30 w-64  bg-black text-white p-6 transform transition-transform duration-300 ease-in-out',
+              'fixed inset-y-0 left-0 z-30 w-64  bg-flag-red text-white p-6 transform transition-transform duration-300 ease-in-out',
               {
                 '-translate-x-full': !sidebarOpen,
                 'translate-x-0': sidebarOpen,
@@ -62,7 +62,7 @@ export default function AdminLayout({
           {/* Overlay */}
           {sidebarOpen && (
             <div
-              className="fixed inset-0 bg-black opacity-50 z-20 md:hidden"
+              className="fixed inset-0 bg-flag-red opacity-50 z-20 md:hidden"
               onClick={() => setSidebarOpen(false)}
             />
           )}
@@ -70,14 +70,13 @@ export default function AdminLayout({
           {/* Main content area */}
           <div className="flex-1 flex flex-col">
             {/* Mobile header */}
-            <header className="md:hidden sticky top-0 z-20 flex justify-between items-center bg-[#101015] text-white p-4 shadow-sm">
-              <h1 className="uppercase font-light text-md">Admin HQ</h1>
+            <header className="md:hidden sticky top-0 z-20 flex justify-between items-center bg-flag-red text-white p-4 shadow-sm">
+              <h1 className="uppercase font-light text-md">kaboom HQ</h1>
 
               {/* Hamburger Button */}
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 aria-label="Toggle menu"
-                className="focus:outline-none focus:ring-2 focus:ring-white "
               >
                 <svg
                   className="h-6 w-6"
