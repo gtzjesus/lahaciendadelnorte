@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
 
         {/* Copyright */}
         <p className="uppercase barlow-condensed-regular text-xs tracking-very-wide font-light text-flag-blue">
-          &copy; elpasokaboom {new Date().getFullYear()}. all rights reserved.
+          &copy; elpasokaboom {new Date().getFullYear()}.
         </p>
       </div>
     </footer>
