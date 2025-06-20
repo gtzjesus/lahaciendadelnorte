@@ -12,49 +12,45 @@ const HeroSection: FC = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 0);
     };
-
     window.addEventListener('scroll', handleScroll);
 
-    // Init fireworks
     if (fireworksRef.current) {
       const fireworks = new Fireworks(fireworksRef.current, {
-        hue: { min: 0, max: 360 },
-        delay: { min: 15, max: 30 },
-        rocketsPoint: { min: 25, max: 75 }, // CORREGIDO
-        speed: 2,
+        opacity: 0.6,
         acceleration: 1.05,
         friction: 0.95,
         gravity: 1.5,
-        particles: 90,
-        trace: 3,
-        explosion: 5,
+        explosion: 6,
+        particles: 80,
+        traceLength: 4,
+        traceSpeed: 8,
+        flickering: 40,
+        lineStyle: 'round',
+        hue: { min: 0, max: 360 },
+        delay: { min: 30, max: 60 },
+        rocketsPoint: { min: 30, max: 70 },
+        brightness: { min: 60, max: 90 },
         autoresize: true,
-        brightness: {
-          min: 50,
-          max: 80,
-          decay: { min: 0.015, max: 0.03 },
-        },
-        sound: {
-          enabled: false, // CORREGIDO
-        },
+        sound: { enabled: false },
       });
       fireworks.start();
-
-      return () => fireworks.stop();
+      return () => {
+        fireworks.stop();
+      };
     }
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
     <>
-      {/* Fireworks Canvas */}
       <div
         ref={fireworksRef}
         className="absolute inset-0 pointer-events-none z-[1]"
       />
 
-      {/* Hero Content */}
       <div className="absolute top-1/2 left-5 2xl:left-64 -translate-y-1/2 z-10 max-w-[90vw] lg:max-w-xl">
         <p className="uppercase font-black text-sm lg:text-xl text-white tracking-widest mb-2">
           el paso kaboom
@@ -71,10 +67,9 @@ const HeroSection: FC = () => {
         </p>
       </div>
 
-      {/* Fixed CTA button at bottom center */}
       <Link
         href="/search?q=*"
-        className={`fixed bottom-10 border-none left-1/2 lg:text-lg lg:p-4 transform -translate-x-1/2 p-4 block border transition-all uppercase text-xs z-[10] font-light text-center  ${
+        className={`fixed bottom-10 left-1/2 transform -translate-x-1/2 p-4 block uppercase text-xs z-[10] font-light text-center transition ${
           scrolled
             ? 'bg-flag-blue text-white hover:bg-blue-600'
             : 'bg-white text-gray-800 hover:bg-gray-200'
