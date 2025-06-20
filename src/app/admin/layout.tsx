@@ -71,7 +71,12 @@ export default function AdminLayout({
           <div className="flex-1 flex flex-col">
             {/* Mobile header */}
             <header className="md:hidden sticky top-0 z-20 flex justify-between items-center bg-flag-red text-white p-4 shadow-sm">
-              <h1 className="uppercase font-light text-md">kaboom HQ</h1>
+              <Link
+                href="/admin/dashboard"
+                className="uppercase font-light text-md hover:underline"
+              >
+                kaboom HQ
+              </Link>
 
               {/* Hamburger Button */}
               <button
