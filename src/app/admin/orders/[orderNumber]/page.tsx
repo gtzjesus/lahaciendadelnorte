@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { imageUrl } from '@/lib/imageUrl';
 import Image from 'next/image';
 
-// Define the type of a product item matching your schema
 interface ProductItem {
   quantity?: number;
   _key: string;
@@ -24,15 +23,11 @@ interface Order {
   products?: ProductItem[];
 }
 
-interface OrderDetailPageProps {
-  params: {
-    orderNumber: string;
-  };
-}
-
 export default async function OrderDetailPage({
   params,
-}: OrderDetailPageProps) {
+}: {
+  params: { orderNumber: string };
+}) {
   const { orderNumber } = params;
   const order: Order | null = await getOrderByOrderNumber(orderNumber);
 
@@ -41,11 +36,11 @@ export default async function OrderDetailPage({
   return (
     <div className="bg-[#fff] m-4 p-8 max-w-3xl mx-auto">
       <div className="uppercase flex justify-between">
-        <h1 className=" text-xl text-[#2E8B57] font-bold">
+        <h1 className="text-xl text-[#2E8B57] font-bold">
           Order #{order.orderNumber}
         </h1>
         <p className="text-flag-red">
-          Date:
+          Date:{' '}
           {order.orderDate
             ? new Date(order.orderDate).toLocaleDateString()
             : 'n/a'}
@@ -78,11 +73,11 @@ export default async function OrderDetailPage({
                       src={imageUrl(product.image).url()}
                       alt={product.name}
                       fill
-                      className="object-cover rounded"
+                      className="object-cover"
                     />
                   </div>
                 )}
-                <div className=" uppercase mt-2">
+                <div className="uppercase mt-2">
                   <p className="text-xs font-medium">{product.name}</p>
                   <p className="text-xs text-gray-600">
                     Quantity: {item.quantity}
