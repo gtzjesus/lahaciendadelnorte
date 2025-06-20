@@ -25,17 +25,15 @@ const HeroSection: FC = () => {
       {/* Title in top-left */}
       <div className="absolute top-32 left-5 2xl:left-64 lg:top-40 z-10">
         <p className="uppercase font-black barlow-condensed-regular tracking-very-wide text-6xl  lg:text-9xl  text-white">
-          light
-          <br /> up <br />
-          the
-          <br /> sky!
+          light up <br />
+          the sky!
         </p>
       </div>
-      <div className="absolute top-96 left-5 2xl:left-64 lg:top-32 z-10">
+      {/* <div className="absolute top-64 left-5 2xl:left-64 lg:top-32 z-10">
         <p className="uppercase text-white font-black barlow-condensed-regular tracking-very-wide text-sm  lg:text-md lg:top-96  ">
           4th of july sale
         </p>
-      </div>
+      </div> */}
 
       {/* Fixed CTA button at bottom center */}
       <Link
