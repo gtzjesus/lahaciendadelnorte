@@ -51,7 +51,7 @@ const HeroSection: FC = () => {
         className="absolute inset-0 pointer-events-none z-[1]"
       />
 
-      <div className="absolute top-64 left-5 2xl:left-64 -translate-y-1/2 z-10 max-w-[90vw] lg:max-w-xl">
+      <div className="absolute lg:top-96 top-56 left-5 2xl:left-32 -translate-y-1/2 z-10 max-w-[90vw] lg:max-w-xl">
         <p className="uppercase font-black text-sm lg:text-xl text-white tracking-widest mb-2">
           el paso kaboom
         </p>
@@ -67,7 +67,7 @@ const HeroSection: FC = () => {
             KABOOM
           </strong>
           <br />
-          at checkout
+          for 10% at checkout
         </p>
       </div>
 
