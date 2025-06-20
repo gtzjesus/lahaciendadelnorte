@@ -16,10 +16,10 @@ export default function StatGrid({ data }: { data: StatBlock[] }) {
       {data.map(({ title, value, href, color, loading }) => (
         <Link key={title} href={href}>
           <div className="px-2 py-4 " style={{ backgroundColor: color }}>
-            <div className="uppercase text-xs font-light text-gray-800">
+            <div className="uppercase text-xs font-light text-white">
               {title}
             </div>
-            <div className="uppercase text-4xl font-bold text-gray-800 pt-6">
+            <div className="uppercase text-4xl font-bold text-white pt-6">
               {loading ? '—' : value}
             </div>
           </div>

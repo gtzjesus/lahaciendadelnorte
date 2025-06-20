@@ -4,6 +4,7 @@ import NoResults from '@/components/search/NoResults';
 import SearchResults from '@/components/search/SearchResults';
 import { searchProductsByName } from '@/sanity/lib/products/searchProductsByName';
 import { Product, SearchPageProps } from '@/types';
+import Header from '../common/header';
 
 /**
  * SearchPage Component
@@ -24,20 +25,25 @@ import { Product, SearchPageProps } from '@/types';
 const SearchPage = async ({ searchParams }: SearchPageProps) => {
   const { q } = searchParams;
 
-  // Fetching the products based on the search query `q`
+  // Fetching the products based on the search query q
   const products: Product[] = await searchProductsByName(q);
 
   // Calculating the number of search results
   const resultCount = products.length;
 
-  // If no results are found, render the "No Results" component
-  if (resultCount === 0) {
-    return <NoResults query={q} />;
-  }
-
-  // If results are found, render the search results
   return (
-    <SearchResults query={q} resultCount={resultCount} products={products} />
+    <div className="w-full bg-flag-red">
+      <Header />
+      {resultCount === 0 ? (
+        <NoResults query={q} />
+      ) : (
+        <SearchResults
+          query={q}
+          resultCount={resultCount}
+          products={products}
+        />
+      )}
+    </div>
   );
 };
 

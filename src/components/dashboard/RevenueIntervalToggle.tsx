@@ -25,8 +25,8 @@ export default function RevenueIntervalToggle({
             onClick={() => onChangeAction(interval)}
             className={`px-2 py-1 uppercase text-xs font-semibold text-center ${
               active === interval
-                ? 'bg-green-700 text-white'
-                : 'bg-gray-800 text-gray-300'
+                ? 'bg-flag-red text-white'
+                : 'bg-flag-blue text-gray-300'
             }`}
           >
             {interval}

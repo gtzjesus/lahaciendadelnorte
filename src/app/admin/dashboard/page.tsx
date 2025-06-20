@@ -7,13 +7,34 @@ import { useDashboardStats } from '@/hooks/dashboard/useDashboardStats';
 import { useRecentOrders } from '@/hooks/dashboard/useRecentOrders';
 import { useRevenueStats } from '@/hooks/dashboard/useRevenueStats';
 import RevenueIntervalToggle from '@/components/dashboard/RevenueIntervalToggle';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import NewOrderToast from '@/components/orders/NewOrderToast';
+
+// Util functions for persistent seen order tracking
+const getSeenOrders = (): string[] => {
+  if (typeof window === 'undefined') return [];
+  return JSON.parse(localStorage.getItem('seenOrders') || '[]');
+};
+
+const markOrderAsSeen = (orderId: string) => {
+  const seen = getSeenOrders();
+  if (!seen.includes(orderId)) {
+    seen.push(orderId);
+    localStorage.setItem('seenOrders', JSON.stringify(seen));
+  }
+};
+
+const isOrderSeen = (orderId: string): boolean => {
+  const seen = getSeenOrders();
+  return seen.includes(orderId);
+};
 
 export default function AdminDashboardPage() {
   const [interval, setInterval] = useState<'daily' | 'weekly' | 'monthly'>(
     'daily'
   );
+
   const { dashboardData, statsError } = useDashboardStats();
   const { recentOrders, ordersLoading, ordersError } = useRecentOrders();
   const {
@@ -22,48 +43,35 @@ export default function AdminDashboardPage() {
     error: revenueError,
   } = useRevenueStats(interval);
 
-  // 🔁 Track last order to detect new ones
-  const lastOrderId = useRef<string | null>(null);
-
   useEffect(() => {
     if (recentOrders && recentOrders.length > 0) {
       const latest = recentOrders[0];
 
-      if (lastOrderId.current && latest.id !== lastOrderId.current) {
+      if (!isOrderSeen(latest.id)) {
         toast.custom((t) => (
-          <div className="bg-green-700 text-white p-4 rounded shadow-lg mb-2 w-72">
-            <div className="text-sm font-light uppercase">
-              New Order from {latest.customerName || 'Customer'}!
-            </div>
-            <div className="text-xs font-medium mt-1">
-              Order #{latest.orderNumber || '—'} • ${latest.totalPrice}
-            </div>
-            <button
-              onClick={() => {
-                window.location.href = `/admin/orders/${latest.orderNumber || ''}`;
-                toast.dismiss(t);
-              }}
-              className="mt-3 text-xs uppercase font-semibold bg-white text-green-700 px-3 py-1 rounded"
-            >
-              View Order
-            </button>
-          </div>
+          <NewOrderToast
+            t={t}
+            orderNumber={latest.orderNumber || ''}
+            customerName={latest.customerName}
+            totalPrice={latest.totalPrice}
+            onView={() => {
+              markOrderAsSeen(latest.id);
+              window.location.href = `/admin/orders/${latest.orderNumber || ''}`;
+            }}
+          />
         ));
       }
-
-      // Update last known order ID
-      lastOrderId.current = latest.id;
     }
   }, [recentOrders]);
 
   if (statsError) {
-    return <p className="text-red-500">Error loading stats.</p>;
+    return <p className="text-flag-red">Error loading stats.</p>;
   }
 
   return (
     <>
-      <RevenueIntervalToggle onChangeAction={setInterval} active={interval} />;
-      {revenueError && <p className="text-red-500">{revenueError}</p>}
+      <RevenueIntervalToggle onChangeAction={setInterval} active={interval} />
+      {revenueError && <p className="text-flag-red">{revenueError}</p>}
       {!revenueLoading && !revenueError && (
         <RevenueBarChart data={revenueData} interval={interval} />
       )}
