@@ -71,7 +71,7 @@ export default function BasketPage() {
     } catch (err) {
       console.error('Reservation failed:', err);
       setReservationError(
-        'Some items are no longer available. Please review your bag.'
+        'Some items are no longer available. Please review your fireworks basket.'
       );
       await refreshStockLevels(); // Refetch stock after failure
     }
@@ -80,24 +80,17 @@ export default function BasketPage() {
   };
 
   const refreshStockLevels = async () => {
+    const productIds = groupedItems.map((item) => item.product._id).join(',');
     try {
-      const productIds = groupedItems.map((item) => item.product._id);
-      const query = productIds.map((id) => `ids=${id}`).join('&');
+      const res = await fetch(`/api/stock?ids=${productIds}`);
+      const latestStocksRecord: Record<string, number> = await res.json();
 
-      const res = await fetch(`/api/stock?${query}`);
-      if (!res.ok) throw new Error('Failed to fetch stock');
-
-      const latestStock: Record<string, number> = await res.json();
-
-      // Convert object to array for store update
-      const latestStockArray = Object.entries(latestStock).map(
-        ([id, stock]) => ({
-          _id: id,
-          stock,
-        })
+      // Convert record to array [{ _id, stock }]
+      const latestStocksArray = Object.entries(latestStocksRecord).map(
+        ([_id, stock]) => ({ _id, stock })
       );
 
-      useBasketStore.getState().updateStockLevels(latestStockArray);
+      useBasketStore.getState().updateStockLevels(latestStocksArray);
     } catch (err) {
       console.error('Failed to fetch latest stock:', err);
     }
@@ -118,7 +111,7 @@ export default function BasketPage() {
 
       <div className="w-full bg-flag-red">
         <h1 className="uppercase text-sm font-light text-center p-5 text-white">
-          Shopping Bag
+          fireworks basket
         </h1>
       </div>
 
