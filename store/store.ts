@@ -30,6 +30,9 @@ interface BasketState {
 
   /** Returns all items in the basket */
   getGroupedItems: () => BasketItem[];
+
+  /** Updates stock levels for products in basket and clamps quantity if needed */
+  updateStockLevels: (latestStocks: { _id: string; stock: number }[]) => void;
 }
 
 /**
@@ -69,7 +72,7 @@ const useBasketStore = create<BasketState>()(
               if (item.quantity > 1) {
                 acc.push({ ...item, quantity: item.quantity - 1 });
               }
-              // Skip if quantity is 1 (removes item)
+              // If quantity is 1, removing it completely (skip pushing)
             } else {
               acc.push(item);
             }
@@ -105,6 +108,35 @@ const useBasketStore = create<BasketState>()(
       },
 
       getGroupedItems: () => get().items,
+
+      /**
+       * Updates the stock levels for products in the basket.
+       * If the new stock is lower than the current quantity,
+       * clamps the quantity to the available stock.
+       *
+       * @param latestStocks Array of objects with product _id and updated stock number
+       */
+      updateStockLevels: (latestStocks) =>
+        set((state) => ({
+          items: state.items.map((item) => {
+            const updatedStock = latestStocks.find(
+              (prod) => prod._id === item.product._id
+            )?.stock;
+
+            if (updatedStock !== undefined) {
+              return {
+                ...item,
+                product: {
+                  ...item.product,
+                  stock: updatedStock,
+                },
+                quantity: Math.min(item.quantity, updatedStock),
+              };
+            }
+
+            return item;
+          }),
+        })),
     }),
     {
       name: 'basket-store', // 🧠 Key used in localStorage
