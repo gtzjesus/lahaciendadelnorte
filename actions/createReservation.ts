@@ -11,6 +11,12 @@ export type Metadata = {
   clerkUserId: string;
 };
 
+type ProductRevision = {
+  _id: string;
+  _rev: string;
+  stock: number;
+};
+
 export async function createReservation(
   items: GroupedBasketItem[],
   metadata: Metadata
@@ -18,6 +24,28 @@ export async function createReservation(
   try {
     const orderId = `order-${uuidv4()}`;
     const nameToUse = metadata.customerName?.trim() || metadata.customerEmail;
+
+    // Fetch latest _rev and stock for all products in the basket
+    const productIds = items.map((item) => item.product._id);
+    const latestProducts: ProductRevision[] = await backendClient.fetch(
+      `*[_type == "product" && _id in $ids]{ _id, _rev, stock }`,
+      { ids: productIds }
+    );
+
+    // Validate stock availability before committing the transaction
+    for (const item of items) {
+      const latestProduct = latestProducts.find(
+        (p: ProductRevision) => p._id === item.product._id
+      );
+      if (!latestProduct) {
+        throw new Error(`Product ${item.product._id} not found`);
+      }
+      if (latestProduct.stock < item.quantity) {
+        throw new Error(
+          `Insufficient stock for product ${item.product._id}. Available: ${latestProduct.stock}, requested: ${item.quantity}`
+        );
+      }
+    }
 
     const orderDoc = {
       _id: orderId,
@@ -43,10 +71,10 @@ export async function createReservation(
 
     const txn = backendClient.transaction();
 
-    // 🧾 Add the order document
+    // Add the order document
     txn.create(orderDoc);
 
-    // 👤 Check if customer exists
+    // Check if customer exists
     const existingCustomer = await backendClient.fetch(
       `*[_type == "customer" && (clerkUserId == $clerkUserId || email == $email)][0]`,
       {
@@ -77,31 +105,31 @@ export async function createReservation(
       });
     }
 
-    // 📉 Decrement stock for each product
+    // Decrement stock for each product using the latest _rev from Sanity
     for (const item of items) {
-      const productId = item.product._id;
-      const quantityToDecrement = item.quantity;
-
-      if (!item.product._rev) {
-        throw new Error(`Missing _rev for product ${productId}`);
+      const latestProduct = latestProducts.find(
+        (p: ProductRevision) => p._id === item.product._id
+      );
+      if (!latestProduct) {
+        throw new Error(`Product ${item.product._id} not found in latest data`);
       }
 
       const patch = backendClient
-        .patch(productId)
-        .ifRevisionId(item.product._rev)
-        .dec({ stock: quantityToDecrement });
+        .patch(latestProduct._id)
+        .ifRevisionId(latestProduct._rev) // Use latest revision here!
+        .dec({ stock: item.quantity });
 
       txn.patch(patch);
     }
 
-    // ✅ Commit the full transaction atomically
+    // Commit the full transaction atomically
     await txn.commit();
 
     return { success: true, orderNumber: metadata.orderNumber };
   } catch (err) {
     console.error('🚨 Reservation failed:', err);
     throw new Error(
-      'Reservation failed. Item may be out of stock. Please refresh and try again.'
+      'Reservation failed. Item may be out of stock or the data is stale. Please refresh and try again.'
     );
   }
 }
