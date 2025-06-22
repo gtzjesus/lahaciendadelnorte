@@ -10,20 +10,17 @@ import { motion } from 'framer-motion';
 
 function SuccessPage() {
   const searchParams = useSearchParams();
-  const orderNumber = searchParams.get('orderNumber');
+  const orderNumber = searchParams.get('order');
   const clearBasket = useBasketStore((state) => state.clearBasket);
   const router = useRouter();
+  const [countdown, setCountdown] = useState(10);
 
-  const [countdown, setCountdown] = useState(10); // ⏳ countdown in seconds
-
-  // 🧹 Cleanup + celebration on mount
   useEffect(() => {
     if (orderNumber) {
       clearBasket();
       sessionStorage.clear();
       localStorage.clear();
 
-      // 🧼 Only remove cart-related cookies
       document.cookie.split(';').forEach((c) => {
         const cookieName = c.trim().split('=')[0];
         if (
@@ -40,7 +37,6 @@ function SuccessPage() {
         origin: { y: 0.6 },
       });
 
-      // ⏳ Countdown interval
       const interval = setInterval(() => {
         setCountdown((prev) => {
           if (prev <= 1) {
@@ -51,11 +47,10 @@ function SuccessPage() {
         });
       }, 1000);
 
-      return () => clearInterval(interval); // Cleanup on unmount
+      return () => clearInterval(interval);
     }
   }, [orderNumber, clearBasket]);
 
-  // 🚀 Safe redirect after countdown finishes
   useEffect(() => {
     if (countdown === 0 && orderNumber) {
       router.push('/orders');
@@ -89,47 +84,48 @@ function SuccessPage() {
           </div>
         </div>
 
-        {/* ✅ Confirmation Title */}
+        {/* ✅ Reservation Title */}
         <h1 className="text-lg text-center mb-2 text-green-700 dark:text-green-400 uppercase font-light">
-          Order Confirmed!
+          Reservation Confirmed!
         </h1>
 
+        {/* 🔄 Text updated to reflect reservation */}
         <p className="text-xs text-gray-700 dark:text-gray-300 text-center mb-6">
-          Thank you for your purchase.
+          Your fireworks have been reserved. Please visit the store to complete
+          payment and pickup.
         </p>
 
         {/* ✅ Order Summary */}
         {orderNumber && (
           <div className="bg-green-50 dark:bg-green-800 p-6 mb-8 text-center">
             <h3 className="font-light text-sm uppercase text-gray-800 dark:text-gray-200 mb-2">
-              Order Summary
+              Reservation Details
             </h3>
             <ul className="text-xs font-mono uppercase text-gray-600 dark:text-gray-400 space-y-1">
               <li>
-                🧾 <span>Order Number:</span>{' '}
+                🧾 <span>Reservation #:</span>{' '}
                 <span
                   className="text-green-600 dark:text-green-400"
                   title={orderNumber || ''}
                 >
-                  #{orderNumber?.slice(-6)}
+                  {orderNumber?.slice(-6)}
                 </span>
               </li>
             </ul>
           </div>
         )}
 
-        {/* ⏳ Countdown Message */}
         <p className="text-xs text-gray-500 dark:text-gray-400 text-center mb-6">
-          Redirecting to your order in <strong>{countdown}</strong> seconds...
+          Redirecting to your reservation in <strong>{countdown}</strong>{' '}
+          seconds...
         </p>
 
-        {/* ✅ Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             asChild
             className="uppercase text-xs font-light bg-green-600 hover:bg-green-700 transition-all duration-200 shadow-md"
           >
-            <Link href="/orders">View Order</Link>
+            <Link href="/orders">View Reservation</Link>
           </Button>
           <Button
             asChild

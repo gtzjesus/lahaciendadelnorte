@@ -1,5 +1,3 @@
-// app/(store)/basket/page.tsx
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -8,25 +6,10 @@ import { useAuth, useUser } from '@clerk/nextjs';
 import useBasketStore from '../../../../store/store';
 import Loader from '@/components/common/Loader';
 import Header from '@/components/common/header';
-import {
-  createCheckoutSession,
-  Metadata,
-} from '../../../../actions/createCheckoutSession';
+import { createReservation } from '../../../../actions/createReservation';
 import EmptyBasket from '@/components/basket/EmptyBasket';
 import OrderSummary from '@/components/basket/OrderSummary';
 import BasketItemCard from '@/components/basket/BasketItemCard';
-
-/**
- * BasketPage Component
- *
- * Displays a list of products added to the user's shopping basket.
- * Allows users to view product details, adjust quantities, remove items,
- * and proceed to checkout (if signed in).
- *
- * Handles client-side rendering due to usage of session storage and stateful hooks.
- *
- * @returns {JSX.Element} The rendered basket page.
- */
 
 export default function BasketPage() {
   const { isSignedIn = false } = useAuth();
@@ -37,7 +20,6 @@ export default function BasketPage() {
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Helper function for better UI order numbers
   function generateOrderNumber(length = 6): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     return Array.from(
@@ -46,56 +28,59 @@ export default function BasketPage() {
     ).join('');
   }
 
-  // Make sure we only render on the client to avoid hydration issues
   useEffect(() => {
     setIsClient(true);
 
     if (
       isSignedIn &&
-      user?.id && // ✅ ensure user is ready
+      user?.id &&
       sessionStorage.getItem('checkoutAfterLogin') === 'true'
     ) {
       sessionStorage.removeItem('checkoutAfterLogin');
-      handleCheckout();
+      handleReservation();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn, user]);
 
-  // Show loader if not yet mounted
   if (!isClient) return <Loader />;
-
-  // Show empty state if cart has no items
   if (groupedItems.length === 0) return <EmptyBasket />;
 
-  // Handle checkout logic
-  const handleCheckout = async () => {
+  const handleReservation = async () => {
     if (!isSignedIn) return;
-
     setIsLoading(true);
+
     try {
-      const metadata: Metadata = {
-        orderNumber: generateOrderNumber(), // ✅ short + styled
-        customerName: user?.fullName ?? 'Unknown',
+      const metadata = {
+        orderNumber: generateOrderNumber(),
+        customerName:
+          user?.fullName?.trim() ||
+          user?.emailAddresses[0]?.emailAddress.split('@')[0] ||
+          'Unknown',
         customerEmail: user?.emailAddresses[0].emailAddress ?? 'Unknown',
         clerkUserId: user!.id,
       };
 
-      const checkoutUrl = await createCheckoutSession(groupedItems, metadata);
-      if (checkoutUrl) window.location.href = checkoutUrl;
+      const result = await createReservation(groupedItems, metadata);
+
+      if (result?.success) {
+        // Redirect immediately and stop execution to prevent state updates
+        window.location.href = `/success?order=${metadata.orderNumber}`;
+        return; // <-- This stops further code in this function (including finally block)
+      }
     } catch (err) {
-      console.error('Checkout failed:', err);
-    } finally {
-      setIsLoading(false);
+      console.error('Reservation failed:', err);
+      setIsLoading(false); // Show error state and allow retry
     }
+
+    // Only run if no redirect happened
+    setIsLoading(false);
   };
 
-  // Remove product from store and session
   const handleRemoveItem = (productId: string) => {
     useBasketStore.getState().removeItem(productId);
     sessionStorage.removeItem(productId);
   };
 
-  // Update quantity
   const handleQuantityChange = (productId: string, quantity: number) => {
     useBasketStore.getState().updateItemQuantity(productId, quantity);
   };
@@ -103,16 +88,13 @@ export default function BasketPage() {
   return (
     <div className="bg-red min-h-screen">
       <Header />
-
-      {/* Page title */}
-      <div className="w-full  bg-flag-red">
+      <div className="w-full bg-flag-red">
         <h1 className="uppercase text-sm font-light text-center p-5 text-white">
           Shopping Bag
         </h1>
       </div>
 
-      <div className="container mx-auto w-full px-2 lg:px-2 grid grid-cols-1  ">
-        {/* Product Items */}
+      <div className="container mx-auto w-full px-2 lg:px-2 grid grid-cols-1">
         <div className="col-span-2 pb-80">
           {groupedItems.map((item) => (
             <BasketItemCard
@@ -124,7 +106,6 @@ export default function BasketPage() {
           ))}
         </div>
 
-        {/* Order Summary */}
         <OrderSummary
           totalItems={groupedItems.reduce(
             (sum, item) => sum + item.quantity,
@@ -133,7 +114,7 @@ export default function BasketPage() {
           totalPrice={totalPrice}
           isSignedIn={isSignedIn}
           isLoading={isLoading}
-          onCheckout={handleCheckout}
+          onCheckout={handleReservation} // 🟢 Reservation handler with fixed loading state
         />
       </div>
     </div>
