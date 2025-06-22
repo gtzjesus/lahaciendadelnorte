@@ -46,17 +46,18 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   return (
     <div className="w-full lg:w-auto lg:sticky h-fit bg-flag-blue p-6 lg:p-12 fixed bottom-0 left-0 lg:left-auto lg:bottom-0 lg:order-last shadow-md">
       <h3 className="uppercase text-xs font-light text-center text-white border-b pb-1">
-        Order Summary
+        Reservation Summary
       </h3>
 
       <div className="pt-1 space-y-1">
         <p className="flex justify-between uppercase text-xs font-light text-white">
-          <span>Total items:</span>
+          <span>Total fireworks:</span>
           <span>{totalItems}</span>
         </p>
         <p className="flex justify-between uppercase text-xs font-light text-white">
           <span>
-            Subtotal <span className="lowercase">(tax at checkout)</span>:
+            Subtotal{' '}
+            <span className="lowercase">(estimated — pay at store)</span>:
           </span>
           <span>${totalPrice.toFixed(0)}</span>
         </p>
@@ -70,7 +71,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           className="mt-3 w-full text-sm uppercase font-light bg-blue-500 text-white py-3 rounded hover:bg-blue-600 disabled:bg-green-600 transition"
           aria-disabled={isLoading}
         >
-          {isLoading ? 'Processing...' : 'Checkout'}
+          {isLoading ? 'Recerving Fireworks...' : 'Reserve Fireworks'}
         </button>
       ) : (
         <div className="flex items-center justify-center mt-3">
@@ -82,7 +83,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 sessionStorage.setItem('checkoutAfterLogin', 'true');
               }}
             >
-              Checkout
+              Reserve Fireworks
             </button>
           </SignInButton>
         </div>
