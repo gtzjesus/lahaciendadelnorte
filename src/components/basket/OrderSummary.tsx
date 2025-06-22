@@ -71,7 +71,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           className="mt-3 w-full text-sm uppercase font-light bg-blue-500 text-white py-3 rounded hover:bg-blue-600 disabled:bg-green-600 transition"
           aria-disabled={isLoading}
         >
-          {isLoading ? 'Recerving Fireworks...' : 'Reserve Fireworks'}
+          {isLoading ? 'Reserving Fireworks...' : 'Reserve Fireworks'}
         </button>
       ) : (
         <div className="flex items-center justify-center mt-3">
