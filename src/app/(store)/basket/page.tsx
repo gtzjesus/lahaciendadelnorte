@@ -19,6 +19,7 @@ export default function BasketPage() {
 
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [reservationError, setReservationError] = useState('');
 
   function generateOrderNumber(length = 6): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -48,6 +49,7 @@ export default function BasketPage() {
   const handleReservation = async () => {
     if (!isSignedIn) return;
     setIsLoading(true);
+    setReservationError('');
 
     try {
       const metadata = {
@@ -63,17 +65,42 @@ export default function BasketPage() {
       const result = await createReservation(groupedItems, metadata);
 
       if (result?.success) {
-        // Redirect immediately and stop execution to prevent state updates
         window.location.href = `/success?order=${metadata.orderNumber}`;
-        return; // <-- This stops further code in this function (including finally block)
+        return;
       }
     } catch (err) {
       console.error('Reservation failed:', err);
-      setIsLoading(false); // Show error state and allow retry
+      setReservationError(
+        'Some items are no longer available. Please review your bag.'
+      );
+      await refreshStockLevels(); // Refetch stock after failure
     }
 
-    // Only run if no redirect happened
     setIsLoading(false);
+  };
+
+  const refreshStockLevels = async () => {
+    try {
+      const productIds = groupedItems.map((item) => item.product._id);
+      const query = productIds.map((id) => `ids=${id}`).join('&');
+
+      const res = await fetch(`/api/stock?${query}`);
+      if (!res.ok) throw new Error('Failed to fetch stock');
+
+      const latestStock: Record<string, number> = await res.json();
+
+      // Convert object to array for store update
+      const latestStockArray = Object.entries(latestStock).map(
+        ([id, stock]) => ({
+          _id: id,
+          stock,
+        })
+      );
+
+      useBasketStore.getState().updateStockLevels(latestStockArray);
+    } catch (err) {
+      console.error('Failed to fetch latest stock:', err);
+    }
   };
 
   const handleRemoveItem = (productId: string) => {
@@ -88,11 +115,18 @@ export default function BasketPage() {
   return (
     <div className="bg-red min-h-screen">
       <Header />
+
       <div className="w-full bg-flag-red">
         <h1 className="uppercase text-sm font-light text-center p-5 text-white">
           Shopping Bag
         </h1>
       </div>
+
+      {reservationError && (
+        <div className="bg-red-100 text-red-700 text-center p-4 text-xs uppercase">
+          {reservationError}
+        </div>
+      )}
 
       <div className="container mx-auto w-full px-2 lg:px-2 grid grid-cols-1">
         <div className="col-span-2 pb-80">
@@ -114,7 +148,7 @@ export default function BasketPage() {
           totalPrice={totalPrice}
           isSignedIn={isSignedIn}
           isLoading={isLoading}
-          onCheckout={handleReservation} // 🟢 Reservation handler with fixed loading state
+          onCheckout={handleReservation}
         />
       </div>
     </div>
