@@ -1,6 +1,6 @@
 'use server';
 
-import { backendClient } from '@/sanity/lib/backendClient'; // <-- Use the write client here
+import { backendClient } from '@/sanity/lib/backendClient';
 import { GroupedBasketItem } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -16,16 +16,16 @@ export async function createReservation(
   metadata: Metadata
 ) {
   try {
-    console.log('createReservation metadata:', metadata);
-
+    const orderId = `order-${uuidv4()}`;
     const nameToUse = metadata.customerName?.trim() || metadata.customerEmail;
 
+    // 1. Create the order document
     const orderDoc = {
-      _id: `order-${uuidv4()}`,
+      _id: orderId,
       _type: 'order',
       orderNumber: metadata.orderNumber,
       clerkUserId: metadata.clerkUserId,
-      customerName: nameToUse, // fallback here
+      customerName: nameToUse,
       email: metadata.customerEmail,
       products: items.map((item) => ({
         _key: uuidv4(),
@@ -43,6 +43,38 @@ export async function createReservation(
     };
 
     await backendClient.create(orderDoc);
+
+    // 2. Try to find the customer by clerkUserId OR email
+    const existingCustomer = await backendClient.fetch(
+      `*[_type == "customer" && (clerkUserId == $clerkUserId || email == $email)][0]`,
+      {
+        clerkUserId: metadata.clerkUserId,
+        email: metadata.customerEmail,
+      }
+    );
+
+    if (existingCustomer) {
+      // 3a. Update existing customer with new order
+      await backendClient
+        .patch(existingCustomer._id)
+        .setIfMissing({ orders: [] })
+        .append('orders', [{ _type: 'reference', _ref: orderId }])
+        .commit();
+    } else {
+      // 3b. Create new customer document
+      const customerDoc = {
+        _type: 'customer',
+        clerkUserId: metadata.clerkUserId,
+        name: nameToUse,
+        email: metadata.customerEmail,
+        stripeCustomerId: 'N/A', // or generate if Stripe is integrated later
+        orders: [{ _type: 'reference', _ref: orderId }],
+        totalSpent: 0,
+        createdAt: new Date().toISOString(),
+      };
+
+      await backendClient.create(customerDoc);
+    }
 
     return { success: true, orderNumber: metadata.orderNumber };
   } catch (err) {

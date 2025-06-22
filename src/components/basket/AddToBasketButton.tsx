@@ -75,7 +75,7 @@ const AddToBasketButton: React.FC<AddToBasketButtonProps> = ({
             ? 'Out of Stock'
             : isAdded
               ? 'Added to basket'
-              : 'Add to bag'}
+              : 'Add to basket'}
         </span>
       </button>
     </div>
