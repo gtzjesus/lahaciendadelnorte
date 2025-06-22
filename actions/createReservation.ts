@@ -19,7 +19,6 @@ export async function createReservation(
     const orderId = `order-${uuidv4()}`;
     const nameToUse = metadata.customerName?.trim() || metadata.customerEmail;
 
-    // 1. Create the order document
     const orderDoc = {
       _id: orderId,
       _type: 'order',
@@ -44,7 +43,7 @@ export async function createReservation(
 
     await backendClient.create(orderDoc);
 
-    // 2. Try to find the customer by clerkUserId OR email
+    // Update customer or create new
     const existingCustomer = await backendClient.fetch(
       `*[_type == "customer" && (clerkUserId == $clerkUserId || email == $email)][0]`,
       {
@@ -54,26 +53,39 @@ export async function createReservation(
     );
 
     if (existingCustomer) {
-      // 3a. Update existing customer with new order
       await backendClient
         .patch(existingCustomer._id)
         .setIfMissing({ orders: [] })
         .append('orders', [{ _type: 'reference', _ref: orderId }])
         .commit();
     } else {
-      // 3b. Create new customer document
-      const customerDoc = {
+      await backendClient.create({
         _type: 'customer',
         clerkUserId: metadata.clerkUserId,
         name: nameToUse,
         email: metadata.customerEmail,
-        stripeCustomerId: 'N/A', // or generate if Stripe is integrated later
+        stripeCustomerId: 'N/A',
         orders: [{ _type: 'reference', _ref: orderId }],
         totalSpent: 0,
         createdAt: new Date().toISOString(),
-      };
+      });
+    }
 
-      await backendClient.create(customerDoc);
+    // 🔻 Step 3: Decrease stock for each product
+    for (const item of items) {
+      const productId = item.product._id;
+      const quantityToReduce = item.quantity;
+
+      const product = await backendClient.fetch(
+        `*[_type == "product" && _id == $id][0]`,
+        { id: productId }
+      );
+
+      if (product?.stock !== undefined) {
+        const newStock = Math.max((product.stock || 0) - quantityToReduce, 0);
+
+        await backendClient.patch(productId).set({ stock: newStock }).commit();
+      }
     }
 
     return { success: true, orderNumber: metadata.orderNumber };
