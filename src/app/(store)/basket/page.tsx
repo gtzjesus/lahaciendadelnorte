@@ -52,53 +52,46 @@ export default function BasketPage() {
     setReservationError('');
 
     try {
+      const res = await fetch(
+        `/api/stock?ids=${groupedItems.map((i) => i.product._id).join(',')}`
+      );
+      const latest: Record<string, number> = await res.json();
+
+      for (const item of groupedItems) {
+        const available = latest[item.product._id] ?? 0;
+        if (available < item.quantity) {
+          setReservationError(
+            `Only ${available} left for ${item.product.name}`
+          );
+          setIsLoading(false);
+          return;
+        }
+      }
+
       const metadata = {
         orderNumber: generateOrderNumber(),
-        customerName:
-          user?.fullName?.trim() ||
-          user?.emailAddresses[0]?.emailAddress.split('@')[0] ||
-          'Unknown',
-        customerEmail: user?.emailAddresses[0].emailAddress ?? 'Unknown',
-        clerkUserId: user!.id,
+        customerName: user?.fullName || 'Unknown',
+        customerEmail:
+          user?.emailAddresses?.[0]?.emailAddress || 'no-reply@example.com',
+        clerkUserId: user?.id ?? '',
       };
 
       const result = await createReservation(groupedItems, metadata);
-
       if (result?.success) {
         window.location.href = `/success?order=${metadata.orderNumber}`;
         return;
       }
     } catch (err) {
       console.error('Reservation failed:', err);
-      setReservationError(
-        'Some items are no longer available. Please review your fireworks basket.'
-      );
-      await refreshStockLevels(); // Refetch stock after failure
+      setReservationError('Reservation failed unexpectedly. Try again.');
     }
 
     setIsLoading(false);
   };
 
-  const refreshStockLevels = async () => {
-    const productIds = groupedItems.map((item) => item.product._id).join(',');
-    try {
-      const res = await fetch(`/api/stock?ids=${productIds}`);
-      const latestStocksRecord: Record<string, number> = await res.json();
-
-      // Convert record to array [{ _id, stock }]
-      const latestStocksArray = Object.entries(latestStocksRecord).map(
-        ([_id, stock]) => ({ _id, stock })
-      );
-
-      useBasketStore.getState().updateStockLevels(latestStocksArray);
-    } catch (err) {
-      console.error('Failed to fetch latest stock:', err);
-    }
-  };
-
   const handleRemoveItem = (productId: string) => {
-    useBasketStore.getState().removeAllOfItem(productId); // 💥 removes entire item
-    sessionStorage.removeItem(productId); // optional cleanup
+    useBasketStore.getState().removeAllOfItem(productId);
+    sessionStorage.removeItem(productId);
   };
 
   const handleQuantityChange = (productId: string, quantity: number) => {

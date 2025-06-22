@@ -24,22 +24,21 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
     item.product.stock ?? null
   );
 
-  // 🔁 Fetch live stock every 5 seconds
   useEffect(() => {
     const fetchStock = async () => {
       try {
         const res = await fetch(`/api/stock?ids=${_id}`);
         const data = await res.json();
-        setLiveStock(data[_id]); // Assuming format: { [productId]: stock }
+        setLiveStock(data[_id]);
       } catch (err) {
         console.error(`❌ Failed to fetch live stock for ${_id}:`, err);
       }
     };
 
-    fetchStock(); // Run immediately
-    const interval = setInterval(fetchStock, 5000); // Poll every 5s
+    fetchStock();
+    const interval = setInterval(fetchStock, 5000);
 
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, [_id]);
 
   const getStockStatus = (stock?: number) =>

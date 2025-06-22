@@ -3,7 +3,7 @@ import { backendClient } from '@/sanity/lib/backendClient';
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const idsParam = url.searchParams.get('ids'); // comma-separated
+  const idsParam = url.searchParams.get('ids');
 
   if (!idsParam) {
     return NextResponse.json({ error: 'Missing product IDs' }, { status: 400 });
@@ -16,7 +16,6 @@ export async function GET(req: Request) {
       { _id: string; stock: number }[]
     >(`*[_type == "product" && _id in $ids]{ _id, stock }`, { ids });
 
-    // Convert to { [id]: stock }
     const stockMap: Record<string, number> = {};
     for (const p of products) {
       stockMap[p._id] = p.stock ?? 0;
