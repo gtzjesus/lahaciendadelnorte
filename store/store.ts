@@ -16,6 +16,8 @@ interface BasketState {
   /** Removes one unit of a product, or removes the item if quantity becomes zero */
   removeItem: (productId: string) => void;
 
+  removeAllOfItem: (productId: string) => void;
+
   /** Sets a product's quantity explicitly (min. 1) */
   updateItemQuantity: (productId: string, quantity: number) => void;
 
@@ -78,6 +80,10 @@ const useBasketStore = create<BasketState>()(
             }
             return acc;
           }, [] as BasketItem[]),
+        })),
+      removeAllOfItem: (productId) =>
+        set((state) => ({
+          items: state.items.filter((item) => item.product._id !== productId),
         })),
 
       updateItemQuantity: (productId, quantity) =>
