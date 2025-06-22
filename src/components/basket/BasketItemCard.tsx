@@ -47,10 +47,10 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
    * Returns a stock status element based on product availability.
    */
   const getStockStatus = (stock?: number) =>
-    stock && stock > 0 ? (
+    typeof stock === 'number' && stock > 0 ? (
       <span className="font-semibold text-green-600">Available</span>
     ) : (
-      <span className="font-semibold text-red-500">Out of stock</span>
+      <span className="font-semibold text-flag-red">Out of stock</span>
     );
 
   return (

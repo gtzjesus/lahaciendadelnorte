@@ -97,8 +97,8 @@ export default function BasketPage() {
   };
 
   const handleRemoveItem = (productId: string) => {
-    useBasketStore.getState().removeItem(productId);
-    sessionStorage.removeItem(productId);
+    useBasketStore.getState().removeAllOfItem(productId); // 💥 removes entire item
+    sessionStorage.removeItem(productId); // optional cleanup
   };
 
   const handleQuantityChange = (productId: string, quantity: number) => {
