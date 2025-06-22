@@ -16,23 +16,24 @@ const HeroSection: FC = () => {
 
     if (fireworksRef.current) {
       const fireworks = new Fireworks(fireworksRef.current, {
-        opacity: 0.8,
-        acceleration: 1.02,
-        friction: 0.97,
-        gravity: 1.2,
-        explosion: 12,
-        particles: 120,
-        traceLength: 6,
-        traceSpeed: 3,
-        flickering: 15,
+        opacity: 0.5, // slightly more transparent
+        acceleration: 1.0, // less acceleration for slower movement
+        friction: 0.98, // more friction to slow things down
+        gravity: 0.9, // slightly lighter gravity
+        explosion: 8, // smaller explosion radius
+        particles: 80, // fewer particles = less intense
+        traceLength: 5,
+        traceSpeed: 2,
+        flickering: 10, // less flickering
         lineStyle: 'round',
-        hue: { min: 20, max: 40 }, // naranja natural
-        brightness: { min: 80, max: 100 }, // naranja claro a casi blanco
-        delay: { min: 50, max: 100 },
+        hue: { min: 20, max: 35 }, // keep it orange
+        brightness: { min: 60, max: 85 }, // reduced brightness
+        delay: { min: 100, max: 150 }, // slower launching
         rocketsPoint: { min: 40, max: 80 },
         autoresize: true,
         sound: { enabled: false },
       });
+
       fireworks.start();
       return () => {
         fireworks.stop();
@@ -60,14 +61,8 @@ const HeroSection: FC = () => {
           Light up <br />
           the sky!
         </h1>
-        <p className="uppercase font-black text-xs lg:text-xl text-white tracking-widest mb-2">
-          4th of July sale on now! <br />
-          use code
-          <strong className="uppercase text-white text-xs sm:text-sm font-semibold tracking-wider m-1 bg-flag-red px-2 py-1 inline-block shadow-md">
-            KABOOM
-          </strong>
-          <br />
-          for 10% at checkout
+        <p className="uppercase font-black text-xs lg:text-xl text-flag-red tracking-widest mb-2">
+          Reserve your fireworks now! <br />
         </p>
       </div>
 
@@ -78,9 +73,9 @@ const HeroSection: FC = () => {
             ? 'bg-flag-blue text-white hover:bg-blue-600'
             : 'bg-white text-gray-800 hover:bg-gray-200'
         }`}
-        aria-label="Start shopping"
+        aria-label="reserve fireworks"
       >
-        Start shopping
+        reserve fireworks
       </Link>
     </>
   );
