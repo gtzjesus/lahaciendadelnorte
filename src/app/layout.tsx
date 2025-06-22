@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import { SanityLive } from '@/sanity/lib/live'; // Optional if you want global live updates
+import ErrorBoundary from '@/components/errors/ErrorBoundary';
 
 export const metadata: Metadata = {
   title: {
@@ -75,7 +76,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-white text-black">
         <ClerkProvider>
-          {children}
+          <ErrorBoundary>{children}</ErrorBoundary>
           <SanityLive />{' '}
           {/* Optional: only if you want global Sanity live updates */}
         </ClerkProvider>
