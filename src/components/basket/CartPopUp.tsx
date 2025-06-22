@@ -55,7 +55,9 @@ const CartPopup: React.FC<CartPopupProps> = ({ onClose }) => {
         {/* Header */}
         <div className="flex items-center justify-between border-b py-2 px-2">
           <p className="uppercase text-xs font-light text-white">
-            {hasItems ? 'Added to reservation bag' : 'Shopping bag is empty'}
+            {hasItems
+              ? 'Added to reservation basket'
+              : 'Reservation basket is empty'}
           </p>
           <button
             className="text-xl hover:text-gray-900 transition"
