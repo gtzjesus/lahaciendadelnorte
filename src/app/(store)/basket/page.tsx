@@ -83,7 +83,11 @@ export default function BasketPage() {
       }
     } catch (err) {
       console.error('Reservation failed:', err);
-      setReservationError('Reservation failed unexpectedly. Try again.');
+      setReservationError(
+        err instanceof Error
+          ? `Reservation failed: ${err.message}`
+          : `Reservation failed: ${JSON.stringify(err)}`
+      );
     }
 
     setIsLoading(false);
