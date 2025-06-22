@@ -9,19 +9,19 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 /**
- * Orders Page (Server Component)
+ * Reservations Page (Server Component)
  *
- * Displays a list of the current user's past orders.
+ * Displays a list of the current user's reserved items.
  * Requires authentication via Clerk — if the user is not signed in,
  * they are redirected to the home page.
  *
- * Each order includes:
- * - Order number and date
+ * Each reservation includes:
+ * - Reservation number and date
  * - Items with quantity and pricing
  * - Linkable product names and images to navigate to individual product pages
- * - Total cost of the order
+ * - Estimated total of the reservation
  *
- * @returns {JSX.Element} Rendered orders page
+ * @returns {JSX.Element} Rendered reservations page
  */
 export default async function Orders() {
   const { userId } = await auth();
@@ -31,7 +31,7 @@ export default async function Orders() {
     return redirect('/');
   }
 
-  // Fetch orders from backend
+  // Fetch reservations from backend
   const orders = await getMyOrders(userId);
 
   return (
@@ -39,20 +39,25 @@ export default async function Orders() {
       <div className="p-4 w-full max-w-3xl">
         <div className="flex justify-between">
           <h1 className="text-xl uppercase font-light text-gray-900 tracking-tight mb-8">
-            orders
+            reservations
           </h1>
           <Link
             href="/search?q=*"
             className="inline-block border-none bg-green-600 p-4 text-xs font-light text-center text-white uppercase mb-4"
             aria-label="Continue shopping"
           >
-            Continue Shopping
+            reserve fireworks
           </Link>
         </div>
 
+        <p className="text-xs italic text-gray-500 mb-4">
+          These reservations are not yet paid. Please complete payment at pickup
+          or contact support.
+        </p>
+
         {orders.length === 0 ? (
           <div className="text-sm text-center uppercase font-light text-gray-900 tracking-tight m-4">
-            <p>you have not placed any orders yet.</p>
+            <p>you have not made any reservations yet.</p>
           </div>
         ) : (
           <div className="space-y-6 sm:space-y-8">
@@ -61,12 +66,12 @@ export default async function Orders() {
                 key={order.orderNumber}
                 className="border border-green-600 p-3 shadow-sm overflow-hidden"
               >
-                {/* Order Header */}
+                {/* Reservation Header */}
                 <div className="p-4 border-b border-green-600">
                   <div className="flex flex-row justify-between">
                     <div>
                       <p className="text-xs uppercase font-light text-gray-600 font-mono">
-                        order number
+                        reservation number
                       </p>
                       <span
                         className="font-mono uppercase font-light text-xs text-green-600 dark:text-green-400"
@@ -77,7 +82,7 @@ export default async function Orders() {
                     </div>
                     <div>
                       <p className="text-xs uppercase font-light font-mono text-gray-600">
-                        order date
+                        reserved on
                       </p>
                       <p className="font-light text-xs mt-1">
                         {order.orderDate
@@ -88,7 +93,7 @@ export default async function Orders() {
                   </div>
                 </div>
 
-                {/* Order Items */}
+                {/* Reserved Items */}
                 <div className="font-mono p-4">
                   <p className="text-xs uppercase font-light text-gray-600">
                     items
@@ -155,11 +160,11 @@ export default async function Orders() {
                   </div>
                 </div>
 
-                {/* Order Total */}
+                {/* Estimated Total */}
                 <div className="border-t border-green-600 font-mono p-4 flex flex-col">
                   <div className="flex justify-between">
                     <p className="uppercase text-xs mb-1 text-gray-600">
-                      total
+                      estimated total
                     </p>
                     <p className="font-bold text-xs">
                       ${order.totalPrice?.toFixed(2)}

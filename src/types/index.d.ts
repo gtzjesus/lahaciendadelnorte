@@ -82,3 +82,9 @@ export interface Metadata {
   customerEmail: string;
   clerkUserId: string;
 }
+
+// 🧺 Grouped Basket Item (shared between reservation + checkout)
+export interface GroupedBasketItem {
+  product: BasketItem['product'];
+  quantity: number;
+}
