@@ -41,9 +41,12 @@ export async function createReservation(
       orderDate: new Date().toISOString(),
     };
 
-    await backendClient.create(orderDoc);
+    const txn = backendClient.transaction();
 
-    // Update customer or create new
+    // 🧾 Add the order document
+    txn.create(orderDoc);
+
+    // 👤 Check if customer exists
     const existingCustomer = await backendClient.fetch(
       `*[_type == "customer" && (clerkUserId == $clerkUserId || email == $email)][0]`,
       {
@@ -53,13 +56,16 @@ export async function createReservation(
     );
 
     if (existingCustomer) {
-      await backendClient
+      // Patch existing customer to add order reference
+      const customerPatch = backendClient
         .patch(existingCustomer._id)
         .setIfMissing({ orders: [] })
-        .append('orders', [{ _type: 'reference', _ref: orderId }])
-        .commit();
+        .append('orders', [{ _type: 'reference', _ref: orderId }]);
+
+      txn.patch(customerPatch);
     } else {
-      await backendClient.create({
+      // Create new customer
+      txn.create({
         _type: 'customer',
         clerkUserId: metadata.clerkUserId,
         name: nameToUse,
@@ -71,26 +77,31 @@ export async function createReservation(
       });
     }
 
-    // 🔻 Step 3: Decrease stock for each product
+    // 📉 Decrement stock for each product
     for (const item of items) {
       const productId = item.product._id;
-      const quantityToReduce = item.quantity;
+      const quantityToDecrement = item.quantity;
 
-      const product = await backendClient.fetch(
-        `*[_type == "product" && _id == $id][0]`,
-        { id: productId }
-      );
-
-      if (product?.stock !== undefined) {
-        const newStock = Math.max((product.stock || 0) - quantityToReduce, 0);
-
-        await backendClient.patch(productId).set({ stock: newStock }).commit();
+      if (!item.product._rev) {
+        throw new Error(`Missing _rev for product ${productId}`);
       }
+
+      const patch = backendClient
+        .patch(productId)
+        .ifRevisionId(item.product._rev)
+        .dec({ stock: quantityToDecrement });
+
+      txn.patch(patch);
     }
+
+    // ✅ Commit the full transaction atomically
+    await txn.commit();
 
     return { success: true, orderNumber: metadata.orderNumber };
   } catch (err) {
-    console.error('Error creating reservation:', err);
-    throw err;
+    console.error('🚨 Reservation failed:', err);
+    throw new Error(
+      'Reservation failed. Item may be out of stock. Please refresh and try again.'
+    );
   }
 }
