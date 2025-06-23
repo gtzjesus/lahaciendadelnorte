@@ -29,7 +29,7 @@ const AuthButtons = ({ user }: AuthButtonsProps) => (
       <>
         <Link
           href="/orders"
-          className="flex items-center space-x-2 opacity-70 text-black font-bold py-2 px-4 rounded lowercase"
+          className="text-sm flex items-center space-x-2 text-white font-bold py-2 px-4 uppercase"
         >
           <span>reservations</span>
         </Link>
