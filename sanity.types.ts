@@ -73,8 +73,8 @@ export type Order = {
   currency?: string;
   amountDiscount?: number;
   orderType?: "reservation";
-  paymentStatus?: "unpaid" | "paid_in_store";
-  pickupStatus?: "not_picked_up" | "picked_up" | "cancelled";
+  paymentStatus?: "unpaid" | "paid_in_store" | "paid_online";
+  pickupStatus?: "not_picked_up" | "ready_for_pickup" | "picked_up" | "cancelled";
   orderDate?: string;
 };
 
@@ -367,8 +367,8 @@ export type MY_ORDERS_QUERYResult = Array<{
   currency?: string;
   amountDiscount?: number;
   orderType?: "reservation";
-  paymentStatus?: "paid_in_store" | "unpaid";
-  pickupStatus?: "cancelled" | "not_picked_up" | "picked_up";
+  paymentStatus?: "paid_in_store" | "paid_online" | "unpaid";
+  pickupStatus?: "cancelled" | "not_picked_up" | "picked_up" | "ready_for_pickup";
   orderDate?: string;
 }>;
 

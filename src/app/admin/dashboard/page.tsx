@@ -3,9 +3,9 @@
 import QuickStatsSection from '@/components/dashboard/QuickStatsSection';
 import RecentOrdersTable from '@/components/dashboard/RecentOrdersTable';
 import RevenueBarChart from '@/components/dashboard/RevenueBarChart';
-import { useDashboardStats } from '@/hooks/dashboard/useDashboardStats';
-import { useRecentOrders } from '@/hooks/dashboard/useRecentOrders';
-import { useRevenueStats } from '@/hooks/dashboard/useRevenueStats';
+import { useDashboardStats } from '@/app/hooks/dashboard/useDashboardStats';
+import { useRecentOrders } from '@/app/hooks/dashboard/useRecentOrders';
+import { useRevenueStats } from '@/app/hooks/dashboard/useRevenueStats';
 import RevenueIntervalToggle from '@/components/dashboard/RevenueIntervalToggle';
 import OrderNotifications from '@/components/orders/OrderNotifications';
 import { useState } from 'react';

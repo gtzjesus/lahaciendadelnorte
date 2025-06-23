@@ -1,6 +1,6 @@
 // components/RecentOrdersTable.tsx
 import React from 'react';
-import { RecentOrder } from '@/hooks/dashboard/useRecentOrders';
+import { RecentOrder } from '@/app/hooks/dashboard/useRecentOrders';
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 type RecentOrdersTableProps = {
   recentOrders: RecentOrder[];

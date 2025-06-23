@@ -44,6 +44,7 @@ export const orderType = defineType({
               title: 'Product',
               type: 'reference',
               to: [{ type: 'product' }],
+              validation: (Rule) => Rule.required(),
             }),
             defineField({
               name: 'quantity',
@@ -59,11 +60,11 @@ export const orderType = defineType({
               image: 'product.image',
               price: 'product.price',
             },
-            prepare(select) {
+            prepare({ product, quantity, image, price }) {
               return {
-                title: `${select.product} x ${select.quantity}`,
-                subtitle: `$${(select.price || 0) * select.quantity}`,
-                media: select.image,
+                title: `${product} x ${quantity}`,
+                subtitle: `$${(price || 0) * quantity}`,
+                media: image,
               };
             },
           },
@@ -94,7 +95,10 @@ export const orderType = defineType({
       title: 'Order Type',
       type: 'string',
       options: {
-        list: [{ title: 'Reservation (Pay at Store)', value: 'reservation' }],
+        list: [
+          { title: 'Reservation (Pay at Store)', value: 'reservation' },
+          // add other types if needed
+        ],
       },
       initialValue: 'reservation',
       validation: (Rule) => Rule.required(),
@@ -107,6 +111,7 @@ export const orderType = defineType({
         list: [
           { title: 'Unpaid', value: 'unpaid' },
           { title: 'Paid In Store', value: 'paid_in_store' },
+          { title: 'Paid Online', value: 'paid_online' }, // optional extra status
         ],
       },
       initialValue: 'unpaid',
@@ -119,6 +124,7 @@ export const orderType = defineType({
       options: {
         list: [
           { title: 'Not Picked Up', value: 'not_picked_up' },
+          { title: 'Ready for Pickup', value: 'ready_for_pickup' }, // added
           { title: 'Picked Up', value: 'picked_up' },
           { title: 'Cancelled', value: 'cancelled' },
         ],
@@ -141,14 +147,24 @@ export const orderType = defineType({
       orderId: 'orderNumber',
       email: 'email',
       pickupStatus: 'pickupStatus',
+      paymentStatus: 'paymentStatus',
     },
-    prepare(select) {
-      const orderIdSnippet = select.orderId
-        ? select.orderId.toUpperCase().slice(0, 6)
+    prepare(selection) {
+      const {
+        name,
+        amount,
+        currency,
+        orderId,
+        email,
+        pickupStatus,
+        paymentStatus,
+      } = selection;
+      const orderIdSnippet = orderId
+        ? orderId.toUpperCase().slice(0, 6)
         : 'Unknown';
       return {
-        title: `${select.name} (${orderIdSnippet})`,
-        subtitle: `${select.amount} ${select.currency}, ${select.email} — ${select.pickupStatus}`,
+        title: `${name} (${orderIdSnippet})`,
+        subtitle: `${amount} ${currency} | ${email} | ${paymentStatus} | ${pickupStatus}`,
         media: BasketIcon,
       };
     },
