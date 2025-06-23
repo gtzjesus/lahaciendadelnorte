@@ -59,8 +59,8 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
             <Image
               src={imageUrl(image).url()}
               alt={name ?? 'Product Image'}
-              width={200}
-              height={200}
+              width={150}
+              height={150}
               className="object-contain transition-transform duration-300 hover:scale-105"
               priority
             />
