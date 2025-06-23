@@ -16,7 +16,7 @@ const ReservationDetails: React.FC<ReservationDetailsProps> = ({
       </h3>
       <ul className="text-xs font-mono uppercase text-gray-600 dark:text-gray-400 space-y-1">
         <li>
-          🧾 <span>Reservation #:</span>{' '}
+          <span>Reservation #:</span>{' '}
           <span
             className="text-green-600 dark:text-green-400"
             title={orderNumber}
@@ -27,7 +27,7 @@ const ReservationDetails: React.FC<ReservationDetailsProps> = ({
 
         {email && (
           <li>
-            📧 <span>Email:</span>{' '}
+            <span>Email:</span>{' '}
             <span className="text-green-600 dark:text-green-400">{email}</span>
           </li>
         )}
