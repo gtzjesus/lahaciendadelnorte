@@ -26,7 +26,7 @@ function SuccessPage() {
   }, [countdown, router, orderNumber]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-flag-red dark:bg-black px-4">
+    <div className="pt-10 flex-col items-center justify-center min-h-screen bg-flag-red dark:bg-black px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -60,7 +60,8 @@ function SuccessPage() {
         {/* Instructions */}
         <p className="text-xs text-gray-700 dark:text-gray-300 text-center mb-6">
           Your fireworks have been reserved. <br />
-          Please visit the store to complete payment and pickup.
+          Please visit the store to
+          <br /> complete payment and pickup.
         </p>
 
         {/* Reservation Details */}
