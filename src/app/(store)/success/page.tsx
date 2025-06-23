@@ -26,7 +26,7 @@ function SuccessPage() {
   }, [countdown, router, orderNumber]);
 
   return (
-    <div className="pt-10 flex-col items-center justify-center min-h-screen bg-flag-red dark:bg-black px-4">
+    <div className="flex items-center justify-center min-h-screen bg-flag-red dark:bg-black px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
