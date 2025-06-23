@@ -3,31 +3,25 @@
 import { useEffect, useState } from 'react';
 import { useAuth, useUser } from '@clerk/nextjs';
 
-import useBasketStore from '../../../../store/store';
 import Loader from '@/components/common/Loader';
 import Header from '@/components/common/header';
-import { createReservation } from '../../../../actions/createReservation';
 import EmptyBasket from '@/components/basket/EmptyBasket';
 import OrderSummary from '@/components/basket/OrderSummary';
-import BasketItemCard from '@/components/basket/BasketItemCard';
+
+import useBasketStore from '../../../../store/store';
+import { useReservation } from '@/app/hooks/reservation/useReservation';
+import BasketItemsList from '@/components/basket/BasketItemsList';
 
 export default function BasketPage() {
   const { isSignedIn = false } = useAuth();
   const { user } = useUser();
+
   const groupedItems = useBasketStore((state) => state.getGroupedItems());
   const totalPrice = useBasketStore((state) => state.getTotalPrice());
 
   const [isClient, setIsClient] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [reservationError, setReservationError] = useState('');
 
-  function generateOrderNumber(length = 6): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    return Array.from(
-      { length },
-      () => chars[Math.floor(Math.random() * chars.length)]
-    ).join('');
-  }
+  const { isLoading, reservationError, handleReservation } = useReservation();
 
   useEffect(() => {
     setIsClient(true);
@@ -45,53 +39,6 @@ export default function BasketPage() {
 
   if (!isClient) return <Loader />;
   if (groupedItems.length === 0) return <EmptyBasket />;
-
-  const handleReservation = async () => {
-    if (!isSignedIn) return;
-    setIsLoading(true);
-    setReservationError('');
-
-    try {
-      const res = await fetch(
-        `/api/stock?ids=${groupedItems.map((i) => i.product._id).join(',')}`
-      );
-      const latest: Record<string, number> = await res.json();
-
-      for (const item of groupedItems) {
-        const available = latest[item.product._id] ?? 0;
-        if (available < item.quantity) {
-          setReservationError(
-            `Only ${available} left for ${item.product.name}`
-          );
-          setIsLoading(false);
-          return;
-        }
-      }
-
-      const metadata = {
-        orderNumber: generateOrderNumber(),
-        customerName: user?.fullName || 'Unknown',
-        customerEmail:
-          user?.emailAddresses?.[0]?.emailAddress || 'no-reply@example.com',
-        clerkUserId: user?.id ?? '',
-      };
-
-      const result = await createReservation(groupedItems, metadata);
-      if (result?.success) {
-        window.location.href = `/success?order=${metadata.orderNumber}`;
-        return;
-      }
-    } catch (err) {
-      console.error('Reservation failed:', err);
-      setReservationError(
-        err instanceof Error
-          ? `Reservation failed: ${err.message}`
-          : `Reservation failed: ${JSON.stringify(err)}`
-      );
-    }
-
-    setIsLoading(false);
-  };
 
   const handleRemoveItem = (productId: string) => {
     useBasketStore.getState().removeAllOfItem(productId);
@@ -120,14 +67,10 @@ export default function BasketPage() {
 
       <div className="container mx-auto w-full px-2 lg:px-2 grid grid-cols-1">
         <div className="col-span-2 pb-80">
-          {groupedItems.map((item) => (
-            <BasketItemCard
-              key={item.product._id}
-              item={item}
-              onQuantityChange={handleQuantityChange}
-              onRemove={handleRemoveItem}
-            />
-          ))}
+          <BasketItemsList
+            onQuantityChange={handleQuantityChange}
+            onRemove={handleRemoveItem}
+          />
         </div>
 
         <OrderSummary

@@ -377,6 +377,10 @@
             {
               "type": "string",
               "value": "paid_in_store"
+            },
+            {
+              "type": "string",
+              "value": "paid_online"
             }
           ]
         },
@@ -390,6 +394,10 @@
             {
               "type": "string",
               "value": "not_picked_up"
+            },
+            {
+              "type": "string",
+              "value": "ready_for_pickup"
             },
             {
               "type": "string",

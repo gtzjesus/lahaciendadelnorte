@@ -9,6 +9,7 @@ export type Metadata = {
   customerName: string;
   customerEmail: string;
   clerkUserId: string;
+  status?: string; // add this line
 };
 
 type ProductRevision = {
@@ -65,7 +66,12 @@ export async function createReservation(
       ),
       currency: 'usd',
       amountDiscount: 0,
-      status: 'reserved',
+
+      // ✅ explicitly set statuses
+      orderType: 'reservation',
+      paymentStatus: 'unpaid',
+      pickupStatus: 'not_picked_up',
+
       orderDate: new Date().toISOString(),
     };
 

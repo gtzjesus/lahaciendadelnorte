@@ -1,46 +1,23 @@
 // store/store.ts
 
-import { Product, BasketItem } from '@/types'; // ✅ Centralized types
+import { Product, BasketItem } from '@/types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-/**
- * Zustand store state and actions for managing the shopping basket.
- */
 interface BasketState {
   items: BasketItem[];
 
-  /** Adds a product to the basket, or increments quantity if it already exists */
   addItem: (product: Product) => void;
-
-  /** Removes one unit of a product, or removes the item if quantity becomes zero */
   removeItem: (productId: string) => void;
-
   removeAllOfItem: (productId: string) => void;
-
-  /** Sets a product's quantity explicitly (min. 1) */
   updateItemQuantity: (productId: string, quantity: number) => void;
-
-  /** Empties the entire basket */
   clearBasket: () => void;
-
-  /** Calculates the total cost of all items */
   getTotalPrice: () => number;
-
-  /** Returns quantity of a specific item by productId */
   getItemCount: (productId: string) => number;
-
-  /** Returns all items in the basket */
   getGroupedItems: () => BasketItem[];
-
-  /** Updates stock levels for products in basket and clamps quantity if needed */
   updateStockLevels: (latestStocks: { _id: string; stock: number }[]) => void;
 }
 
-/**
- * Zustand store hook for the shopping basket.
- * Includes localStorage persistence via Zustand middleware.
- */
 const useBasketStore = create<BasketState>()(
   persist(
     (set, get) => ({
@@ -74,13 +51,14 @@ const useBasketStore = create<BasketState>()(
               if (item.quantity > 1) {
                 acc.push({ ...item, quantity: item.quantity - 1 });
               }
-              // If quantity is 1, removing it completely (skip pushing)
+              // skip if quantity is 1
             } else {
               acc.push(item);
             }
             return acc;
           }, [] as BasketItem[]),
         })),
+
       removeAllOfItem: (productId) =>
         set((state) => ({
           items: state.items.filter((item) => item.product._id !== productId),
@@ -96,9 +74,7 @@ const useBasketStore = create<BasketState>()(
         })),
 
       clearBasket: () => {
-        set({ items: [] }); // Clear the basket state
-
-        // Manually clear localStorage to ensure the persisted store data is removed
+        set({ items: [] });
         localStorage.removeItem('basket-store');
       },
 
@@ -115,13 +91,6 @@ const useBasketStore = create<BasketState>()(
 
       getGroupedItems: () => get().items,
 
-      /**
-       * Updates the stock levels for products in the basket.
-       * If the new stock is lower than the current quantity,
-       * clamps the quantity to the available stock.
-       *
-       * @param latestStocks Array of objects with product _id and updated stock number
-       */
       updateStockLevels: (latestStocks) =>
         set((state) => ({
           items: state.items.map((item) => {
@@ -145,7 +114,7 @@ const useBasketStore = create<BasketState>()(
         })),
     }),
     {
-      name: 'basket-store', // 🧠 Key used in localStorage
+      name: 'basket-store',
     }
   )
 );
