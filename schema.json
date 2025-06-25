@@ -707,46 +707,6 @@
           "type": "number"
         },
         "optional": true
-      },
-      "deal": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "object",
-          "attributes": {
-            "type": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "union",
-                "of": [
-                  {
-                    "type": "string",
-                    "value": "bogo"
-                  },
-                  {
-                    "type": "string",
-                    "value": "twoForX"
-                  }
-                ]
-              },
-              "optional": true
-            },
-            "quantityRequired": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "number"
-              },
-              "optional": true
-            },
-            "dealPrice": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "number"
-              },
-              "optional": true
-            }
-          }
-        },
-        "optional": true
       }
     }
   },
