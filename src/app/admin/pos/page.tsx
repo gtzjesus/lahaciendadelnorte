@@ -179,7 +179,7 @@ export default function POSPage() {
           fw?.stop();
           setShowCelebration(false);
           router.push('/admin/orders');
-        }, 5000);
+        }, 10000);
       }
       /* eslint-disable  @typescript-eslint/no-explicit-any */
     } catch (err: any) {
@@ -205,11 +205,8 @@ export default function POSPage() {
       {showCelebration && (
         <div className="fixed inset-0 z-[210] flex flex-col items-center justify-center bg-flag-blue bg-opacity-90 text-white p-6 text-center">
           <h1 className="text-5xl font-extrabold mb-4 animate-bounce">
-            🎉 Sale Success!
+            Sale Success!
           </h1>
-          <p className="mb-4 text-lg">
-            Great job! Grab the items and celebrate!
-          </p>
           <button
             onClick={() => {
               setShowCelebration(false);
