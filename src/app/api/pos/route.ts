@@ -1,5 +1,3 @@
-// ✅ File: src/app/api/pos/route.ts
-
 import { NextResponse } from 'next/server';
 import { backendClient } from '@/sanity/lib/backendClient'; // ✅ has token
 
@@ -53,7 +51,6 @@ export async function POST(req: Request) {
     const tax = subtotal * 0.0825;
     const totalPrice = subtotal + tax;
 
-    // Use custom 6-letter code for order number
     const orderNumber = generateOrderCode();
 
     const clerkUserId = 'clerk-placeholder'; // Replace with real user if needed
@@ -68,6 +65,41 @@ export async function POST(req: Request) {
       },
       quantity: item.quantity,
     }));
+
+    // Update stock for each product
+    for (const item of items) {
+      // Fetch current stock to ensure no negative stock
+      const product = await backendClient.fetch(
+        `*[_type == "product" && _id == $id][0]{stock}`,
+        { id: item.productId }
+      );
+
+      if (!product) {
+        return NextResponse.json(
+          { success: false, message: `Product not found: ${item.productId}` },
+          { status: 404 }
+        );
+      }
+
+      const currentStock = product.stock ?? 0;
+      const newStock = currentStock - item.quantity;
+
+      if (newStock < 0) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: `Insufficient stock for product ${item.productId}`,
+          },
+          { status: 400 }
+        );
+      }
+
+      // Patch stock
+      await backendClient
+        .patch(item.productId)
+        .set({ stock: newStock })
+        .commit();
+    }
 
     const orderDoc = {
       _type: 'order',
