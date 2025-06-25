@@ -129,60 +129,61 @@ export default function POSPage() {
   const total = subtotal + tax;
 
   return (
-    <div className="relative p-6 min-h-screen bg-white">
+    <div className="relative min-h-screen bg-white">
       <div
         ref={fireworksContainer}
         className="fixed inset-0 z-50 pointer-events-none"
       ></div>
+      <div className="p-3">
+        <h1 className="text-2xl uppercase font-bold mb-4">point of sale</h1>
 
-      <h1 className="text-2xl uppercase font-bold mb-4">point of sale</h1>
+        <button
+          onClick={startScanner}
+          className="p-4 block uppercase text-xs z-[10] font-light text-center bg-flag-blue text-white"
+        >
+          start scanning
+        </button>
 
-      <button
-        onClick={startScanner}
-        className="p-4 block uppercase text-xs z-[10] font-light text-center bg-flag-blue text-white"
-      >
-        start scanning
-      </button>
+        <div id="reader" className="w-full max-w-md mx-auto mt-4"></div>
 
-      <div id="reader" className="w-full max-w-md mx-auto mt-4"></div>
-
-      <div className="mt-6 space-y-4">
-        {cart.map((item, i) => (
-          <div
-            key={i}
-            className="flex items-center justify-between border-b pb-2"
-          >
-            <div>
-              <div className="font-medium">{item.name}</div>
-              <div className="text-sm text-gray-600">
-                ${item.price.toFixed(2)} x
-                <select
-                  className="ml-2 border rounded px-1 py-0.5"
-                  value={item.quantity}
-                  onChange={(e) => updateQuantity(i, Number(e.target.value))}
+        <div className="mt-6 space-y-4">
+          {cart.map((item, i) => (
+            <div
+              key={i}
+              className="flex items-center justify-between border-b pb-2"
+            >
+              <div>
+                <div className="font-medium">{item.name}</div>
+                <div className="text-sm text-gray-600">
+                  ${item.price.toFixed(2)} x
+                  <select
+                    className="ml-2 border rounded px-1 py-0.5"
+                    value={item.quantity}
+                    onChange={(e) => updateQuantity(i, Number(e.target.value))}
+                  >
+                    {[...Array(10)].map((_, n) => (
+                      <option key={n + 1} value={n + 1}>
+                        {n + 1}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="font-semibold">
+                  ${(item.price * (item.quantity || 1)).toFixed(2)}
+                </div>
+                <button
+                  onClick={() => removeItem(i)}
+                  className="text-red-600 text-lg font-bold"
+                  aria-label="Remove item"
                 >
-                  {[...Array(10)].map((_, n) => (
-                    <option key={n + 1} value={n + 1}>
-                      {n + 1}
-                    </option>
-                  ))}
-                </select>
+                  ❌
+                </button>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="font-semibold">
-                ${(item.price * (item.quantity || 1)).toFixed(2)}
-              </div>
-              <button
-                onClick={() => removeItem(i)}
-                className="text-red-600 text-lg font-bold"
-                aria-label="Remove item"
-              >
-                ❌
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <div className="w-full lg:w-auto h-fit bg-flag-blue p-6 lg:p-12 bottom-0 left-0 lg:left-auto lg:bottom-0 lg:order-last shadow-md">
