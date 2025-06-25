@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { client } from '@/sanity/lib/client';
+import confetti from 'canvas-confetti';
 
 type Product = {
   _id: string;
@@ -21,7 +22,6 @@ export default function POSPage() {
     setCart((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Load products from Sanity
   useEffect(() => {
     client
       .fetch<Product[]>(`*[_type == "product"]{_id, name, slug, price}`)
@@ -51,6 +51,13 @@ export default function POSPage() {
         setCart((prevCart) => {
           const exists = prevCart.find((item) => item._id === matched._id);
           if (exists) return prevCart; // already in cart, skip
+
+          // Fire confetti for success!
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+          });
 
           return [...prevCart, { ...matched, quantity: 1 }];
         });
@@ -82,7 +89,7 @@ export default function POSPage() {
 
       <button
         onClick={startScanner}
-        className="p-4 block uppercase text-xs z-[10] font-light text-center  bg-flag-blue text-white "
+        className="p-4 block uppercase text-xs z-[10] font-light text-center bg-flag-blue text-white "
       >
         start scanning
       </button>
