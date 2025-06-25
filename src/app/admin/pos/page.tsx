@@ -22,6 +22,12 @@ export default function POSPage() {
   const fireworksContainer = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
 
+  // Toast state
+  const [toast, setToast] = useState<{ visible: boolean; message: string }>({
+    visible: false,
+    message: '',
+  });
+
   // Fetch products once on mount
   useEffect(() => {
     client
@@ -64,6 +70,14 @@ export default function POSPage() {
         fireworksContainer.current.style.opacity = '0';
       }
     }, 2500);
+  };
+
+  // Show toast with message, auto hide after 3 seconds
+  const showToast = (message: string) => {
+    setToast({ visible: true, message });
+    setTimeout(() => {
+      setToast({ visible: false, message: '' });
+    }, 3000);
   };
 
   // Start the QR scanner
@@ -166,7 +180,8 @@ export default function POSPage() {
       const data = await res.json();
       if (data.success) {
         clearCart();
-        alert(`✅ Sale complete! Order ID: ${data.orderId}`);
+        showToast(`✅ Sale complete! Order ID: ${data.orderId}`);
+        launchFireworks();
       } else {
         alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
       }
@@ -183,7 +198,20 @@ export default function POSPage() {
       <div
         ref={fireworksContainer}
         className="fixed inset-0 z-50 pointer-events-none"
+        style={{ opacity: 0, transition: 'opacity 0.5s ease' }}
       ></div>
+
+      {/* Toast popup */}
+      {toast.visible && (
+        <div
+          className="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded shadow-lg text-center font-semibold select-none animate-fade-in"
+          style={{
+            animation: 'fadeIn 0.3s ease forwards',
+          }}
+        >
+          {toast.message}
+        </div>
+      )}
 
       <div className="p-3">
         <h1 className="text-2xl uppercase font-bold mb-4">point of sale</h1>
@@ -273,6 +301,13 @@ export default function POSPage() {
           Clear Sale
         </button>
       </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from {opacity: 0; transform: translateY(-10px);}
+          to {opacity: 1; transform: translateY(0);}
+        }
+      `}</style>
     </div>
   );
 }
