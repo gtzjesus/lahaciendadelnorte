@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       _type: 'order',
       orderNumber: `POS-${orderId}`,
       orderDate: new Date().toISOString(),
-      clerkUserId: 'demo-user', // Replace with actual user if available
+      clerkUserId: 'demo-user', // adjust accordingly
       customerName: 'Walk-In',
       email: 'noemail@store.com',
       totalPrice,
@@ -71,6 +71,7 @@ export async function POST(req: Request) {
       pickupStatus: 'picked_up',
       products: items.map((item) => ({
         _key: item.productId,
+        _type: 'object', // MUST be here
         product: {
           _type: 'reference',
           _ref: item.productId,
