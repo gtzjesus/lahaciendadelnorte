@@ -182,7 +182,7 @@ export default function POSPage() {
         celebrationTimeout.current = setTimeout(() => {
           setShowCelebration(false);
           fireworksInstance?.stop();
-        }, 2500000);
+        }, 5000);
       } else {
         alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
       }
@@ -204,8 +204,9 @@ export default function POSPage() {
   // Navigate to order detail page
   const handleViewOrder = () => {
     if (!orderId) return;
+
     setShowCelebration(false);
-    router.push(`/order/${orderId}`);
+    router.push(`/admin/orders`);
   };
 
   return (
@@ -231,7 +232,7 @@ export default function POSPage() {
             onClick={handleViewOrder}
             className="inline-block border-none bg-white  p-4 text-xs font-light text-center text-flag-blue uppercase"
           >
-            View Order
+            View Orders
           </button>
         </div>
       )}
