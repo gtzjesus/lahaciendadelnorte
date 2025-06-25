@@ -6,7 +6,15 @@ export const productType = defineType({
   title: 'Products',
   type: 'document',
   icon: TrolleyIcon,
+
   fields: [
+    defineField({
+      name: 'itemNumber',
+      title: 'Item Number',
+      type: 'string',
+      description: 'Unique inventory ID, e.g., 1',
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: 'name',
       title: 'Name',
@@ -92,10 +100,11 @@ export const productType = defineType({
       title: 'name',
       media: 'image',
       price: 'price',
+      itemNumber: 'itemNumber',
     },
     prepare(select) {
       return {
-        title: select.title,
+        title: `${select.title} (${select.itemNumber})`,
         subtitle: `$${select.price}`,
         media: select.media,
       };

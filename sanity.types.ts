@@ -84,6 +84,7 @@ export type Product = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  itemNumber?: string;
   name?: string;
   slug?: Slug;
   image?: {
@@ -320,6 +321,7 @@ export type MY_ORDERS_QUERYResult = Array<{
       _createdAt: string;
       _updatedAt: string;
       _rev: string;
+      itemNumber?: string;
       name?: string;
       slug?: Slug;
       image?: {
@@ -407,6 +409,7 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  itemNumber?: string;
   name?: string;
   slug?: Slug;
   image?: {
@@ -457,6 +460,7 @@ export type PRODUCT_BY_ID_QUERYResult = Array<{
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  itemNumber?: string;
   name?: string;
   slug?: Slug;
   image?: {
@@ -507,6 +511,7 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  itemNumber?: string;
   name?: string;
   slug?: Slug;
   image?: {
