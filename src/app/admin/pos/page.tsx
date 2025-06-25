@@ -19,11 +19,11 @@ export default function POSPage() {
     client
       .fetch<Product[]>(
         `*[_type == "product"]{
-      _id,
-      name,
-      slug,
-      price
-    }`
+          _id,
+          name,
+          slug,
+          price
+        }`
       )
       .then((data) => setProducts(data));
   }, []);
@@ -46,7 +46,6 @@ export default function POSPage() {
         }
       },
       (err) => {
-        // Optional: Handle errors
         console.log('error', err);
       }
     );
