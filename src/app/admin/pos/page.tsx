@@ -10,12 +10,10 @@ type Product = {
   name: string;
   slug: { current: string };
   price: number;
-  quantity?: number; // actual stock from backend
+  stock?: number; // <-- from Sanity
 };
 
-type CartItem = Product & {
-  cartQty: number; // quantity selected by user
-};
+type CartItem = Product & { cartQty: number };
 
 export default function POSPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -25,16 +23,13 @@ export default function POSPage() {
 
   useEffect(() => {
     client
-      .fetch<
-        Product[]
-      >(`*[_type == "product"]{_id, name, slug, price, quantity}`)
+      .fetch<Product[]>(`*[_type == "product"]{_id, name, slug, price, stock}`)
       .then(setProducts)
       .catch(console.error);
   }, []);
 
   const launchFireworks = () => {
     if (!fireworksContainer.current) return;
-
     fireworksContainer.current.innerHTML = '';
     fireworksContainer.current.style.opacity = '1';
 
@@ -121,7 +116,7 @@ export default function POSPage() {
   const clearCart = () => setCart([]);
 
   const subtotal = cart.reduce(
-    (sum, item) => sum + item.price * (item.cartQty || 1),
+    (sum, item) => sum + item.price * item.cartQty,
     0
   );
   const tax = subtotal * 0.0825;
@@ -148,7 +143,7 @@ export default function POSPage() {
         <div className="mt-6 space-y-4">
           {cart.map((item, i) => (
             <div
-              key={i}
+              key={item._id}
               className="flex items-center justify-between border-b pb-2"
             >
               <div className="uppercase text-sm">
@@ -160,14 +155,14 @@ export default function POSPage() {
                     value={item.cartQty}
                     onChange={(e) => updateQuantity(i, Number(e.target.value))}
                   >
-                    {[...Array(item.quantity || 10)].map((_, n) => (
+                    {[...Array(item.stock || 1)].map((_, n) => (
                       <option key={n + 1} value={n + 1}>
                         {n + 1}
                       </option>
                     ))}
                   </select>
-                  <span className="ml-2 text-xs italic">
-                    ({item.quantity ?? 'N/A'} in stock)
+                  <span className="ml-2 text-xs italic text-gray-500">
+                    ({item.stock ?? 'N/A'} in stock)
                   </span>
                 </div>
               </div>
@@ -193,7 +188,7 @@ export default function POSPage() {
           sale Summary
         </h3>
 
-        <div className=" space-y-1 mt-2 mb-2">
+        <div className="space-y-1 mt-2 mb-2">
           <p className="flex justify-between uppercase text-xs font-light text-white">
             <span>Subtotal: ${subtotal.toFixed(2)}</span>
           </p>
