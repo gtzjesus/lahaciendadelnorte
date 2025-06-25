@@ -11,9 +11,7 @@ import { Toaster } from 'sonner';
 
 const navItems = [
   { name: 'Dashboard', href: '/admin/dashboard' },
-  { name: 'Orders', href: '/admin/orders' },
-  { name: 'Products', href: '/admin/products' },
-  { name: 'Settings', href: '/admin/settings' },
+  { name: 'Pos', href: '/admin/pos' },
 ];
 
 export default function AdminLayout({
@@ -48,7 +46,7 @@ export default function AdminLayout({
                   key={href}
                   href={href}
                   className={clsx(
-                    'block px-3 py-2  hover:bg-black-100',
+                    'block px-3 py-2 uppercase text-md  hover:bg-black-100',
                     pathname === href && 'bg-gray-900'
                   )}
                   onClick={() => setSidebarOpen(false)}
@@ -70,7 +68,7 @@ export default function AdminLayout({
           {/* Main content area */}
           <div className="flex-1 flex flex-col">
             {/* Mobile header */}
-            <header className="md:hidden sticky top-0 z-20 flex justify-between items-center bg-flag-red text-white p-4 shadow-sm">
+            <header className="md:hidden sticky top-0 z-[99999] flex justify-between items-center bg-flag-red text-white p-4 shadow-sm">
               <Link
                 href="/admin/dashboard"
                 className="uppercase font-light text-md hover:underline"
@@ -104,12 +102,13 @@ export default function AdminLayout({
               richColors
               closeButton
               duration={Infinity}
-              offset={64} // this sets starting point below the sticky header
+              offset={64}
               toastOptions={{
-                className: 'mb-4 shadow-lg rounded-lg', // spacing between stacked toasts
+                className: 'mb-4 shadow-lg rounded-lg',
               }}
             />
-            <main className="flex-1  px-4 ">{children}</main>
+
+            <main className="flex-1 ">{children}</main>
           </div>
         </div>
       </AdminGuard>

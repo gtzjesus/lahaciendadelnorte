@@ -28,7 +28,7 @@ export default function NewOrderToast({
 
   return (
     <div
-      className="bg-green-700 text-white p-4 rounded shadow-lg mb-2 w-72 cursor-pointer transition-all"
+      className="mt-12 bg-green text-white p-4 rounded shadow-lg mb-2 w-72 cursor-pointer transition-all"
       onClick={toggleExpand}
     >
       <div className="text-sm font-light uppercase">
