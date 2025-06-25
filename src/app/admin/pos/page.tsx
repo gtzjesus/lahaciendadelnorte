@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { client } from '@/sanity/lib/client';
-import confetti from 'canvas-confetti';
+import { Fireworks } from 'fireworks-js';
 
 type Product = {
   _id: string;
@@ -17,6 +17,7 @@ export default function POSPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<Product[]>([]);
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
+  const fireworksContainer = useRef<HTMLDivElement>(null);
 
   const removeItem = (index: number) => {
     setCart((prev) => prev.filter((_, i) => i !== index));
@@ -28,6 +29,45 @@ export default function POSPage() {
       .then(setProducts)
       .catch(console.error);
   }, []);
+
+  const launchFireworks = () => {
+    if (!fireworksContainer.current) return;
+    if (fireworksContainer.current) {
+      fireworksContainer.current.style.opacity = '1';
+    }
+
+    const fireworks = new Fireworks(fireworksContainer.current, {
+      opacity: 0.8, // Slightly more visible
+      acceleration: 1.2, // Faster vertical speed
+      friction: 0.95, // Less drag = faster trails
+      gravity: 1.5, // Pulls particles down faster
+      explosion: 6, // Smaller burst radius
+      particles: 60, // Balanced particle count
+      traceLength: 3,
+      traceSpeed: 5, // Fast tail motion
+      flickering: 15,
+      lineStyle: 'round',
+      hue: { min: 30, max: 60 }, // Orange-yellow tones
+      brightness: { min: 65, max: 90 },
+      delay: { min: 20, max: 40 }, // Rapid launches
+      rocketsPoint: { min: 30, max: 70 }, // Wide launch zoen
+      autoresize: true,
+      sound: { enabled: false },
+    });
+
+    fireworks.start();
+
+    setTimeout(() => {
+      fireworks.stop();
+    }, 2500); // lasts about 2.5 seconds
+
+    setTimeout(() => {
+      if (fireworksContainer.current) {
+        fireworksContainer.current.style.transition = 'opacity 0.5s ease';
+        fireworksContainer.current.style.opacity = '0';
+      }
+    }, 2000);
+  };
 
   const startScanner = () => {
     if (scanner) return;
@@ -50,15 +90,9 @@ export default function POSPage() {
 
         setCart((prevCart) => {
           const exists = prevCart.find((item) => item._id === matched._id);
-          if (exists) return prevCart; // already in cart, skip
+          if (exists) return prevCart;
 
-          // Fire confetti for success!
-          confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 },
-          });
-
+          launchFireworks(); // 🎆 Launch on success
           return [...prevCart, { ...matched, quantity: 1 }];
         });
       },
@@ -84,7 +118,12 @@ export default function POSPage() {
   const total = subtotal + tax;
 
   return (
-    <div className="p-6 min-h-screen bg-white">
+    <div className="relative p-6 min-h-screen bg-white">
+      <div
+        ref={fireworksContainer}
+        className="fixed inset-0 z-50 pointer-events-none"
+      ></div>
+
       <h1 className="text-2xl uppercase font-bold mb-4">point of sale</h1>
 
       <button
@@ -140,21 +179,20 @@ export default function POSPage() {
           sale Summary
         </h3>
 
-        <div></div>
-        <div className="font-bold"></div>
         <div className="pt-1 space-y-1 mt-5 mb-5 gap-3">
           <p className="flex justify-between uppercase text-xs font-light text-white">
             <span>Subtotal: ${subtotal.toFixed(2)}</span>
           </p>
           <p className="flex justify-between uppercase text-xs font-light text-white">
             <span>
-              <span className="lowercase">Tax (8.25%): ${tax.toFixed(2)}</span>:
+              <span className="lowercase">Tax (8.25%): ${tax.toFixed(2)}</span>
             </span>
           </p>
           <p className="flex justify-between uppercase text-xs font-light text-white">
             <span>Total: ${total.toFixed(2)}</span>
           </p>
         </div>
+
         <button
           onClick={clearCart}
           className="w-full text-sm bg-green border uppercase mb-5 py-2 text-white font-light hover:bg-opacity-90 transition"
