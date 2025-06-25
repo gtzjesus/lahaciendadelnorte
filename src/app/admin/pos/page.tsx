@@ -19,10 +19,6 @@ export default function POSPage() {
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
   const fireworksContainer = useRef<HTMLDivElement>(null);
 
-  const removeItem = (index: number) => {
-    setCart((prev) => prev.filter((_, i) => i !== index));
-  };
-
   useEffect(() => {
     client
       .fetch<Product[]>(`*[_type == "product"]{_id, name, slug, price}`)
@@ -32,25 +28,24 @@ export default function POSPage() {
 
   const launchFireworks = () => {
     if (!fireworksContainer.current) return;
-    if (fireworksContainer.current) {
-      fireworksContainer.current.style.opacity = '1';
-    }
+
+    fireworksContainer.current.style.opacity = '1';
 
     const fireworks = new Fireworks(fireworksContainer.current, {
-      opacity: 0.8, // Slightly more visible
-      acceleration: 1.2, // Faster vertical speed
-      friction: 0.95, // Less drag = faster trails
-      gravity: 1.5, // Pulls particles down faster
-      explosion: 6, // Smaller burst radius
-      particles: 60, // Balanced particle count
+      opacity: 0.8,
+      acceleration: 1.2,
+      friction: 0.95,
+      gravity: 1.5,
+      explosion: 6,
+      particles: 60,
       traceLength: 3,
-      traceSpeed: 5, // Fast tail motion
+      traceSpeed: 5,
       flickering: 15,
       lineStyle: 'round',
-      hue: { min: 30, max: 60 }, // Orange-yellow tones
+      hue: { min: 30, max: 60 },
       brightness: { min: 65, max: 90 },
-      delay: { min: 20, max: 40 }, // Rapid launches
-      rocketsPoint: { min: 30, max: 70 }, // Wide launch zoen
+      delay: { min: 20, max: 40 },
+      rocketsPoint: { min: 30, max: 70 },
       autoresize: true,
       sound: { enabled: false },
     });
@@ -59,7 +54,7 @@ export default function POSPage() {
 
     setTimeout(() => {
       fireworks.stop();
-    }, 2500); // lasts about 2.5 seconds
+    }, 2500);
 
     setTimeout(() => {
       if (fireworksContainer.current) {
@@ -88,13 +83,11 @@ export default function POSPage() {
           return;
         }
 
-        setCart((prevCart) => {
-          const exists = prevCart.find((item) => item._id === matched._id);
-          if (exists) return prevCart;
+        const alreadyInCart = cart.some((item) => item._id === matched._id);
+        if (alreadyInCart) return;
 
-          launchFireworks(); // 🎆 Launch on success
-          return [...prevCart, { ...matched, quantity: 1 }];
-        });
+        setCart((prev) => [...prev, { ...matched, quantity: 1 }]);
+        launchFireworks(); // 🎆 always trigger after adding
       },
       (err) => console.warn('QR error:', err)
     );
@@ -106,6 +99,10 @@ export default function POSPage() {
     setCart((prev) =>
       prev.map((item, i) => (i === index ? { ...item, quantity: qty } : item))
     );
+  };
+
+  const removeItem = (index: number) => {
+    setCart((prev) => prev.filter((_, i) => i !== index));
   };
 
   const clearCart = () => setCart([]);
@@ -128,7 +125,7 @@ export default function POSPage() {
 
       <button
         onClick={startScanner}
-        className="p-4 block uppercase text-xs z-[10] font-light text-center bg-flag-blue text-white "
+        className="p-4 block uppercase text-xs z-[10] font-light text-center bg-flag-blue text-white"
       >
         start scanning
       </button>
@@ -179,14 +176,12 @@ export default function POSPage() {
           sale Summary
         </h3>
 
-        <div className="pt-1 space-y-1 mt-5 mb-5 gap-3">
+        <div className=" space-y-1 mt-2 mb-2">
           <p className="flex justify-between uppercase text-xs font-light text-white">
             <span>Subtotal: ${subtotal.toFixed(2)}</span>
           </p>
           <p className="flex justify-between uppercase text-xs font-light text-white">
-            <span>
-              <span className="lowercase">Tax (8.25%): ${tax.toFixed(2)}</span>
-            </span>
+            <span>Tax (8.25%): ${tax.toFixed(2)}</span>
           </p>
           <p className="flex justify-between uppercase text-xs font-light text-white">
             <span>Total: ${total.toFixed(2)}</span>
@@ -195,7 +190,7 @@ export default function POSPage() {
 
         <button
           onClick={clearCart}
-          className="w-full text-sm bg-green border uppercase mb-5 py-2 text-white font-light hover:bg-opacity-90 transition"
+          className="w-full text-sm bg-green border uppercase mb-2 py-2 text-white font-light hover:bg-opacity-90 transition"
         >
           Sale Total: ${total.toFixed(2)}
         </button>
