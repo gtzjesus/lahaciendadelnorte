@@ -182,7 +182,7 @@ export default function POSPage() {
         celebrationTimeout.current = setTimeout(() => {
           setShowCelebration(false);
           fireworksInstance?.stop();
-        }, 5000);
+        }, 2500000);
       } else {
         alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
       }
@@ -213,21 +213,23 @@ export default function POSPage() {
       {/* Fireworks container */}
       <div
         ref={fireworksContainer}
-        className="fixed inset-0 z-[100] pointer-events-none"
+        className="fixed inset-0 z-[200] pointer-events-none"
         style={{ opacity: 0, transition: 'opacity 0.5s ease' }}
       ></div>
 
       {/* Celebration Overlay */}
       {showCelebration && (
         <div
-          className="fixed inset-0 z-[110] flex flex-col items-center justify-center bg-black bg-opacity-90 text-white p-6 text-center"
+          className="fixed inset-0 z-[110] flex flex-col items-center justify-center bg-flag-blue bg-opacity-90 text-white p-6 text-center"
           style={{ animation: 'fadeIn 0.3s ease forwards' }}
         >
-          <h1 className="text-4xl font-extrabold mb-6">🎉 Sale Complete! 🎉</h1>
-          <p className="mb-6 text-xl">Thank you for your purchase!</p>
+          <h1 className="text-5xl font-extrabold mb-6 animate-bounce text-yellow-400 drop-shadow-lg">
+            Sale Success!
+          </h1>
+
           <button
             onClick={handleViewOrder}
-            className="bg-green-600 hover:bg-green-700 transition px-6 py-3 rounded text-lg font-semibold"
+            className="inline-block border-none bg-white  p-4 text-xs font-light text-center text-flag-blue uppercase"
           >
             View Order
           </button>
