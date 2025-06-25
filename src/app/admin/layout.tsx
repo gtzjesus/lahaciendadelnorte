@@ -32,7 +32,7 @@ export default function AdminLayout({
           {/* Sidebar */}
           <aside
             className={clsx(
-              'fixed inset-y-0 left-0 z-30 w-64  bg-flag-red text-white p-6 transform transition-transform duration-300 ease-in-out',
+              'mt-10 fixed inset-y-0 left-0 z-30 w-64  bg-flag-red text-white p-6 transform transition-transform duration-300 ease-in-out',
               {
                 '-translate-x-full': !sidebarOpen,
                 'translate-x-0': sidebarOpen,
