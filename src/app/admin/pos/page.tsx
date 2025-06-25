@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
 import { client } from '@/sanity/lib/client';
 
 type Product = {
@@ -15,76 +14,88 @@ export default function POSPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<Product[]>([]);
 
+  // Fetch products from Sanity
   useEffect(() => {
     client
-      .fetch<Product[]>(
-        `*[_type == "product"]{
-          _id,
-          name,
-          slug,
-          price
-        }`
-      )
-      .then((data) => setProducts(data));
+      .fetch<Product[]>(`*[_type == "product"]{_id, name, slug, price}`)
+      .then(setProducts)
+      .catch(console.error);
   }, []);
 
+  // Setup QR scanner on client only
   useEffect(() => {
-    const scanner = new Html5QrcodeScanner(
-      'reader',
-      { fps: 10, qrbox: 250 },
-      false
-    );
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
+    let scanner: any;
 
-    scanner.render(
-      (decodedText) => {
-        const scannedCode = decodedText.trim().toLowerCase();
-        const matched = products.find((p) => p.slug.current === scannedCode);
-        if (matched) {
-          setCart((prev) => [...prev, matched]);
-        } else {
-          alert(`No matching product for code: ${scannedCode}`);
-        }
-      },
-      (err) => {
-        console.log('error', err);
+    async function initScanner() {
+      const { Html5Qrcode } = await import('html5-qrcode');
+      scanner = new Html5Qrcode('reader');
+
+      const devices = await Html5Qrcode.getCameras();
+      if (devices && devices.length) {
+        const backCam = devices.find((d: any) =>
+          d.label.toLowerCase().includes('back')
+        );
+        const cameraId = backCam?.id || devices[0].id;
+
+        await scanner.start(
+          cameraId,
+          { fps: 10, qrbox: 250 },
+          (decodedText: string) => {
+            const scannedCode = decodedText.trim().toLowerCase();
+            const matched = products.find(
+              (p) => p.slug.current === scannedCode
+            );
+            if (matched) {
+              setCart((prev) => [...prev, matched]);
+            } else {
+              alert(`No matching product for code: ${scannedCode}`);
+            }
+          },
+          (err: any) => console.warn('scan error', err)
+        );
+      } else {
+        console.error('No camera devices found');
       }
-    );
+    }
+
+    initScanner().catch(console.error);
 
     return () => {
-      scanner.clear().catch(console.error);
+      if (scanner) {
+        scanner
+          .stop()
+          .then(() => scanner.clear())
+          .catch(console.error);
+      }
     };
   }, [products]);
 
-  const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+  const subtotal = cart.reduce((sum, i) => sum + i.price, 0);
   const tax = subtotal * 0.0825;
   const total = subtotal + tax;
 
-  const clearCart = () => setCart([]);
-
   return (
-    <div style={{ padding: '1rem' }}>
-      <h1>ElPasoKaboom POS 💥</h1>
-
-      <div id="reader" style={{ width: '100%', maxWidth: '400px' }}></div>
-
-      <div style={{ marginTop: '1rem' }}>
+    <div className="p-4 min-h-screen">
+      <h1 className="text-2xl font-bold mb-4">ElPasoKaboom POS 💥</h1>
+      <div id="reader" className="w-full max-w-md mx-auto" />
+      <div className="mt-6 space-y-2">
         {cart.map((item, i) => (
-          <div
-            key={i}
-            style={{ padding: '0.5rem', borderBottom: '1px solid #ddd' }}
-          >
-            {item.name} - ${item.price.toFixed(2)}
+          <div key={i} className="flex justify-between border-b pb-2">
+            <span>{item.name}</span>
+            <span>${item.price.toFixed(2)}</span>
           </div>
         ))}
       </div>
-
-      <div style={{ marginTop: '1rem', fontSize: '1.2rem' }}>
-        Subtotal: ${subtotal.toFixed(2)} <br />
-        Tax (8.25%): ${tax.toFixed(2)} <br />
-        <strong>Total: ${total.toFixed(2)}</strong>
+      <div className="mt-6 text-lg">
+        <div>Subtotal: ${subtotal.toFixed(2)}</div>
+        <div>Tax (8.25%): ${tax.toFixed(2)}</div>
+        <div className="font-bold">Total: ${total.toFixed(2)}</div>
       </div>
-
-      <button onClick={clearCart} style={{ marginTop: '1rem' }}>
+      <button
+        onClick={() => setCart([])}
+        className="mt-6 px-4 py-2 bg-red-500 text-white rounded"
+      >
         🗑️ Clear Cart
       </button>
     </div>
