@@ -1,7 +1,7 @@
 // ✅ File: src/app/api/pos/route.ts
 
 import { NextResponse } from 'next/server';
-import { client } from '@/sanity/lib/client';
+import { backendClient } from '@/sanity/lib/backendClient'; // ✅ has token
 
 type OrderItem = {
   productId: string;
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
       orderDate: new Date().toISOString(),
     };
 
-    const createdOrder = await client.create(orderDoc);
+    const createdOrder = await backendClient.create(orderDoc);
 
     return NextResponse.json(
       {
