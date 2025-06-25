@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { backendClient } from '@/sanity/lib/backendClient';
-import { decreaseProductStock } from '@/sanity/lib/products/decreaseProductStock';
-import { nanoid } from 'nanoid';
+import { v4 as uuidv4 } from 'uuid';
 
 type POSItem = {
   productId: string;
@@ -20,13 +19,17 @@ export async function POST(req: Request) {
       );
     }
 
-    // Step 1: Validate stock
-    for (const item of items) {
-      const product = await backendClient.fetch<{ stock: number }>(
-        `*[_id == $id][0]{stock}`,
-        { id: item.productId }
-      );
+    // Fetch latest _rev and stock for all products in the sale
+    const productIds = items.map((item) => item.productId);
+    const latestProducts = await backendClient.fetch<
+      { _id: string; _rev: string; stock: number }[]
+    >(`*[_type == "product" && _id in $ids]{_id, _rev, stock}`, {
+      ids: productIds,
+    });
 
+    // Validate stock availability before commit
+    for (const item of items) {
+      const product = latestProducts.find((p) => p._id === item.productId);
       if (!product) {
         return new NextResponse(
           JSON.stringify({
@@ -36,50 +39,66 @@ export async function POST(req: Request) {
           { status: 404 }
         );
       }
-
       if (product.stock < item.quantity) {
         return new NextResponse(
           JSON.stringify({
             success: false,
-            message: `Insufficient stock for ${item.productId}`,
+            message: `Insufficient stock for product ${item.productId}`,
           }),
           { status: 400 }
         );
       }
     }
 
-    // Step 2: Reduce stock
-    for (const item of items) {
-      await decreaseProductStock(item.productId, item.quantity);
-    }
-
-    // Step 3: Create order document
-    const orderId = nanoid();
+    const orderId = `order-${uuidv4()}`;
     const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
-    await backendClient.create({
+    // Build the order document
+    const orderDoc = {
+      _id: orderId,
       _type: 'order',
-      orderNumber: `POS-${orderId}`,
+      orderNumber: `POS-${uuidv4()}`,
       orderDate: new Date().toISOString(),
-      clerkUserId: 'demo-user', // Replace as needed
-      customerName: 'Walk-In', // Replace or extend frontend to get customer info
-      email: 'noemail@store.com', // Replace or extend frontend to get customer info
+      clerkUserId: 'demo-user', // replace or extend as needed
+      customerName: 'Walk-In',
+      email: 'noemail@store.com',
       totalPrice,
       currency: 'usd',
       amountDiscount: 0,
-      orderType: 'reservation',
+      orderType: 'sale',
       paymentStatus: 'paid_in_store',
       pickupStatus: 'picked_up',
       products: items.map((item) => ({
-        _key: item.productId,
-        _type: 'object',
-        product: {
-          _type: 'reference',
-          _ref: item.productId,
-        },
+        _key: uuidv4(),
+        _type: 'orderItem', // or 'object', whatever your schema expects
+        product: { _type: 'reference', _ref: item.productId },
         quantity: item.quantity,
+        price: item.price,
       })),
-    });
+    };
+
+    // Start transaction
+    const txn = backendClient.transaction();
+
+    // Create order document
+    txn.create(orderDoc);
+
+    // Patch products to decrement stock with revision check
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
+    for (const item of items) {
+      const product = latestProducts.find((p) => p._id === item.productId);
+      if (!product) {
+        throw new Error(
+          `Product ${item.productId} not found during transaction`
+        );
+      }
+      (txn.patch(product._id) as any)
+        .ifRevisionId(product._rev)
+        .dec({ stock: item.quantity });
+    }
+
+    // Commit transaction
+    await txn.commit();
 
     return NextResponse.json({
       success: true,
