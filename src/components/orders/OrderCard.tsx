@@ -15,7 +15,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         <div className="flex flex-row justify-between">
           <div>
             <p className="text-xs uppercase font-light font-mono">
-              reservation number
+              order number
             </p>
             <span
               className="font-mono uppercase font-light text-xs text-green-600 dark:text-green-400"
@@ -26,7 +26,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           </div>
           <div>
             <p className="text-xs uppercase font-light font-mono text-gray-600">
-              reserved on
+              ordered on
             </p>
             <p className="font-light text-xs mt-1">
               {order.orderDate
@@ -104,9 +104,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
       <div className="border-t border-flag-blue font-mono p-4 flex flex-col">
         <div className="flex justify-between">
-          <p className="uppercase text-xs mb-1 text-gray-600">
-            estimated total:
-          </p>
+          <p className="uppercase text-xs mb-1 text-gray-600">total:</p>
           <p className="font-bold text-xs">${order.totalPrice?.toFixed(2)}</p>
         </div>
       </div>
