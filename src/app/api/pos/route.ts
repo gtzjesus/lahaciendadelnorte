@@ -53,32 +53,47 @@ export async function POST(req: Request) {
       await decreaseProductStock(item.productId, item.quantity);
     }
 
-    // Step 3: Create order document
-    const orderId = nanoid();
-    const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    // Step 3: Create order in Sanity
+    const orderId = nanoid(10);
+    const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
-    await backendClient.create({
+    const createdOrder = await backendClient.create({
       _type: 'order',
-      _id: orderId,
-      createdAt: new Date().toISOString(),
-      total,
-      items: items.map((item) => ({
-        _type: 'orderItem',
-        product: { _type: 'reference', _ref: item.productId },
+      orderNumber: `POS-${orderId}`,
+      orderDate: new Date().toISOString(),
+      clerkUserId: 'demo-user', // Replace with actual user if available
+      customerName: 'Walk-In',
+      email: 'noemail@store.com',
+      totalPrice,
+      currency: 'usd',
+      orderType: 'reservation',
+      paymentStatus: 'paid_in_store',
+      pickupStatus: 'picked_up',
+      products: items.map((item) => ({
+        _key: item.productId,
+        product: {
+          _type: 'reference',
+          _ref: item.productId,
+        },
         quantity: item.quantity,
-        price: item.price,
       })),
     });
 
     return NextResponse.json({
       success: true,
       message: 'Stock adjusted and order created',
-      orderId,
+      orderId: createdOrder._id,
     });
-  } catch (error) {
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
+  } catch (error: any) {
     console.error('❌ POS API error:', error);
     return new NextResponse(
-      JSON.stringify({ success: false, message: (error as Error).message }),
+      JSON.stringify({
+        success: false,
+        message:
+          error?.message ||
+          'Unknown server error. Check your backendClient and schema.',
+      }),
       { status: 500 }
     );
   }
