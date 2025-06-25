@@ -20,6 +20,7 @@ export default function POSPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
   const fireworksContainer = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     client
@@ -122,6 +123,39 @@ export default function POSPage() {
   const tax = subtotal * 0.0825;
   const total = subtotal + tax;
 
+  const handleSale = async () => {
+    if (cart.length === 0) return;
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/admin/pos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cart.map((item) => ({
+            productId: item._id,
+            quantity: item.cartQty,
+            price: item.price,
+          })),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        clearCart();
+        alert(`Order created! Order ID: ${data.orderId}`);
+      } else {
+        alert(`Error: ${data.message}`);
+      }
+    } catch (err) {
+      alert('Something went wrong.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="relative min-h-screen bg-white">
       <div
@@ -201,11 +235,13 @@ export default function POSPage() {
         </div>
 
         <button
-          onClick={clearCart}
-          className="w-full text-sm bg-green border uppercase mb-2 py-2 text-white font-light hover:bg-opacity-90 transition"
+          onClick={handleSale}
+          disabled={cart.length === 0 || loading}
+          className="w-full text-sm bg-green border uppercase mb-2 py-2 text-white font-light hover:bg-opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Sale Total: ${total.toFixed(2)}
+          {loading ? 'Processing Sale...' : `Sale Total: $${total.toFixed(2)}`}
         </button>
+
         <button
           onClick={clearCart}
           className="w-full text-sm bg-flag-red border uppercase py-2 text-white font-light hover:bg-opacity-90 transition"
