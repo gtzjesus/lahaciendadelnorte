@@ -12,3 +12,4 @@ export const backendClient = createClient({
   useCdn: false,
   token: process.env.SANITY_API_TOKEN, // important: this enables write access
 });
+console.log('Sanity token:', process.env.SANITY_API_TOKEN);

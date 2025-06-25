@@ -144,7 +144,7 @@ export default function POSPage() {
     }
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/pos', {
+      const res = await fetch('/api/pos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

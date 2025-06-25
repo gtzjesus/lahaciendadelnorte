@@ -12,6 +12,7 @@ import { Toaster } from 'sonner';
 const navItems = [
   { name: 'Dashboard', href: '/admin/dashboard' },
   { name: 'Pos', href: '/admin/pos' },
+  { name: 'orders', href: '/admin/orders' },
 ];
 
 export default function AdminLayout({
