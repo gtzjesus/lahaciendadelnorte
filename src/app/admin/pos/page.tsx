@@ -128,7 +128,7 @@ export default function POSPage() {
         ))}
       </div>
 
-      <div className="w-full lg:w-auto lg:sticky h-fit bg-flag-blue p-6 lg:p-12 fixed bottom-0 left-0 lg:left-auto lg:bottom-0 lg:order-last shadow-md">
+      <div className="w-full lg:w-auto h-fit bg-flag-blue p-6 lg:p-12 bottom-0 left-0 lg:left-auto lg:bottom-0 lg:order-last shadow-md">
         <h3 className="uppercase text-xs font-light text-center text-white border-b pb-1">
           sale Summary
         </h3>
