@@ -80,7 +80,7 @@ export async function POST(req: Request) {
       currency: 'usd',
       amountDiscount: 0,
       orderType: 'reservation',
-      paymentStatus: 'paid', // Set payment status to paid
+      paymentStatus: 'paid_in_store', // Set payment status to paid
       pickupStatus: 'picked_up', // Set pickup status to picked_up
       orderDate: new Date().toISOString(),
     };

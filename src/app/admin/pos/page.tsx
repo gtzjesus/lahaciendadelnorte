@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { client } from '@/sanity/lib/client';
 import { Fireworks } from 'fireworks-js';
+import { useRouter } from 'next/navigation';
 
 type Product = {
   _id: string;
@@ -22,11 +23,12 @@ export default function POSPage() {
   const fireworksContainer = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
 
-  // Toast state
-  const [toast, setToast] = useState<{ visible: boolean; message: string }>({
-    visible: false,
-    message: '',
-  });
+  // Celebration overlay state
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [orderId, setOrderId] = useState<string | null>(null);
+  const celebrationTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const router = useRouter();
 
   // Fetch products once on mount
   useEffect(() => {
@@ -36,7 +38,7 @@ export default function POSPage() {
       .catch(console.error);
   }, []);
 
-  // Fireworks celebration effect
+  // Fireworks celebration effect - enhanced for overlay
   const launchFireworks = () => {
     if (!fireworksContainer.current) return;
     fireworksContainer.current.innerHTML = '';
@@ -48,36 +50,23 @@ export default function POSPage() {
       friction: 0.95,
       gravity: 1.5,
       explosion: 6,
-      particles: 60,
-      traceLength: 3,
-      traceSpeed: 5,
-      flickering: 15,
+      particles: 80,
+      traceLength: 4,
+      traceSpeed: 7,
+      flickering: 20,
       lineStyle: 'round',
-      hue: { min: 30, max: 60 },
-      brightness: { min: 65, max: 90 },
+      hue: { min: 0, max: 360 },
+      brightness: { min: 50, max: 100 },
       delay: { min: 20, max: 40 },
-      rocketsPoint: { min: 30, max: 70 },
+      rocketsPoint: { min: 10, max: 90 },
       autoresize: true,
       sound: { enabled: false },
     });
 
     fireworks.start();
 
-    setTimeout(() => {
-      fireworks.stop();
-      if (fireworksContainer.current) {
-        fireworksContainer.current.style.transition = 'opacity 0.5s ease';
-        fireworksContainer.current.style.opacity = '0';
-      }
-    }, 2500);
-  };
-
-  // Show toast with message, auto hide after 3 seconds
-  const showToast = (message: string) => {
-    setToast({ visible: true, message });
-    setTimeout(() => {
-      setToast({ visible: false, message: '' });
-    }, 3000);
+    // Stop fireworks after overlay disappears
+    return fireworks;
   };
 
   // Start the QR scanner
@@ -110,7 +99,10 @@ export default function POSPage() {
         setScanner(null);
 
         setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
-        launchFireworks();
+
+        // Fireworks briefly when adding item (optional)
+        const fw = launchFireworks();
+        setTimeout(() => fw?.stop(), 2000);
 
         // Restart scanner after delay
         setTimeout(() => {
@@ -180,8 +172,17 @@ export default function POSPage() {
       const data = await res.json();
       if (data.success) {
         clearCart();
-        showToast(`✅ Sale complete! Order ID: ${data.orderId}`);
-        launchFireworks();
+        setOrderId(data.orderId);
+        setShowCelebration(true);
+
+        // Launch fireworks for overlay
+        const fireworksInstance = launchFireworks();
+
+        // Hide overlay and stop fireworks after 5 seconds
+        celebrationTimeout.current = setTimeout(() => {
+          setShowCelebration(false);
+          fireworksInstance?.stop();
+        }, 5000);
       } else {
         alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
       }
@@ -193,23 +194,43 @@ export default function POSPage() {
     }
   };
 
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (celebrationTimeout.current) clearTimeout(celebrationTimeout.current);
+    };
+  }, []);
+
+  // Navigate to order detail page
+  const handleViewOrder = () => {
+    if (!orderId) return;
+    setShowCelebration(false);
+    router.push(`/order/${orderId}`);
+  };
+
   return (
     <div className="relative min-h-screen bg-white">
+      {/* Fireworks container */}
       <div
         ref={fireworksContainer}
-        className="fixed inset-0 z-50 pointer-events-none"
+        className="fixed inset-0 z-[100] pointer-events-none"
         style={{ opacity: 0, transition: 'opacity 0.5s ease' }}
       ></div>
 
-      {/* Toast popup */}
-      {toast.visible && (
+      {/* Celebration Overlay */}
+      {showCelebration && (
         <div
-          className="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded shadow-lg text-center font-semibold select-none animate-fade-in"
-          style={{
-            animation: 'fadeIn 0.3s ease forwards',
-          }}
+          className="fixed inset-0 z-[110] flex flex-col items-center justify-center bg-black bg-opacity-90 text-white p-6 text-center"
+          style={{ animation: 'fadeIn 0.3s ease forwards' }}
         >
-          {toast.message}
+          <h1 className="text-4xl font-extrabold mb-6">🎉 Sale Complete! 🎉</h1>
+          <p className="mb-6 text-xl">Thank you for your purchase!</p>
+          <button
+            onClick={handleViewOrder}
+            className="bg-green-600 hover:bg-green-700 transition px-6 py-3 rounded text-lg font-semibold"
+          >
+            View Order
+          </button>
         </div>
       )}
 
@@ -301,13 +322,6 @@ export default function POSPage() {
           Clear Sale
         </button>
       </div>
-
-      <style>{`
-        @keyframes fadeIn {
-          from {opacity: 0; transform: translateY(-10px);}
-          to {opacity: 1; transform: translateY(0);}
-        }
-      `}</style>
     </div>
   );
 }
