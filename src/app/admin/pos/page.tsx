@@ -148,12 +148,12 @@ export default function POSPage() {
               key={i}
               className="flex items-center justify-between border-b pb-2"
             >
-              <div>
-                <div className="font-medium">{item.name}</div>
-                <div className="text-sm text-gray-600">
+              <div className="uppercase text-sm">
+                <div className="font-light">{item.name}</div>
+                <div className="font-bold text-green">
                   ${item.price.toFixed(2)} x
                   <select
-                    className="ml-2 border rounded px-1 py-0.5"
+                    className="ml-2 border px-1 py-0.5"
                     value={item.quantity}
                     onChange={(e) => updateQuantity(i, Number(e.target.value))}
                   >
@@ -174,8 +174,8 @@ export default function POSPage() {
                 </div>
                 <button
                   onClick={() => removeItem(i)}
-                  className="text-red-600 text-lg font-bold"
-                  aria-label="Remove item"
+                  className="text-flag-red text-md font-light"
+                  aria-label="Remove"
                 >
                   ❌
                 </button>
