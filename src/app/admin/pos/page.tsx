@@ -10,12 +10,16 @@ type Product = {
   name: string;
   slug: { current: string };
   price: number;
-  quantity?: number; // <-- quantity from backend
+  quantity?: number; // actual stock from backend
+};
+
+type CartItem = Product & {
+  cartQty: number; // quantity selected by user
 };
 
 export default function POSPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [cart, setCart] = useState<Product[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
   const fireworksContainer = useRef<HTMLDivElement>(null);
 
@@ -88,13 +92,12 @@ export default function POSPage() {
         const alreadyInCart = cart.some((item) => item._id === matched._id);
         if (alreadyInCart) return;
 
-        await newScanner.clear(); // stop scanner
-        setScanner(null); // mark scanner as inactive
+        await newScanner.clear();
+        setScanner(null);
 
-        setCart((prev) => [...prev, { ...matched, quantity: 1 }]);
+        setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
         launchFireworks();
 
-        // restart scanner after delay
         setTimeout(() => {
           startScanner();
         }, 3000);
@@ -107,7 +110,7 @@ export default function POSPage() {
 
   const updateQuantity = (index: number, qty: number) => {
     setCart((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, quantity: qty } : item))
+      prev.map((item, i) => (i === index ? { ...item, cartQty: qty } : item))
     );
   };
 
@@ -118,7 +121,7 @@ export default function POSPage() {
   const clearCart = () => setCart([]);
 
   const subtotal = cart.reduce(
-    (sum, item) => sum + item.price * (item.quantity || 1),
+    (sum, item) => sum + item.price * (item.cartQty || 1),
     0
   );
   const tax = subtotal * 0.0825;
@@ -154,7 +157,7 @@ export default function POSPage() {
                   ${item.price.toFixed(2)} x
                   <select
                     className="ml-2 border px-1 py-0.5"
-                    value={item.quantity}
+                    value={item.cartQty}
                     onChange={(e) => updateQuantity(i, Number(e.target.value))}
                   >
                     {[...Array(item.quantity || 10)].map((_, n) => (
@@ -170,7 +173,7 @@ export default function POSPage() {
               </div>
               <div className="flex items-center gap-4">
                 <div className="font-semibold">
-                  ${(item.price * (item.quantity || 1)).toFixed(2)}
+                  ${(item.price * item.cartQty).toFixed(2)}
                 </div>
                 <button
                   onClick={() => removeItem(i)}
