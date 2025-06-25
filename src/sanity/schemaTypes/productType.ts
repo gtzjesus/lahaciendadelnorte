@@ -26,7 +26,6 @@ export const productType = defineType({
       title: 'Slug',
       type: 'slug',
       description: 'Enter product name.',
-
       options: {
         source: 'name',
         maxLength: 96,
@@ -45,7 +44,6 @@ export const productType = defineType({
       title: 'Additional Images',
       type: 'array',
       description: 'Upload images displayed in product page.',
-
       of: [{ type: 'image', options: { hotspot: true } }],
       validation: (Rule) =>
         Rule.min(1)
@@ -55,7 +53,7 @@ export const productType = defineType({
     defineField({
       name: 'description',
       title: 'Description',
-      type: 'string', // Change from 'blockContent' to 'string'
+      type: 'string',
       description: 'Enter summary description for the product.',
     }),
     defineField({
@@ -75,7 +73,6 @@ export const productType = defineType({
       title: 'Price',
       type: 'number',
       description: 'Enter product price.',
-
       validation: (Rule) => Rule.required().min(0),
     }),
     defineField({
@@ -83,7 +80,6 @@ export const productType = defineType({
       title: 'Categories',
       type: 'array',
       description: 'Choose category that belongs.',
-
       of: [{ type: 'reference', to: { type: 'category' } }],
     }),
     defineField({
@@ -91,10 +87,47 @@ export const productType = defineType({
       title: 'Stock',
       type: 'number',
       description: 'Enter how many products in stock.',
-
       validation: (Rule) => Rule.min(0),
     }),
+
+    // ✅ New Deal Field
+    defineField({
+      name: 'deal',
+      title: 'Deal / BOGO Pricing',
+      type: 'object',
+      description:
+        'Configure special pricing like Buy One Get One or 2 for $3 deals',
+      fields: [
+        defineField({
+          name: 'type',
+          title: 'Deal Type',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Buy One Get One Free', value: 'bogo' },
+              { title: '2 for $X Price', value: 'twoForX' },
+            ],
+            layout: 'radio',
+          },
+        }),
+        defineField({
+          name: 'quantityRequired',
+          title: 'Quantity Required for Deal',
+          type: 'number',
+          description: 'e.g. 2 if it’s 2 for $3',
+          validation: (Rule) => Rule.min(1).max(10),
+        }),
+        defineField({
+          name: 'dealPrice',
+          title: 'Deal Price',
+          type: 'number',
+          description: 'e.g. $3 if the deal is 2 for $3',
+          validation: (Rule) => Rule.min(0),
+        }),
+      ],
+    }),
   ],
+
   preview: {
     select: {
       title: 'name',

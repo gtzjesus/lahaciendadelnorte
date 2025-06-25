@@ -124,6 +124,11 @@ export type Product = {
     [internalGroqTypeReferenceTo]?: "category";
   }>;
   stock?: number;
+  deal?: {
+    type?: "bogo" | "twoForX";
+    quantityRequired?: number;
+    dealPrice?: number;
+  };
 };
 
 export type Category = {
@@ -361,6 +366,11 @@ export type MY_ORDERS_QUERYResult = Array<{
         [internalGroqTypeReferenceTo]?: "category";
       }>;
       stock?: number;
+      deal?: {
+        type?: "bogo" | "twoForX";
+        quantityRequired?: number;
+        dealPrice?: number;
+      };
     } | null;
     quantity?: number;
     _key: string;
@@ -449,6 +459,11 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
     [internalGroqTypeReferenceTo]?: "category";
   }>;
   stock?: number;
+  deal?: {
+    type?: "bogo" | "twoForX";
+    quantityRequired?: number;
+    dealPrice?: number;
+  };
 }>;
 
 // Source: ./src/sanity/lib/products/getProductBySlug.ts
@@ -500,6 +515,11 @@ export type PRODUCT_BY_ID_QUERYResult = Array<{
     [internalGroqTypeReferenceTo]?: "category";
   }>;
   stock?: number;
+  deal?: {
+    type?: "bogo" | "twoForX";
+    quantityRequired?: number;
+    dealPrice?: number;
+  };
 }>;
 
 // Source: ./src/sanity/lib/products/getProductsByCategory.tsx
@@ -551,6 +571,11 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
     [internalGroqTypeReferenceTo]?: "category";
   }>;
   stock?: number;
+  deal?: {
+    type?: "bogo" | "twoForX";
+    quantityRequired?: number;
+    dealPrice?: number;
+  };
 }>;
 
 // Source: ./src/sanity/lib/sales/getActiveSaleByCouponCode.ts

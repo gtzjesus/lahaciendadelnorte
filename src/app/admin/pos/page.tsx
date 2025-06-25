@@ -134,11 +134,27 @@ export default function POSPage() {
   };
 
   const clearCart = () => setCart([]);
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  const subtotal = cart.reduce((sum, item) => {
+    const deal = (item as any).deal;
 
-  const subtotal = cart.reduce(
-    (sum, item) => sum + item.price * item.cartQty,
-    0
-  );
+    if (deal?.type === 'twoForX' && deal.quantityRequired && deal.dealPrice) {
+      const groupQty = Math.floor(item.cartQty / deal.quantityRequired);
+      const remainder = item.cartQty % deal.quantityRequired;
+
+      const dealTotal = groupQty * deal.dealPrice + remainder * item.price;
+      return sum + dealTotal;
+    }
+
+    if (deal?.type === 'bogo') {
+      const payableQty = Math.ceil(item.cartQty / 2);
+      return sum + payableQty * item.price;
+    }
+
+    // No deal applies
+    return sum + item.price * item.cartQty;
+  }, 0);
+
   const tax = subtotal * 0.0825;
   const total = subtotal + tax;
 
