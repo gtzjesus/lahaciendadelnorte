@@ -83,25 +83,19 @@ export default function POSPage() {
           return;
         }
 
-        setCart((prev) => {
-          const foundIndex = prev.findIndex((item) => item._id === matched._id);
-          if (foundIndex !== -1) {
-            // increase quantity by 1, max 10 for example
-            const updated = [...prev];
-            const currentQty = updated[foundIndex].quantity || 1;
-            updated[foundIndex] = {
-              ...updated[foundIndex],
-              quantity: currentQty < 10 ? currentQty + 1 : currentQty,
-            };
-            return updated;
-          }
-          // not found, add new product with qty 1
-          return [...prev, { ...matched, quantity: 1 }];
-        });
+        const alreadyInCart = cart.some((item) => item._id === matched._id);
+        if (alreadyInCart) return;
 
+        await newScanner.clear(); // stop scanner
+        setScanner(null); // mark scanner as inactive
+
+        setCart((prev) => [...prev, { ...matched, quantity: 1 }]);
         launchFireworks();
 
-        // Optional: pause and restart scanner if you want
+        // restart scanner after delay
+        setTimeout(() => {
+          startScanner();
+        }, 3000);
       },
       (err) => console.warn('QR error:', err)
     );
