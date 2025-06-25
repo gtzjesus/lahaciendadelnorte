@@ -2,14 +2,16 @@ import Header from '@/components/common/header';
 import { getAllOrders } from '@/sanity/lib/orders/getAllOrders';
 import OrderCard from '@/components/orders/OrderCard';
 
+export const dynamic = 'force-dynamic'; // 🚨 Important for real-time freshness
+
 export default async function AdminOrdersPage() {
   const orders = await getAllOrders();
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   interface ProductRef {
     _id: string;
     name: string;
     slug?: { current: string };
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    image?: any; // you can type it more strictly if you want
+    image?: any;
     price?: number;
   }
 

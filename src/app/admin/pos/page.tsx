@@ -179,7 +179,7 @@ export default function POSPage() {
           fw?.stop();
           setShowCelebration(false);
           router.push('/admin/orders');
-        }, 10000);
+        }, 7500);
       }
       /* eslint-disable  @typescript-eslint/no-explicit-any */
     } catch (err: any) {
@@ -199,12 +199,12 @@ export default function POSPage() {
     <div className="relative min-h-screen bg-white">
       <div
         ref={fireworksContainer}
-        className="fixed inset-0 z-[200] pointer-events-none"
+        className="fixed inset-0 z-[2000] pointer-events-none"
         style={{ opacity: 0, transition: 'opacity 0.5s' }}
       />
       {showCelebration && (
         <div className="fixed inset-0 z-[210] flex flex-col items-center justify-center bg-flag-blue bg-opacity-90 text-white p-6 text-center">
-          <h1 className="text-5xl font-extrabold mb-4 animate-bounce">
+          <h1 className="text-5xl text-yellow font-extrabold mb-4 animate-bounce">
             Sale Success!
           </h1>
           <button
