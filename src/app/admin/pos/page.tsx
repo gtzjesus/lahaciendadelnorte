@@ -9,6 +9,7 @@ type Product = {
   name: string;
   slug: { current: string };
   price: number;
+  quantity?: number;
 };
 
 export default function POSPage() {
@@ -26,27 +27,48 @@ export default function POSPage() {
 
   const startScanner = () => {
     if (scanner) return;
+
     const newScanner = new Html5QrcodeScanner(
       'reader',
       { fps: 10, qrbox: 250 },
       false
     );
+
     newScanner.render(
       (decodedText) => {
-        console.log('Decoded:', decodedText);
         const code = decodedText.trim().toLowerCase();
         const matched = products.find((p) => p.slug.current === code);
-        if (matched) setCart((prev) => [...prev, matched]);
-        else alert(`No product matches "${code}"`);
+
+        if (!matched) {
+          alert(`No product matches "${code}"`);
+          return;
+        }
+
+        setCart((prevCart) => {
+          const exists = prevCart.find((item) => item._id === matched._id);
+          if (exists) return prevCart; // already in cart, skip
+
+          return [...prevCart, { ...matched, quantity: 1 }];
+        });
       },
       (err) => console.warn('QR error:', err)
     );
+
     setScanner(newScanner);
+  };
+
+  const updateQuantity = (index: number, qty: number) => {
+    setCart((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, quantity: qty } : item))
+    );
   };
 
   const clearCart = () => setCart([]);
 
-  const subtotal = cart.reduce((sum, i) => sum + i.price, 0);
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.price * (item.quantity || 1),
+    0
+  );
   const tax = subtotal * 0.0825;
   const total = subtotal + tax;
 
@@ -63,11 +85,32 @@ export default function POSPage() {
 
       <div id="reader" className="w-full max-w-md mx-auto mt-4"></div>
 
-      <div className="mt-6 space-y-2">
+      <div className="mt-6 space-y-4">
         {cart.map((item, i) => (
-          <div key={i} className="flex justify-between border-b pb-2">
-            <span>{item.name}</span>
-            <span>${item.price.toFixed(2)}</span>
+          <div
+            key={i}
+            className="flex items-center justify-between border-b pb-2"
+          >
+            <div>
+              <div className="font-medium">{item.name}</div>
+              <div className="text-sm text-gray-600">
+                ${item.price.toFixed(2)} x
+                <select
+                  className="ml-2 border rounded px-1 py-0.5"
+                  value={item.quantity}
+                  onChange={(e) => updateQuantity(i, Number(e.target.value))}
+                >
+                  {[...Array(10)].map((_, n) => (
+                    <option key={n + 1} value={n + 1}>
+                      {n + 1}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="font-semibold">
+              ${(item.price * (item.quantity || 1)).toFixed(2)}
+            </div>
           </div>
         ))}
       </div>

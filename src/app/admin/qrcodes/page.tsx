@@ -1,4 +1,5 @@
 'use client';
+
 import { QRCodeCanvas } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
@@ -20,12 +21,13 @@ export default function QRCodePage() {
   }, []);
 
   return (
-    <div className="bg-flag-red h-full">
-      <h1>Product QR Codes</h1>
+    <div className="p-8 bg-white min-h-screen">
+      <h1 className="text-3xl font-bold mb-8">🔥 Product QR Codes</h1>
+
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill,minmax(150px,1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
           gap: '2rem',
         }}
       >
@@ -34,12 +36,20 @@ export default function QRCodePage() {
             key={product._id}
             style={{
               textAlign: 'center',
-              border: '1px solid #ccc',
-              padding: '0.5rem',
+              border: '2px solid #ccc',
+              padding: '1rem',
+              borderRadius: '8px',
+              background: '#f9f9f9',
             }}
           >
-            <QRCodeCanvas value={product.slug.current} />
-            <div>{product.name}</div>
+            <QRCodeCanvas
+              value={product.slug.current}
+              size={256} // 🔍 Make QR Code larger
+              includeMargin={true}
+            />
+            <div style={{ marginTop: '1rem', fontWeight: 'bold' }}>
+              {product.name}
+            </div>
             <div>Item #: {product.itemNumber}</div>
           </div>
         ))}
