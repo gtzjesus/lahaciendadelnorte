@@ -10,7 +10,7 @@ type Product = {
   name: string;
   slug: { current: string };
   price: number;
-  quantity?: number;
+  quantity?: number; // <-- quantity from backend
 };
 
 export default function POSPage() {
@@ -21,7 +21,9 @@ export default function POSPage() {
 
   useEffect(() => {
     client
-      .fetch<Product[]>(`*[_type == "product"]{_id, name, slug, price}`)
+      .fetch<
+        Product[]
+      >(`*[_type == "product"]{_id, name, slug, price, quantity}`)
       .then(setProducts)
       .catch(console.error);
   }, []);
@@ -155,12 +157,15 @@ export default function POSPage() {
                     value={item.quantity}
                     onChange={(e) => updateQuantity(i, Number(e.target.value))}
                   >
-                    {[...Array(10)].map((_, n) => (
+                    {[...Array(item.quantity || 10)].map((_, n) => (
                       <option key={n + 1} value={n + 1}>
                         {n + 1}
                       </option>
                     ))}
                   </select>
+                  <span className="ml-2 text-xs italic">
+                    ({item.quantity ?? 'N/A'} in stock)
+                  </span>
                 </div>
               </div>
               <div className="flex items-center gap-4">
