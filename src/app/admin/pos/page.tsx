@@ -28,7 +28,7 @@ export default function POSPage() {
   const fireworksContainer = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [orderId, setOrderId] = useState<string | null>(null);
+  // const [orderId, setOrderId] = useState<string | null>(null);
   const celebrationTimeout = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
 
@@ -173,7 +173,6 @@ export default function POSPage() {
         alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
       } else {
         clearCart();
-        setOrderId(data.orderId);
         setShowCelebration(true);
         const fw = launchFireworks();
         celebrationTimeout.current = setTimeout(() => {
