@@ -20,13 +20,13 @@ export default function QRCodePage() {
   }, []);
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div className="bg-flag-red h-full">
       <h1>Product QR Codes</h1>
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill,minmax(150px,1fr))',
-          gap: '1rem',
+          gap: '2rem',
         }}
       >
         {products.map((product) => (
