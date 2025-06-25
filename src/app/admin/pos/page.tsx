@@ -29,6 +29,7 @@ export default function POSPage() {
   const launchFireworks = () => {
     if (!fireworksContainer.current) return;
 
+    fireworksContainer.current.innerHTML = '';
     fireworksContainer.current.style.opacity = '1';
 
     const fireworks = new Fireworks(fireworksContainer.current, {
@@ -54,14 +55,11 @@ export default function POSPage() {
 
     setTimeout(() => {
       fireworks.stop();
-    }, 2500);
-
-    setTimeout(() => {
       if (fireworksContainer.current) {
         fireworksContainer.current.style.transition = 'opacity 0.5s ease';
         fireworksContainer.current.style.opacity = '0';
       }
-    }, 2000);
+    }, 2500);
   };
 
   const startScanner = () => {
@@ -74,9 +72,11 @@ export default function POSPage() {
     );
 
     newScanner.render(
-      (decodedText) => {
+      async (decodedText) => {
         const code = decodedText.trim().toLowerCase();
-        const matched = products.find((p) => p.slug.current === code);
+        const matched = products.find(
+          (p) => p.slug.current.toLowerCase() === code
+        );
 
         if (!matched) {
           alert(`No product matches "${code}"`);
@@ -86,8 +86,16 @@ export default function POSPage() {
         const alreadyInCart = cart.some((item) => item._id === matched._id);
         if (alreadyInCart) return;
 
+        await newScanner.clear(); // stop scanner
+        setScanner(null); // mark scanner as inactive
+
         setCart((prev) => [...prev, { ...matched, quantity: 1 }]);
-        launchFireworks(); // 🎆 always trigger after adding
+        launchFireworks();
+
+        // restart scanner after delay
+        setTimeout(() => {
+          startScanner();
+        }, 3000);
       },
       (err) => console.warn('QR error:', err)
     );

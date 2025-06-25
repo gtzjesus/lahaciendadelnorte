@@ -119,3 +119,15 @@ video::-webkit-media-controls-start-playback-button {
   height: 0;
   width: 0;
 }
+
+/* ============================================================================
+   Toaster OVERRIDES
+============================================================================ */
+/* globals.css or a custom toast override file */
+#sonner-toast-container {
+  z-index: 9998 !important; /* lower than your header's 99999 */
+}
+
+body > div[id^='sonner'] {
+  z-index: 9998 !important;
+}
