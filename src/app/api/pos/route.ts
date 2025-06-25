@@ -1,4 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+// ✅ File: src/app/api/pos/route.ts
+
+import { NextResponse } from 'next/server';
 import { client } from '@/sanity/lib/client';
 
 type OrderItem = {
@@ -7,30 +9,18 @@ type OrderItem = {
   price: number;
 };
 
-type RequestBody = {
-  items: OrderItem[];
-};
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== 'POST') {
-    return res
-      .status(405)
-      .json({ success: false, message: 'Method not allowed' });
-  }
-
+export async function POST(req: Request) {
   try {
-    const { items }: RequestBody = req.body;
+    const body = await req.json();
+    const items: OrderItem[] = body.items;
 
-    if (!items || !Array.isArray(items) || items.length === 0) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'No items provided' });
+    if (!Array.isArray(items) || items.length === 0) {
+      return NextResponse.json(
+        { success: false, message: 'No items provided' },
+        { status: 400 }
+      );
     }
 
-    // Validate items
     for (const item of items) {
       if (
         typeof item.productId !== 'string' ||
@@ -39,32 +29,27 @@ export default async function handler(
         typeof item.price !== 'number' ||
         item.price < 0
       ) {
-        return res
-          .status(400)
-          .json({ success: false, message: 'Invalid item format' });
+        return NextResponse.json(
+          { success: false, message: 'Invalid item format' },
+          { status: 400 }
+        );
       }
     }
 
-    // Calculate total price
     const subtotal = items.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
     );
-    const tax = subtotal * 0.0825; // 8.25% tax
+    const tax = subtotal * 0.0825;
     const totalPrice = subtotal + tax;
 
-    // Generate order number (simple timestamp + random)
     const orderNumber =
       'ORD-' + Date.now().toString() + '-' + Math.floor(Math.random() * 1000);
 
-    // Get clerkUserId from auth/session -- replace with your logic
-    const clerkUserId = 'clerk-placeholder';
-
-    // Placeholder customer info, replace with real if available
+    const clerkUserId = 'clerk-placeholder'; // Replace with real user if needed
     const customerName = 'Walk-in Customer';
     const email = 'customer@example.com';
 
-    // Prepare products array with references
     const productsForSanity = items.map((item) => ({
       _type: 'object',
       product: {
@@ -74,7 +59,6 @@ export default async function handler(
       quantity: item.quantity,
     }));
 
-    // Create order document in Sanity
     const orderDoc = {
       _type: 'order',
       orderNumber,
@@ -93,16 +77,20 @@ export default async function handler(
 
     const createdOrder = await client.create(orderDoc);
 
-    return res.status(201).json({
-      success: true,
-      orderId: createdOrder._id,
-      orderNumber: createdOrder.orderNumber,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        orderId: createdOrder._id,
+        orderNumber: createdOrder.orderNumber,
+      },
+      { status: 201 }
+    );
     /* eslint-disable  @typescript-eslint/no-explicit-any */
   } catch (error: any) {
     console.error('Error creating order:', error);
-    return res
-      .status(500)
-      .json({ success: false, message: error.message || 'Server error' });
+    return NextResponse.json(
+      { success: false, message: error.message || 'Server error' },
+      { status: 500 }
+    );
   }
 }
