@@ -20,7 +20,7 @@ export default function POSPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
   const fireworksContainer = useRef<HTMLDivElement>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   useEffect(() => {
     client
@@ -124,9 +124,6 @@ export default function POSPage() {
   const total = subtotal + tax;
 
   const handleSale = async () => {
-    if (cart.length === 0) return;
-    setLoading(true);
-
     try {
       const res = await fetch('/api/admin/pos', {
         method: 'POST',
@@ -141,18 +138,15 @@ export default function POSPage() {
       });
 
       const data = await res.json();
-
+      /* eslint-disable  @typescript-eslint/no-explicit-any */
       if (data.success) {
         clearCart();
-        alert(`Order created! Order ID: ${data.orderId}`);
+        alert(`✅ Sale complete! Order ID: ${data.orderId}`);
       } else {
-        alert(`Error: ${data.message}`);
+        alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
       }
-    } catch (err) {
-      alert('Something went wrong.');
-      console.error(err);
-    } finally {
-      setLoading(false);
+    } catch (error: any) {
+      alert(`❌ Error: ${error.message || 'Something went wrong.'}`);
     }
   };
 
