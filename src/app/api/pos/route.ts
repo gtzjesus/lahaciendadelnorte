@@ -53,25 +53,26 @@ export async function POST(req: Request) {
       await decreaseProductStock(item.productId, item.quantity);
     }
 
-    // Step 3: Create order in Sanity
-    const orderId = nanoid(10);
+    // Step 3: Create order document
+    const orderId = nanoid();
     const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
-    const createdOrder = await backendClient.create({
+    await backendClient.create({
       _type: 'order',
       orderNumber: `POS-${orderId}`,
       orderDate: new Date().toISOString(),
-      clerkUserId: 'demo-user', // adjust accordingly
-      customerName: 'Walk-In',
-      email: 'noemail@store.com',
+      clerkUserId: 'demo-user', // Replace as needed
+      customerName: 'Walk-In', // Replace or extend frontend to get customer info
+      email: 'noemail@store.com', // Replace or extend frontend to get customer info
       totalPrice,
       currency: 'usd',
+      amountDiscount: 0,
       orderType: 'reservation',
       paymentStatus: 'paid_in_store',
       pickupStatus: 'picked_up',
       products: items.map((item) => ({
         _key: item.productId,
-        _type: 'object', // MUST be here
+        _type: 'object',
         product: {
           _type: 'reference',
           _ref: item.productId,
@@ -83,18 +84,12 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       message: 'Stock adjusted and order created',
-      orderId: createdOrder._id,
+      orderId,
     });
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-  } catch (error: any) {
+  } catch (error) {
     console.error('❌ POS API error:', error);
     return new NextResponse(
-      JSON.stringify({
-        success: false,
-        message:
-          error?.message ||
-          'Unknown server error. Check your backendClient and schema.',
-      }),
+      JSON.stringify({ success: false, message: (error as Error).message }),
       { status: 500 }
     );
   }
