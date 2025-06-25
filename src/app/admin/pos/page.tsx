@@ -17,6 +17,10 @@ export default function POSPage() {
   const [cart, setCart] = useState<Product[]>([]);
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
 
+  const removeItem = (index: number) => {
+    setCart((prev) => prev.filter((_, i) => i !== index));
+  };
+
   // Load products from Sanity
   useEffect(() => {
     client
@@ -73,14 +77,14 @@ export default function POSPage() {
   const total = subtotal + tax;
 
   return (
-    <div className="p-4 min-h-screen bg-white">
-      <h1 className="text-2xl font-bold mb-4">ElPasoKaboom POS 💥</h1>
+    <div className="p-6 min-h-screen bg-white">
+      <h1 className="text-2xl uppercase font-bold mb-4">point of sale</h1>
 
       <button
         onClick={startScanner}
-        className="px-4 py-2 bg-green-600 text-white rounded"
+        className="p-4 block uppercase text-xs z-[10] font-light text-center  bg-flag-blue text-white "
       >
-        📷 Start Scanner
+        start scanning
       </button>
 
       <div id="reader" className="w-full max-w-md mx-auto mt-4"></div>
@@ -108,25 +112,55 @@ export default function POSPage() {
                 </select>
               </div>
             </div>
-            <div className="font-semibold">
-              ${(item.price * (item.quantity || 1)).toFixed(2)}
+            <div className="flex items-center gap-4">
+              <div className="font-semibold">
+                ${(item.price * (item.quantity || 1)).toFixed(2)}
+              </div>
+              <button
+                onClick={() => removeItem(i)}
+                className="text-red-600 text-lg font-bold"
+                aria-label="Remove item"
+              >
+                ❌
+              </button>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="mt-6 text-lg">
-        <div>Subtotal: ${subtotal.toFixed(2)}</div>
-        <div>Tax (8.25%): ${tax.toFixed(2)}</div>
-        <div className="font-bold">Total: ${total.toFixed(2)}</div>
-      </div>
+      <div className="w-full lg:w-auto lg:sticky h-fit bg-flag-blue p-6 lg:p-12 fixed bottom-0 left-0 lg:left-auto lg:bottom-0 lg:order-last shadow-md">
+        <h3 className="uppercase text-xs font-light text-center text-white border-b pb-1">
+          sale Summary
+        </h3>
 
-      <button
-        onClick={clearCart}
-        className="mt-6 px-4 py-2 bg-red-500 text-white rounded"
-      >
-        🗑️ Clear Cart
-      </button>
+        <div></div>
+        <div className="font-bold"></div>
+        <div className="pt-1 space-y-1 mt-5 mb-5 gap-3">
+          <p className="flex justify-between uppercase text-xs font-light text-white">
+            <span>Subtotal: ${subtotal.toFixed(2)}</span>
+          </p>
+          <p className="flex justify-between uppercase text-xs font-light text-white">
+            <span>
+              <span className="lowercase">Tax (8.25%): ${tax.toFixed(2)}</span>:
+            </span>
+          </p>
+          <p className="flex justify-between uppercase text-xs font-light text-white">
+            <span>Total: ${total.toFixed(2)}</span>
+          </p>
+        </div>
+        <button
+          onClick={clearCart}
+          className="w-full text-sm bg-green border uppercase mb-5 py-2 text-white font-light hover:bg-opacity-90 transition"
+        >
+          Sale Total: ${total.toFixed(2)}
+        </button>
+        <button
+          onClick={clearCart}
+          className="w-full text-sm bg-flag-red border uppercase py-2 text-white font-light hover:bg-opacity-90 transition"
+        >
+          Clear Sale
+        </button>
+      </div>
     </div>
   );
 }

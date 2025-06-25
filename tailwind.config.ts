@@ -35,6 +35,7 @@ const config: Config = {
         pearl: '#F5F5F5',
         'flag-red': '#B22234',
         'flag-blue': '#0A3161',
+        green: '#2E8B57',
 
         // Dynamic theme colors using CSS variables (used with CSS theming systems)
         background: 'hsl(var(--background))',
