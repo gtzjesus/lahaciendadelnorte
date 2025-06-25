@@ -9,6 +9,16 @@ type OrderItem = {
   price: number;
 };
 
+// Generate random 6-letter uppercase order code
+function generateOrderCode(length = 6): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -43,8 +53,8 @@ export async function POST(req: Request) {
     const tax = subtotal * 0.0825;
     const totalPrice = subtotal + tax;
 
-    const orderNumber =
-      'ORD-' + Date.now().toString() + '-' + Math.floor(Math.random() * 1000);
+    // Use custom 6-letter code for order number
+    const orderNumber = generateOrderCode();
 
     const clerkUserId = 'clerk-placeholder'; // Replace with real user if needed
     const customerName = 'Walk-in Customer';
@@ -70,8 +80,8 @@ export async function POST(req: Request) {
       currency: 'usd',
       amountDiscount: 0,
       orderType: 'reservation',
-      paymentStatus: 'paid_in_store',
-      pickupStatus: 'not_picked_up',
+      paymentStatus: 'paid', // Set payment status to paid
+      pickupStatus: 'picked_up', // Set pickup status to picked_up
       orderDate: new Date().toISOString(),
     };
 
