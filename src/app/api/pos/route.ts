@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 import { backendClient } from '@/sanity/lib/backendClient';
 import { decreaseProductStock } from '@/sanity/lib/products/decreaseProductStock';
+import { nanoid } from 'nanoid';
 
 type POSItem = {
   productId: string;
   quantity: number;
+  price: number;
 };
 
 export async function POST(req: Request) {
@@ -18,7 +20,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Step 1: Validate stock for each product
+    // Step 1: Validate stock
     for (const item of items) {
       const product = await backendClient.fetch<{ stock: number }>(
         `*[_id == $id][0]{stock}`,
@@ -46,14 +48,32 @@ export async function POST(req: Request) {
       }
     }
 
-    // Step 2: All checks passed – reduce stock
+    // Step 2: Reduce stock
     for (const item of items) {
       await decreaseProductStock(item.productId, item.quantity);
     }
 
+    // Step 3: Create order document
+    const orderId = nanoid();
+    const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+    await backendClient.create({
+      _type: 'order',
+      _id: orderId,
+      createdAt: new Date().toISOString(),
+      total,
+      items: items.map((item) => ({
+        _type: 'orderItem',
+        product: { _type: 'reference', _ref: item.productId },
+        quantity: item.quantity,
+        price: item.price,
+      })),
+    });
+
     return NextResponse.json({
       success: true,
-      message: 'Stock adjusted successfully',
+      message: 'Stock adjusted and order created',
+      orderId,
     });
   } catch (error) {
     console.error('❌ POS API error:', error);
