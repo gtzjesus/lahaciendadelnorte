@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { client } from '@/sanity/lib/client';
 import { Fireworks } from 'fireworks-js';
@@ -17,6 +18,7 @@ type Product = {
     quantityRequired?: number;
     dealPrice?: number;
   };
+  imageUrl?: string;
 };
 
 type CartItem = Product & { cartQty: number };
@@ -28,7 +30,6 @@ export default function POSPage() {
   const fireworksContainer = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
-  // const [orderId, setOrderId] = useState<string | null>(null);
   const celebrationTimeout = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
 
@@ -37,8 +38,13 @@ export default function POSPage() {
       .fetch<Product[]>(
         `
         *[_type == "product"]{
-          _id, name, slug, price, stock,
-          deal->{type, quantityRequired, dealPrice}
+          _id,
+          name,
+          slug,
+          price,
+          stock,
+          deal->{type, quantityRequired, dealPrice},
+          "imageUrl": image.asset->url
         }
       `
       )
@@ -98,7 +104,6 @@ export default function POSPage() {
 
         const fw = launchFireworks();
         setTimeout(() => fw?.stop(), 2000);
-
         setTimeout(startScanner, 3000);
       },
       (err) => console.warn('QR error:', err)
@@ -116,10 +121,8 @@ export default function POSPage() {
     );
   };
 
-  const removeItem = (i: number) => {
+  const removeItem = (i: number) =>
     setCart((prev) => prev.filter((_, idx) => idx !== i));
-  };
-
   const clearCart = () => setCart([]);
 
   const subtotal = cart.reduce((sum, item) => {
@@ -167,7 +170,6 @@ export default function POSPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items: payloadItems }),
       });
-
       const data = await res.json();
       if (!res.ok || !data.success) {
         alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
@@ -200,7 +202,7 @@ export default function POSPage() {
       <div
         ref={fireworksContainer}
         className="fixed inset-0 z-[2000] pointer-events-none"
-        style={{ opacity: 0, transition: 'opacity 0.5s' }}
+        style={{ opacity: '0', transition: 'opacity 0.5s' }}
       />
       {showCelebration && (
         <div className="fixed inset-0 z-[210] flex flex-col items-center justify-center bg-flag-blue bg-opacity-90 text-white p-6 text-center">
@@ -243,31 +245,45 @@ export default function POSPage() {
               const payQty = Math.ceil(item.cartQty / 2);
               lineTotal = payQty * item.price;
             }
+
             return (
               <div
                 key={item._id}
                 className="flex items-center justify-between border-b py-2"
               >
-                <div className="uppercase text-sm">
-                  <div className="font-light">{item.name}</div>
-                  <div className="font-bold text-green">
-                    ${item.price.toFixed(2)} x
-                    <select
-                      className="ml-2 border px-1 py-0.5"
-                      value={item.cartQty}
-                      onChange={(e) =>
-                        updateQuantity(i, Number(e.target.value))
-                      }
-                    >
-                      {[...Array(item.stock || 1)].map((_, n) => (
-                        <option key={n + 1} value={n + 1}>
-                          {n + 1}
-                        </option>
-                      ))}
-                    </select>
-                    <span className="ml-2 text-xs italic text-gray-500">
-                      ({item.stock ?? 'N/A'} in stock)
-                    </span>
+                <div className="flex items-center">
+                  {item.imageUrl && (
+                    <div className="relative w-12 h-12 mr-3 flex-shrink-0">
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.name}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        sizes="48px"
+                      />
+                    </div>
+                  )}
+                  <div className="uppercase text-sm">
+                    <div className="font-light">{item.name}</div>
+                    <div className="font-bold text-green">
+                      ${item.price.toFixed(2)} x
+                      <select
+                        className="ml-2 border px-1 py-0.5"
+                        value={item.cartQty}
+                        onChange={(e) =>
+                          updateQuantity(i, Number(e.target.value))
+                        }
+                      >
+                        {[...Array(item.stock || 1)].map((_, n) => (
+                          <option key={n + 1} value={n + 1}>
+                            {n + 1}
+                          </option>
+                        ))}
+                      </select>
+                      <span className="ml-2 text-xs italic text-gray-500">
+                        ({item.stock ?? 'N/A'} in stock)
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <div className="flex flex-col items-end">
