@@ -19,12 +19,12 @@ type Product = {
 type CartItem = Product & { cartQty: number };
 
 export default function POSPage() {
-  const [finalTotal, setFinalTotal] = useState<number | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
   const fireworksContainer = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
+  const [finalTotal, setFinalTotal] = useState<number | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
   const celebrationTimeout = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
@@ -32,26 +32,26 @@ export default function POSPage() {
   useEffect(() => {
     client
       .fetch<Product[]>(
-        `
-        *[_type == "product"]{
-          _id,
-          name,
-          slug,
-          price,
-          stock,
+        `*[_type == "product"]{
+          _id, name, slug, price, stock,
           "imageUrl": image.asset->url
-        }
-      `
+        }`
       )
-      .then((res) => setProducts(res))
+      .then(setProducts)
       .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (scanner) scanner.clear().catch(() => {});
+    };
   }, []);
 
   const launchFireworks = () => {
     if (!fireworksContainer.current) return;
     fireworksContainer.current.innerHTML = '';
     fireworksContainer.current.style.opacity = '1';
-    const fireworksInstance = new Fireworks(fireworksContainer.current, {
+    const fw = new Fireworks(fireworksContainer.current, {
       opacity: 0.8,
       acceleration: 1.2,
       friction: 0.95,
@@ -61,77 +61,47 @@ export default function POSPage() {
       traceLength: 4,
       traceSpeed: 7,
       flickering: 20,
-      lineStyle: 'round',
       hue: { min: 0, max: 360 },
       brightness: { min: 50, max: 100 },
       delay: { min: 20, max: 50 },
-      rocketsPoint: { min: 10, max: 90 },
       autoresize: true,
       sound: { enabled: false },
     });
-    fireworksInstance.start();
-    return fireworksInstance;
+    fw.start();
+    return fw;
   };
 
-  // Clean up scanner only on unmount — no dependency on scanner state
-  useEffect(() => {
-    return () => {
-      if (scanner) {
-        scanner.clear().catch(() => {});
-      }
-    };
-  }, []);
-
   const startScanner = () => {
-    if (scanner) return; // scanner already running
+    if (scanner) return;
 
     const newScanner = new Html5QrcodeScanner(
       'reader',
       { fps: 10, qrbox: 250 },
       false
     );
-
     newScanner.render(
       async (decodedText) => {
         const code = decodedText.trim().toLowerCase();
         const matched = products.find(
           (p) => p.slug.current.toLowerCase() === code
         );
-        if (!matched) {
-          alert(`No product matches "${code}"`);
-          return;
-        }
-
-        if ((matched.stock ?? 0) <= 0) {
-          alert(`${matched.name} is out of stock.`);
-          return;
-        }
+        if (!matched) return; // no alert, just ignore
 
         if (cart.some((item) => item._id === matched._id)) return;
 
-        // Clear and dispose scanner *and reset state* BEFORE continuing
         await newScanner.clear();
         setScanner(null);
 
         setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
 
-        const fireworksScan = launchFireworks();
-        setTimeout(() => fireworksScan?.stop(), 2000);
-
-        // Restart scanner after delay
-        setTimeout(startScanner, 3000);
+        const fw = launchFireworks();
+        setTimeout(() => fw?.stop(), 2000);
+        setTimeout(startScanner, 2000);
       },
       (err) => console.warn('QR error:', err)
     );
 
     setScanner(newScanner);
-  };
-
-  const stopScanner = async () => {
-    if (scanner) {
-      await scanner.clear();
-      setScanner(null);
-    }
   };
 
   const updateQuantity = (index: number, qty: number) => {
@@ -152,12 +122,12 @@ export default function POSPage() {
     if ((item.stock ?? 0) <= 0) return sum;
     return sum + item.price * item.cartQty;
   }, 0);
-
   const tax = subtotal * 0.0825;
   const total = subtotal + tax;
 
   const handleSale = async () => {
-    if (!cart.length) return alert('Cart is empty!');
+    if (!cart.length) return;
+
     setLoading(true);
 
     const stockErrors = cart.filter((item) => {
@@ -166,14 +136,12 @@ export default function POSPage() {
     });
 
     if (stockErrors.length) {
-      const names = stockErrors.map((i) => i.name).join(', ');
-      alert(`❌ Not enough stock for: ${names}`);
       setLoading(false);
       return;
     }
 
     try {
-      const payloadItems = cart.map((item) => ({
+      const payload = cart.map((item) => ({
         productId: item._id,
         quantity: item.cartQty,
         price: item.price,
@@ -183,8 +151,9 @@ export default function POSPage() {
       const res = await fetch('/api/pos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: payloadItems }),
+        body: JSON.stringify({ items: payload }),
       });
+
       const data = await res.json();
       if (!res.ok || !data.success) {
         alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
@@ -192,26 +161,20 @@ export default function POSPage() {
         setFinalTotal(total);
         clearCart();
         setShowCelebration(true);
-        const fireworksSale = launchFireworks();
+        const fw = launchFireworks();
         celebrationTimeout.current = setTimeout(() => {
-          fireworksSale?.stop();
+          fw?.stop();
           setShowCelebration(false);
           router.push('/admin/orders');
         }, 10000);
       }
       /* eslint-disable  @typescript-eslint/no-explicit-any */
     } catch (err: any) {
-      alert(`❌ Error: ${err.message || 'Something went wrong.'}`);
+      alert(`❌ ${err.message || 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    return () => {
-      if (celebrationTimeout.current) clearTimeout(celebrationTimeout.current);
-    };
-  }, []);
 
   return (
     <div className="relative min-h-screen bg-white">
@@ -225,13 +188,11 @@ export default function POSPage() {
           <h1 className="text-5xl text-yellow font-extrabold mb-4 animate-bounce">
             Sale Success!
           </h1>
-
           {finalTotal !== null && (
             <p className="text-2xl text-yellow font-extrabold mb-4 animate-bounce">
               Total: ${finalTotal.toFixed(2)}
             </p>
           )}
-
           <button
             onClick={() => {
               setShowCelebration(false);
@@ -245,31 +206,19 @@ export default function POSPage() {
       )}
 
       <div className="p-3">
-        <h1 className="text-2xl uppercase font-bold mb-4">point of sale</h1>
-
-        <div className="flex gap-2 mb-4">
-          <button
-            onClick={startScanner}
-            disabled={!!scanner}
-            className="p-4 block uppercase text-xs z-[10] font-light text-center bg-flag-blue text-white flex-1"
-          >
-            {scanner ? 'Scanning...' : 'Start Scanning'}
-          </button>
-          <button
-            onClick={stopScanner}
-            disabled={!scanner}
-            className="p-4 block uppercase text-xs z-[10] font-light text-center bg-flag-red text-white flex-1"
-          >
-            Stop Scanning
-          </button>
-        </div>
-
+        <h1 className="text-2xl uppercase font-bold mb-4">Point of Sale</h1>
+        <button
+          onClick={startScanner}
+          disabled={!!scanner}
+          className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-blue text-white w-full"
+        >
+          {scanner ? 'Scanning...' : 'Start Scanning'}
+        </button>
         <div id="reader" className="w-full max-w-md mx-auto" />
 
         <div className="mt-6 space-y-4">
           {cart.map((item, i) => {
             const lineTotal = item.price * item.cartQty;
-
             return (
               <div
                 key={item._id}
@@ -307,28 +256,16 @@ export default function POSPage() {
                         </select>
                       ) : (
                         <span className="ml-2 text-xs text-red-600 font-semibold">
-                          Out of stock
-                        </span>
-                      )}
-                      {item.stock !== undefined ? (
-                        <span
-                          className="ml-2 text-xs italic font-semibold"
-                          style={{
-                            color: item.stock === 0 ? 'red' : '#6b7280',
-                          }}
-                        >
-                          ({item.stock} in stock)
-                        </span>
-                      ) : (
-                        <span className="ml-2 text-xs italic text-gray-500">
-                          (N/A stock)
+                          OUT OF STOCK
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
                 <div className="flex flex-col items-end">
-                  <div className="font-semibold">${lineTotal.toFixed(2)}</div>
+                  <div className="font-semibold">
+                    ${(item.stock ?? 0) > 0 ? lineTotal.toFixed(2) : '--'}
+                  </div>
                   <button
                     onClick={() => removeItem(i)}
                     className="text-flag-red mt-1"
@@ -342,7 +279,7 @@ export default function POSPage() {
         </div>
       </div>
 
-      <div className="w-full lg:w-auto bg-flag-blue p-6 lg:p-12 shadow-md">
+      <div className="w-full lg:w-auto bg-flag-blue p-6 lg:p-12 shadow-md mt-6">
         <h3 className="uppercase text-xs font-light text-center text-white border-b pb-1">
           Sale Summary
         </h3>
