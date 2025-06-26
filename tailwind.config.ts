@@ -36,6 +36,7 @@ const config: Config = {
         'flag-red': '#B22234',
         'flag-blue': '#0A3161',
         green: '#2E8B57',
+        yellow: '#FFEB3B',
 
         // Dynamic theme colors using CSS variables (used with CSS theming systems)
         background: 'hsl(var(--background))',

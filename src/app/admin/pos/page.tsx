@@ -24,6 +24,8 @@ type Product = {
 type CartItem = Product & { cartQty: number };
 
 export default function POSPage() {
+  const [finalTotal, setFinalTotal] = useState<number | null>(null);
+
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
@@ -95,7 +97,16 @@ export default function POSPage() {
           alert(`No product matches "${code}"`);
           return;
         }
+
+        // 🛑 VERIFICAR STOCK ANTES DE AGREGAR
+        if ((matched.stock ?? 0) <= 0) {
+          alert(`❌ "${matched.name}" is out of stock`);
+          return;
+        }
+
         if (cart.some((item) => item._id === matched._id)) return;
+
+        // ...
 
         await newScanner.clear();
         setScanner(null);
@@ -145,6 +156,19 @@ export default function POSPage() {
     if (!cart.length) return alert('Cart is empty!');
     setLoading(true);
 
+    // 🔒 Validar que ningún producto esté sin stock suficiente
+    const stockErrors = cart.filter((item) => {
+      const inStock = item.stock ?? 0;
+      return item.cartQty > inStock || inStock <= 0;
+    });
+
+    if (stockErrors.length) {
+      const names = stockErrors.map((i) => i.name).join(', ');
+      alert(`❌ Not enough stock for: ${names}`);
+      setLoading(false);
+      return;
+    }
+
     try {
       const payloadItems = cart.map((item) => {
         const d = item.deal;
@@ -174,15 +198,17 @@ export default function POSPage() {
       if (!res.ok || !data.success) {
         alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
       } else {
-        clearCart();
+        setFinalTotal(total); // ✔ Guardamos el total solo una vez
+        clearCart(); // ✔ Ahora sí está bien aquí
         setShowCelebration(true);
         const fw = launchFireworks();
         celebrationTimeout.current = setTimeout(() => {
           fw?.stop();
           setShowCelebration(false);
           router.push('/admin/orders');
-        }, 7500);
+        }, 10000);
       }
+
       /* eslint-disable  @typescript-eslint/no-explicit-any */
     } catch (err: any) {
       alert(`❌ Error: ${err.message || 'Something went wrong.'}`);
@@ -209,6 +235,13 @@ export default function POSPage() {
           <h1 className="text-5xl text-yellow font-extrabold mb-4 animate-bounce">
             Sale Success!
           </h1>
+
+          {finalTotal !== null && (
+            <p className="text-2xl text-yellow font-extrabold mb-4 animate-bounce">
+              Total: ${finalTotal.toFixed(2)}
+            </p>
+          )}
+
           <button
             onClick={() => {
               setShowCelebration(false);
@@ -267,22 +300,39 @@ export default function POSPage() {
                     <div className="font-light">{item.name}</div>
                     <div className="font-bold text-green">
                       ${item.price.toFixed(2)} x
-                      <select
-                        className="ml-2 border px-1 py-0.5"
-                        value={item.cartQty}
-                        onChange={(e) =>
-                          updateQuantity(i, Number(e.target.value))
-                        }
-                      >
-                        {[...Array(item.stock || 1)].map((_, n) => (
-                          <option key={n + 1} value={n + 1}>
-                            {n + 1}
-                          </option>
-                        ))}
-                      </select>
-                      <span className="ml-2 text-xs italic text-gray-500">
-                        ({item.stock ?? 'N/A'} in stock)
-                      </span>
+                      {(item.stock ?? 0) > 0 ? (
+                        <select
+                          className="ml-2 border px-1 py-0.5"
+                          value={item.cartQty}
+                          onChange={(e) =>
+                            updateQuantity(i, Number(e.target.value))
+                          }
+                        >
+                          {[...Array(item.stock)].map((_, n) => (
+                            <option key={n + 1} value={n + 1}>
+                              {n + 1}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <span className="ml-2 text-xs text-red-600 font-semibold">
+                          Out of stock
+                        </span>
+                      )}
+                      {item.stock !== undefined ? (
+                        <span
+                          className="ml-2 text-xs italic font-semibold"
+                          style={{
+                            color: item.stock === 0 ? 'red' : '#6b7280',
+                          }}
+                        >
+                          ({item.stock} in stock)
+                        </span>
+                      ) : (
+                        <span className="ml-2 text-xs italic text-gray-500">
+                          (N/A stock)
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
