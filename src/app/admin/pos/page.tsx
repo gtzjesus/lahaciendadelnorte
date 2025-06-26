@@ -73,13 +73,24 @@ export default function POSPage() {
     return fireworksInstance;
   };
 
+  useEffect(() => {
+    return () => {
+      if (scanner) {
+        scanner.clear().catch(() => {}); // safely clear scanner
+        setScanner(null);
+      }
+    };
+  }, [scanner]);
+
   const startScanner = () => {
-    if (scanner) return;
+    if (scanner) return; // scanner already running
+
     const newScanner = new Html5QrcodeScanner(
       'reader',
       { fps: 10, qrbox: 250 },
       false
     );
+
     newScanner.render(
       async (decodedText) => {
         const code = decodedText.trim().toLowerCase();
@@ -98,17 +109,22 @@ export default function POSPage() {
 
         if (cart.some((item) => item._id === matched._id)) return;
 
+        // **Important:**
+        // Clear and dispose scanner *and reset state* BEFORE continuing
         await newScanner.clear();
-        setScanner(null);
+        setScanner(null); // reset state so you can start scanning again later
 
         setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
 
         const fireworksScan = launchFireworks();
         setTimeout(() => fireworksScan?.stop(), 2000);
+
+        // Restart scanner after delay
         setTimeout(startScanner, 3000);
       },
       (err) => console.warn('QR error:', err)
     );
+
     setScanner(newScanner);
   };
 
