@@ -3,6 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
+type Category = {
+  _id: string;
+  title: string;
+  slug: { current: string };
+};
+
 type Product = {
   _id?: string;
   itemNumber: string;
@@ -10,6 +16,7 @@ type Product = {
   slug?: string;
   price: number;
   stock: number;
+  category?: Category;
   imageUrl?: string;
   extraImageUrls?: string[];
 };
@@ -24,6 +31,8 @@ const slugify = (text: string) =>
 
 export default function InventoryPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [form, setForm] = useState({
     itemNumber: '',
     name: '',
@@ -49,6 +58,10 @@ export default function InventoryPage() {
     fetch('/api/products')
       .then((res) => res.json())
       .then((data) => setProducts(data.products || []));
+
+    fetch('/api/categories')
+      .then((res) => res.json())
+      .then((data) => setCategories(data.categories || []));
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,9 +75,10 @@ export default function InventoryPage() {
       !form.name ||
       !form.slug ||
       form.price === '' ||
-      form.stock === ''
+      form.stock === '' ||
+      !selectedCategory
     ) {
-      return alert('Please fill out all fields');
+      return alert('Please fill out all fields and select a category');
     }
 
     const data = new FormData();
@@ -73,6 +87,7 @@ export default function InventoryPage() {
     data.append('slug', form.slug);
     data.append('price', form.price);
     data.append('stock', form.stock);
+    data.append('categoryId', selectedCategory);
 
     if (mainImageFile) {
       data.append('mainImage', mainImageFile);
@@ -90,6 +105,7 @@ export default function InventoryPage() {
       if (res.ok) {
         setMessage('✅ Product added!');
         setForm({ itemNumber: '', name: '', slug: '', price: '', stock: '' });
+        setSelectedCategory('');
         setMainImageFile(null);
         setExtraImageFiles([]);
 
@@ -141,6 +157,29 @@ export default function InventoryPage() {
             }`}
           />
         ))}
+
+        {/* Category dropdown */}
+        <div>
+          <label
+            htmlFor="category"
+            className="uppercase text-sm font-semibold block mb-1"
+          >
+            Category
+          </label>
+          <select
+            id="category"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="uppercase text-sm border border-flag-red p-3 w-full"
+          >
+            <option value="">Select a category</option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.title}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* File Inputs */}
@@ -211,13 +250,18 @@ export default function InventoryPage() {
                   />
                 </div>
               )}
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 <p className="text-flag-blue text-sm font-semibold">
                   #{p.itemNumber}
                 </p>
                 <p className="text-flag-red text-xs font-bold">{p.name}</p>
                 <p className="text-sm font-bold text-green">${p.price}</p>
                 <p className="text-xs font-bold">stock: {p.stock}</p>
+                {p.category && (
+                  <p className="text-xs font-semibold text-gray-600">
+                    category: {p.category.title}
+                  </p>
+                )}
               </div>
             </li>
           ))}
