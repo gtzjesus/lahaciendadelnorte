@@ -11,6 +11,7 @@ import { Toaster } from 'sonner';
 
 const navItems = [
   { name: 'Dashboard', href: '/admin/dashboard' },
+  { name: 'inventory', href: '/admin/inventory' },
   { name: 'Pos', href: '/admin/pos' },
   { name: 'orders', href: '/admin/orders' },
 ];
