@@ -13,11 +13,6 @@ type Product = {
   slug: { current: string };
   price: number;
   stock?: number;
-  deal?: {
-    type: 'bogo' | 'twoForX';
-    quantityRequired?: number;
-    dealPrice?: number;
-  };
   imageUrl?: string;
 };
 
@@ -44,7 +39,6 @@ export default function POSPage() {
           slug,
           price,
           stock,
-          deal->{type, quantityRequired, dealPrice},
           "imageUrl": image.asset->url
         }
       `
@@ -97,7 +91,10 @@ export default function POSPage() {
           return;
         }
 
-        // Removed stock check here to allow adding products even if stock is 0.
+        if ((matched.stock ?? 0) <= 0) {
+          alert(`${matched.name} is out of stock.`);
+          return;
+        }
 
         if (cart.some((item) => item._id === matched._id)) return;
 
@@ -129,19 +126,12 @@ export default function POSPage() {
     setCart((prev) => prev.filter((_, idx) => idx !== i));
   const clearCart = () => setCart([]);
 
+  // Subtotal only counts items in stock
   const subtotal = cart.reduce((sum, item) => {
-    const d = item.deal;
-    if (d?.type === 'twoForX' && d.quantityRequired && d.dealPrice) {
-      const groups = Math.floor(item.cartQty / d.quantityRequired);
-      const rem = item.cartQty % d.quantityRequired;
-      return sum + groups * d.dealPrice + rem * item.price;
-    }
-    if (d?.type === 'bogo') {
-      const payQty = Math.ceil(item.cartQty / 2);
-      return sum + payQty * item.price;
-    }
+    if ((item.stock ?? 0) <= 0) return sum; // skip out-of-stock items
     return sum + item.price * item.cartQty;
   }, 0);
+
   const tax = subtotal * 0.0825;
   const total = subtotal + tax;
 
@@ -162,24 +152,12 @@ export default function POSPage() {
     }
 
     try {
-      const payloadItems = cart.map((item) => {
-        const d = item.deal;
-        let finalPrice = item.price * item.cartQty;
-        if (d?.type === 'twoForX' && d.quantityRequired && d.dealPrice) {
-          const groups = Math.floor(item.cartQty / d.quantityRequired);
-          const rem = item.cartQty % d.quantityRequired;
-          finalPrice = groups * d.dealPrice + rem * item.price;
-        } else if (d?.type === 'bogo') {
-          const payQty = Math.ceil(item.cartQty / 2);
-          finalPrice = payQty * item.price;
-        }
-        return {
-          productId: item._id,
-          quantity: item.cartQty,
-          price: item.price,
-          finalPrice,
-        };
-      });
+      const payloadItems = cart.map((item) => ({
+        productId: item._id,
+        quantity: item.cartQty,
+        price: item.price,
+        finalPrice: item.price * item.cartQty,
+      }));
 
       const res = await fetch('/api/pos', {
         method: 'POST',
@@ -258,17 +236,7 @@ export default function POSPage() {
 
         <div className="mt-6 space-y-4">
           {cart.map((item, i) => {
-            const d = item.deal;
-            let lineTotal = item.price * item.cartQty;
-            if (d?.type === 'twoForX' && d.quantityRequired && d.dealPrice) {
-              const groups = Math.floor(item.cartQty / d.quantityRequired);
-              const rem = item.cartQty % d.quantityRequired;
-              lineTotal = groups * d.dealPrice + rem * item.price;
-            }
-            if (d?.type === 'bogo') {
-              const payQty = Math.ceil(item.cartQty / 2);
-              lineTotal = payQty * item.price;
-            }
+            const lineTotal = item.price * item.cartQty;
 
             return (
               <div
@@ -329,14 +297,6 @@ export default function POSPage() {
                 </div>
                 <div className="flex flex-col items-end">
                   <div className="font-semibold">${lineTotal.toFixed(2)}</div>
-                  {d?.type === 'bogo' && (
-                    <div className="text-xs text-blue-600">BOGO applied!</div>
-                  )}
-                  {d?.type === 'twoForX' && (
-                    <div className="text-xs text-blue-600">
-                      {d.quantityRequired} for ${d.dealPrice?.toFixed(2)} deal!
-                    </div>
-                  )}
                   <button
                     onClick={() => removeItem(i)}
                     className="text-flag-red mt-1"

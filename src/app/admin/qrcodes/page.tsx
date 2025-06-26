@@ -21,8 +21,10 @@ export default function QRCodePage() {
   }, []);
 
   return (
-    <div className="p-8 bg-white min-h-screen">
-      <h1 className="text-3xl font-bold mb-8">🔥 Product QR Codes</h1>
+    <div className="relative min-h-screen bg-white p-3">
+      <h1 className="uppercase text-xl font-semibold mb-6">
+        Firworks QR Codes
+      </h1>
 
       <div
         style={{
@@ -35,22 +37,30 @@ export default function QRCodePage() {
           <div
             key={product._id}
             style={{
-              textAlign: 'center',
               border: '2px solid #ccc',
               padding: '1rem',
               borderRadius: '8px',
               background: '#f9f9f9',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center', // centers horizontally
             }}
           >
             <QRCodeCanvas
               value={product.slug.current}
-              size={256} // 🔍 Make QR Code larger
+              size={156}
               includeMargin={true}
+              style={{ display: 'block' }}
             />
-            <div style={{ marginTop: '1rem', fontWeight: 'bold' }}>
+            <div
+              className="uppercase text-lg font-semibold"
+              style={{ marginTop: '1rem', fontWeight: 'bold' }}
+            >
               {product.name}
             </div>
-            <div>Item #: {product.itemNumber}</div>
+            <div className="uppercase text-md font-light">
+              Item # {product.itemNumber}
+            </div>
           </div>
         ))}
       </div>
