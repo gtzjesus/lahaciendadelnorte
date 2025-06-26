@@ -99,10 +99,7 @@ export default function POSPage() {
         }
 
         // 🛑 VERIFICAR STOCK ANTES DE AGREGAR
-        if ((matched.stock ?? 0) <= 0) {
-          alert(`❌ "${matched.name}" is out of stock`);
-          return;
-        }
+        if ((matched.stock ?? 0) <= 0) return;
 
         if (cart.some((item) => item._id === matched._id)) return;
 
