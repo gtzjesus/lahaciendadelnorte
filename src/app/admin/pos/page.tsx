@@ -73,14 +73,14 @@ export default function POSPage() {
     return fireworksInstance;
   };
 
+  // Clean up scanner only on unmount — no dependency on scanner state
   useEffect(() => {
     return () => {
       if (scanner) {
-        scanner.clear().catch(() => {}); // safely clear scanner
-        setScanner(null);
+        scanner.clear().catch(() => {});
       }
     };
-  }, [scanner]);
+  }, []);
 
   const startScanner = () => {
     if (scanner) return; // scanner already running
@@ -109,10 +109,9 @@ export default function POSPage() {
 
         if (cart.some((item) => item._id === matched._id)) return;
 
-        // **Important:**
         // Clear and dispose scanner *and reset state* BEFORE continuing
         await newScanner.clear();
-        setScanner(null); // reset state so you can start scanning again later
+        setScanner(null);
 
         setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
 
@@ -126,6 +125,13 @@ export default function POSPage() {
     );
 
     setScanner(newScanner);
+  };
+
+  const stopScanner = async () => {
+    if (scanner) {
+      await scanner.clear();
+      setScanner(null);
+    }
   };
 
   const updateQuantity = (index: number, qty: number) => {
@@ -142,9 +148,8 @@ export default function POSPage() {
     setCart((prev) => prev.filter((_, idx) => idx !== i));
   const clearCart = () => setCart([]);
 
-  // Subtotal only counts items in stock
   const subtotal = cart.reduce((sum, item) => {
-    if ((item.stock ?? 0) <= 0) return sum; // skip out-of-stock items
+    if ((item.stock ?? 0) <= 0) return sum;
     return sum + item.price * item.cartQty;
   }, 0);
 
@@ -241,14 +246,25 @@ export default function POSPage() {
 
       <div className="p-3">
         <h1 className="text-2xl uppercase font-bold mb-4">point of sale</h1>
-        <button
-          onClick={startScanner}
-          disabled={!!scanner}
-          className="p-4 block uppercase text-xs z-[10] font-light text-center bg-flag-blue text-white"
-        >
-          {scanner ? 'Scanning...' : 'Start Scanning'}
-        </button>
-        <div id="reader" className="w-full max-w-md mx-auto mt-4" />
+
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={startScanner}
+            disabled={!!scanner}
+            className="p-4 block uppercase text-xs z-[10] font-light text-center bg-flag-blue text-white flex-1"
+          >
+            {scanner ? 'Scanning...' : 'Start Scanning'}
+          </button>
+          <button
+            onClick={stopScanner}
+            disabled={!scanner}
+            className="p-4 block uppercase text-xs z-[10] font-light text-center bg-flag-red text-white flex-1"
+          >
+            Stop Scanning
+          </button>
+        </div>
+
+        <div id="reader" className="w-full max-w-md mx-auto" />
 
         <div className="mt-6 space-y-4">
           {cart.map((item, i) => {
