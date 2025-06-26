@@ -25,7 +25,6 @@ type CartItem = Product & { cartQty: number };
 
 export default function POSPage() {
   const [finalTotal, setFinalTotal] = useState<number | null>(null);
-
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
@@ -58,7 +57,7 @@ export default function POSPage() {
     if (!fireworksContainer.current) return;
     fireworksContainer.current.innerHTML = '';
     fireworksContainer.current.style.opacity = '1';
-    const fw = new Fireworks(fireworksContainer.current, {
+    const fireworksInstance = new Fireworks(fireworksContainer.current, {
       opacity: 0.8,
       acceleration: 1.2,
       friction: 0.95,
@@ -76,8 +75,8 @@ export default function POSPage() {
       autoresize: true,
       sound: { enabled: false },
     });
-    fw.start();
-    return fw;
+    fireworksInstance.start();
+    return fireworksInstance;
   };
 
   const startScanner = () => {
@@ -98,20 +97,17 @@ export default function POSPage() {
           return;
         }
 
-        // 🛑 VERIFICAR STOCK ANTES DE AGREGAR
-        if ((matched.stock ?? 0) <= 0) return;
+        // Removed stock check here to allow adding products even if stock is 0.
 
         if (cart.some((item) => item._id === matched._id)) return;
-
-        // ...
 
         await newScanner.clear();
         setScanner(null);
 
         setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
 
-        const fw = launchFireworks();
-        setTimeout(() => fw?.stop(), 2000);
+        const fireworksScan = launchFireworks();
+        setTimeout(() => fireworksScan?.stop(), 2000);
         setTimeout(startScanner, 3000);
       },
       (err) => console.warn('QR error:', err)
@@ -153,7 +149,6 @@ export default function POSPage() {
     if (!cart.length) return alert('Cart is empty!');
     setLoading(true);
 
-    // 🔒 Validar que ningún producto esté sin stock suficiente
     const stockErrors = cart.filter((item) => {
       const inStock = item.stock ?? 0;
       return item.cartQty > inStock || inStock <= 0;
@@ -195,17 +190,16 @@ export default function POSPage() {
       if (!res.ok || !data.success) {
         alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
       } else {
-        setFinalTotal(total); // ✔ Guardamos el total solo una vez
-        clearCart(); // ✔ Ahora sí está bien aquí
+        setFinalTotal(total);
+        clearCart();
         setShowCelebration(true);
-        const fw = launchFireworks();
+        const fireworksSale = launchFireworks();
         celebrationTimeout.current = setTimeout(() => {
-          fw?.stop();
+          fireworksSale?.stop();
           setShowCelebration(false);
           router.push('/admin/orders');
         }, 10000);
       }
-
       /* eslint-disable  @typescript-eslint/no-explicit-any */
     } catch (err: any) {
       alert(`❌ Error: ${err.message || 'Something went wrong.'}`);
