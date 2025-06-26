@@ -192,33 +192,35 @@ export default function InventoryPage() {
       </h2>
 
       <ul className="space-y-2">
-        {products.map((p) => (
-          <li
-            key={p._id}
-            className="border border-flag-blue uppercase p-2 flex items-center gap-4"
-          >
-            {p.imageUrl && (
-              <div className="relative w-16 h-16 flex-shrink-0">
-                <Image
-                  src={p.imageUrl}
-                  alt={p.name}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  sizes="64px"
-                  priority={false}
-                />
+        {[...products]
+          .sort((a, b) => Number(a.itemNumber) - Number(b.itemNumber))
+          .map((p) => (
+            <li
+              key={p._id}
+              className="border border-flag-blue uppercase p-2 flex items-center gap-4"
+            >
+              {p.imageUrl && (
+                <div className="relative w-16 h-16 flex-shrink-0">
+                  <Image
+                    src={p.imageUrl}
+                    alt={p.name}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    sizes="64px"
+                    priority={false}
+                  />
+                </div>
+              )}
+              <div className="flex gap-2">
+                <p className="text-flag-blue text-sm font-semibold">
+                  #{p.itemNumber}
+                </p>
+                <p className="text-flag-red text-xs font-bold">{p.name}</p>
+                <p className="text-sm font-bold text-green">${p.price}</p>
+                <p className="text-xs font-bold">stock: {p.stock}</p>
               </div>
-            )}
-            <div className="flex gap-2">
-              <p className="text-flag-blue text-sm font-semibold">
-                #{p.itemNumber}
-              </p>
-              <p className="text-flag-red text-sm font-bold">{p.name}</p>
-              <p className="text-sm font-bold text-green">${p.price}</p>
-              <p className="text-sm font-bold">stock: {p.stock}</p>
-            </div>
-          </li>
-        ))}
+            </li>
+          ))}
       </ul>
     </div>
   );
