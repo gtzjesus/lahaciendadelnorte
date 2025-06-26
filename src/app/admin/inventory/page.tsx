@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 type Product = {
@@ -18,9 +18,9 @@ const slugify = (text: string) =>
   text
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9\s-]/g, '') // remove non-alphanumerics
-    .replace(/\s+/g, '-') // replace spaces with -
-    .replace(/-+/g, '-'); // collapse multiple dashes
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
 
 export default function InventoryPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -35,6 +35,10 @@ export default function InventoryPage() {
   const [extraImageFiles, setExtraImageFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+
+  // Refs for file inputs
+  const mainImageRef = useRef<HTMLInputElement | null>(null);
+  const extraImagesRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const newSlug = slugify(form.name);
@@ -88,6 +92,12 @@ export default function InventoryPage() {
         setForm({ itemNumber: '', name: '', slug: '', price: '', stock: '' });
         setMainImageFile(null);
         setExtraImageFiles([]);
+
+        // Reset file inputs manually
+        if (mainImageRef.current) mainImageRef.current.value = '';
+        if (extraImagesRef.current) extraImagesRef.current.value = '';
+
+        // Refresh product list
         fetch('/api/products')
           .then((r) => r.json())
           .then((d) => setProducts(d.products || []));
@@ -109,7 +119,7 @@ export default function InventoryPage() {
       </h1>
 
       {/* Form */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
         <h1 className="uppercase text-sm font-semibold">add firework</h1>
 
         {['itemNumber', 'name', 'slug', 'price', 'stock'].map((key) => (
@@ -132,10 +142,13 @@ export default function InventoryPage() {
           />
         ))}
       </div>
+
+      {/* File Inputs */}
       <div className="border border-flag-red p-2">
         <div className="uppercase text-sm font-semibold mb-2">
           <label className="px-1">Main Image:</label>
           <input
+            ref={mainImageRef}
             type="file"
             accept="image/*"
             onChange={(e) => {
@@ -146,8 +159,9 @@ export default function InventoryPage() {
         </div>
 
         <div className="uppercase text-sm font-semibold mb-2">
-          <label className='className="px-1'>other Images (1–4):</label>
+          <label className="px-1">Other Images (1–4):</label>
           <input
+            ref={extraImagesRef}
             type="file"
             accept="image/*"
             multiple
@@ -160,6 +174,7 @@ export default function InventoryPage() {
           />
         </div>
       </div>
+
       <button
         disabled={loading}
         onClick={handleUpload}
@@ -175,11 +190,12 @@ export default function InventoryPage() {
       <h2 className="uppercase text-xl font-semibold mb-6">
         explosives inventory
       </h2>
+
       <ul className="space-y-2">
         {products.map((p) => (
           <li
             key={p._id}
-            className="border p-3 rounded flex items-center gap-4"
+            className="border border-flag-blue uppercase p-2 flex items-center gap-4"
           >
             {p.imageUrl && (
               <div className="relative w-16 h-16 flex-shrink-0">
@@ -193,8 +209,13 @@ export default function InventoryPage() {
                 />
               </div>
             )}
-            <div>
-              {p.name} ({p.itemNumber}) — ${p.price} — stock: {p.stock}
+            <div className="flex gap-2">
+              <p className="text-flag-blue text-sm font-semibold">
+                #{p.itemNumber}
+              </p>
+              <p className="text-flag-red text-sm font-bold">{p.name}</p>
+              <p className="text-sm font-bold text-green">${p.price}</p>
+              <p className="text-sm font-bold">stock: {p.stock}</p>
             </div>
           </li>
         ))}
