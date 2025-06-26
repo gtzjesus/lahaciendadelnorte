@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { backendClient } from '@/sanity/lib/backendClient'; // ✅ has token
+import { backendClient } from '@/sanity/lib/backendClient';
 
 type OrderItem = {
   productId: string;
@@ -7,7 +7,6 @@ type OrderItem = {
   price: number;
 };
 
-// Generate random 6-letter uppercase order code
 function generateOrderCode(length = 6): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let result = '';
@@ -50,40 +49,31 @@ export async function POST(req: Request) {
     );
     const tax = subtotal * 0.0825;
     const totalPrice = subtotal + tax;
-
     const orderNumber = generateOrderCode();
 
-    const clerkUserId = 'clerk-placeholder'; // Replace with real user if needed
+    const clerkUserId = 'clerk-placeholder';
     const customerName = 'Walk-in Customer';
     const email = 'customer@example.com';
 
     const productsForSanity = items.map((item) => ({
       _type: 'object',
-      product: {
-        _type: 'reference',
-        _ref: item.productId,
-      },
+      product: { _type: 'reference', _ref: item.productId },
       quantity: item.quantity,
     }));
 
-    // Update stock for each product
     for (const item of items) {
-      // Fetch current stock to ensure no negative stock
       const product = await backendClient.fetch(
         `*[_type == "product" && _id == $id][0]{stock}`,
         { id: item.productId }
       );
-
       if (!product) {
         return NextResponse.json(
           { success: false, message: `Product not found: ${item.productId}` },
           { status: 404 }
         );
       }
-
       const currentStock = product.stock ?? 0;
       const newStock = currentStock - item.quantity;
-
       if (newStock < 0) {
         return NextResponse.json(
           {
@@ -93,8 +83,6 @@ export async function POST(req: Request) {
           { status: 400 }
         );
       }
-
-      // Patch stock
       await backendClient
         .patch(item.productId)
         .set({ stock: newStock })
@@ -112,8 +100,8 @@ export async function POST(req: Request) {
       currency: 'usd',
       amountDiscount: 0,
       orderType: 'reservation',
-      paymentStatus: 'paid', // Set payment status to paid
-      pickupStatus: 'picked_up', // Set pickup status to picked_up
+      paymentStatus: 'paid',
+      pickupStatus: 'picked_up',
       orderDate: new Date().toISOString(),
     };
 
