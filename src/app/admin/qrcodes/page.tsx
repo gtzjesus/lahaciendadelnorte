@@ -79,6 +79,7 @@ function QRPDF({ images }: { images: QRImage[] }) {
 export default function QRCodePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [qrImages, setQrImages] = useState<QRImage[]>([]);
+  const [loading, setLoading] = useState(false);
   const qrRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
@@ -90,22 +91,31 @@ export default function QRCodePage() {
   }, []);
 
   const generateImages = async () => {
+    setLoading(true);
     const images: QRImage[] = [];
 
-    for (const p of products) {
+    // Limiting to first 50 products to avoid freezing (adjust if needed)
+    const batch = products.slice(0, 50);
+
+    for (const p of batch) {
       const node = qrRefs.current[p._id];
       if (!node) continue;
 
-      const dataUrl = await toPng(node, { cacheBust: true });
-      images.push({
-        id: p._id,
-        dataUrl,
-        name: p.name,
-        itemNumber: p.itemNumber,
-      });
+      try {
+        const dataUrl = await toPng(node, { cacheBust: true });
+        images.push({
+          id: p._id,
+          dataUrl,
+          name: p.name,
+          itemNumber: p.itemNumber,
+        });
+      } catch (err) {
+        console.error(`Failed to render QR for ${p.name}`, err);
+      }
     }
 
     setQrImages(images);
+    setLoading(false);
   };
 
   return (
@@ -117,8 +127,9 @@ export default function QRCodePage() {
       <button
         onClick={generateImages}
         className="mb-4 bg-flag-blue text-white py-2 px-4 uppercase text-sm"
+        disabled={loading}
       >
-        Prepare PDF
+        {loading ? 'Generating QR codes...' : 'Prepare PDF'}
       </button>
 
       {qrImages.length > 0 && (
@@ -129,6 +140,10 @@ export default function QRCodePage() {
         >
           Download PDF
         </PDFDownloadLink>
+      )}
+
+      {loading && (
+        <p className="text-sm text-gray-500">Working... please wait</p>
       )}
 
       <div
@@ -157,10 +172,6 @@ export default function QRCodePage() {
               size={156}
               includeMargin={true}
             />
-            {/* <div className="uppercase text-sm font-bold mt-2">
-              {product.name}
-            </div>
-            <div className="uppercase text-xs">Item # {product.itemNumber}</div> */}
           </div>
         ))}
       </div>
