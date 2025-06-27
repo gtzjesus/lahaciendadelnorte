@@ -78,6 +78,14 @@ export const orderType = defineType({
       validation: (Rule) => Rule.required().min(0),
     }),
     defineField({
+      name: 'tax',
+      title: 'Tax',
+      type: 'number',
+      description: 'Tax amount applied to the order.',
+      validation: (Rule) => Rule.min(0),
+    }),
+
+    defineField({
       name: 'currency',
       title: 'Currency',
       type: 'string',

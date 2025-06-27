@@ -9,24 +9,32 @@ export async function getOrderByOrderNumber(orderNumber: string) {
       *[_type == "order" && orderNumber == $orderNumber][0]{
         _id,
         orderNumber,
+        clerkUserId,
         customerName,
-        totalPrice,
-        status,
-        orderDate,
-        currency,
-        paymentStatus,
-        pickupStatus,
+        email,
         products[] {
           quantity,
           _key,
           product->{
             _id,
             name,
-            price,
             slug,
-            image
+            image,
+            price
           }
-        }
+        },
+        totalPrice,
+        tax,
+        currency,
+        amountDiscount,
+        orderType,
+        paymentStatus,
+        pickupStatus,
+        orderDate,
+        paymentMethod,
+        cashReceived,
+        cardAmount,
+        changeGiven
       }
     `,
     { orderNumber }

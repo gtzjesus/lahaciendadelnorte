@@ -338,6 +338,13 @@
         },
         "optional": true
       },
+      "tax": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": true
+      },
       "currency": {
         "type": "objectAttribute",
         "value": {

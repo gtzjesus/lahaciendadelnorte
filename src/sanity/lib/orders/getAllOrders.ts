@@ -19,6 +19,7 @@ export async function getAllOrders() {
         }
       },
       totalPrice,
+      tax,
       currency,
       amountDiscount,
       orderType,
@@ -27,10 +28,7 @@ export async function getAllOrders() {
       orderDate,
 
       // ✅ Campos de pago agregados
-      paymentMethod,
-      cashReceived,
-      cardAmount,
-      changeGiven
+   
     }
   `;
 
