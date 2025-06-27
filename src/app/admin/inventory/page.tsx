@@ -227,7 +227,7 @@ export default function InventoryPage() {
       <hr className="my-8" />
 
       <h2 className="uppercase text-xl font-semibold mb-6">
-        explosives inventory
+        firework inventory
       </h2>
 
       <ul className="space-y-2">
@@ -250,15 +250,17 @@ export default function InventoryPage() {
                   />
                 </div>
               )}
-              <div className="flex gap-2 flex-wrap">
-                <p className="text-flag-blue text-sm font-semibold">
+              <div className="flex gap-1 flex-wrap">
+                <p className="text-flag-blue text-xs font-bold">
                   #{p.itemNumber}
                 </p>
                 <p className="text-flag-red text-xs font-bold">{p.name}</p>
-                <p className="text-sm font-bold text-green">${p.price}</p>
+              </div>
+              <div className="flex flex-col gap-2 flex-wrap">
+                <p className="text-xs font-bold text-green">${p.price}</p>
                 <p className="text-xs font-bold">stock: {p.stock}</p>
                 {p.category && (
-                  <p className="text-xs font-semibold text-gray-600">
+                  <p className="text-xs text-green font-semibold ">
                     category: {p.category.title}
                   </p>
                 )}
