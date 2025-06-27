@@ -29,6 +29,7 @@ export default function POSPage() {
   const [showCelebration, setShowCelebration] = useState(false);
   const celebrationTimeout = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
+  const totalItems = cart.reduce((sum, item) => sum + item.cartQty, 0);
 
   useEffect(() => {
     client
@@ -296,10 +297,12 @@ export default function POSPage() {
           Sale Summary
         </h3>
         <div className="space-y-1 mt-2 mb-2 text-white uppercase text-xs font-light">
+          <p>Total Items: {totalItems}</p>
           <p>Subtotal: ${subtotal.toFixed(2)}</p>
           <p>Tax (8.25%): ${tax.toFixed(2)}</p>
           <p>Total: ${total.toFixed(2)}</p>
         </div>
+
         <button
           onClick={handleSale}
           disabled={loading || cart.length === 0}

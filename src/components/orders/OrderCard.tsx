@@ -9,6 +9,11 @@ interface OrderCardProps {
 }
 
 const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
+  const totalItems = order.products?.reduce(
+    (sum: number, item: any) => sum + item.quantity,
+    0
+  );
+
   return (
     <div className="bg-white border border-flag-blue p-2 shadow-sm overflow-hidden">
       <div className="p-4 border-b border-flag-blue">
@@ -102,7 +107,11 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         </div>
       </div>
 
-      <div className="border-t border-flag-blue font-mono p-4 flex flex-col">
+      <div className="border-t border-flag-blue font-mono p-4 flex flex-col space-y-1">
+        <div className="flex justify-between">
+          <p className="uppercase text-xs mb-1 text-gray-600">total items:</p>
+          <p className="font-bold text-xs">{totalItems}</p>
+        </div>
         <div className="flex justify-between">
           <p className="uppercase text-xs mb-1 text-gray-600">total:</p>
           <p className="font-bold text-xs">${order.totalPrice?.toFixed(2)}</p>

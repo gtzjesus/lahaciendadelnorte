@@ -1,4 +1,3 @@
-import Header from '@/components/common/header';
 import { getAllOrders } from '@/sanity/lib/orders/getAllOrders';
 import OrderCard from '@/components/orders/OrderCard';
 
@@ -38,7 +37,6 @@ export default async function AdminOrdersPage() {
 
   return (
     <>
-      <Header />
       <div className="bg-gray-50 min-h-screen p-6">
         <h1 className="uppercase text-xl font-semibold mb-6">All Orders</h1>
 

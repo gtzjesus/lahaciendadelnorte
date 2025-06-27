@@ -100,7 +100,7 @@ export async function POST(req: Request) {
       currency: 'usd',
       amountDiscount: 0,
       orderType: 'reservation',
-      paymentStatus: 'paid',
+      paymentStatus: 'paid_in_store', // ✅ or 'paid_online' depending on your logic
       pickupStatus: 'picked_up',
       orderDate: new Date().toISOString(),
     };
