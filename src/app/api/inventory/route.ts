@@ -13,6 +13,7 @@ export async function POST(req: Request) {
     const slug = formData.get('slug')?.toString();
     const price = parseFloat(formData.get('price') as string);
     const stock = parseInt(formData.get('stock') as string);
+    const categoryId = formData.get('categoryId')?.toString();
 
     if (!itemNumber || !name || !slug || isNaN(price) || isNaN(stock)) {
       return NextResponse.json(
@@ -21,6 +22,7 @@ export async function POST(req: Request) {
       );
     }
 
+    // Check for duplicate itemNumber
     const existing = await backendClient.fetch(
       `*[_type == "product" && itemNumber == $itemNumber][0]`,
       { itemNumber }
@@ -32,6 +34,7 @@ export async function POST(req: Request) {
       );
     }
 
+    // Upload main image
     let mainImageRef = null;
     const mainImage = formData.get('mainImage') as File | null;
     if (mainImage && mainImage.size > 0) {
@@ -43,6 +46,8 @@ export async function POST(req: Request) {
         asset: { _type: 'reference', _ref: uploaded._id },
       };
     }
+
+    // Upload extra images
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     const extraImageRefs: any[] = [];
     const extraImages = formData.getAll('extraImages') as File[];
@@ -58,6 +63,7 @@ export async function POST(req: Request) {
       }
     }
 
+    // Build new product object
     const newProduct: any = {
       _type: 'product',
       itemNumber,
@@ -68,6 +74,14 @@ export async function POST(req: Request) {
       image: mainImageRef,
       extraImages: extraImageRefs,
     };
+
+    // Add category reference if provided
+    if (categoryId) {
+      newProduct.category = {
+        _type: 'reference',
+        _ref: categoryId,
+      };
+    }
 
     await backendClient.create(newProduct);
 
