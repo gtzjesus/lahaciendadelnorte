@@ -401,7 +401,7 @@ export default function POSPage() {
                   className="w-full p-2 text-black"
                 />
               </div>
-              {cashReceived + cardAmount !== total && (
+              {Math.abs(cashReceived + cardAmount - total) > 0.01 && (
                 <p className="text-xs text-yellow-300 font-semibold">
                   Amount does not match total.
                 </p>
