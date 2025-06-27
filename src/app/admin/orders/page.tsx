@@ -33,6 +33,10 @@ export default async function AdminOrdersPage() {
     paymentStatus: string;
     pickupStatus: string;
     orderDate: string;
+    paymentMethod?: 'cash' | 'card' | 'split';
+    cashReceived?: number;
+    cardAmount?: number;
+    changeGiven?: number;
   }
 
   return (

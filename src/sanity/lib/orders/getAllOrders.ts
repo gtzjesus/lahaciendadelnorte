@@ -24,7 +24,13 @@ export async function getAllOrders() {
       orderType,
       paymentStatus,
       pickupStatus,
-      orderDate
+      orderDate,
+
+      // ✅ Campos de pago agregados
+      paymentMethod,
+      cashReceived,
+      cardAmount,
+      changeGiven
     }
   `;
 

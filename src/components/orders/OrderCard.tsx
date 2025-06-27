@@ -107,7 +107,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         </div>
       </div>
 
-      {/* Totals */}
+      {/* Totals & Payment */}
       <div className="border-t border-flag-blue font-mono p-4 flex flex-col space-y-1">
         <div className="flex justify-between">
           <p className="uppercase text-xs mb-1 text-gray-600">total items:</p>
@@ -115,13 +115,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         </div>
         <div className="flex justify-between">
           <p className="uppercase text-xs mb-1 text-gray-600">sale total:</p>
-          <p className="font-bold text-xs">${order.totalPrice?.toFixed(2)}</p>
+          <p className="font-bold text-xs">
+            ${order.totalPrice?.toFixed(2) ?? 'n/a'}
+          </p>
         </div>
 
         {/* Payment Details */}
         {(order.paymentMethod ||
-          order.cashReceived !== undefined ||
-          order.cardAmount !== undefined) && (
+          typeof order.cashReceived === 'number' ||
+          typeof order.cardAmount === 'number' ||
+          typeof order.changeGiven === 'number') && (
           <div className="mt-4">
             <p className="text-xs uppercase font-semibold text-gray-500 mb-1">
               payment details
@@ -134,7 +137,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               </div>
             )}
 
-            {order.cashReceived !== undefined && (
+            {typeof order.cashReceived === 'number' && (
               <div className="flex justify-between">
                 <p className="uppercase text-xs text-gray-600">
                   cash received:
@@ -145,7 +148,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               </div>
             )}
 
-            {order.cardAmount !== undefined && (
+            {typeof order.cardAmount === 'number' && (
               <div className="flex justify-between">
                 <p className="uppercase text-xs text-gray-600">card amount:</p>
                 <p className="font-bold text-xs">
@@ -154,7 +157,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               </div>
             )}
 
-            {order.changeGiven !== undefined && (
+            {typeof order.changeGiven === 'number' && (
               <div className="flex justify-between">
                 <p className="uppercase text-xs text-gray-600">change given:</p>
                 <p className="font-bold text-xs">
@@ -195,7 +198,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         </p>
       </div>
 
-      {/* 🔗 View Order Button */}
+      {/* View Order Button */}
       <div className="p-4 border-t border-flag-blue flex justify-center">
         <Link
           href={`/admin/orders/${order.orderNumber}`}
