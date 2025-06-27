@@ -95,10 +95,7 @@ export const orderType = defineType({
       title: 'Order Type',
       type: 'string',
       options: {
-        list: [
-          { title: 'Reservation (Pay at Store)', value: 'reservation' },
-          // add other types if needed
-        ],
+        list: [{ title: 'Reservation (Pay at Store)', value: 'reservation' }],
       },
       initialValue: 'reservation',
       validation: (Rule) => Rule.required(),
@@ -111,7 +108,7 @@ export const orderType = defineType({
         list: [
           { title: 'Unpaid', value: 'unpaid' },
           { title: 'Paid In Store', value: 'paid_in_store' },
-          { title: 'Paid Online', value: 'paid_online' }, // optional extra status
+          { title: 'Paid Online', value: 'paid_online' },
         ],
       },
       initialValue: 'unpaid',
@@ -124,7 +121,7 @@ export const orderType = defineType({
       options: {
         list: [
           { title: 'Not Picked Up', value: 'not_picked_up' },
-          { title: 'Ready for Pickup', value: 'ready_for_pickup' }, // added
+          { title: 'Ready for Pickup', value: 'ready_for_pickup' },
           { title: 'Picked Up', value: 'picked_up' },
           { title: 'Cancelled', value: 'cancelled' },
         ],
@@ -137,6 +134,39 @@ export const orderType = defineType({
       title: 'Order Date',
       type: 'datetime',
       validation: (Rule) => Rule.required(),
+    }),
+
+    // ✅ NEW FIELDS BELOW
+
+    defineField({
+      name: 'paymentMethod',
+      title: 'Payment Method',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Cash', value: 'cash' },
+          { title: 'Card', value: 'card' },
+          { title: 'Split (Cash + Card)', value: 'split' },
+        ],
+      },
+    }),
+    defineField({
+      name: 'cashReceived',
+      title: 'Cash Received',
+      type: 'number',
+      description: 'Amount of cash received from the customer.',
+    }),
+    defineField({
+      name: 'cardAmount',
+      title: 'Card Amount',
+      type: 'number',
+      description: 'Amount paid by card, if split payment.',
+    }),
+    defineField({
+      name: 'changeGiven',
+      title: 'Change Given',
+      type: 'number',
+      description: 'Change returned to the customer (for cash payments).',
     }),
   ],
   preview: {
