@@ -21,6 +21,15 @@ export async function POST(req: Request) {
     const body = await req.json();
     const items: OrderItem[] = body.items;
 
+    // ✅ new payment fields
+    const paymentMethod = body.paymentMethod as 'cash' | 'card' | 'split';
+    const cashReceived =
+      typeof body.cashReceived === 'number' ? body.cashReceived : 0;
+    const cardAmount =
+      typeof body.cardAmount === 'number' ? body.cardAmount : 0;
+    const changeGiven =
+      typeof body.changeGiven === 'number' ? body.changeGiven : 0;
+
     if (!Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
         { success: false, message: 'No items provided' },
@@ -100,9 +109,14 @@ export async function POST(req: Request) {
       currency: 'usd',
       amountDiscount: 0,
       orderType: 'reservation',
-      paymentStatus: 'paid_in_store', // ✅ or 'paid_online' depending on your logic
+      paymentStatus: 'paid_in_store',
       pickupStatus: 'picked_up',
       orderDate: new Date().toISOString(),
+      // ✅ new fields added here:
+      paymentMethod,
+      cashReceived,
+      cardAmount,
+      changeGiven,
     };
 
     const createdOrder = await backendClient.create(orderDoc);
