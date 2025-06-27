@@ -29,6 +29,7 @@ export default function POSPage() {
   const [showCelebration, setShowCelebration] = useState(false);
   const celebrationTimeout = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
+
   const totalItems = cart.reduce((sum, item) => sum + item.cartQty, 0);
   const subtotal = cart.reduce((sum, item) => {
     if ((item.stock ?? 0) <= 0) return sum;
@@ -36,6 +37,7 @@ export default function POSPage() {
   }, 0);
   const tax = subtotal * 0.0825;
   const total = subtotal + tax;
+
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'split'>(
     'card'
   );
@@ -46,11 +48,13 @@ export default function POSPage() {
   const changeGiven =
     paymentMethod === 'cash' ? Math.max(cashReceived - total, 0) : 0;
 
+  // Redondeo helper
+  const round2 = (num: number) => Math.round(num * 100) / 100;
+
   useEffect(() => {
     if (paymentMethod === 'split') {
       const remaining = total - cashReceived;
-      // Redondeamos a 2 decimales
-      const rounded = Math.round(remaining * 100) / 100;
+      const rounded = round2(remaining);
       setCardAmount(rounded > 0 ? rounded : 0);
     }
   }, [cashReceived, paymentMethod, total]);
@@ -71,7 +75,7 @@ export default function POSPage() {
     return () => {
       if (scanner) scanner.clear().catch(() => {});
     };
-  }, []);
+  }, [scanner]);
 
   const launchFireworks = () => {
     if (!fireworksContainer.current) return;
@@ -146,6 +150,7 @@ export default function POSPage() {
 
   const handleSale = async () => {
     if (!cart.length) return;
+
     if (
       paymentMethod === 'split' &&
       Math.abs(cashReceived + cardAmount - total) > 0.01
@@ -180,14 +185,16 @@ export default function POSPage() {
         body: JSON.stringify({
           items: payload,
           paymentMethod,
-          cashReceived: paymentMethod !== 'card' ? cashReceived : undefined,
+          cashReceived:
+            paymentMethod !== 'card' ? round2(cashReceived) : undefined,
           cardAmount:
             paymentMethod !== 'cash'
               ? paymentMethod === 'split'
-                ? cardAmount
-                : total
+                ? round2(cardAmount)
+                : round2(total)
               : undefined,
-          changeGiven: paymentMethod === 'cash' ? changeGiven : undefined,
+          changeGiven:
+            paymentMethod === 'cash' ? round2(changeGiven) : undefined,
         }),
       });
 
@@ -365,10 +372,12 @@ export default function POSPage() {
               <input
                 type="number"
                 min="0"
+                step="0.01"
                 value={Number.isNaN(cashReceived) ? 0 : cashReceived}
-                onChange={(e) =>
-                  setCashReceived(parseFloat(e.target.value) || 0)
-                }
+                onChange={(e) => {
+                  const val = parseFloat(e.target.value) || 0;
+                  setCashReceived(round2(val));
+                }}
                 className="w-full p-2 mt-1 text-black"
               />
               <p className="text-xs mt-1">
@@ -385,10 +394,12 @@ export default function POSPage() {
                 <input
                   type="number"
                   min="0"
+                  step="0.01"
                   value={Number.isNaN(cashReceived) ? 0 : cashReceived}
-                  onChange={(e) =>
-                    setCashReceived(parseFloat(e.target.value) || 0)
-                  }
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    setCashReceived(round2(val));
+                  }}
                   className="w-full p-2 text-black"
                 />
               </div>
@@ -397,10 +408,12 @@ export default function POSPage() {
                 <input
                   type="number"
                   min="0"
+                  step="0.01"
                   value={Number.isNaN(cardAmount) ? 0 : cardAmount}
-                  onChange={(e) =>
-                    setCardAmount(parseFloat(e.target.value) || 0)
-                  }
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    setCardAmount(round2(val));
+                  }}
                   className="w-full p-2 text-black"
                 />
               </div>
@@ -416,15 +429,9 @@ export default function POSPage() {
         <button
           onClick={handleSale}
           disabled={loading || cart.length === 0}
-          className="w-full bg-green py-2 text-white uppercase font-light disabled:opacity-50"
+          className="w-full bg-white text-flag-blue uppercase font-semibold py-3"
         >
-          {loading ? 'Processing Sale...' : `Sale Total: $${total.toFixed(2)}`}
-        </button>
-        <button
-          onClick={clearCart}
-          className="w-full mt-2 bg-flag-red py-2 text-white uppercase font-light"
-        >
-          Clear Sale
+          {loading ? 'Processing...' : 'Complete Sale'}
         </button>
       </div>
     </div>
