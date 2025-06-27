@@ -23,17 +23,15 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               order number
             </p>
             <span
-              className="font-mono uppercase font-light text-xs text-green-600 dark:text-green-400"
+              className="font-mono uppercase font-light text-xs text-flag-blue dark:text-green"
               title={order.orderNumber || ''}
             >
               {order.orderNumber?.slice(-6)}
             </span>
           </div>
           <div>
-            <p className="text-xs uppercase font-light font-mono text-gray-600">
-              ordered on
-            </p>
-            <p className="font-light text-xs mt-1">
+            <p className="text-xs uppercase font-light font-mono ">sale date</p>
+            <p className="font-light text-xs mt-1 text-flag-red">
               {order.orderDate
                 ? new Date(order.orderDate).toLocaleDateString()
                 : 'n/a'}
@@ -113,7 +111,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           <p className="font-bold text-xs">{totalItems}</p>
         </div>
         <div className="flex justify-between">
-          <p className="uppercase text-xs mb-1 text-gray-600">total:</p>
+          <p className="uppercase text-xs mb-1 text-gray-600">sale total:</p>
           <p className="font-bold text-xs">${order.totalPrice?.toFixed(2)}</p>
         </div>
       </div>
@@ -124,12 +122,12 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           payment status:{' '}
           <span
             className={`font-bold ${
-              order.paymentStatus === 'paid'
-                ? 'text-green-700'
+              order.paymentStatus === 'paid_in_store'
+                ? 'text-green'
                 : 'text-flag-red'
             }`}
           >
-            {order.paymentStatus === 'paid' ? 'Paid' : 'Unpaid'}
+            {order.paymentStatus === 'paid_in_store' ? 'Paid' : 'Unpaid'}
           </span>
         </p>
 
@@ -138,7 +136,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           <span
             className={`font-bold ${
               order.pickupStatus === 'picked_up'
-                ? 'text-green-700'
+                ? 'text-green'
                 : 'text-flag-red'
             }`}
           >
