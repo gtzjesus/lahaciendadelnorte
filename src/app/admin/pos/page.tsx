@@ -13,6 +13,7 @@ type Product = {
   slug: { current: string };
   price: number;
   stock?: number;
+  itemNumber?: string; // 👈 add this
   imageUrl?: string;
 };
 
@@ -33,9 +34,9 @@ export default function POSPage() {
     client
       .fetch<Product[]>(
         `*[_type == "product"]{
-          _id, name, slug, price, stock,
-          "imageUrl": image.asset->url
-        }`
+    _id, name, slug, itemNumber, price, stock,
+    "imageUrl": image.asset->url
+  }`
       )
       .then(setProducts)
       .catch(console.error);
@@ -236,9 +237,20 @@ export default function POSPage() {
                       />
                     </div>
                   )}
-                  <div className="uppercase text-sm">
-                    <div className="font-light">{item.name}</div>
-                    <div className="font-bold text-green">
+                  <div className="uppercase  ">
+                    <div className="font-light">
+                      {item.name}
+                      <div className="text-xs text-gray-500">
+                        Item #:{' '}
+                        <span className="font-bold">
+                          {item.itemNumber || 'N/A'}
+                        </span>{' '}
+                        | Stock:{' '}
+                        <span className="font-bold">{item.stock ?? 0}</span>
+                      </div>
+                    </div>
+
+                    <div className="font-bold ">
                       ${item.price.toFixed(2)} x
                       {(item.stock ?? 0) > 0 ? (
                         <select
@@ -262,7 +274,7 @@ export default function POSPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-end">
+                <div className="flex flex-col items-end text-green">
                   <div className="font-semibold">
                     ${(item.stock ?? 0) > 0 ? lineTotal.toFixed(2) : '--'}
                   </div>
