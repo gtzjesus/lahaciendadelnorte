@@ -146,7 +146,10 @@ export default function POSPage() {
 
   const handleSale = async () => {
     if (!cart.length) return;
-    if (paymentMethod === 'split' && cashReceived + cardAmount !== total) {
+    if (
+      paymentMethod === 'split' &&
+      Math.abs(cashReceived + cardAmount - total) > 0.01
+    ) {
       alert('❌ Split payment does not add up to total.');
       return;
     }
