@@ -117,6 +117,53 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           <p className="uppercase text-xs mb-1 text-gray-600">sale total:</p>
           <p className="font-bold text-xs">${order.totalPrice?.toFixed(2)}</p>
         </div>
+
+        {/* Payment Details */}
+        {(order.paymentMethod ||
+          order.cashReceived !== undefined ||
+          order.cardAmount !== undefined) && (
+          <div className="mt-4">
+            <p className="text-xs uppercase font-semibold text-gray-500 mb-1">
+              payment details
+            </p>
+
+            {order.paymentMethod && (
+              <div className="flex justify-between">
+                <p className="uppercase text-xs text-gray-600">method:</p>
+                <p className="font-bold text-xs">{order.paymentMethod}</p>
+              </div>
+            )}
+
+            {order.cashReceived !== undefined && (
+              <div className="flex justify-between">
+                <p className="uppercase text-xs text-gray-600">
+                  cash received:
+                </p>
+                <p className="font-bold text-xs">
+                  ${order.cashReceived.toFixed(2)}
+                </p>
+              </div>
+            )}
+
+            {order.cardAmount !== undefined && (
+              <div className="flex justify-between">
+                <p className="uppercase text-xs text-gray-600">card amount:</p>
+                <p className="font-bold text-xs">
+                  ${order.cardAmount.toFixed(2)}
+                </p>
+              </div>
+            )}
+
+            {order.changeGiven !== undefined && (
+              <div className="flex justify-between">
+                <p className="uppercase text-xs text-gray-600">change given:</p>
+                <p className="font-bold text-xs">
+                  ${order.changeGiven.toFixed(2)}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Status */}
