@@ -14,8 +14,11 @@ export async function getOrderByOrderNumber(orderNumber: string) {
         status,
         orderDate,
         currency,
+        paymentStatus,
+        pickupStatus,
         products[] {
           quantity,
+          _key,
           product->{
             _id,
             name,
