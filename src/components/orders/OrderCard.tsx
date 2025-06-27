@@ -2,15 +2,18 @@ import { formatCurrency } from '@/lib/formatCurrency';
 import { imageUrl } from '@/lib/imageUrl';
 import Image from 'next/image';
 import Link from 'next/link';
-
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 interface OrderCardProps {
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
-  order: any; // Ideally, replace with proper type
+  order: any; // Puedes mejorar el tipo si quieres
+  showDetailButton?: boolean;
 }
 
-const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
+const OrderCard: React.FC<OrderCardProps> = ({
+  order,
+  showDetailButton = true,
+}) => {
   const totalItems = order.products?.reduce(
-    (sum: number, item: any) => sum + item.quantity,
+    (sum: number, item: any) => sum + (item.quantity ?? 0),
     0
   );
 
@@ -52,7 +55,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
             return (
               <div
-                key={prod?._id}
+                key={prod?._id || product._key}
                 className="flex flex-col border-b border-flag-blue last:border-b-0"
               >
                 <div className="flex items-center gap-6">
@@ -116,11 +119,10 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         <div className="flex justify-between">
           <p className="uppercase text-xs mb-1 text-gray-600">sale total:</p>
           <p className="font-bold text-xs">
-            ${order.totalPrice?.toFixed(2) ?? 'n/a'}
+            {formatCurrency(order.totalPrice ?? 0, order.currency || 'usd')}
           </p>
         </div>
 
-        {/* Payment Details */}
         {(order.paymentMethod ||
           typeof order.cashReceived === 'number' ||
           typeof order.cardAmount === 'number' ||
@@ -143,7 +145,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
                   cash received:
                 </p>
                 <p className="font-bold text-xs">
-                  ${order.cashReceived.toFixed(2)}
+                  {formatCurrency(order.cashReceived, order.currency || 'usd')}
                 </p>
               </div>
             )}
@@ -152,7 +154,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               <div className="flex justify-between">
                 <p className="uppercase text-xs text-gray-600">card amount:</p>
                 <p className="font-bold text-xs">
-                  ${order.cardAmount.toFixed(2)}
+                  {formatCurrency(order.cardAmount, order.currency || 'usd')}
                 </p>
               </div>
             )}
@@ -161,7 +163,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               <div className="flex justify-between">
                 <p className="uppercase text-xs text-gray-600">change given:</p>
                 <p className="font-bold text-xs">
-                  ${order.changeGiven.toFixed(2)}
+                  {formatCurrency(order.changeGiven, order.currency || 'usd')}
                 </p>
               </div>
             )}
@@ -199,14 +201,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
       </div>
 
       {/* View Order Button */}
-      <div className="p-4 border-t border-flag-blue flex justify-center">
-        <Link
-          href={`/admin/orders/${order.orderNumber}`}
-          className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-blue text-white w-full"
-        >
-          View firework Order
-        </Link>
-      </div>
+      {showDetailButton && (
+        <div className="p-4 border-t border-flag-blue flex justify-center">
+          <Link
+            href={`/admin/orders/${order.orderNumber}`}
+            className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-blue text-white w-full"
+          >
+            View firework Order
+          </Link>
+        </div>
+      )}
     </div>
   );
 };
