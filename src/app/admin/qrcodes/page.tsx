@@ -96,7 +96,9 @@ export default function QRCodePage() {
 
     // Limiting to first 50 products to avoid freezing (adjust if needed)
     // Process all products (be mindful of performance)
-    const batch = products;
+    const batch = [...products].sort(
+      (a, b) => Number(a.itemNumber) - Number(b.itemNumber)
+    );
 
     for (const p of batch) {
       const node = qrRefs.current[p._id];
@@ -154,27 +156,29 @@ export default function QRCodePage() {
           gap: '2rem',
         }}
       >
-        {products.map((product) => (
-          <div
-            key={product._id}
-            ref={(el) => {
-              qrRefs.current[product._id] = el;
-            }}
-            style={{
-              width: 180,
-              padding: 10,
-              border: '1px solid #ccc',
-              background: '#f9f9f9',
-              textAlign: 'center',
-            }}
-          >
-            <QRCodeCanvas
-              value={product.slug.current}
-              size={156}
-              includeMargin={true}
-            />
-          </div>
-        ))}
+        {[...products]
+          .sort((a, b) => Number(a.itemNumber) - Number(b.itemNumber))
+          .map((product) => (
+            <div
+              key={product._id}
+              ref={(el) => {
+                qrRefs.current[product._id] = el;
+              }}
+              style={{
+                width: 180,
+                padding: 10,
+                border: '1px solid #ccc',
+                background: '#f9f9f9',
+                textAlign: 'center',
+              }}
+            >
+              <QRCodeCanvas
+                value={product.slug.current}
+                size={156}
+                includeMargin={true}
+              />
+            </div>
+          ))}
       </div>
     </div>
   );
