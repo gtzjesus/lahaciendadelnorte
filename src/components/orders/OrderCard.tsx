@@ -2,6 +2,7 @@ import { formatCurrency } from '@/lib/formatCurrency';
 import { imageUrl } from '@/lib/imageUrl';
 import Image from 'next/image';
 import Link from 'next/link';
+
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 interface OrderCardProps {
   order: any; // Puedes mejorar el tipo si quieres
@@ -112,17 +113,6 @@ const OrderCard: React.FC<OrderCardProps> = ({
 
       {/* Totals & Payment */}
       <div className="border-t border-flag-blue font-mono p-4 flex flex-col space-y-1">
-        <div className="flex justify-between">
-          <p className="uppercase text-xs mb-1 text-gray-600">total items:</p>
-          <p className="font-bold text-xs">{totalItems}</p>
-        </div>
-        <div className="flex justify-between">
-          <p className="uppercase text-xs mb-1 text-gray-600">sale total:</p>
-          <p className="font-bold text-xs">
-            {formatCurrency(order.totalPrice ?? 0, order.currency || 'usd')}
-          </p>
-        </div>
-
         {(order.paymentMethod ||
           typeof order.cashReceived === 'number' ||
           typeof order.cardAmount === 'number' ||
@@ -139,34 +129,59 @@ const OrderCard: React.FC<OrderCardProps> = ({
               </div>
             )}
 
-            {typeof order.cashReceived === 'number' && (
-              <div className="flex justify-between">
-                <p className="uppercase text-xs text-gray-600">
-                  cash received:
-                </p>
-                <p className="font-bold text-xs">
-                  {formatCurrency(order.cashReceived, order.currency || 'usd')}
-                </p>
-              </div>
-            )}
+            {['cash', 'split'].includes(order.paymentMethod) &&
+              typeof order.cashReceived === 'number' && (
+                <div className="flex justify-between">
+                  <p className="uppercase text-xs text-gray-600">
+                    cash received:
+                  </p>
+                  <p className="font-bold text-xs">
+                    {formatCurrency(
+                      order.cashReceived,
+                      order.currency || 'usd'
+                    )}
+                  </p>
+                </div>
+              )}
 
-            {typeof order.cardAmount === 'number' && (
-              <div className="flex justify-between">
-                <p className="uppercase text-xs text-gray-600">card amount:</p>
-                <p className="font-bold text-xs">
-                  {formatCurrency(order.cardAmount, order.currency || 'usd')}
-                </p>
-              </div>
-            )}
+            {['card', 'split'].includes(order.paymentMethod) &&
+              typeof order.cardAmount === 'number' && (
+                <div className="flex justify-between">
+                  <p className="uppercase text-xs text-gray-600">
+                    card amount:
+                  </p>
+                  <p className="font-bold text-xs">
+                    {formatCurrency(order.cardAmount, order.currency || 'usd')}
+                  </p>
+                </div>
+              )}
 
-            {typeof order.changeGiven === 'number' && (
-              <div className="flex justify-between">
-                <p className="uppercase text-xs text-gray-600">change given:</p>
-                <p className="font-bold text-xs">
-                  {formatCurrency(order.changeGiven, order.currency || 'usd')}
-                </p>
-              </div>
-            )}
+            {['cash', 'split'].includes(order.paymentMethod) &&
+              typeof order.changeGiven === 'number' && (
+                <div className="flex justify-between">
+                  <p className="uppercase text-xs text-gray-600">
+                    change given:
+                  </p>
+                  <p className="font-bold text-xs">
+                    {formatCurrency(order.changeGiven, order.currency || 'usd')}
+                  </p>
+                </div>
+              )}
+
+            <div className="flex justify-between border-t border-flag-blue pt-2 mt-2">
+              <p className="uppercase text-xs mb-1 text-gray-600">
+                total items:
+              </p>
+              <p className="font-bold text-xs">{totalItems}</p>
+            </div>
+            <div className="flex justify-between">
+              <p className="uppercase text-xs mb-1 text-gray-600">
+                sale total:
+              </p>
+              <p className="font-bold text-xs">
+                {formatCurrency(order.totalPrice ?? 0, order.currency || 'usd')}
+              </p>
+            </div>
           </div>
         )}
       </div>
