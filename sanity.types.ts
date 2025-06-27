@@ -70,6 +70,7 @@ export type Order = {
     _key: string;
   }>;
   totalPrice?: number;
+  tax?: number;
   currency?: string;
   amountDiscount?: number;
   orderType?: "reservation";
@@ -370,6 +371,7 @@ export type MY_ORDERS_QUERYResult = Array<{
     _key: string;
   }> | null;
   totalPrice?: number;
+  tax?: number;
   currency?: string;
   amountDiscount?: number;
   orderType?: "reservation";
