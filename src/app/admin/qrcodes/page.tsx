@@ -95,7 +95,8 @@ export default function QRCodePage() {
     const images: QRImage[] = [];
 
     // Limiting to first 50 products to avoid freezing (adjust if needed)
-    const batch = products.slice(0, 50);
+    // Process all products (be mindful of performance)
+    const batch = products;
 
     for (const p of batch) {
       const node = qrRefs.current[p._id];
