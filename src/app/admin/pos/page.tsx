@@ -335,10 +335,10 @@ export default function POSPage() {
       </div>
 
       <div className="w-full lg:w-auto bg-flag-blue p-6 lg:p-12 shadow-md mt-6">
-        <h3 className="uppercase text-xs font-light text-center text-white border-b pb-1">
+        <h3 className="uppercase text-sm font-light text-center text-white border-b pb-1">
           Sale Summary
         </h3>
-        <div className="space-y-1 mt-2 mb-2 text-white uppercase text-xs font-light">
+        <div className="space-y-1 mt-2 mb-2 text-white uppercase text-md font-light">
           <p>Total Items: {totalItems}</p>
           <p>Subtotal: ${subtotal.toFixed(2)}</p>
           <p>Tax (8.25%): ${tax.toFixed(2)}</p>
@@ -429,9 +429,18 @@ export default function POSPage() {
         <button
           onClick={handleSale}
           disabled={loading || cart.length === 0}
-          className="w-full bg-white text-flag-blue uppercase font-semibold py-3"
+          className="w-full bg-white text-green uppercase font-semibold py-3"
         >
-          {loading ? 'Processing...' : 'Complete Sale'}
+          {loading
+            ? `Processing... ${total.toFixed(2)} `
+            : `Complete Sale ($${total.toFixed(2)}) `}
+        </button>
+        <button
+          onClick={clearCart}
+          disabled={cart.length === 0 || loading}
+          className="w-full mt-4 bg-flag-red text-white uppercase font-semibold py-3"
+        >
+          Clear Sale
         </button>
       </div>
     </div>
