@@ -16,6 +16,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
   return (
     <div className="bg-white border border-flag-blue p-2 shadow-sm overflow-hidden">
+      {/* Header */}
       <div className="p-4 border-b border-flag-blue">
         <div className="flex flex-row justify-between">
           <div>
@@ -30,7 +31,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
             </span>
           </div>
           <div>
-            <p className="text-xs uppercase font-light font-mono ">sale date</p>
+            <p className="text-xs uppercase font-light font-mono">sale date</p>
             <p className="font-light text-xs mt-1 text-flag-red">
               {order.orderDate
                 ? new Date(order.orderDate).toLocaleDateString()
@@ -40,6 +41,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         </div>
       </div>
 
+      {/* Items */}
       <div className="font-mono p-4">
         <p className="text-xs uppercase font-light text-gray-600">items</p>
 
@@ -105,6 +107,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         </div>
       </div>
 
+      {/* Totals */}
       <div className="border-t border-flag-blue font-mono p-4 flex flex-col space-y-1">
         <div className="flex justify-between">
           <p className="uppercase text-xs mb-1 text-gray-600">total items:</p>
@@ -116,7 +119,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         </div>
       </div>
 
-      {/* Status Indicators */}
+      {/* Status */}
       <div className="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2">
         <p className="text-xs font-light uppercase text-gray-600">
           payment status:{' '}
@@ -143,6 +146,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
             {order.pickupStatus === 'picked_up' ? 'Picked up' : 'Not picked up'}
           </span>
         </p>
+      </div>
+
+      {/* 🔗 View Order Button */}
+      <div className="p-4 border-t border-flag-blue flex justify-center">
+        <Link
+          href={`/admin/orders/${order.orderNumber}`}
+          className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-blue text-white w-full"
+        >
+          View firework Order
+        </Link>
       </div>
     </div>
   );
