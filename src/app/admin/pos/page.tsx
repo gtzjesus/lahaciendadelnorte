@@ -13,7 +13,7 @@ type Product = {
   slug: { current: string };
   price: number;
   stock?: number;
-  itemNumber?: string; // 👈 add this
+  itemNumber?: string;
   imageUrl?: string;
 };
 
@@ -30,14 +30,38 @@ export default function POSPage() {
   const celebrationTimeout = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
   const totalItems = cart.reduce((sum, item) => sum + item.cartQty, 0);
+  const subtotal = cart.reduce((sum, item) => {
+    if ((item.stock ?? 0) <= 0) return sum;
+    return sum + item.price * item.cartQty;
+  }, 0);
+  const tax = subtotal * 0.0825;
+  const total = subtotal + tax;
+  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'split'>(
+    'card'
+  );
+
+  const [cashReceived, setCashReceived] = useState<number>(0);
+  const [cardAmount, setCardAmount] = useState<number>(0);
+
+  const changeGiven =
+    paymentMethod === 'cash' ? Math.max(cashReceived - total, 0) : 0;
+
+  useEffect(() => {
+    if (paymentMethod === 'split') {
+      const remaining = total - cashReceived;
+      // Redondeamos a 2 decimales
+      const rounded = Math.round(remaining * 100) / 100;
+      setCardAmount(rounded > 0 ? rounded : 0);
+    }
+  }, [cashReceived, paymentMethod, total]);
 
   useEffect(() => {
     client
       .fetch<Product[]>(
         `*[_type == "product"]{
-    _id, name, slug, itemNumber, price, stock,
-    "imageUrl": image.asset->url
-  }`
+          _id, name, slug, itemNumber, price, stock,
+          "imageUrl": image.asset->url
+        }`
       )
       .then(setProducts)
       .catch(console.error);
@@ -87,7 +111,7 @@ export default function POSPage() {
         const matched = products.find(
           (p) => p.slug.current.toLowerCase() === code
         );
-        if (!matched) return; // no alert, just ignore
+        if (!matched) return;
 
         if (cart.some((item) => item._id === matched._id)) return;
 
@@ -120,15 +144,12 @@ export default function POSPage() {
     setCart((prev) => prev.filter((_, idx) => idx !== i));
   const clearCart = () => setCart([]);
 
-  const subtotal = cart.reduce((sum, item) => {
-    if ((item.stock ?? 0) <= 0) return sum;
-    return sum + item.price * item.cartQty;
-  }, 0);
-  const tax = subtotal * 0.0825;
-  const total = subtotal + tax;
-
   const handleSale = async () => {
     if (!cart.length) return;
+    if (paymentMethod === 'split' && cashReceived + cardAmount !== total) {
+      alert('❌ Split payment does not add up to total.');
+      return;
+    }
 
     setLoading(true);
 
@@ -153,7 +174,18 @@ export default function POSPage() {
       const res = await fetch('/api/pos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: payload }),
+        body: JSON.stringify({
+          items: payload,
+          paymentMethod,
+          cashReceived: paymentMethod !== 'card' ? cashReceived : undefined,
+          cardAmount:
+            paymentMethod !== 'cash'
+              ? paymentMethod === 'split'
+                ? cardAmount
+                : total
+              : undefined,
+          changeGiven: paymentMethod === 'cash' ? changeGiven : undefined,
+        }),
       });
 
       const data = await res.json();
@@ -185,6 +217,7 @@ export default function POSPage() {
         className="fixed inset-0 z-[2000] pointer-events-none"
         style={{ opacity: '0', transition: 'opacity 0.5s' }}
       />
+
       {showCelebration && (
         <div className="fixed inset-0 z-[210] flex flex-col items-center justify-center bg-flag-blue bg-opacity-90 text-white p-6 text-center">
           <h1 className="text-5xl text-yellow font-extrabold mb-4 animate-bounce">
@@ -238,7 +271,7 @@ export default function POSPage() {
                       />
                     </div>
                   )}
-                  <div className="uppercase  ">
+                  <div className="uppercase">
                     <div className="font-light">
                       {item.name}
                       <div className="text-xs text-gray-500">
@@ -250,8 +283,7 @@ export default function POSPage() {
                         <span className="font-bold">{item.stock ?? 0}</span>
                       </div>
                     </div>
-
-                    <div className="font-bold ">
+                    <div className="font-bold">
                       ${item.price.toFixed(2)} x
                       {(item.stock ?? 0) > 0 ? (
                         <select
@@ -301,6 +333,81 @@ export default function POSPage() {
           <p>Subtotal: ${subtotal.toFixed(2)}</p>
           <p>Tax (8.25%): ${tax.toFixed(2)}</p>
           <p>Total: ${total.toFixed(2)}</p>
+        </div>
+
+        {/* Payment Method Section */}
+        <div className="mt-4 mb-4 text-white">
+          <label className="block uppercase text-xs ">Payment Method</label>
+          <select
+            value={paymentMethod}
+            onChange={(e) => {
+              const method = e.target.value as 'cash' | 'card' | 'split';
+              setPaymentMethod(method);
+              if (method === 'cash') {
+                setCardAmount(0);
+              } else if (method === 'card') {
+                setCashReceived(0);
+              }
+            }}
+            className="w-full p-2 text-black"
+          >
+            <option value="cash">Cash</option>
+            <option value="card">Card</option>
+            <option value="split">Split</option>
+          </select>
+
+          {paymentMethod === 'cash' && (
+            <div className="mt-2">
+              <label className="text-xs">Cash Received</label>
+              <input
+                type="number"
+                min="0"
+                value={Number.isNaN(cashReceived) ? 0 : cashReceived}
+                onChange={(e) =>
+                  setCashReceived(parseFloat(e.target.value) || 0)
+                }
+                className="w-full p-2 mt-1 text-black"
+              />
+              <p className="text-xs mt-1">
+                Change Due:{' '}
+                <span className="font-bold">${changeGiven.toFixed(2)}</span>
+              </p>
+            </div>
+          )}
+
+          {paymentMethod === 'split' && (
+            <div className=" space-y-2">
+              <div>
+                <label className="text-xs">Cash Portion</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={Number.isNaN(cashReceived) ? 0 : cashReceived}
+                  onChange={(e) =>
+                    setCashReceived(parseFloat(e.target.value) || 0)
+                  }
+                  className="w-full p-2 text-black"
+                />
+              </div>
+              <div>
+                <label className="text-xs">Card Portion</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={Number.isNaN(cardAmount) ? 0 : cardAmount}
+                  onChange={(e) =>
+                    setCardAmount(parseFloat(e.target.value) || 0)
+                  }
+                  className="w-full p-2 text-black"
+                />
+              </div>
+              {cashReceived + cardAmount !== total && (
+                <p className="text-xs text-yellow-300 font-semibold">
+                  Amount does not match total.
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         <button

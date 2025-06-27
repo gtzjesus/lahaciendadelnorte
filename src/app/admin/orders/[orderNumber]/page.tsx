@@ -102,7 +102,7 @@ export default async function OrderDetailPage({
 
                 <div className="uppercase">
                   <p className="text-xs font-light">{product.name}</p>
-                  <p className="text-xs text-gray-600">
+                  <p className="text-xs text-gray-600 pt-2 pb-2">
                     Quantity: {item.quantity ?? 'n/a'}
                   </p>
                   <p className="text-xs text-green-700">{productTotal}</p>
@@ -120,8 +120,8 @@ export default async function OrderDetailPage({
           <p className="text-xs font-bold">{totalItems}</p>
         </div>
         <div className="flex justify-between">
-          <p className="uppercase text-xs text-gray-600">sale total:</p>
-          <p className="text-xs font-bold">
+          <p className="uppercase text-xs text-green">sale total:</p>
+          <p className="text-xs font-bold text-green">
             {formatCurrency(order.totalPrice ?? 0, order.currency || 'usd')}
           </p>
         </div>
