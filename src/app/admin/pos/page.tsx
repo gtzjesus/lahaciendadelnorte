@@ -43,25 +43,20 @@ export default function POSPage() {
     'card'
   );
 
-  // Now as strings, start empty for better UX
-  const [cashReceived, setCashReceived] = useState<string>('');
-  const [cardAmount, setCardAmount] = useState<string>('');
-
-  // Parse inputs safely for calculations
-  const parsedCash = parseFloat(cashReceived) || 0;
-  const parsedCard = parseFloat(cardAmount) || 0;
+  const [cashReceived, setCashReceived] = useState<number>(0);
+  const [cardAmount, setCardAmount] = useState<number>(0);
 
   const changeGiven =
-    paymentMethod === 'cash' ? Math.max(parsedCash - total, 0) : 0;
+    paymentMethod === 'cash' ? Math.max(cashReceived - total, 0) : 0;
 
-  // Round helper
+  // Redondeo helper
   const round2 = (num: number) => Math.round(num * 100) / 100;
 
   useEffect(() => {
     if (paymentMethod === 'split') {
-      const remaining = total - parsedCash;
+      const remaining = total - cashReceived;
       const rounded = round2(remaining);
-      setCardAmount(rounded > 0 ? rounded.toString() : '');
+      setCardAmount(rounded > 0 ? rounded : 0);
     }
   }, [cashReceived, paymentMethod, total]);
 
@@ -136,7 +131,7 @@ export default function POSPage() {
 
             await scanner.stop();
             html5QrCodeRef.current = null;
-            setIsScanning(false); // stop tracking
+            setIsScanning(false); // 🔑 Stop tracking
             setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
 
             const fw = launchFireworks();
@@ -144,13 +139,13 @@ export default function POSPage() {
 
             setTimeout(() => {
               startScanner();
-              setIsScanning(true); // resume tracking
+              setIsScanning(true); // 🔑 Resume tracking
             }, 2000);
           },
           (err) => console.warn('QR error:', err)
         );
 
-        setIsScanning(true); // scanning active
+        setIsScanning(true); // 🔑 Set scanning active
       }
     } catch (err) {
       console.error('Camera error', err);
@@ -162,7 +157,7 @@ export default function POSPage() {
       await html5QrCodeRef.current.stop().catch(() => {});
       html5QrCodeRef.current.clear();
       html5QrCodeRef.current = null;
-      setIsScanning(false); // scanner stopped
+      setIsScanning(false); // 🔑 Scanner is stopped
     }
   };
 
@@ -178,18 +173,14 @@ export default function POSPage() {
 
   const removeItem = (i: number) =>
     setCart((prev) => prev.filter((_, idx) => idx !== i));
-  const clearCart = () => {
-    setCart([]);
-    setCashReceived('');
-    setCardAmount('');
-  };
+  const clearCart = () => setCart([]);
 
   const handleSale = async () => {
     if (!cart.length) return;
 
     if (
       paymentMethod === 'split' &&
-      Math.abs(parsedCash + parsedCard - total) > 0.01
+      Math.abs(cashReceived + cardAmount - total) > 0.01
     ) {
       alert('❌ Split payment does not add up to total.');
       return;
@@ -222,11 +213,11 @@ export default function POSPage() {
           items: payload,
           paymentMethod,
           cashReceived:
-            paymentMethod !== 'card' ? round2(parsedCash) : undefined,
+            paymentMethod !== 'card' ? round2(cashReceived) : undefined,
           cardAmount:
             paymentMethod !== 'cash'
               ? paymentMethod === 'split'
-                ? round2(parsedCard)
+                ? round2(cardAmount)
                 : round2(total)
               : undefined,
           changeGiven:
@@ -398,9 +389,11 @@ export default function POSPage() {
             onChange={(e) => {
               const method = e.target.value as 'cash' | 'card' | 'split';
               setPaymentMethod(method);
-              // Reset payment inputs on method change
-              setCashReceived('');
-              setCardAmount('');
+              if (method === 'cash') {
+                setCardAmount(0);
+              } else if (method === 'card') {
+                setCashReceived(0);
+              }
             }}
             className="w-full p-2 text-black"
           >
@@ -408,61 +401,82 @@ export default function POSPage() {
             <option value="card">Card</option>
             <option value="split">Split</option>
           </select>
+
+          {paymentMethod === 'cash' && (
+            <div className="mt-2">
+              <label className="text-xs">Cash Received</label>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={Number.isNaN(cashReceived) ? 0 : cashReceived}
+                onChange={(e) => {
+                  const val = parseFloat(e.target.value) || 0;
+                  setCashReceived(round2(val));
+                }}
+                className="w-full p-2 mt-1 text-black"
+              />
+              <p className="text-xs mt-1">
+                Change Due:{' '}
+                <span className="font-bold">${changeGiven.toFixed(2)}</span>
+              </p>
+            </div>
+          )}
+
+          {paymentMethod === 'split' && (
+            <div className=" space-y-2">
+              <div>
+                <label className="text-xs">Cash Portion</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={Number.isNaN(cashReceived) ? 0 : cashReceived}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    setCashReceived(round2(val));
+                  }}
+                  className="w-full p-2 text-black"
+                />
+              </div>
+              <div>
+                <label className="text-xs">Card Portion</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={Number.isNaN(cardAmount) ? 0 : cardAmount}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    setCardAmount(round2(val));
+                  }}
+                  className="w-full p-2 text-black"
+                />
+              </div>
+              {Math.abs(cashReceived + cardAmount - total) > 0.01 && (
+                <p className="text-xs text-yellow-300 font-semibold">
+                  Amount does not match total.
+                </p>
+              )}
+            </div>
+          )}
         </div>
-
-        {/* Cash Received Input */}
-        {(paymentMethod === 'cash' || paymentMethod === 'split') && (
-          <div className="mb-4">
-            <label className="block uppercase text-xs text-white">
-              Cash Received
-            </label>
-            <input
-              type="number"
-              inputMode="decimal"
-              value={cashReceived}
-              onChange={(e) => setCashReceived(e.target.value)}
-              placeholder="Enter amount"
-              className="w-full p-2 mt-1 text-black"
-              min="0"
-            />
-            {paymentMethod === 'cash' && (
-              <p className="mt-1 text-xs text-white">
-                Change: ${round2(changeGiven).toFixed(2)}
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* Card Amount Input */}
-        {(paymentMethod === 'card' || paymentMethod === 'split') && (
-          <div className="mb-4">
-            <label className="block uppercase text-xs text-white">
-              Card Amount
-            </label>
-            <input
-              type="number"
-              inputMode="decimal"
-              value={cardAmount}
-              onChange={(e) => setCardAmount(e.target.value)}
-              placeholder="Enter amount"
-              className="w-full p-2 text-black"
-              min="0"
-              readOnly={paymentMethod === 'card'}
-            />
-            {paymentMethod === 'card' && (
-              <p className="mt-1 text-xs text-white">
-                Amount: ${total.toFixed(2)}
-              </p>
-            )}
-          </div>
-        )}
 
         <button
           onClick={handleSale}
-          disabled={loading || !cart.length}
-          className="uppercase text-white bg-flag-yellow w-full p-3 font-bold disabled:opacity-60"
+          disabled={loading || cart.length === 0}
+          className="w-full bg-white text-green uppercase font-semibold py-3"
         >
-          {loading ? 'Processing...' : 'Complete Sale'}
+          {loading
+            ? `Processing... ${total.toFixed(2)} `
+            : `Complete Sale ($${total.toFixed(2)}) `}
+        </button>
+        <button
+          onClick={clearCart}
+          disabled={cart.length === 0 || loading}
+          className="w-full mt-4 bg-flag-red text-white uppercase font-semibold py-3"
+        >
+          Clear Sale
         </button>
       </div>
     </div>
