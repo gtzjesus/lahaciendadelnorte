@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 type Category = {
   _id: string;
@@ -44,7 +45,7 @@ export default function InventoryPage() {
   const [extraImageFiles, setExtraImageFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [showForm, setShowForm] = useState(false); // <-- NEW
+  const [showForm, setShowForm] = useState(false);
 
   const mainImageRef = useRef<HTMLInputElement | null>(null);
   const extraImagesRef = useRef<HTMLInputElement | null>(null);
@@ -108,7 +109,6 @@ export default function InventoryPage() {
         setSelectedCategory('');
         setMainImageFile(null);
         setExtraImageFiles([]);
-
         if (mainImageRef.current) mainImageRef.current.value = '';
         if (extraImagesRef.current) extraImagesRef.current.value = '';
 
@@ -132,20 +132,20 @@ export default function InventoryPage() {
         inventory manager
       </h1>
 
-      {/* Toggle Add Firework Form */}
+      {/* Toggle Form */}
       <div className="flex flex-col">
         <h1 className="uppercase text-sm font-semibold mb-2">add firework</h1>
         <button
           className="text-xs uppercase font-light mb-2 text-white bg-flag-blue px-3 py-2"
           onClick={() => setShowForm((prev) => !prev)}
         >
-          {showForm ? 'Hide' : 'show to add firework'}
+          {showForm ? 'Hide' : 'Show to Add Firework'}
         </button>
       </div>
 
+      {/* Form Section */}
       {showForm && (
         <>
-          {/* Form */}
           <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
             {['itemNumber', 'name', 'slug', 'price', 'stock'].map((key) => (
               <input
@@ -169,7 +169,7 @@ export default function InventoryPage() {
               />
             ))}
 
-            {/* Category dropdown */}
+            {/* Category Dropdown */}
             <div>
               <label
                 htmlFor="category"
@@ -193,7 +193,7 @@ export default function InventoryPage() {
             </div>
           </div>
 
-          {/* File Inputs */}
+          {/* File Uploads */}
           <div className="border border-flag-red p-2">
             <div className="uppercase text-sm font-semibold mb-2">
               <label className="px-1">Main Image:</label>
@@ -239,8 +239,8 @@ export default function InventoryPage() {
         </>
       )}
 
+      {/* Product List */}
       <hr className="my-8" />
-
       <h2 className="uppercase text-xl font-semibold mb-6">
         firework inventory
       </h2>
@@ -269,13 +269,18 @@ export default function InventoryPage() {
                 <p className="text-flag-blue text-xs font-bold">
                   #{p.itemNumber}
                 </p>
-                <p className="text-flag-red text-xs font-bold">{p.name}</p>
+                <Link
+                  href={`/admin/inventory/${p.itemNumber}`}
+                  className="text-flag-red text-xs font-bold underline"
+                >
+                  {p.name}
+                </Link>
               </div>
               <div className="flex flex-col gap-2 flex-wrap">
                 <p className="text-xs font-bold text-green">${p.price}</p>
                 <p className="text-xs font-bold">stock: {p.stock}</p>
                 {p.category && (
-                  <p className="text-xs text-green font-semibold ">
+                  <p className="text-xs text-green font-semibold">
                     category: {p.category.title}
                   </p>
                 )}
