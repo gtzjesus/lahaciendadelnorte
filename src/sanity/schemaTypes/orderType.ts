@@ -146,19 +146,19 @@ export const orderType = defineType({
 
     // ✅ NEW FIELDS BELOW
 
-    defineField({
+    {
       name: 'paymentMethod',
       title: 'Payment Method',
       type: 'string',
       options: {
         list: [
-          { title: 'Unpaid (Online Reservation)', value: 'unpaid' },
+          { title: 'Unpaid (Online Reservation)', value: 'online_unpaid' },
           { title: 'Cash', value: 'cash' },
           { title: 'Card', value: 'card' },
           { title: 'Split (Cash + Card)', value: 'split' },
         ],
       },
-    }),
+    },
     defineField({
       name: 'cashReceived',
       title: 'Cash Received',

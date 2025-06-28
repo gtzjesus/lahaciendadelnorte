@@ -432,7 +432,7 @@
           "of": [
             {
               "type": "string",
-              "value": "unpaid"
+              "value": "online_unpaid"
             },
             {
               "type": "string",
