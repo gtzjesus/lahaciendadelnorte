@@ -203,7 +203,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
       </div>
 
       {/* Status */}
-      <div className="p-4 flex justify-center sm:flex-row sm:items-center sm:justify-between gap-2 mt-2">
+      <div className="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2">
         <p className="text-xs font-light uppercase text-gray-600">
           payment status:{' '}
           <span
