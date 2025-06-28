@@ -410,13 +410,14 @@ export default function POSPage() {
                 type="number"
                 min="0"
                 step="0.01"
-                value={Number.isNaN(cashReceived) ? 0 : cashReceived}
+                value={cashReceived === 0 ? '' : cashReceived}
                 onChange={(e) => {
-                  const val = parseFloat(e.target.value) || 0;
-                  setCashReceived(round2(val));
+                  const val = parseFloat(e.target.value);
+                  setCashReceived(isNaN(val) ? 0 : round2(val));
                 }}
                 className="w-full p-2 mt-1 text-black"
               />
+
               <p className="text-xs mt-1">
                 Change Due:{' '}
                 <span className="font-bold">${changeGiven.toFixed(2)}</span>
@@ -432,12 +433,12 @@ export default function POSPage() {
                   type="number"
                   min="0"
                   step="0.01"
-                  value={Number.isNaN(cashReceived) ? 0 : cashReceived}
+                  value={cashReceived === 0 ? '' : cashReceived}
                   onChange={(e) => {
-                    const val = parseFloat(e.target.value) || 0;
-                    setCashReceived(round2(val));
+                    const val = parseFloat(e.target.value);
+                    setCashReceived(isNaN(val) ? 0 : round2(val));
                   }}
-                  className="w-full p-2 text-black"
+                  className="w-full p-2 mt-1 text-black"
                 />
               </div>
               <div>
@@ -446,10 +447,10 @@ export default function POSPage() {
                   type="number"
                   min="0"
                   step="0.01"
-                  value={Number.isNaN(cardAmount) ? 0 : cardAmount}
+                  value={cardAmount === 0 ? '' : cardAmount}
                   onChange={(e) => {
-                    const val = parseFloat(e.target.value) || 0;
-                    setCardAmount(round2(val));
+                    const val = parseFloat(e.target.value);
+                    setCardAmount(isNaN(val) ? 0 : round2(val));
                   }}
                   className="w-full p-2 text-black"
                 />
