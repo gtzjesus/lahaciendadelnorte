@@ -2,7 +2,10 @@
 
 const PickupLocation = () => {
   return (
-    <div className="bg-white rounded-md shadow-md p-4 my-4 border border-flag-blue">
+    <div
+      className="bg-white shadow-md p-4 my-4 
+  "
+    >
       <h2 className="text-sm uppercase text-flag-blue mb-2">
         El paso kaboom pickup location
       </h2>

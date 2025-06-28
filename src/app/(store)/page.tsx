@@ -30,6 +30,7 @@ import Script from 'next/script';
  * @returns {JSX.Element} The complete home page layout with all major sections.
  */
 import type { Metadata } from 'next';
+import PickupLocation from '@/components/orders/PickupLocation';
 
 export const metadata: Metadata = {
   title: 'ElPasoKaBoom - Fireworks & Party Supplies',
@@ -96,6 +97,7 @@ const Home = async () => {
       <HeroSection />
       <BlackFridayBanner />
       <Categories categories={categories} />
+      <PickupLocation />
       <Footer />
 
       <Script
