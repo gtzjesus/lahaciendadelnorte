@@ -499,7 +499,7 @@ export default function POSPage() {
         <button
           onClick={() => setShowConfirmModal(true)}
           disabled={loading || cart.length === 0}
-          className="w-full bg-white text-green uppercase font-semibold py-3"
+          className="p-4 mb-2 block uppercase text-sm font-light text-center bg-green text-white w-full"
         >
           {loading
             ? `Processing... $${total.toFixed(2)}`
@@ -509,7 +509,7 @@ export default function POSPage() {
         <button
           onClick={clearCart}
           disabled={cart.length === 0 || loading}
-          className="w-full mt-4 bg-flag-red text-white uppercase font-semibold py-3"
+          className="p-4 mb-2 block uppercase text-sm font-light text-center bg-flag-red text-white w-full"
         >
           Clear Sale
         </button>

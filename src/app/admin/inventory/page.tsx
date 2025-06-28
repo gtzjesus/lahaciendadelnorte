@@ -44,8 +44,8 @@ export default function InventoryPage() {
   const [extraImageFiles, setExtraImageFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [showForm, setShowForm] = useState(false); // <-- NEW
 
-  // Refs for file inputs
   const mainImageRef = useRef<HTMLInputElement | null>(null);
   const extraImagesRef = useRef<HTMLInputElement | null>(null);
 
@@ -109,11 +109,9 @@ export default function InventoryPage() {
         setMainImageFile(null);
         setExtraImageFiles([]);
 
-        // Reset file inputs manually
         if (mainImageRef.current) mainImageRef.current.value = '';
         if (extraImagesRef.current) extraImagesRef.current.value = '';
 
-        // Refresh product list
         fetch('/api/products')
           .then((r) => r.json())
           .then((d) => setProducts(d.products || []));
@@ -134,95 +132,112 @@ export default function InventoryPage() {
         inventory manager
       </h1>
 
-      {/* Form */}
-      <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
-        <h1 className="uppercase text-sm font-semibold">add firework</h1>
+      {/* Toggle Add Firework Form */}
+      <div className="flex flex-col">
+        <h1 className="uppercase text-sm font-semibold mb-2">add firework</h1>
+        <button
+          className="text-xs uppercase font-light mb-2 text-white bg-flag-blue px-3 py-2"
+          onClick={() => setShowForm((prev) => !prev)}
+        >
+          {showForm ? 'Hide' : 'show to add firework'}
+        </button>
+      </div>
 
-        {['itemNumber', 'name', 'slug', 'price', 'stock'].map((key) => (
-          <input
-            key={key}
-            name={key}
-            type={key === 'price' || key === 'stock' ? 'text' : 'text'}
-            inputMode={key === 'price' || key === 'stock' ? 'numeric' : 'text'}
-            placeholder={
-              key === 'slug'
-                ? 'slug Auto-generated'
-                : key.charAt(0).toUpperCase() + key.slice(1)
-            }
-            value={(form as any)[key]}
-            onChange={handleChange}
-            readOnly={key === 'slug'}
-            className={`uppercase text-sm border border-flag-red p-3 ${
-              key === 'slug' ? 'bg-gray-100 cursor-not-allowed' : ''
-            }`}
-          />
-        ))}
-
-        {/* Category dropdown */}
-        <div>
-          <label
-            htmlFor="category"
-            className="uppercase text-sm font-semibold block mb-1"
-          >
-            Category
-          </label>
-          <select
-            id="category"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="uppercase text-sm border border-flag-red p-3 w-full"
-          >
-            <option value="">Select a category</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.title}
-              </option>
+      {showForm && (
+        <>
+          {/* Form */}
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
+            {['itemNumber', 'name', 'slug', 'price', 'stock'].map((key) => (
+              <input
+                key={key}
+                name={key}
+                type={key === 'price' || key === 'stock' ? 'text' : 'text'}
+                inputMode={
+                  key === 'price' || key === 'stock' ? 'numeric' : 'text'
+                }
+                placeholder={
+                  key === 'slug'
+                    ? 'slug Auto-generated'
+                    : key.charAt(0).toUpperCase() + key.slice(1)
+                }
+                value={(form as any)[key]}
+                onChange={handleChange}
+                readOnly={key === 'slug'}
+                className={`uppercase text-sm border border-flag-red p-3 ${
+                  key === 'slug' ? 'bg-gray-100 cursor-not-allowed' : ''
+                }`}
+              />
             ))}
-          </select>
-        </div>
-      </div>
 
-      {/* File Inputs */}
-      <div className="border border-flag-red p-2">
-        <div className="uppercase text-sm font-semibold mb-2">
-          <label className="px-1">Main Image:</label>
-          <input
-            ref={mainImageRef}
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) setMainImageFile(f);
-            }}
-          />
-        </div>
+            {/* Category dropdown */}
+            <div>
+              <label
+                htmlFor="category"
+                className="uppercase text-sm font-semibold block mb-1"
+              >
+                Category
+              </label>
+              <select
+                id="category"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="uppercase text-sm border border-flag-red p-3 w-full"
+              >
+                <option value="">Select a category</option>
+                {categories.map((cat) => (
+                  <option key={cat._id} value={cat._id}>
+                    {cat.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-        <div className="uppercase text-sm font-semibold mb-2">
-          <label className="px-1">Other Images (1–4):</label>
-          <input
-            ref={extraImagesRef}
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={(e) => {
-              const files = e.target.files ? Array.from(e.target.files) : [];
-              if (files.length > 4)
-                return alert('Only up to 4 extra images allowed.');
-              setExtraImageFiles(files);
-            }}
-          />
-        </div>
-      </div>
+          {/* File Inputs */}
+          <div className="border border-flag-red p-2">
+            <div className="uppercase text-sm font-semibold mb-2">
+              <label className="px-1">Main Image:</label>
+              <input
+                ref={mainImageRef}
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) setMainImageFile(f);
+                }}
+              />
+            </div>
 
-      <button
-        disabled={loading}
-        onClick={handleUpload}
-        className="bg-flag-blue mt-4 text-white uppercase px-6 py-3 font-light"
-      >
-        {loading ? 'Adding firework...' : 'Add firework'}
-      </button>
+            <div className="uppercase text-sm font-semibold mb-2">
+              <label className="px-1">Other Images (1–4):</label>
+              <input
+                ref={extraImagesRef}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => {
+                  const files = e.target.files
+                    ? Array.from(e.target.files)
+                    : [];
+                  if (files.length > 4)
+                    return alert('Only up to 4 extra images allowed.');
+                  setExtraImageFiles(files);
+                }}
+              />
+            </div>
+          </div>
 
-      {message && <p className="mt-4">{message}</p>}
+          <button
+            disabled={loading}
+            onClick={handleUpload}
+            className="bg-flag-blue mt-4 text-white uppercase px-6 py-3 font-light"
+          >
+            {loading ? 'Adding firework...' : 'Add firework'}
+          </button>
+
+          {message && <p className="mt-4">{message}</p>}
+        </>
+      )}
 
       <hr className="my-8" />
 
