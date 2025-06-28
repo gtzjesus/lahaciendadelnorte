@@ -22,6 +22,12 @@ export async function createReservation(
   items: GroupedBasketItem[],
   metadata: Metadata
 ) {
+  const subtotal = items.reduce(
+    (sum, item) => sum + (item.product.price || 0) * item.quantity,
+    0
+  );
+  const tax = subtotal * 0.0825;
+
   try {
     const orderId = `order-${uuidv4()}`;
     const nameToUse = metadata.customerName?.trim() || metadata.customerEmail;
@@ -60,19 +66,20 @@ export async function createReservation(
         product: { _type: 'reference', _ref: item.product._id },
         quantity: item.quantity,
       })),
-      totalPrice: items.reduce(
-        (sum, item) => sum + (item.product.price || 0) * item.quantity,
-        0
-      ),
+      totalPrice: subtotal + tax,
+      tax,
       currency: 'usd',
       amountDiscount: 0,
-
-      // ✅ explicitly set statuses
       orderType: 'reservation',
       paymentStatus: 'unpaid',
       pickupStatus: 'not_picked_up',
-
       orderDate: new Date().toISOString(),
+
+      // ✅ Added default values for payment-related fields
+      paymentMethod: 'unpaid', // or null or 'not_selected' depending on your use case
+      cashReceived: 0,
+      cardAmount: 0,
+      changeGiven: 0,
     };
 
     const txn = backendClient.transaction();
