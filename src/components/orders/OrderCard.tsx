@@ -178,6 +178,36 @@ const OrderCard: React.FC<OrderCardProps> = ({
                 </p>
               </div>
             )}
+            {/* Status */}
+            <div className=" flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2 border-b pb-2 border-flag-blue">
+              <p className="text-xs font-light uppercase text-gray-600">
+                payment status:{' '}
+                <span
+                  className={`font-bold ${
+                    order.paymentStatus === 'paid_in_store'
+                      ? 'text-green'
+                      : 'text-flag-red'
+                  }`}
+                >
+                  {order.paymentStatus === 'paid_in_store' ? 'Paid' : 'Unpaid'}
+                </span>
+              </p>
+
+              <p className="text-xs font-light uppercase text-gray-600">
+                pickup status:{' '}
+                <span
+                  className={`font-bold ${
+                    order.pickupStatus === 'picked_up'
+                      ? 'text-green'
+                      : 'text-flag-red'
+                  }`}
+                >
+                  {order.pickupStatus === 'picked_up'
+                    ? 'Picked up'
+                    : 'Not picked up'}
+                </span>
+              </p>
+            </div>
           </div>
         )}
         <div className="flex justify-between">
@@ -200,35 +230,6 @@ const OrderCard: React.FC<OrderCardProps> = ({
             {formatCurrency(order.totalPrice ?? 0, order.currency || 'usd')}
           </p>
         </div>
-      </div>
-
-      {/* Status */}
-      <div className="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2">
-        <p className="text-xs font-light uppercase text-gray-600">
-          payment status:{' '}
-          <span
-            className={`font-bold ${
-              order.paymentStatus === 'paid_in_store'
-                ? 'text-green'
-                : 'text-flag-red'
-            }`}
-          >
-            {order.paymentStatus === 'paid_in_store' ? 'Paid' : 'Unpaid'}
-          </span>
-        </p>
-
-        <p className="text-xs font-light uppercase text-gray-600">
-          pickup status:{' '}
-          <span
-            className={`font-bold ${
-              order.pickupStatus === 'picked_up'
-                ? 'text-green'
-                : 'text-flag-red'
-            }`}
-          >
-            {order.pickupStatus === 'picked_up' ? 'Picked up' : 'Not picked up'}
-          </span>
-        </p>
       </div>
 
       {/* View Order Button */}
