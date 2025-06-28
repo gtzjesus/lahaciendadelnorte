@@ -3,7 +3,7 @@ import { getMyOrders } from '@/sanity/lib/orders/getMyOrders';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import PickupLocation from '@/components/orders/PickupLocation';
-import OrderCard from '@/components/orders/OrderCard';
+import ClientOrderCard from '@/components/orders/ClientOrderCard';
 
 export default async function Orders() {
   const { userId } = await auth();
@@ -35,7 +35,7 @@ export default async function Orders() {
           ) : (
             <div className="space-y-6 sm:space-y-8">
               {orders.map((order) => (
-                <OrderCard key={order.orderNumber} order={order} />
+                <ClientOrderCard key={order.orderNumber} order={order} />
               ))}
             </div>
           )}
