@@ -178,38 +178,9 @@ const OrderCard: React.FC<OrderCardProps> = ({
                 </p>
               </div>
             )}
-            {/* Status */}
-            <div className=" flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2 border-b pb-2 border-flag-blue">
-              <p className="text-xs font-light uppercase text-gray-600">
-                payment status:{' '}
-                <span
-                  className={`font-bold ${
-                    order.paymentStatus === 'paid_in_store'
-                      ? 'text-green'
-                      : 'text-flag-red'
-                  }`}
-                >
-                  {order.paymentStatus === 'paid_in_store' ? 'Paid' : 'Unpaid'}
-                </span>
-              </p>
-
-              <p className="text-xs font-light uppercase text-gray-600">
-                pickup status:{' '}
-                <span
-                  className={`font-bold ${
-                    order.pickupStatus === 'picked_up'
-                      ? 'text-green'
-                      : 'text-flag-red'
-                  }`}
-                >
-                  {order.pickupStatus === 'picked_up'
-                    ? 'Picked up'
-                    : 'Not picked up'}
-                </span>
-              </p>
-            </div>
           </div>
         )}
+
         <div className="flex justify-between">
           <p className="uppercase text-xs mb-1 text-gray-600">total items:</p>
           <p className="font-bold text-xs">{totalItems}</p>
@@ -228,6 +199,43 @@ const OrderCard: React.FC<OrderCardProps> = ({
           <p className="uppercase text-xs mb-1 text-gray-600">sale total:</p>
           <p className="font-bold text-sm text-green">
             {formatCurrency(order.totalPrice ?? 0, order.currency || 'usd')}
+          </p>
+        </div>
+        {/* Status */}
+        <div className=" flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2 border-t pt-2 border-flag-blue">
+          <p className="text-xs font-light uppercase text-gray-600">
+            payment status:{' '}
+            <span
+              className={`font-bold ${
+                order.paymentStatus === 'paid_in_store' ||
+                order.paymentStatus === 'paid_online'
+                  ? 'text-green'
+                  : 'text-flag-red'
+              }`}
+            >
+              {order.paymentStatus === 'paid_in_store'
+                ? 'Paid In Store'
+                : order.paymentStatus === 'paid_online'
+                  ? 'Paid Online'
+                  : order.paymentMethod === 'unpaid'
+                    ? 'Unpaid (Online Reservation)'
+                    : 'Unpaid'}
+            </span>
+          </p>
+
+          <p className="text-xs font-light uppercase text-gray-600">
+            pickup status:{' '}
+            <span
+              className={`font-bold ${
+                order.pickupStatus === 'picked_up'
+                  ? 'text-green'
+                  : 'text-flag-red'
+              }`}
+            >
+              {order.pickupStatus === 'picked_up'
+                ? 'Picked up'
+                : 'Not picked up'}
+            </span>
           </p>
         </div>
       </div>
