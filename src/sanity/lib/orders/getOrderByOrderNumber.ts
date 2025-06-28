@@ -14,6 +14,7 @@ export async function getOrderByOrderNumber(orderNumber: string) {
         email,
         products[] {
           quantity,
+          itemNumber,
           _key,
           product->{
             _id,

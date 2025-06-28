@@ -27,6 +27,8 @@ const OrderCard: React.FC<OrderCardProps> = ({
     ? order.products
     : order.products?.slice(0, 3);
 
+  console.log('Order data:', order);
+
   return (
     <div className="bg-white border border-flag-blue p-2 shadow-sm overflow-hidden">
       {/* Header */}
@@ -84,7 +86,6 @@ const OrderCard: React.FC<OrderCardProps> = ({
                       />
                     </Link>
                   )}
-
                   <div>
                     {slug ? (
                       <Link
@@ -102,17 +103,6 @@ const OrderCard: React.FC<OrderCardProps> = ({
                       quantity: {product.quantity ?? 'n/a'}
                     </p>
                   </div>
-                </div>
-
-                <div>
-                  <p className="text-green-800 mb-1 text-xs text-right">
-                    {prod?.price && product.quantity
-                      ? formatCurrency(
-                          prod.price * product.quantity,
-                          order.currency
-                        )
-                      : 'n/a'}
-                  </p>
                 </div>
               </div>
             );

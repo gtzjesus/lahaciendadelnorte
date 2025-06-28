@@ -10,6 +10,7 @@ export async function getAllOrders() {
       email,
       products[] {
         quantity,
+        itemNumber,
         product->{
           _id,
           name,
