@@ -20,6 +20,7 @@ type Product = {
 type CartItem = Product & { cartQty: number };
 
 export default function POSPage() {
+  const [isScanning, setIsScanning] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
@@ -110,7 +111,6 @@ export default function POSPage() {
     try {
       const cameras = await Html5Qrcode.getCameras();
       if (cameras && cameras.length > 0) {
-        // prefer back camera
         const backCamera = cameras.find((cam) =>
           cam.label.toLowerCase().includes('back')
         );
@@ -131,14 +131,21 @@ export default function POSPage() {
 
             await scanner.stop();
             html5QrCodeRef.current = null;
+            setIsScanning(false); // 🔑 Stop tracking
             setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
 
             const fw = launchFireworks();
             setTimeout(() => fw?.stop(), 2000);
-            setTimeout(startScanner, 2000);
+
+            setTimeout(() => {
+              startScanner();
+              setIsScanning(true); // 🔑 Resume tracking
+            }, 2000);
           },
           (err) => console.warn('QR error:', err)
         );
+
+        setIsScanning(true); // 🔑 Set scanning active
       }
     } catch (err) {
       console.error('Camera error', err);
@@ -148,8 +155,9 @@ export default function POSPage() {
   const stopScanner = async () => {
     if (html5QrCodeRef.current) {
       await html5QrCodeRef.current.stop().catch(() => {});
-      html5QrCodeRef.current.clear(); // Clear the scanner UI
+      html5QrCodeRef.current.clear();
       html5QrCodeRef.current = null;
+      setIsScanning(false); // 🔑 Scanner is stopped
     }
   };
 
@@ -271,7 +279,7 @@ export default function POSPage() {
 
       <div className="p-3">
         <h1 className="text-2xl uppercase font-bold mb-4">Point of Sale</h1>
-        {html5QrCodeRef.current ? (
+        {isScanning ? (
           <button
             onClick={stopScanner}
             className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-red text-white w-full"
