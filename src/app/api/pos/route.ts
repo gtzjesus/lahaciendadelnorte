@@ -65,9 +65,12 @@ export async function POST(req: Request) {
     const email = 'customer@example.com';
 
     const productsForSanity = items.map((item) => ({
+      _key: crypto.randomUUID(),
       _type: 'object',
       product: { _type: 'reference', _ref: item.productId },
       quantity: item.quantity,
+      price: item.price,
+      finalPrice: item.price * item.quantity,
     }));
 
     for (const item of items) {
@@ -104,7 +107,7 @@ export async function POST(req: Request) {
       clerkUserId,
       customerName,
       email,
-      products: productsForSanity,
+      products: productsForSanity, // los productos llevan itemNumber
       totalPrice,
       currency: 'usd',
       amountDiscount: 0,
