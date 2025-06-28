@@ -152,6 +152,7 @@ export const orderType = defineType({
       type: 'string',
       options: {
         list: [
+          { title: 'Unpaid (Online Reservation)', value: 'unpaid' },
           { title: 'Cash', value: 'cash' },
           { title: 'Card', value: 'card' },
           { title: 'Split (Cash + Card)', value: 'split' },

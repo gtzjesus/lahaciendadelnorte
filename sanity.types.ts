@@ -77,7 +77,7 @@ export type Order = {
   paymentStatus?: "unpaid" | "paid_in_store" | "paid_online";
   pickupStatus?: "not_picked_up" | "ready_for_pickup" | "picked_up" | "cancelled";
   orderDate?: string;
-  paymentMethod?: "cash" | "card" | "split";
+  paymentMethod?: "unpaid" | "cash" | "card" | "split";
   cashReceived?: number;
   cardAmount?: number;
   changeGiven?: number;
@@ -378,7 +378,7 @@ export type MY_ORDERS_QUERYResult = Array<{
   paymentStatus?: "paid_in_store" | "paid_online" | "unpaid";
   pickupStatus?: "cancelled" | "not_picked_up" | "picked_up" | "ready_for_pickup";
   orderDate?: string;
-  paymentMethod?: "card" | "cash" | "split";
+  paymentMethod?: "card" | "cash" | "split" | "unpaid";
   cashReceived?: number;
   cardAmount?: number;
   changeGiven?: number;

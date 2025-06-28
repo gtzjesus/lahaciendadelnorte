@@ -432,6 +432,10 @@
           "of": [
             {
               "type": "string",
+              "value": "unpaid"
+            },
+            {
+              "type": "string",
               "value": "cash"
             },
             {
