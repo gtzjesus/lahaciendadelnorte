@@ -112,7 +112,7 @@ export async function POST(req: Request) {
       paymentStatus: 'paid_in_store',
       pickupStatus: 'picked_up',
       orderDate: new Date().toISOString(),
-      // ✅ new fields added here:
+      tax,
       paymentMethod,
       cashReceived,
       cardAmount,
