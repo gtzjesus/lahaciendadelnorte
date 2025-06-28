@@ -51,6 +51,10 @@ export async function handleCheckoutSessionCompleted(
   }));
 
   // 🧾 Create the order document
+  // 🧾 Create the order document
+  const subtotal = (amount_total || 0) / 100;
+  const tax = parseFloat((subtotal * 0.0825).toFixed(2)); // 8.25% tax
+
   const order = await backendClient.create({
     _type: 'order',
     orderNumber,
@@ -62,9 +66,9 @@ export async function handleCheckoutSessionCompleted(
     email: stripeCustomer.email,
     currency,
     amountDiscount: (total_details?.amount_discount || 0) / 100,
+    tax, // ✅ added tax field here
     products: sanityProducts,
-    totalPrice: (amount_total || 0) / 100,
-    tax: (total_details?.amount_tax || 0) / 100, // ✅ NEW: tax field populated
+    totalPrice: subtotal,
     status: 'paid',
     orderDate: new Date().toISOString(),
   });
