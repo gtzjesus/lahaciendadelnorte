@@ -219,7 +219,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                   ? 'Paid Online'
                   : order.paymentMethod === 'online_unpaid'
                     ? 'Unpaid (Online Reservation)'
-                    : 'Unpaid'}
+                    : 'Unpaid online reservation'}
             </span>
           </p>
 
