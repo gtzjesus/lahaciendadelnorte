@@ -20,6 +20,7 @@ type Product = {
 type CartItem = Product & { cartQty: number };
 
 export default function POSPage() {
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -462,15 +463,48 @@ export default function POSPage() {
           )}
         </div>
 
+        {showConfirmModal && (
+          <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black bg-opacity-60">
+            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md mx-auto text-center">
+              <h2 className="text-xl font-bold mb-4">Confirm Sale</h2>
+              <p className="mb-6 text-gray-700">
+                Are you sure you want to complete this sale for{' '}
+                <span className="font-bold text-green">
+                  ${total.toFixed(2)}
+                </span>
+                ?
+              </p>
+              <div className="flex justify-center space-x-4">
+                <button
+                  onClick={() => setShowConfirmModal(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    setShowConfirmModal(false);
+                    await handleSale();
+                  }}
+                  className="px-4 py-2 bg-flag-blue text-white rounded hover:bg-blue-700"
+                >
+                  Yes, Complete Sale
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <button
-          onClick={handleSale}
+          onClick={() => setShowConfirmModal(true)}
           disabled={loading || cart.length === 0}
           className="w-full bg-white text-green uppercase font-semibold py-3"
         >
           {loading
-            ? `Processing... ${total.toFixed(2)} `
-            : `Complete Sale ($${total.toFixed(2)}) `}
+            ? `Processing... $${total.toFixed(2)}`
+            : `Complete Sale ($${total.toFixed(2)})`}
         </button>
+
         <button
           onClick={clearCart}
           disabled={cart.length === 0 || loading}
