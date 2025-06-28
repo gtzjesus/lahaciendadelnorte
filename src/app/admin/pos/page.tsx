@@ -110,7 +110,11 @@ export default function POSPage() {
     try {
       const cameras = await Html5Qrcode.getCameras();
       if (cameras && cameras.length > 0) {
-        const cameraId = cameras[0].id;
+        // prefer back camera
+        const backCamera = cameras.find((cam) =>
+          cam.label.toLowerCase().includes('back')
+        );
+        const cameraId = backCamera?.id || cameras[cameras.length - 1].id;
 
         await scanner.start(
           cameraId,
@@ -138,6 +142,14 @@ export default function POSPage() {
       }
     } catch (err) {
       console.error('Camera error', err);
+    }
+  };
+
+  const stopScanner = async () => {
+    if (html5QrCodeRef.current) {
+      await html5QrCodeRef.current.stop().catch(() => {});
+      html5QrCodeRef.current.clear(); // Clear the scanner UI
+      html5QrCodeRef.current = null;
     }
   };
 
@@ -259,13 +271,21 @@ export default function POSPage() {
 
       <div className="p-3">
         <h1 className="text-2xl uppercase font-bold mb-4">Point of Sale</h1>
-        <button
-          onClick={startScanner}
-          disabled={Boolean(html5QrCodeRef.current)}
-          className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-blue text-white w-full"
-        >
-          {html5QrCodeRef.current ? 'Scanning...' : 'Start Scanning'}
-        </button>
+        {html5QrCodeRef.current ? (
+          <button
+            onClick={stopScanner}
+            className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-red text-white w-full"
+          >
+            Stop Scanning
+          </button>
+        ) : (
+          <button
+            onClick={startScanner}
+            className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-blue text-white w-full"
+          >
+            Start Scanning
+          </button>
+        )}
 
         <div id="reader" className="w-full max-w-md mx-auto" />
 
