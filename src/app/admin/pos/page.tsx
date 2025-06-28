@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Html5QrcodeScanner } from 'html5-qrcode';
 import { client } from '@/sanity/lib/client';
 import { Fireworks } from 'fireworks-js';
 import { useRouter } from 'next/navigation';
+import { Html5Qrcode } from 'html5-qrcode';
 
 type Product = {
   _id: string;
@@ -22,7 +22,7 @@ type CartItem = Product & { cartQty: number };
 export default function POSPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
+  const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
   const fireworksContainer = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [finalTotal, setFinalTotal] = useState<number | null>(null);
@@ -73,9 +73,9 @@ export default function POSPage() {
 
   useEffect(() => {
     return () => {
-      if (scanner) scanner.clear().catch(() => {});
+      html5QrCodeRef.current?.stop().catch(() => {});
     };
-  }, [scanner]);
+  }, []);
 
   const launchFireworks = () => {
     if (!fireworksContainer.current) return;
@@ -101,37 +101,44 @@ export default function POSPage() {
     return fw;
   };
 
-  const startScanner = () => {
-    if (scanner) return;
+  const startScanner = async () => {
+    if (html5QrCodeRef.current) return;
 
-    const newScanner = new Html5QrcodeScanner(
-      'reader',
-      { fps: 10, qrbox: 250 },
-      false
-    );
-    newScanner.render(
-      async (decodedText) => {
-        const code = decodedText.trim().toLowerCase();
-        const matched = products.find(
-          (p) => p.slug.current.toLowerCase() === code
+    const scanner = new Html5Qrcode('reader');
+    html5QrCodeRef.current = scanner;
+
+    try {
+      const cameras = await Html5Qrcode.getCameras();
+      if (cameras && cameras.length > 0) {
+        const cameraId = cameras[0].id;
+
+        await scanner.start(
+          cameraId,
+          {
+            fps: 10,
+            qrbox: 250,
+          },
+          async (decodedText) => {
+            const code = decodedText.trim().toLowerCase();
+            const matched = products.find(
+              (p) => p.slug.current.toLowerCase() === code
+            );
+            if (!matched) return;
+
+            await scanner.stop();
+            html5QrCodeRef.current = null;
+            setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
+
+            const fw = launchFireworks();
+            setTimeout(() => fw?.stop(), 2000);
+            setTimeout(startScanner, 2000);
+          },
+          (err) => console.warn('QR error:', err)
         );
-        if (!matched) return;
-
-        if (cart.some((item) => item._id === matched._id)) return;
-
-        await newScanner.clear();
-        setScanner(null);
-
-        setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
-
-        const fw = launchFireworks();
-        setTimeout(() => fw?.stop(), 2000);
-        setTimeout(startScanner, 2000);
-      },
-      (err) => console.warn('QR error:', err)
-    );
-
-    setScanner(newScanner);
+      }
+    } catch (err) {
+      console.error('Camera error', err);
+    }
   };
 
   const updateQuantity = (index: number, qty: number) => {
@@ -254,11 +261,12 @@ export default function POSPage() {
         <h1 className="text-2xl uppercase font-bold mb-4">Point of Sale</h1>
         <button
           onClick={startScanner}
-          disabled={!!scanner}
+          disabled={Boolean(html5QrCodeRef.current)}
           className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-blue text-white w-full"
         >
-          {scanner ? 'Scanning...' : 'Start Scanning'}
+          {html5QrCodeRef.current ? 'Scanning...' : 'Start Scanning'}
         </button>
+
         <div id="reader" className="w-full max-w-md mx-auto" />
 
         <div className="mt-6 space-y-4">
