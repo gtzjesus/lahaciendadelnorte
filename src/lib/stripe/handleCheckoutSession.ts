@@ -64,6 +64,7 @@ export async function handleCheckoutSessionCompleted(
     amountDiscount: (total_details?.amount_discount || 0) / 100,
     products: sanityProducts,
     totalPrice: (amount_total || 0) / 100,
+    tax: (total_details?.amount_tax || 0) / 100, // ✅ NEW: tax field populated
     status: 'paid',
     orderDate: new Date().toISOString(),
   });
