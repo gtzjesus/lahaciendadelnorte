@@ -97,18 +97,23 @@ const OrderCard: React.FC<OrderCardProps> = ({
                     {slug ? (
                       <Link
                         href={`/product/${slug}`}
-                        className="font-xs uppercase text-gray-600 font-light mb-1 mt-2 hover:underline"
+                        className="text-xs uppercase text-flag-red font-light mt-1 hover:underline"
                       >
                         {prod?.name}
                       </Link>
                     ) : (
-                      <p className="font-xs uppercase text-gray-600 font-light mb-1 mt-2">
+                      <p className="text-xs uppercase text-gray-600 font-light mt-2">
                         {prod?.name}
                       </p>
                     )}
-                    <p className="text-xs uppercase font-light text-gray-600">
+                    <p className="text-xs uppercase font-light text-flag-blue">
                       quantity: {product.quantity ?? 'n/a'}
                     </p>
+                    {prod?.itemNumber && (
+                      <p className="text-xs uppercase font-light text-gray-600">
+                        item #: {prod.itemNumber}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -119,7 +124,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
           {order.products?.length > 3 && (
             <button
               onClick={() => setIsExpanded((prev) => !prev)}
-              className="mt-2 uppercase text-xs text-white border p-2 bg-flag-red"
+              className="mt-2 uppercase text-xs text-white border p-2 bg-flag-blue"
             >
               {isExpanded
                 ? 'Hide fireworks'
