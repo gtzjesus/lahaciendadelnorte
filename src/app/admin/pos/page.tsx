@@ -378,7 +378,7 @@ export default function POSPage() {
         <div className="space-y-1 mt-2 mb-2 text-white uppercase text-md font-light">
           <p>Total Items: {totalItems}</p>
           <p>Subtotal: ${subtotal.toFixed(2)}</p>
-          <p>Tax (8.25%): ${tax.toFixed(2)}</p>
+          <p>Tax: ${tax.toFixed(2)}</p>
           <p>Total: ${total.toFixed(2)}</p>
         </div>
 
