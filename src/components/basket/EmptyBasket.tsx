@@ -22,7 +22,7 @@ const EmptyBasket: React.FC = () => {
         className="inline-block border-none bg-flag-blue  p-4 text-xs font-light text-center text-white uppercase "
         aria-label="Continue shopping"
       >
-        reserve fireworks
+        reserve firework
       </Link>
     </div>
   );
