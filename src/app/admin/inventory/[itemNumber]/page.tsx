@@ -16,8 +16,8 @@ export default async function ProductDetailPage({ params }: Props) {
   if (!product) return notFound();
 
   return (
-    <div className="bg-white min-h-screen p-6">
-      <h1 className="text-2xl uppercase font-bold mb-6">Product Detail</h1>
+    <div className="bg-gray-50 min-h-screen p-6">
+      <h1 className="uppercase text-xl font-semibold mb-6">Firework Detail</h1>
       <InventoryCard product={product} allCategories={allCategories} />
     </div>
   );
