@@ -119,12 +119,12 @@ export type Product = {
   }>;
   description?: string;
   sizes?: Array<{
-    label?: string;
+    label?: "Small" | "Medium" | "Large" | "Extra Large";
     price?: number;
     _type: "sizeOption";
     _key: string;
   }>;
-  flavors?: Array<string>;
+  flavors?: Array<"hawaiian delight" | "blue moon" | "chocolate" | "velvet rose" | "yellow rode" | "pink lady" | "creamy banana" | "tamarindo" | "mango" | "cantaloupe" | "natural lime" | "guava" | "mazapan">;
   categories?: Array<{
     _ref: string;
     _type: "reference";
@@ -360,12 +360,12 @@ export type MY_ORDERS_QUERYResult = Array<{
       }>;
       description?: string;
       sizes?: Array<{
-        label?: string;
+        label?: "Extra Large" | "Large" | "Medium" | "Small";
         price?: number;
         _type: "sizeOption";
         _key: string;
       }>;
-      flavors?: Array<string>;
+      flavors?: Array<"blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode">;
       categories?: Array<{
         _ref: string;
         _type: "reference";
@@ -457,12 +457,12 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
   }>;
   description?: string;
   sizes?: Array<{
-    label?: string;
+    label?: "Extra Large" | "Large" | "Medium" | "Small";
     price?: number;
     _type: "sizeOption";
     _key: string;
   }>;
-  flavors?: Array<string>;
+  flavors?: Array<"blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode">;
   categories?: Array<{
     _ref: string;
     _type: "reference";
@@ -474,9 +474,9 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
 }>;
 
 // Source: ./src/sanity/lib/products/getProductBySlug.ts
-// Variable: PRODUCT_BY_ID_QUERY
-// Query: *[_type == 'product' && slug.current == $slug] | order(name asc)
-export type PRODUCT_BY_ID_QUERYResult = Array<{
+// Variable: PRODUCT_BY_SLUG_QUERY
+// Query: *[_type == 'product' && slug.current == $slug][0]
+export type PRODUCT_BY_SLUG_QUERYResult = {
   _id: string;
   _type: "product";
   _createdAt: string;
@@ -512,12 +512,12 @@ export type PRODUCT_BY_ID_QUERYResult = Array<{
   }>;
   description?: string;
   sizes?: Array<{
-    label?: string;
+    label?: "Extra Large" | "Large" | "Medium" | "Small";
     price?: number;
     _type: "sizeOption";
     _key: string;
   }>;
-  flavors?: Array<string>;
+  flavors?: Array<"blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode">;
   categories?: Array<{
     _ref: string;
     _type: "reference";
@@ -526,7 +526,7 @@ export type PRODUCT_BY_ID_QUERYResult = Array<{
     [internalGroqTypeReferenceTo]?: "category";
   }>;
   stock?: number;
-}>;
+} | null;
 
 // Source: ./src/sanity/lib/products/getProductsByCategory.tsx
 // Variable: PRODUCTS_BY_CATEGORY_QUERY
@@ -567,12 +567,12 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
   }>;
   description?: string;
   sizes?: Array<{
-    label?: string;
+    label?: "Extra Large" | "Large" | "Medium" | "Small";
     price?: number;
     _type: "sizeOption";
     _key: string;
   }>;
-  flavors?: Array<string>;
+  flavors?: Array<"blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode">;
   categories?: Array<{
     _ref: string;
     _type: "reference";
@@ -608,7 +608,7 @@ declare module "@sanity/client" {
     "\n    *[_type == 'order' && clerkUserId == $userId] | order(orderDate desc) {\n        ...,\n        products[]{\n            ...,\n            product->\n        }\n    }\n  ": MY_ORDERS_QUERYResult;
     "\n  *[_type == 'category'] | order(title asc) {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    slug,\n    description,\n    image\n  }\n": ALL_CATEGORIES_QUERYResult;
     "\n  *[_type == 'product'] | order(name asc)\n  ": ALL_PRODUCTS_QUERYResult;
-    "\n      *[_type == 'product' && slug.current == $slug] | order(name asc)\n    ": PRODUCT_BY_ID_QUERYResult;
+    "\n    *[_type == 'product' && slug.current == $slug][0]\n  ": PRODUCT_BY_SLUG_QUERYResult;
     "\n    *[_type == 'product' && references(*[_type == 'category' && slug.current == $categorySlug]._id)] | order(name asc)\n  ": PRODUCTS_BY_CATEGORY_QUERYResult;
     "\n    *[\n        _type == 'sale'\n        && isActive == true \n        && couponCode == $couponCode\n    ] | order(validFfrom desc)[0]\n    ": ACTIVE_SALE_BY_COUPON_QUERYResult;
   }

@@ -61,7 +61,16 @@ export const productType = defineType({
           type: 'object',
           name: 'sizeOption',
           fields: [
-            { name: 'label', title: 'Size', type: 'string' }, // e.g., "Small"
+            {
+              name: 'label',
+              title: 'Size',
+              type: 'string',
+              options: {
+                list: ['Small', 'Medium', 'Large', 'Extra Large'], // predefined size labels
+                layout: 'dropdown', // render as dropdown
+              },
+              validation: (Rule) => Rule.required(),
+            },
             {
               name: 'price',
               title: 'Price',
@@ -71,7 +80,7 @@ export const productType = defineType({
           ],
         }),
       ],
-      description: 'List sizes with corresponding prices (for shaved ice).',
+      description: 'Select size and set price for each.',
     }),
 
     // ⬇️ Flavor picker
@@ -79,8 +88,29 @@ export const productType = defineType({
       name: 'flavors',
       title: 'Available Flavors',
       type: 'array',
-      of: [{ type: 'string' }],
-      description: 'List of available flavors.',
+      of: [
+        {
+          type: 'string',
+          options: {
+            list: [
+              'hawaiian delight',
+              'blue moon',
+              'chocolate',
+              'velvet rose',
+              'yellow rode',
+              'pink lady',
+              'creamy banana',
+              'tamarindo',
+              'mango',
+              'cantaloupe',
+              'natural lime',
+              'guava',
+              'mazapan',
+            ],
+          },
+        },
+      ],
+      description: 'Pick available flavors from the list.',
     }),
 
     defineField({
