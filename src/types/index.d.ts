@@ -40,10 +40,17 @@ export interface Product extends SanityDocument {
   price: number;
   stock?: number;
   image?: SanityImage;
-  extraImages?: SanityImage[];
   description?: string;
-  sizes?: { label: string; price: number }[];
-  flavors?: string[];
+  extraImages?: SanityImage[];
+
+  // 🆕 New fields for shaved ice/snacks
+  sizes?: {
+    label: string; // e.g. "Small", "Medium", etc.
+    price: number;
+  }[];
+
+  flavors?: string[]; // e.g. ["Mango", "Guava", "Tamarindo"]
+  categories?: Category[]; // in case you're querying expanded category data
 }
 
 // 🧠 Basket Item
