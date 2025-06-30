@@ -1,20 +1,25 @@
 import { defineQuery } from 'next-sanity';
 import { sanityFetch } from '../live';
+import { Product } from '@/types';
 
-export const getProductBySlug = async (slug: string) => {
-  const PRODUCT_BY_ID_QUERY = defineQuery(`
-      *[_type == 'product' && slug.current == $slug] | order(name asc)
-    `);
+export const getProductBySlug = async (
+  slug: string
+): Promise<Product | null> => {
+  const PRODUCT_BY_SLUG_QUERY = defineQuery(`
+    *[_type == 'product' && slug.current == $slug][0]
+  `);
+
   try {
     const result = await sanityFetch({
-      query: PRODUCT_BY_ID_QUERY,
+      query: PRODUCT_BY_SLUG_QUERY,
       params: { slug },
     });
 
-    // Return the first product found or null if not found
-    return result.data?.[0] || null;
+    const product = result.data as Product; // 👈 aquí tipamos solo result.data
+
+    return product ?? null;
   } catch (error) {
-    console.error('Error fetching product by slug', error);
+    console.error('Error fetching product by slug:', error);
     return null;
   }
 };

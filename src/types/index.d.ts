@@ -35,15 +35,15 @@ export interface Category extends SanityDocument {
 
 // 🛍️ Product
 export interface Product extends SanityDocument {
-  name: string; // Must be required
+  name: string;
   slug: SanitySlug;
   price: number;
   stock?: number;
   image?: SanityImage;
+  extraImages?: SanityImage[];
   description?: string;
-  care?: string;
-  size?: string;
-  extraImages?: SanityImage[]; // optional extra product images
+  sizes?: { label: string; price: number }[];
+  flavors?: string[];
 }
 
 // 🧠 Basket Item
