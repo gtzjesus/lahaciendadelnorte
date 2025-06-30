@@ -118,9 +118,13 @@ export type Product = {
     _key: string;
   }>;
   description?: string;
-  size?: string;
-  care?: string;
-  price?: number;
+  sizes?: Array<{
+    label?: string;
+    price?: number;
+    _type: "sizeOption";
+    _key: string;
+  }>;
+  flavors?: Array<string>;
   categories?: Array<{
     _ref: string;
     _type: "reference";
@@ -355,9 +359,13 @@ export type MY_ORDERS_QUERYResult = Array<{
         _key: string;
       }>;
       description?: string;
-      size?: string;
-      care?: string;
-      price?: number;
+      sizes?: Array<{
+        label?: string;
+        price?: number;
+        _type: "sizeOption";
+        _key: string;
+      }>;
+      flavors?: Array<string>;
       categories?: Array<{
         _ref: string;
         _type: "reference";
@@ -448,9 +456,13 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
     _key: string;
   }>;
   description?: string;
-  size?: string;
-  care?: string;
-  price?: number;
+  sizes?: Array<{
+    label?: string;
+    price?: number;
+    _type: "sizeOption";
+    _key: string;
+  }>;
+  flavors?: Array<string>;
   categories?: Array<{
     _ref: string;
     _type: "reference";
@@ -499,9 +511,13 @@ export type PRODUCT_BY_ID_QUERYResult = Array<{
     _key: string;
   }>;
   description?: string;
-  size?: string;
-  care?: string;
-  price?: number;
+  sizes?: Array<{
+    label?: string;
+    price?: number;
+    _type: "sizeOption";
+    _key: string;
+  }>;
+  flavors?: Array<string>;
   categories?: Array<{
     _ref: string;
     _type: "reference";
@@ -550,9 +566,13 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
     _key: string;
   }>;
   description?: string;
-  size?: string;
-  care?: string;
-  price?: number;
+  sizes?: Array<{
+    label?: string;
+    price?: number;
+    _type: "sizeOption";
+    _key: string;
+  }>;
+  flavors?: Array<string>;
   categories?: Array<{
     _ref: string;
     _type: "reference";

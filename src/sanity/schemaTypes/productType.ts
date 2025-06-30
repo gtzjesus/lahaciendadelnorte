@@ -25,69 +25,77 @@ export const productType = defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      description: 'Enter product name.',
-      options: {
-        source: 'name',
-        maxLength: 96,
-      },
+      description: 'Auto-generated from name',
+      options: { source: 'name', maxLength: 96 },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'image',
-      title: 'Product Image',
+      title: 'Main Image',
       type: 'image',
       options: { hotspot: true },
-      description: 'Upload image thumbnail.',
+      description: 'Thumbnail or main display image.',
     }),
     defineField({
       name: 'extraImages',
       title: 'Additional Images',
       type: 'array',
-      description: 'Upload images displayed in product page.',
       of: [{ type: 'image', options: { hotspot: true } }],
       validation: (Rule) =>
-        Rule.min(1)
-          .max(4)
-          .error('You can upload between 1 and 4 extra images.'),
+        Rule.max(4).error('You can upload up to 4 additional images.'),
     }),
     defineField({
       name: 'description',
       title: 'Description',
-      type: 'string', // Change from 'blockContent' to 'string'
-      description: 'Enter summary description for the product.',
+      type: 'text',
+      description: 'Short description of the product.',
     }),
+
+    // ⬇️ Multi-size price field
     defineField({
-      name: 'size',
-      title: 'Size Information',
-      type: 'string',
-      description: 'Enter size information about the product.',
+      name: 'sizes',
+      title: 'Sizes & Prices',
+      type: 'array',
+      of: [
+        defineField({
+          type: 'object',
+          name: 'sizeOption',
+          fields: [
+            { name: 'label', title: 'Size', type: 'string' }, // e.g., "Small"
+            {
+              name: 'price',
+              title: 'Price',
+              type: 'number',
+              validation: (Rule) => Rule.required().min(0),
+            },
+          ],
+        }),
+      ],
+      description: 'List sizes with corresponding prices (for shaved ice).',
     }),
+
+    // ⬇️ Flavor picker
     defineField({
-      name: 'care',
-      title: 'Care Instructions',
-      type: 'string',
-      description: 'Enter care instructions for the product.',
+      name: 'flavors',
+      title: 'Available Flavors',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'List of available flavors.',
     }),
-    defineField({
-      name: 'price',
-      title: 'Price',
-      type: 'number',
-      description: 'Enter product price.',
-      validation: (Rule) => Rule.required().min(0),
-    }),
+
     defineField({
       name: 'categories',
       title: 'Categories',
       type: 'array',
-      description: 'Choose category that belongs.',
       of: [{ type: 'reference', to: { type: 'category' } }],
+      description: 'Assign product categories (e.g., shaved ice, snacks).',
     }),
+
     defineField({
       name: 'stock',
       title: 'Stock',
       type: 'number',
-      description: 'Enter how many products in stock.',
-      validation: (Rule) => Rule.min(0),
+      description: 'Inventory count (if applicable).',
     }),
   ],
 
@@ -95,14 +103,13 @@ export const productType = defineType({
     select: {
       title: 'name',
       media: 'image',
-      price: 'price',
       itemNumber: 'itemNumber',
     },
-    prepare(select) {
+    prepare({ title, media, itemNumber }) {
       return {
-        title: `${select.title} (${select.itemNumber})`,
-        subtitle: `$${select.price}`,
-        media: select.media,
+        title: `${title} (${itemNumber})`,
+        subtitle: 'Shaved Ice or Snack Item',
+        media,
       };
     },
   },
