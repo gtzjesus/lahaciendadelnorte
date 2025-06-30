@@ -139,7 +139,7 @@ export default function InventoryPage() {
           className="text-xs uppercase font-light mb-2 text-white bg-flag-blue px-3 py-2"
           onClick={() => setShowForm((prev) => !prev)}
         >
-          {showForm ? 'Hide' : 'Show to Add Firework'}
+          {showForm ? 'Hide fields' : 'Show fields to Add Firework'}
         </button>
       </div>
 
@@ -245,46 +245,50 @@ export default function InventoryPage() {
         firework inventory
       </h2>
 
-      <ul className="space-y-2">
+      <ul className="space-y-2 ">
         {[...products]
           .sort((a, b) => Number(a.itemNumber) - Number(b.itemNumber))
           .map((p) => (
-            <li
-              key={p._id}
-              className="border border-flag-blue uppercase p-2 flex items-center gap-4"
-            >
-              {p.imageUrl && (
-                <div className="relative w-16 h-16 flex-shrink-0">
-                  <Image
-                    src={p.imageUrl}
-                    alt={p.name}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    sizes="64px"
-                    priority={false}
-                  />
-                </div>
-              )}
-              <div className="flex gap-1 flex-wrap">
-                <p className="text-flag-blue text-xs font-bold">
-                  #{p.itemNumber}
-                </p>
-                <Link
-                  href={`/admin/inventory/${p.itemNumber}`}
-                  className="text-flag-red text-xs font-bold underline"
-                >
-                  {p.name}
-                </Link>
-              </div>
-              <div className="flex flex-col gap-2 flex-wrap">
-                <p className="text-xs font-bold text-green">${p.price}</p>
-                <p className="text-xs font-bold">stock: {p.stock}</p>
-                {p.category && (
-                  <p className="text-xs text-green font-semibold">
-                    category: {p.category.title}
-                  </p>
+            <li key={p._id}>
+              <Link
+                href={`/admin/inventory/${p.itemNumber}`}
+                className="uppercase border border-flag-blue bg-white p-2 shadow-sm hover:shadow-md transition flex gap-4 items-center"
+              >
+                {p.imageUrl && (
+                  <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden">
+                    <Image
+                      src={p.imageUrl}
+                      alt={p.name}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      sizes="80px"
+                    />
+                  </div>
                 )}
-              </div>
+
+                <div className="flex flex-col flex-1 justify-between text-left">
+                  <div className="flex gap-2 items-center">
+                    <p className="text-sm text-gray-500">#{p.itemNumber}</p>
+                    <p className="text-sm font-semibold text-flag-red">
+                      {p.name}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-4 text-xs text-gray-600 text-right">
+                  <p className="text-sm text-green font-semibold">
+                    ${p.price.toFixed(2)}
+                  </p>
+                  <p>
+                    Stock: <span className="font-semibold ">{p.stock}</span>
+                  </p>
+                  {p.category && (
+                    <p>
+                      Category:{' '}
+                      <span className="font-semibold">{p.category.title}</span>
+                    </p>
+                  )}
+                </div>
+              </Link>
             </li>
           ))}
       </ul>
