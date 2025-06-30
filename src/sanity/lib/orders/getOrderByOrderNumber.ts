@@ -12,18 +12,19 @@ export async function getOrderByOrderNumber(orderNumber: string) {
         clerkUserId,
         customerName,
         email,
-        products[] {
-          quantity,
-          itemNumber,
-          _key,
-          product->{
-            _id,
-            name,
-            slug,
-            image,
-            price
-          }
-        },
+     products[] {
+  quantity,
+  _key,
+  product->{
+    _id,
+    name,
+    slug,
+    image,
+    price,
+    itemNumber,
+    stock
+  }
+},
         totalPrice,
         tax,
         currency,
