@@ -97,7 +97,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                     {slug ? (
                       <Link
                         href={`/product/${slug}`}
-                        className="text-xs uppercase text-flag-red font-light mt-1 hover:underline"
+                        className="text-xs uppercase text-flag-red font-ligh mt-2 hover:underline"
                       >
                         {prod?.name}
                       </Link>
@@ -106,14 +106,25 @@ const OrderCard: React.FC<OrderCardProps> = ({
                         {prod?.name}
                       </p>
                     )}
-                    <p className="text-xs uppercase font-light text-flag-blue">
-                      quantity: {product.quantity ?? 'n/a'}
-                    </p>
+                    {typeof prod?.price === 'number' && (
+                      <p className="text-xs uppercase font-light text-gray-600">
+                        price:{' '}
+                        {formatCurrency(prod.price, order.currency || 'usd')}
+                      </p>
+                    )}
                     {prod?.itemNumber && (
                       <p className="text-xs uppercase font-light text-gray-600">
                         item #: {prod.itemNumber}
                       </p>
                     )}
+                    {typeof prod?.stock === 'number' && (
+                      <p className="text-xs uppercase font-light text-gray-600">
+                        stock: {prod.stock}
+                      </p>
+                    )}
+                    <p className="text-xs uppercase font-light text-flag-blue">
+                      quantity: {product.quantity ?? 'n/a'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -141,7 +152,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
           typeof order.cardAmount === 'number' ||
           typeof order.changeGiven === 'number') && (
           <div className="mt-4">
-            <p className="text-xs border-b pb-2 uppercase font-semibold text-gray-500 mb-1">
+            <p className="text-xs border-b pb-3 uppercase font-semibold text-gray-500 mb-1">
               payment details
             </p>
 
@@ -178,7 +189,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
             </div>
 
             {order.paymentMethod && (
-              <div className="flex justify-between pt-2 border-b">
+              <div className="flex justify-between pt-3 border-b">
                 <p className="text-xs  pb-2 uppercase font-semibold text-gray-500 mb-1">
                   payment method
                 </p>

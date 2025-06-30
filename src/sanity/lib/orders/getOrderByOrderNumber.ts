@@ -21,7 +21,8 @@ export async function getOrderByOrderNumber(orderNumber: string) {
     slug,
     image,
     price,
-    itemNumber
+    itemNumber,
+    stock
   }
 },
         totalPrice,
