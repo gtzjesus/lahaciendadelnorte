@@ -17,6 +17,10 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
     product.categories?.map((cat: any) => cat._id) || []
   );
 
+  const [name, setName] = useState(product.name);
+  const [price, setPrice] = useState(product.price.toString());
+  const [stock, setStock] = useState(product.stock.toString());
+
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -27,15 +31,18 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
     setSelectedCategoryIds(selectedOptions);
   };
 
-  const handleSave = async () => {
+  const handleSaveProduct = async () => {
     setIsSaving(true);
-    const res = await fetch('/api/update-categories', {
-      method: 'PATCH', // o 'POST' si tu API está configurada para eso
+    const res = await fetch('/api/update-product', {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         productId: product._id,
+        name,
+        price: parseFloat(price),
+        stock: parseInt(stock, 10),
         categoryIds: selectedCategoryIds,
       }),
     });
@@ -44,16 +51,16 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } else {
-      alert('Failed to update categories');
+      alert('Failed to update product');
     }
 
     setIsSaving(false);
   };
 
   return (
-    <div className="border border-flag-blue bg-white p-4 flex flex-col md:flex-row gap-6">
+    <div className="border border-flag-blue bg-white p-4 flex flex-col items-center text-center space-y-4">
       {product.imageUrl && (
-        <div className="relative w-40 h-40 flex-shrink-0">
+        <div className="relative w-40 h-40 rounded overflow-hidden">
           <Image
             src={product.imageUrl}
             alt={product.name}
@@ -65,24 +72,42 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         </div>
       )}
 
-      <div className="flex flex-col space-y-2 uppercase text-sm font-mono flex-1">
+      <div className="flex flex-col space-y-2 uppercase text-sm font-mono w-full max-w-md">
         <p>
           <strong>Item #:</strong> {product.itemNumber}
         </p>
-        <p>
-          <strong>Name:</strong> {product.name}
-        </p>
-        <p>
-          <strong>Slug:</strong> {product.slug?.current ?? 'N/A'}
-        </p>
-        <p>
-          <strong>Price:</strong> ${product.price}
-        </p>
-        <p>
-          <strong>Stock:</strong> {product.stock}
-        </p>
 
-        <div>
+        <label className="flex flex-col text-left">
+          <span className="font-semibold">Name</span>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="border border-gray-300 px-2 py-1 rounded text-sm"
+          />
+        </label>
+
+        <label className="flex flex-col text-left">
+          <span className="font-semibold">Price</span>
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="border border-gray-300 px-2 py-1 rounded text-sm"
+          />
+        </label>
+
+        <label className="flex flex-col text-left">
+          <span className="font-semibold">Stock</span>
+          <input
+            type="number"
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+            className="border border-gray-300 px-2 py-1 rounded text-sm"
+          />
+        </label>
+
+        <div className="text-left">
           <label htmlFor="category-select" className="block font-semibold mb-1">
             Categories:
           </label>
@@ -99,21 +124,17 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
               </option>
             ))}
           </select>
-          <button
-            onClick={handleSave}
-            disabled={isSaving}
-            className="mt-2 bg-flag-blue text-white px-4 py-2 text-xs uppercase tracking-wide"
-          >
-            {isSaving ? 'Saving...' : saved ? 'Saved!' : 'Save Categories'}
-          </button>
         </div>
 
         {product.extraImageUrls?.length > 0 && (
-          <div>
-            <p className="font-semibold mt-4 mb-2">Extra Images:</p>
+          <div className="text-left">
+            <p className="font-semibold mt-4 mb-2">Additional Images:</p>
             <div className="flex gap-2 flex-wrap">
               {product.extraImageUrls.map((url: string, idx: number) => (
-                <div key={idx} className="relative w-20 h-20">
+                <div
+                  key={idx}
+                  className="relative w-20 h-20 rounded overflow-hidden"
+                >
                   <Image
                     src={url}
                     alt={`Extra image ${idx + 1}`}
@@ -125,6 +146,18 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
             </div>
           </div>
         )}
+
+        <button
+          onClick={handleSaveProduct}
+          disabled={isSaving}
+          className="mt-4 bg-flag-blue text-white px-4 py-2 text-xs uppercase tracking-wide"
+        >
+          {isSaving
+            ? 'updating...'
+            : saved
+              ? '✔ firework updated!'
+              : 'update firework'}
+        </button>
       </div>
     </div>
   );
