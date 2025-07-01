@@ -22,7 +22,6 @@ type Product = {
   itemNumber: string;
   name: string;
   slug?: string;
-  stock: number;
   category?: Category;
   imageUrl?: string;
   extraImageUrls?: string[];
@@ -37,7 +36,6 @@ const slugify = (text: string) =>
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-');
 
-/* eslint-disable  @typescript-eslint/no-explicit-any */
 export default function InventoryPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -46,7 +44,6 @@ export default function InventoryPage() {
     itemNumber: '',
     name: '',
     slug: '',
-    stock: '',
     variants: [{ size: '', flavor: '', price: '', stock: '' }] as Variant[],
   });
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
@@ -72,19 +69,12 @@ export default function InventoryPage() {
       .then((res) => res.json())
       .then((data) => setCategories(data.categories || []));
   }, []);
-
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   const handleUpload = async () => {
-    if (
-      !form.itemNumber ||
-      !form.name ||
-      !form.slug ||
-      form.stock === '' ||
-      !selectedCategory
-    ) {
+    if (!form.itemNumber || !form.name || !form.slug || !selectedCategory) {
       return alert('Please fill out all required fields and select a category');
     }
 
-    // Validate variants (no empty required fields)
     for (const v of form.variants) {
       if (!v.size || !v.flavor || !v.price || !v.stock) {
         return alert('Please fill out all variant fields.');
@@ -101,10 +91,8 @@ export default function InventoryPage() {
     data.append('itemNumber', form.itemNumber);
     data.append('name', form.name);
     data.append('slug', form.slug);
-    data.append('stock', form.stock);
     data.append('categoryId', selectedCategory);
 
-    // Convert variants price and stock to numbers before sending
     const variantsToSend = form.variants.map((v) => ({
       size: v.size,
       flavor: v.flavor,
@@ -132,7 +120,6 @@ export default function InventoryPage() {
           itemNumber: '',
           name: '',
           slug: '',
-          stock: '',
           variants: [{ size: '', flavor: '', price: '', stock: '' }],
         });
         setSelectedCategory('');
@@ -154,7 +141,6 @@ export default function InventoryPage() {
     }
   };
 
-  // Options for size and flavors (keep in sync with schema)
   const sizeOptions = ['Small', 'Medium', 'Large', 'Extra Large'];
   const flavorOptions = [
     'hawaiian delight',
@@ -191,11 +177,11 @@ export default function InventoryPage() {
       {showForm && (
         <>
           <div className="grid grid-cols-1 gap-4 mb-6">
-            {['itemNumber', 'name', 'slug', 'stock'].map((key) => (
+            {['itemNumber', 'name', 'slug'].map((key) => (
               <input
                 key={key}
                 name={key}
-                type={key === 'stock' ? 'number' : 'text'}
+                type="text"
                 placeholder={key === 'slug' ? 'Slug (auto)' : key}
                 value={(form as any)[key]}
                 onChange={(e) =>
@@ -206,7 +192,6 @@ export default function InventoryPage() {
               />
             ))}
 
-            {/* Category */}
             <select
               className="uppercase text-sm border border-flag-red p-3"
               value={selectedCategory}
@@ -220,7 +205,6 @@ export default function InventoryPage() {
               ))}
             </select>
 
-            {/* Variants */}
             <div>
               <label className="block uppercase text-sm mb-1 font-semibold">
                 Variants (size, flavor, price, stock)
@@ -230,7 +214,6 @@ export default function InventoryPage() {
                   key={i}
                   className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-2 mb-2"
                 >
-                  {/* Size */}
                   <select
                     value={v.size}
                     onChange={(e) => {
@@ -248,7 +231,6 @@ export default function InventoryPage() {
                     ))}
                   </select>
 
-                  {/* Flavor */}
                   <select
                     value={v.flavor}
                     onChange={(e) => {
@@ -266,7 +248,6 @@ export default function InventoryPage() {
                     ))}
                   </select>
 
-                  {/* Price */}
                   <input
                     type="number"
                     step="0.01"
@@ -280,7 +261,6 @@ export default function InventoryPage() {
                     }}
                   />
 
-                  {/* Stock */}
                   <input
                     type="number"
                     placeholder="Stock"
@@ -293,16 +273,15 @@ export default function InventoryPage() {
                     }}
                   />
 
-                  {/* Remove variant */}
                   {form.variants.length > 1 && (
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={() =>
                         setForm({
                           ...form,
                           variants: form.variants.filter((_, idx) => idx !== i),
-                        });
-                      }}
+                        })
+                      }
                       className="text-red-600 font-bold"
                     >
                       ✕
@@ -329,7 +308,6 @@ export default function InventoryPage() {
             </div>
           </div>
 
-          {/* Images */}
           <div className="border border-flag-red p-2 mb-4">
             <input
               ref={mainImageRef}

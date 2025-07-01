@@ -20,6 +20,9 @@ type Product = {
 type CartItem = Product & { cartQty: number };
 
 export default function POSPage() {
+  const [showManualModal, setShowManualModal] = useState(false);
+  const [manualInput, setManualInput] = useState('');
+  const [manualError, setManualError] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
@@ -296,7 +299,70 @@ export default function POSPage() {
           </button>
         )}
 
+        <button
+          onClick={() => {
+            setManualInput('');
+            setManualError('');
+            setShowManualModal(true);
+          }}
+          className="p-4 mb-4 block uppercase text-xs font-light text-center bg-flag-red text-white w-full"
+        >
+          Enter Manually
+        </button>
+
         <div id="reader" className="w-full max-w-md mx-auto" />
+
+        {showManualModal && (
+          <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black bg-opacity-60">
+            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md mx-auto text-center">
+              <h2 className="text-sm font-bold mb-4 uppercase">
+                Enter firework Number
+              </h2>
+              <input
+                type="text"
+                value={manualInput}
+                onChange={(e) => setManualInput(e.target.value)}
+                placeholder=""
+                className="w-full p-2 border border-gray-300 rounded mb-4"
+              />
+              {manualError && (
+                <p className="text-red-500 text-sm mb-2">{manualError}</p>
+              )}
+              <div className=" flex justify-center space-x-4">
+                <button
+                  onClick={() => setShowManualModal(false)}
+                  className="uppercase text-xs px-3 py-1 bg-flag-red text-white"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    const code = manualInput.trim().toLowerCase();
+                    const matched = products.find(
+                      (p) => (p.itemNumber ?? '').toLowerCase() === code
+                    );
+
+                    if (!matched) {
+                      setManualError(
+                        '❌ No firework found with that item number.'
+                      );
+                      return;
+                    }
+
+                    setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
+                    setShowManualModal(false);
+
+                    const fw = launchFireworks();
+                    setTimeout(() => fw?.stop(), 2000);
+                  }}
+                  className="uppercase text-xs px-3 py-1 bg-flag-blue text-white"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="mt-6 space-y-4">
           {cart.map((item, i) => {
@@ -378,7 +444,7 @@ export default function POSPage() {
         <div className="space-y-1 mt-2 mb-2 text-white uppercase text-md font-light">
           <p>Total Items: {totalItems}</p>
           <p>Subtotal: ${subtotal.toFixed(2)}</p>
-          <p>Tax (8.25%): ${tax.toFixed(2)}</p>
+          <p>Tax: ${tax.toFixed(2)}</p>
           <p>Total: ${total.toFixed(2)}</p>
         </div>
 
@@ -467,8 +533,8 @@ export default function POSPage() {
         {showConfirmModal && (
           <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black bg-opacity-60">
             <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md mx-auto text-center">
-              <h2 className="text-xl font-bold mb-4">Confirm Sale</h2>
-              <p className="mb-6 text-gray-700">
+              <h2 className="text-sm uppercase font-bold mb-3">Confirm Sale</h2>
+              <p className="uppercase text-xs mb-4 text-gray-700">
                 Are you sure you want to complete this sale for{' '}
                 <span className="font-bold text-green">
                   ${total.toFixed(2)}
@@ -478,7 +544,7 @@ export default function POSPage() {
               <div className="flex justify-center space-x-4">
                 <button
                   onClick={() => setShowConfirmModal(false)}
-                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                  className="uppercase text-xs px-3 py-1 bg-flag-red text-white"
                 >
                   Cancel
                 </button>
@@ -487,7 +553,7 @@ export default function POSPage() {
                     setShowConfirmModal(false);
                     await handleSale();
                   }}
-                  className="px-4 py-2 bg-flag-blue text-white rounded hover:bg-blue-700"
+                  className="uppercase text-xs px-3 py-1 bg-flag-blue text-white"
                 >
                   Yes, Complete Sale
                 </button>

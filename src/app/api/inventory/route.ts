@@ -7,13 +7,12 @@ export async function POST(req: Request) {
   try {
     const formData = await req.formData();
 
-    const itemNumber = formData.get('itemNumber')?.toString();
-    const name = formData.get('name')?.toString();
-    const slug = formData.get('slug')?.toString();
-    const stock = parseInt(formData.get('stock') as string);
-    const categoryId = formData.get('categoryId')?.toString();
+    const itemNumber = formData.get('itemNumber')?.toString().trim();
+    const name = formData.get('name')?.toString().trim();
+    const slug = formData.get('slug')?.toString().trim();
+    const categoryId = formData.get('categoryId')?.toString().trim();
 
-    if (!itemNumber || !name || !slug || isNaN(stock)) {
+    if (!itemNumber || !name || !slug || !categoryId) {
       return NextResponse.json(
         { success: false, message: 'Missing required fields' },
         { status: 400 }
@@ -38,6 +37,23 @@ export async function POST(req: Request) {
           price: parseFloat(v.price),
           stock: parseInt(v.stock),
         }));
+
+        const invalid = variants.some(
+          (v) =>
+            !v.size ||
+            !v.flavor ||
+            isNaN(v.price) ||
+            v.price < 0 ||
+            isNaN(v.stock) ||
+            v.stock < 0
+        );
+
+        if (invalid) {
+          return NextResponse.json(
+            { success: false, message: 'Invalid variant data.' },
+            { status: 400 }
+          );
+        }
       }
     } catch (err) {
       return NextResponse.json(
@@ -58,7 +74,7 @@ export async function POST(req: Request) {
       };
     }
 
-    // Upload extra images if any
+    // Upload extra images
     const extraImageRefs = [];
     const extraImages = formData.getAll('extraImages') as File[];
     for (const img of extraImages) {
@@ -71,8 +87,6 @@ export async function POST(req: Request) {
       }
     }
 
-    // Prepare variants array for Sanity
-    // Assuming your schema expects 'variants' as an array of objects with size, flavor, price, stock
     const sanityVariants = variants.map((v) => ({
       _type: 'variant',
       size: v.size,
@@ -86,18 +100,14 @@ export async function POST(req: Request) {
       itemNumber,
       name,
       slug: { _type: 'slug', current: slug },
-      stock,
       image: mainImageRef,
       extraImages: extraImageRefs,
       variants: sanityVariants,
-    };
-
-    if (categoryId) {
-      newProduct.category = {
+      category: {
         _type: 'reference',
         _ref: categoryId,
-      };
-    }
+      },
+    };
 
     await backendClient.create(newProduct);
 
