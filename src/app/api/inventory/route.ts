@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { backendClient } from '@/sanity/lib/backendClient';
 
 export const runtime = 'nodejs';
-
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
@@ -20,31 +20,33 @@ export async function POST(req: Request) {
       );
     }
 
-    const sizesRaw = formData.get('sizes')?.toString();
-    const flavorsRaw = formData.get('flavors')?.toString();
+    // Parse variants JSON
+    const variantsRaw = formData.get('variants')?.toString();
+    let variants: {
+      size: string;
+      flavor: string;
+      price: number;
+      stock: number;
+    }[] = [];
 
-    let sizes: { label: string; price: number }[] = [];
-    let flavors: string[] = [];
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
     try {
-      if (sizesRaw) {
-        const parsed = JSON.parse(sizesRaw);
-        sizes = parsed.map((s: any) => ({
-          label: s.label,
-          price: parseFloat(s.price),
+      if (variantsRaw) {
+        const parsed = JSON.parse(variantsRaw);
+        variants = parsed.map((v: any) => ({
+          size: v.size,
+          flavor: v.flavor,
+          price: parseFloat(v.price),
+          stock: parseInt(v.stock),
         }));
-      }
-
-      if (flavorsRaw) {
-        flavors = JSON.parse(flavorsRaw);
       }
     } catch (err) {
       return NextResponse.json(
-        { success: false, message: `Invalid sizes/flavors ${err}` },
+        { success: false, message: `Invalid variants data: ${err}` },
         { status: 400 }
       );
     }
 
+    // Upload main image if any
     const mainImage = formData.get('mainImage') as File | null;
     let mainImageRef = null;
 
@@ -56,6 +58,7 @@ export async function POST(req: Request) {
       };
     }
 
+    // Upload extra images if any
     const extraImageRefs = [];
     const extraImages = formData.getAll('extraImages') as File[];
     for (const img of extraImages) {
@@ -68,6 +71,16 @@ export async function POST(req: Request) {
       }
     }
 
+    // Prepare variants array for Sanity
+    // Assuming your schema expects 'variants' as an array of objects with size, flavor, price, stock
+    const sanityVariants = variants.map((v) => ({
+      _type: 'variant',
+      size: v.size,
+      flavor: v.flavor,
+      price: v.price,
+      stock: v.stock,
+    }));
+
     const newProduct: any = {
       _type: 'product',
       itemNumber,
@@ -76,12 +89,7 @@ export async function POST(req: Request) {
       stock,
       image: mainImageRef,
       extraImages: extraImageRefs,
-      sizes: sizes.map((s) => ({
-        _type: 'sizeOption',
-        label: s.label,
-        price: s.price,
-      })),
-      flavors,
+      variants: sanityVariants,
     };
 
     if (categoryId) {

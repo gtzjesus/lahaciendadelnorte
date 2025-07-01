@@ -118,20 +118,20 @@ export type Product = {
     _key: string;
   }>;
   description?: string;
-  sizes?: Array<{
-    label?: "Small" | "Medium" | "Large" | "Extra Large";
+  variants?: Array<{
+    size?: "Small" | "Medium" | "Large" | "Extra Large";
+    flavor?: "hawaiian delight" | "blue moon" | "chocolate" | "velvet rose" | "yellow rode" | "pink lady" | "creamy banana" | "tamarindo" | "mango" | "cantaloupe" | "natural lime" | "guava" | "mazapan";
     price?: number;
-    _type: "sizeOption";
+    stock?: number;
+    _type: "variant";
     _key: string;
   }>;
-  flavors?: Array<"hawaiian delight" | "blue moon" | "chocolate" | "velvet rose" | "yellow rode" | "pink lady" | "creamy banana" | "tamarindo" | "mango" | "cantaloupe" | "natural lime" | "guava" | "mazapan">;
   category?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "category";
   };
-  stock?: number;
 };
 
 export type Category = {
@@ -358,20 +358,20 @@ export type MY_ORDERS_QUERYResult = Array<{
         _key: string;
       }>;
       description?: string;
-      sizes?: Array<{
-        label?: "Extra Large" | "Large" | "Medium" | "Small";
+      variants?: Array<{
+        size?: "Extra Large" | "Large" | "Medium" | "Small";
+        flavor?: "blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode";
         price?: number;
-        _type: "sizeOption";
+        stock?: number;
+        _type: "variant";
         _key: string;
       }>;
-      flavors?: Array<"blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode">;
       category?: {
         _ref: string;
         _type: "reference";
         _weak?: boolean;
         [internalGroqTypeReferenceTo]?: "category";
       };
-      stock?: number;
     } | null;
     quantity?: number;
     _key: string;
@@ -454,20 +454,20 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
     _key: string;
   }>;
   description?: string;
-  sizes?: Array<{
-    label?: "Extra Large" | "Large" | "Medium" | "Small";
+  variants?: Array<{
+    size?: "Extra Large" | "Large" | "Medium" | "Small";
+    flavor?: "blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode";
     price?: number;
-    _type: "sizeOption";
+    stock?: number;
+    _type: "variant";
     _key: string;
   }>;
-  flavors?: Array<"blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode">;
   category?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "category";
   };
-  stock?: number;
 }>;
 
 // Source: ./src/sanity/lib/products/getProductBySlug.ts
@@ -508,20 +508,20 @@ export type PRODUCT_BY_SLUG_QUERYResult = {
     _key: string;
   }>;
   description?: string;
-  sizes?: Array<{
-    label?: "Extra Large" | "Large" | "Medium" | "Small";
+  variants?: Array<{
+    size?: "Extra Large" | "Large" | "Medium" | "Small";
+    flavor?: "blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode";
     price?: number;
-    _type: "sizeOption";
+    stock?: number;
+    _type: "variant";
     _key: string;
   }>;
-  flavors?: Array<"blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode">;
   category?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "category";
   };
-  stock?: number;
 } | null;
 
 // Source: ./src/sanity/lib/products/getProductsByCategory.tsx
@@ -562,20 +562,20 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
     _key: string;
   }>;
   description?: string;
-  sizes?: Array<{
-    label?: "Extra Large" | "Large" | "Medium" | "Small";
+  variants?: Array<{
+    size?: "Extra Large" | "Large" | "Medium" | "Small";
+    flavor?: "blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode";
     price?: number;
-    _type: "sizeOption";
+    stock?: number;
+    _type: "variant";
     _key: string;
   }>;
-  flavors?: Array<"blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode">;
   category?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "category";
   };
-  stock?: number;
 }>;
 
 // Source: ./src/sanity/lib/sales/getActiveSaleByCouponCode.ts

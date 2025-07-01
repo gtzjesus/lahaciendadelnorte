@@ -12,7 +12,6 @@ export const productType = defineType({
       name: 'itemNumber',
       title: 'Item Number',
       type: 'string',
-      description: 'Unique inventory ID, e.g., 1',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -25,7 +24,6 @@ export const productType = defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      description: 'Auto-generated from name',
       options: { source: 'name', maxLength: 96 },
       validation: (Rule) => Rule.required(),
     }),
@@ -48,26 +46,49 @@ export const productType = defineType({
       name: 'description',
       title: 'Description',
       type: 'text',
-      description: 'Short description of the product.',
     }),
 
-    // Multi-size price field
+    // Variants Array with size, flavor, price, and stock
     defineField({
-      name: 'sizes',
-      title: 'Sizes & Prices',
+      name: 'variants',
+      title: 'Variants',
       type: 'array',
       of: [
         defineField({
           type: 'object',
-          name: 'sizeOption',
+          name: 'variant',
+          title: 'Variant',
           fields: [
             {
-              name: 'label',
+              name: 'size',
               title: 'Size',
               type: 'string',
               options: {
-                list: ['Small', 'Medium', 'Large', 'Extra Large'], // predefined size labels
-                layout: 'dropdown', // render as dropdown
+                list: ['Small', 'Medium', 'Large', 'Extra Large'],
+                layout: 'dropdown',
+              },
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'flavor',
+              title: 'Flavor',
+              type: 'string',
+              options: {
+                list: [
+                  'hawaiian delight',
+                  'blue moon',
+                  'chocolate',
+                  'velvet rose',
+                  'yellow rode',
+                  'pink lady',
+                  'creamy banana',
+                  'tamarindo',
+                  'mango',
+                  'cantaloupe',
+                  'natural lime',
+                  'guava',
+                  'mazapan',
+                ],
               },
               validation: (Rule) => Rule.required(),
             },
@@ -77,56 +98,26 @@ export const productType = defineType({
               type: 'number',
               validation: (Rule) => Rule.required().min(0),
             },
+            {
+              name: 'stock',
+              title: 'Stock',
+              type: 'number',
+              validation: (Rule) => Rule.required().min(0),
+            },
           ],
         }),
       ],
-      description: 'Select size and set price for each.',
+      description:
+        'Each variant corresponds to a unique combination of size and flavor, with its own price and stock.',
+      validation: (Rule) =>
+        Rule.min(1).error('You must add at least one variant'),
     }),
 
-    // Flavor picker
-    defineField({
-      name: 'flavors',
-      title: 'Available Flavors',
-      type: 'array',
-      of: [
-        {
-          type: 'string',
-          options: {
-            list: [
-              'hawaiian delight',
-              'blue moon',
-              'chocolate',
-              'velvet rose',
-              'yellow rode',
-              'pink lady',
-              'creamy banana',
-              'tamarindo',
-              'mango',
-              'cantaloupe',
-              'natural lime',
-              'guava',
-              'mazapan',
-            ],
-          },
-        },
-      ],
-      description: 'Pick available flavors from the list.',
-    }),
-
-    // Single category reference (updated from array to single)
     defineField({
       name: 'category',
       title: 'Category',
       type: 'reference',
       to: [{ type: 'category' }],
-      description: 'Assign a product category (e.g., shaved ice, snacks).',
-    }),
-
-    defineField({
-      name: 'stock',
-      title: 'Stock',
-      type: 'number',
-      description: 'Inventory count (if applicable).',
     }),
   ],
 
@@ -135,12 +126,11 @@ export const productType = defineType({
       title: 'name',
       media: 'image',
       itemNumber: 'itemNumber',
-      categoryTitle: 'category.title',
     },
-    prepare({ title, media, itemNumber, categoryTitle }) {
+    prepare({ title, media, itemNumber }) {
       return {
         title: `${title} (${itemNumber})`,
-        subtitle: categoryTitle ? `Category: ${categoryTitle}` : undefined,
+        subtitle: 'Product with Variants',
         media,
       };
     },

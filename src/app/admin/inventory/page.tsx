@@ -10,16 +10,23 @@ type Category = {
   slug: { current: string };
 };
 
+type Variant = {
+  size: string;
+  flavor: string;
+  price: string; // keep as string for input ease, convert before sending
+  stock: string;
+};
+
 type Product = {
   _id?: string;
   itemNumber: string;
   name: string;
   slug?: string;
-  price?: number;
   stock: number;
   category?: Category;
   imageUrl?: string;
   extraImageUrls?: string[];
+  variants?: Variant[];
 };
 
 const slugify = (text: string) =>
@@ -29,6 +36,7 @@ const slugify = (text: string) =>
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-');
+
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 export default function InventoryPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -39,8 +47,7 @@ export default function InventoryPage() {
     name: '',
     slug: '',
     stock: '',
-    sizes: [{ label: '', price: '' }],
-    flavors: [] as string[],
+    variants: [{ size: '', flavor: '', price: '', stock: '' }] as Variant[],
   });
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
   const [extraImageFiles, setExtraImageFiles] = useState<File[]>([]);
@@ -77,14 +84,35 @@ export default function InventoryPage() {
       return alert('Please fill out all required fields and select a category');
     }
 
+    // Validate variants (no empty required fields)
+    for (const v of form.variants) {
+      if (!v.size || !v.flavor || !v.price || !v.stock) {
+        return alert('Please fill out all variant fields.');
+      }
+      if (isNaN(Number(v.price)) || Number(v.price) < 0) {
+        return alert('Please enter a valid price >= 0 for each variant.');
+      }
+      if (isNaN(Number(v.stock)) || Number(v.stock) < 0) {
+        return alert('Please enter a valid stock >= 0 for each variant.');
+      }
+    }
+
     const data = new FormData();
     data.append('itemNumber', form.itemNumber);
     data.append('name', form.name);
     data.append('slug', form.slug);
     data.append('stock', form.stock);
     data.append('categoryId', selectedCategory);
-    data.append('sizes', JSON.stringify(form.sizes));
-    data.append('flavors', JSON.stringify(form.flavors));
+
+    // Convert variants price and stock to numbers before sending
+    const variantsToSend = form.variants.map((v) => ({
+      size: v.size,
+      flavor: v.flavor,
+      price: Number(v.price),
+      stock: Number(v.stock),
+    }));
+
+    data.append('variants', JSON.stringify(variantsToSend));
 
     if (mainImageFile) {
       data.append('mainImage', mainImageFile);
@@ -105,8 +133,7 @@ export default function InventoryPage() {
           name: '',
           slug: '',
           stock: '',
-          sizes: [{ label: '', price: '' }],
-          flavors: [],
+          variants: [{ size: '', flavor: '', price: '', stock: '' }],
         });
         setSelectedCategory('');
         setMainImageFile(null);
@@ -127,6 +154,24 @@ export default function InventoryPage() {
     }
   };
 
+  // Options for size and flavors (keep in sync with schema)
+  const sizeOptions = ['Small', 'Medium', 'Large', 'Extra Large'];
+  const flavorOptions = [
+    'hawaiian delight',
+    'blue moon',
+    'chocolate',
+    'velvet rose',
+    'yellow rode',
+    'pink lady',
+    'creamy banana',
+    'tamarindo',
+    'mango',
+    'cantaloupe',
+    'natural lime',
+    'guava',
+    'mazapan',
+  ];
+
   return (
     <div className="relative min-h-screen bg-white p-3">
       <h1 className="uppercase text-xl font-semibold mb-6">
@@ -134,12 +179,12 @@ export default function InventoryPage() {
       </h1>
 
       <div className="flex flex-col">
-        <h1 className="uppercase text-sm font-semibold mb-2">add firework</h1>
+        <h1 className="uppercase text-sm font-semibold mb-2">add product</h1>
         <button
           className="text-xs uppercase font-light mb-2 text-white bg-flag-blue px-3 py-2"
           onClick={() => setShowForm((prev) => !prev)}
         >
-          {showForm ? 'Hide fields' : 'Show fields to Add Firework'}
+          {showForm ? 'Hide fields' : 'Show fields to Add Product'}
         </button>
       </div>
 
@@ -150,7 +195,7 @@ export default function InventoryPage() {
               <input
                 key={key}
                 name={key}
-                type="text"
+                type={key === 'stock' ? 'number' : 'text'}
                 placeholder={key === 'slug' ? 'Slug (auto)' : key}
                 value={(form as any)[key]}
                 onChange={(e) =>
@@ -175,105 +220,112 @@ export default function InventoryPage() {
               ))}
             </select>
 
-            {/* Sizes */}
+            {/* Variants */}
             <div>
               <label className="block uppercase text-sm mb-1 font-semibold">
-                Sizes & Prices
+                Variants (size, flavor, price, stock)
               </label>
-              {form.sizes.map((s, i) => (
-                <div key={i} className="flex gap-2 mb-2">
+              {form.variants.map((v, i) => (
+                <div
+                  key={i}
+                  className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-2 mb-2"
+                >
+                  {/* Size */}
                   <select
-                    value={s.label}
+                    value={v.size}
                     onChange={(e) => {
-                      const sizes = [...form.sizes];
-                      sizes[i].label = e.target.value;
-                      setForm({ ...form, sizes });
+                      const variants = [...form.variants];
+                      variants[i].size = e.target.value;
+                      setForm({ ...form, variants });
                     }}
-                    className="flex-1 border p-2 text-sm"
+                    className="border p-2 text-sm uppercase"
                   >
                     <option value="">Size</option>
-                    {['Small', 'Medium', 'Large', 'XL'].map((opt) => (
-                      <option key={opt}>{opt}</option>
+                    {sizeOptions.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
                     ))}
                   </select>
+
+                  {/* Flavor */}
+                  <select
+                    value={v.flavor}
+                    onChange={(e) => {
+                      const variants = [...form.variants];
+                      variants[i].flavor = e.target.value;
+                      setForm({ ...form, variants });
+                    }}
+                    className="border p-2 text-sm capitalize"
+                  >
+                    <option value="">Flavor</option>
+                    {flavorOptions.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* Price */}
                   <input
                     type="number"
                     step="0.01"
                     placeholder="Price"
-                    className="w-24 border p-2 text-sm"
-                    value={s.price}
+                    className="border p-2 text-sm"
+                    value={v.price}
                     onChange={(e) => {
-                      const sizes = [...form.sizes];
-                      sizes[i].price = e.target.value;
-                      setForm({ ...form, sizes });
+                      const variants = [...form.variants];
+                      variants[i].price = e.target.value;
+                      setForm({ ...form, variants });
                     }}
                   />
-                  {form.sizes.length > 1 && (
+
+                  {/* Stock */}
+                  <input
+                    type="number"
+                    placeholder="Stock"
+                    className="border p-2 text-sm"
+                    value={v.stock}
+                    onChange={(e) => {
+                      const variants = [...form.variants];
+                      variants[i].stock = e.target.value;
+                      setForm({ ...form, variants });
+                    }}
+                  />
+
+                  {/* Remove variant */}
+                  {form.variants.length > 1 && (
                     <button
                       type="button"
-                      onClick={() =>
+                      onClick={() => {
                         setForm({
                           ...form,
-                          sizes: form.sizes.filter((_, idx) => idx !== i),
-                        })
-                      }
+                          variants: form.variants.filter((_, idx) => idx !== i),
+                        });
+                      }}
+                      className="text-red-600 font-bold"
                     >
                       ✕
                     </button>
                   )}
                 </div>
               ))}
+
               <button
                 type="button"
                 onClick={() =>
                   setForm({
                     ...form,
-                    sizes: [...form.sizes, { label: '', price: '' }],
+                    variants: [
+                      ...form.variants,
+                      { size: '', flavor: '', price: '', stock: '' },
+                    ],
                   })
                 }
                 className="text-xs underline"
               >
-                + Add size
+                + Add variant
               </button>
-            </div>
-
-            {/* Flavors */}
-            <div>
-              <label className="block uppercase text-sm mb-1 font-semibold">
-                Flavors
-              </label>
-              <select
-                multiple
-                className="border p-2 text-sm w-full h-32"
-                value={form.flavors}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    flavors: Array.from(
-                      e.target.selectedOptions,
-                      (o) => o.value
-                    ),
-                  })
-                }
-              >
-                {[
-                  'hawaiian delight',
-                  'blue moon',
-                  'chocolate',
-                  'velvet rose',
-                  'yellow rode',
-                  'pink lady',
-                  'creamy banana',
-                  'tamarindo',
-                  'mango',
-                  'cantaloupe',
-                  'natural lime',
-                  'guava',
-                  'mazapan',
-                ].map((f) => (
-                  <option key={f}>{f}</option>
-                ))}
-              </select>
             </div>
           </div>
 
@@ -304,7 +356,7 @@ export default function InventoryPage() {
             onClick={handleUpload}
             className="bg-flag-blue text-white uppercase px-6 py-3 font-light"
           >
-            {loading ? 'Adding...' : 'Add Firework'}
+            {loading ? 'Adding...' : 'Add Product'}
           </button>
           {message && <p className="mt-4">{message}</p>}
         </>
@@ -312,7 +364,7 @@ export default function InventoryPage() {
 
       <hr className="my-8" />
       <h2 className="uppercase text-xl font-semibold mb-6">
-        firework inventory
+        product inventory
       </h2>
 
       <ul className="space-y-2">
