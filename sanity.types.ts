@@ -125,13 +125,12 @@ export type Product = {
     _key: string;
   }>;
   flavors?: Array<"hawaiian delight" | "blue moon" | "chocolate" | "velvet rose" | "yellow rode" | "pink lady" | "creamy banana" | "tamarindo" | "mango" | "cantaloupe" | "natural lime" | "guava" | "mazapan">;
-  categories?: Array<{
+  category?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
-    _key: string;
     [internalGroqTypeReferenceTo]?: "category";
-  }>;
+  };
   stock?: number;
 };
 
@@ -366,13 +365,12 @@ export type MY_ORDERS_QUERYResult = Array<{
         _key: string;
       }>;
       flavors?: Array<"blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode">;
-      categories?: Array<{
+      category?: {
         _ref: string;
         _type: "reference";
         _weak?: boolean;
-        _key: string;
         [internalGroqTypeReferenceTo]?: "category";
-      }>;
+      };
       stock?: number;
     } | null;
     quantity?: number;
@@ -463,13 +461,12 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
     _key: string;
   }>;
   flavors?: Array<"blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode">;
-  categories?: Array<{
+  category?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
-    _key: string;
     [internalGroqTypeReferenceTo]?: "category";
-  }>;
+  };
   stock?: number;
 }>;
 
@@ -518,13 +515,12 @@ export type PRODUCT_BY_SLUG_QUERYResult = {
     _key: string;
   }>;
   flavors?: Array<"blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode">;
-  categories?: Array<{
+  category?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
-    _key: string;
     [internalGroqTypeReferenceTo]?: "category";
-  }>;
+  };
   stock?: number;
 } | null;
 
@@ -573,13 +569,12 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
     _key: string;
   }>;
   flavors?: Array<"blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode">;
-  categories?: Array<{
+  category?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
-    _key: string;
     [internalGroqTypeReferenceTo]?: "category";
-  }>;
+  };
   stock?: number;
 }>;
 

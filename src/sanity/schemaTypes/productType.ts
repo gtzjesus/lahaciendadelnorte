@@ -51,7 +51,7 @@ export const productType = defineType({
       description: 'Short description of the product.',
     }),
 
-    // ⬇️ Multi-size price field
+    // Multi-size price field
     defineField({
       name: 'sizes',
       title: 'Sizes & Prices',
@@ -83,7 +83,7 @@ export const productType = defineType({
       description: 'Select size and set price for each.',
     }),
 
-    // ⬇️ Flavor picker
+    // Flavor picker
     defineField({
       name: 'flavors',
       title: 'Available Flavors',
@@ -113,12 +113,13 @@ export const productType = defineType({
       description: 'Pick available flavors from the list.',
     }),
 
+    // Single category reference (updated from array to single)
     defineField({
-      name: 'categories',
-      title: 'Categories',
-      type: 'array',
-      of: [{ type: 'reference', to: { type: 'category' } }],
-      description: 'Assign product categories (e.g., shaved ice, snacks).',
+      name: 'category',
+      title: 'Category',
+      type: 'reference',
+      to: [{ type: 'category' }],
+      description: 'Assign a product category (e.g., shaved ice, snacks).',
     }),
 
     defineField({
@@ -134,11 +135,12 @@ export const productType = defineType({
       title: 'name',
       media: 'image',
       itemNumber: 'itemNumber',
+      categoryTitle: 'category.title',
     },
-    prepare({ title, media, itemNumber }) {
+    prepare({ title, media, itemNumber, categoryTitle }) {
       return {
         title: `${title} (${itemNumber})`,
-        subtitle: 'Shaved Ice or Snack Item',
+        subtitle: categoryTitle ? `Category: ${categoryTitle}` : undefined,
         media,
       };
     },
