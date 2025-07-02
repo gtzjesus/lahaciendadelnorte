@@ -48,7 +48,7 @@ export const productType = defineType({
       type: 'text',
     }),
 
-    // Variants Array with size, flavor, price, and stock
+    // Variants Array without flavor
     defineField({
       name: 'variants',
       title: 'Variants',
@@ -70,29 +70,6 @@ export const productType = defineType({
               validation: (Rule) => Rule.required(),
             },
             {
-              name: 'flavor',
-              title: 'Flavor',
-              type: 'string',
-              options: {
-                list: [
-                  'hawaiian delight',
-                  'blue moon',
-                  'chocolate',
-                  'velvet rose',
-                  'yellow rode',
-                  'pink lady',
-                  'creamy banana',
-                  'tamarindo',
-                  'mango',
-                  'cantaloupe',
-                  'natural lime',
-                  'guava',
-                  'mazapan',
-                ],
-              },
-              validation: (Rule) => Rule.required(),
-            },
-            {
               name: 'price',
               title: 'Price',
               type: 'number',
@@ -108,7 +85,7 @@ export const productType = defineType({
         }),
       ],
       description:
-        'Each variant corresponds to a unique combination of size and flavor, with its own price and stock.',
+        'Each variant corresponds to a unique size with its own price and stock.',
       validation: (Rule) =>
         Rule.min(1).error('You must add at least one variant'),
     }),

@@ -120,7 +120,6 @@ export type Product = {
   description?: string;
   variants?: Array<{
     size?: "Small" | "Medium" | "Large" | "Extra Large";
-    flavor?: "hawaiian delight" | "blue moon" | "chocolate" | "velvet rose" | "yellow rode" | "pink lady" | "creamy banana" | "tamarindo" | "mango" | "cantaloupe" | "natural lime" | "guava" | "mazapan";
     price?: number;
     stock?: number;
     _type: "variant";
@@ -360,7 +359,6 @@ export type MY_ORDERS_QUERYResult = Array<{
       description?: string;
       variants?: Array<{
         size?: "Extra Large" | "Large" | "Medium" | "Small";
-        flavor?: "blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode";
         price?: number;
         stock?: number;
         _type: "variant";
@@ -456,7 +454,6 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
   description?: string;
   variants?: Array<{
     size?: "Extra Large" | "Large" | "Medium" | "Small";
-    flavor?: "blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode";
     price?: number;
     stock?: number;
     _type: "variant";
@@ -510,7 +507,6 @@ export type PRODUCT_BY_SLUG_QUERYResult = {
   description?: string;
   variants?: Array<{
     size?: "Extra Large" | "Large" | "Medium" | "Small";
-    flavor?: "blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode";
     price?: number;
     stock?: number;
     _type: "variant";
@@ -564,7 +560,6 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
   description?: string;
   variants?: Array<{
     size?: "Extra Large" | "Large" | "Medium" | "Small";
-    flavor?: "blue moon" | "cantaloupe" | "chocolate" | "creamy banana" | "guava" | "hawaiian delight" | "mango" | "mazapan" | "natural lime" | "pink lady" | "tamarindo" | "velvet rose" | "yellow rode";
     price?: number;
     stock?: number;
     _type: "variant";

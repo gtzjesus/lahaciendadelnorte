@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 type Category = {
   _id: string;
   title: string;
@@ -12,8 +12,7 @@ type Category = {
 
 type Variant = {
   size: string;
-  flavor: string;
-  price: string; // keep as string for input ease, convert before sending
+  price: string;
   stock: string;
 };
 
@@ -44,7 +43,7 @@ export default function InventoryPage() {
     itemNumber: '',
     name: '',
     slug: '',
-    variants: [{ size: '', flavor: '', price: '', stock: '' }] as Variant[],
+    variants: [{ size: '', price: '', stock: '' }] as Variant[],
   });
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
   const [extraImageFiles, setExtraImageFiles] = useState<File[]>([]);
@@ -69,14 +68,14 @@ export default function InventoryPage() {
       .then((res) => res.json())
       .then((data) => setCategories(data.categories || []));
   }, []);
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
+
   const handleUpload = async () => {
     if (!form.itemNumber || !form.name || !form.slug || !selectedCategory) {
       return alert('Please fill out all required fields and select a category');
     }
 
     for (const v of form.variants) {
-      if (!v.size || !v.flavor || !v.price || !v.stock) {
+      if (!v.size || !v.price || !v.stock) {
         return alert('Please fill out all variant fields.');
       }
       if (isNaN(Number(v.price)) || Number(v.price) < 0) {
@@ -95,7 +94,6 @@ export default function InventoryPage() {
 
     const variantsToSend = form.variants.map((v) => ({
       size: v.size,
-      flavor: v.flavor,
       price: Number(v.price),
       stock: Number(v.stock),
     }));
@@ -120,7 +118,7 @@ export default function InventoryPage() {
           itemNumber: '',
           name: '',
           slug: '',
-          variants: [{ size: '', flavor: '', price: '', stock: '' }],
+          variants: [{ size: '', price: '', stock: '' }],
         });
         setSelectedCategory('');
         setMainImageFile(null);
@@ -142,21 +140,6 @@ export default function InventoryPage() {
   };
 
   const sizeOptions = ['Small', 'Medium', 'Large', 'Extra Large'];
-  const flavorOptions = [
-    'hawaiian delight',
-    'blue moon',
-    'chocolate',
-    'velvet rose',
-    'yellow rode',
-    'pink lady',
-    'creamy banana',
-    'tamarindo',
-    'mango',
-    'cantaloupe',
-    'natural lime',
-    'guava',
-    'mazapan',
-  ];
 
   return (
     <div className="relative min-h-screen bg-white p-3">
@@ -207,12 +190,12 @@ export default function InventoryPage() {
 
             <div>
               <label className="block uppercase text-sm mb-1 font-semibold">
-                Variants (size, flavor, price, stock)
+                Variants (size, price, stock)
               </label>
               {form.variants.map((v, i) => (
                 <div
                   key={i}
-                  className="grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-2 mb-2"
+                  className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 mb-2"
                 >
                   <select
                     value={v.size}
@@ -225,23 +208,6 @@ export default function InventoryPage() {
                   >
                     <option value="">Size</option>
                     {sizeOptions.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
-
-                  <select
-                    value={v.flavor}
-                    onChange={(e) => {
-                      const variants = [...form.variants];
-                      variants[i].flavor = e.target.value;
-                      setForm({ ...form, variants });
-                    }}
-                    className="border p-2 text-sm capitalize"
-                  >
-                    <option value="">Flavor</option>
-                    {flavorOptions.map((opt) => (
                       <option key={opt} value={opt}>
                         {opt}
                       </option>
@@ -297,7 +263,7 @@ export default function InventoryPage() {
                     ...form,
                     variants: [
                       ...form.variants,
-                      { size: '', flavor: '', price: '', stock: '' },
+                      { size: '', price: '', stock: '' },
                     ],
                   })
                 }

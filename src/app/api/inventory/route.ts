@@ -23,7 +23,6 @@ export async function POST(req: Request) {
     const variantsRaw = formData.get('variants')?.toString();
     let variants: {
       size: string;
-      flavor: string;
       price: number;
       stock: number;
     }[] = [];
@@ -33,7 +32,6 @@ export async function POST(req: Request) {
         const parsed = JSON.parse(variantsRaw);
         variants = parsed.map((v: any) => ({
           size: v.size,
-          flavor: v.flavor,
           price: parseFloat(v.price),
           stock: parseInt(v.stock),
         }));
@@ -41,7 +39,6 @@ export async function POST(req: Request) {
         const invalid = variants.some(
           (v) =>
             !v.size ||
-            !v.flavor ||
             isNaN(v.price) ||
             v.price < 0 ||
             isNaN(v.stock) ||
@@ -87,10 +84,10 @@ export async function POST(req: Request) {
       }
     }
 
+    // Prepare Sanity variant objects (no flavor)
     const sanityVariants = variants.map((v) => ({
       _type: 'variant',
       size: v.size,
-      flavor: v.flavor,
       price: v.price,
       stock: v.stock,
     }));

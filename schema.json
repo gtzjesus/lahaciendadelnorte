@@ -721,67 +721,6 @@
                 },
                 "optional": true
               },
-              "flavor": {
-                "type": "objectAttribute",
-                "value": {
-                  "type": "union",
-                  "of": [
-                    {
-                      "type": "string",
-                      "value": "hawaiian delight"
-                    },
-                    {
-                      "type": "string",
-                      "value": "blue moon"
-                    },
-                    {
-                      "type": "string",
-                      "value": "chocolate"
-                    },
-                    {
-                      "type": "string",
-                      "value": "velvet rose"
-                    },
-                    {
-                      "type": "string",
-                      "value": "yellow rode"
-                    },
-                    {
-                      "type": "string",
-                      "value": "pink lady"
-                    },
-                    {
-                      "type": "string",
-                      "value": "creamy banana"
-                    },
-                    {
-                      "type": "string",
-                      "value": "tamarindo"
-                    },
-                    {
-                      "type": "string",
-                      "value": "mango"
-                    },
-                    {
-                      "type": "string",
-                      "value": "cantaloupe"
-                    },
-                    {
-                      "type": "string",
-                      "value": "natural lime"
-                    },
-                    {
-                      "type": "string",
-                      "value": "guava"
-                    },
-                    {
-                      "type": "string",
-                      "value": "mazapan"
-                    }
-                  ]
-                },
-                "optional": true
-              },
               "price": {
                 "type": "objectAttribute",
                 "value": {
