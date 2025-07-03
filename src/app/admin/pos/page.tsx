@@ -169,23 +169,24 @@ export default function POSPage() {
   };
 
   return (
-    <div className="p-4 max-w-3xl mx-auto bg-white min-h-screen">
-      <h1 className="text-2xl font-bold uppercase mb-4">POS System</h1>
+    <div className="overflow-x-hidden mx-auto bg-white min-h-screen">
+      <h1 className="text-2xl font-bold uppercase m-4">POS System</h1>
 
       <input
         type="text"
-        placeholder="Search by product name..."
+        placeholder="Search"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full p-2 border rounded mb-2"
+        className="w-full p-3 border uppercase text-xs rounded"
       />
 
       {filteredResults.length > 0 && (
-        <div className="border rounded shadow-md bg-white max-h-60 overflow-y-auto mb-4">
+        <div className="uppercase text-sm border rounded shadow-md bg-white max-h-60 overflow-y-auto mb-4">
           {filteredResults.map((product) => (
             <div
               key={product._id}
-              className="flex justify-between items-center p-2 border-b hover:bg-gray-100"
+              onClick={() => addToCart(product)}
+              className="cursor-pointer flex justify-between items-center p-2 border-b  transition-colors"
             >
               <div>
                 <div className="font-semibold">{product.name}</div>
@@ -193,12 +194,7 @@ export default function POSPage() {
                   Stock: {product.stock}
                 </div>
               </div>
-              <button
-                className="bg-green text-white text-xs px-3 py-1 rounded"
-                onClick={() => addToCart(product)}
-              >
-                Add
-              </button>
+              <div className="text-xs font-medium"></div>
             </div>
           ))}
         </div>
