@@ -20,13 +20,13 @@ export async function getAllOrders() {
         }
       },
       totalPrice,
-      tax,
       currency,
       amountDiscount,
       orderType,
       paymentStatus,
       pickupStatus,
       orderDate,
+          paymentMethod,
 
       // ✅ Campos de pago agregados
    

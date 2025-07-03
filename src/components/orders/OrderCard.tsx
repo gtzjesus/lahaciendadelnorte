@@ -146,12 +146,30 @@ const OrderCard: React.FC<OrderCardProps> = ({
       </div>
 
       {/* Totals & Payment */}
-      <div className=" border-t border-flag-blue font-mono p-2 flex flex-col space-y-1">
-        {(order.paymentMethod ||
-          typeof order.cashReceived === 'number' ||
-          typeof order.cardAmount === 'number' ||
-          typeof order.changeGiven === 'number') && (
-          <div className="mt-4">
+      <div className="border-t border-flag-blue font-mono p-4 flex flex-col space-y-2">
+        {showDetailButton ? (
+          // Compact (list view)
+          <>
+            {order.paymentMethod && (
+              <div className="flex justify-between">
+                <p className="text-xs uppercase text-gray-600">
+                  payment method:
+                </p>
+                <p className="text-xs font-bold">{order.paymentMethod}</p>
+              </div>
+            )}
+            {typeof order.cardAmount === 'number' && (
+              <div className="flex justify-between">
+                <p className="text-xs uppercase text-gray-600">card amount:</p>
+                <p className="text-xs font-bold">
+                  {formatCurrency(order.cardAmount, order.currency || 'usd')}
+                </p>
+              </div>
+            )}
+          </>
+        ) : (
+          // Detailed view
+          <>
             <p className="text-xs border-b pb-3 uppercase font-semibold text-gray-500 mb-1">
               payment details
             </p>
@@ -179,24 +197,6 @@ const OrderCard: React.FC<OrderCardProps> = ({
               </div>
             )}
 
-            <div className="flex justify-between border-b">
-              <p className="uppercase text-xs mb-1 text-gray-600 ">
-                sale total:
-              </p>
-              <p className="font-bold text-sm text-green">
-                {formatCurrency(order.totalPrice ?? 0, order.currency || 'usd')}
-              </p>
-            </div>
-
-            {order.paymentMethod && (
-              <div className="flex justify-between pt-3 border-b">
-                <p className="text-xs  pb-2 uppercase font-semibold text-gray-500 mb-1">
-                  payment method
-                </p>
-                <p className="font-bold text-xs">{order.paymentMethod}</p>
-              </div>
-            )}
-
             {typeof order.cardAmount === 'number' && (
               <div className="flex justify-between pt-2">
                 <p className="uppercase text-xs text-gray-600">card amount:</p>
@@ -207,7 +207,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
             )}
 
             {typeof order.cashReceived === 'number' && (
-              <div className="flex justify-between ">
+              <div className="flex justify-between">
                 <p className="uppercase text-xs text-gray-600">
                   cash received:
                 </p>
@@ -225,11 +225,28 @@ const OrderCard: React.FC<OrderCardProps> = ({
                 </p>
               </div>
             )}
-          </div>
+
+            {order.paymentMethod && (
+              <div className="flex justify-between pt-3 border-b">
+                <p className="text-xs pb-2 uppercase font-semibold text-gray-500 mb-1">
+                  payment method
+                </p>
+                <p className="font-bold text-xs">{order.paymentMethod}</p>
+              </div>
+            )}
+          </>
         )}
 
-        {/* Status */}
-        <div className=" flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2 border-t pt-2 border-flag-blue">
+        {/* Sale Total */}
+        <div className="flex justify-between">
+          <p className="uppercase text-xs mb-1 text-gray-600">sale total:</p>
+          <p className="font-bold text-sm text-green">
+            {formatCurrency(order.totalPrice ?? 0, order.currency || 'usd')}
+          </p>
+        </div>
+
+        {/* Status (both views) */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2 border-t pt-2 border-flag-blue">
           <p className="text-xs font-light uppercase text-gray-600">
             payment status:{' '}
             <span
@@ -246,7 +263,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                   ? 'Paid Online'
                   : order.paymentMethod === 'online_unpaid'
                     ? 'Unpaid (Online Reservation)'
-                    : 'Unpaid online reservation'}
+                    : 'Unpaid'}
             </span>
           </p>
 
@@ -267,7 +284,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
         </div>
       </div>
 
-      {/* View Order Button */}
+      {/* View Order Button (only list view) */}
       {showDetailButton && (
         <div className="p-4 border-t border-flag-blue flex justify-center">
           <Link
