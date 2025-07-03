@@ -97,7 +97,13 @@ export async function handleCheckoutSessionCompleted(
   );
 
   for (const item of items) {
-    await decreaseProductStock(item.id, item.quantity);
+    const [productId, variantSize] = item.id.split('-');
+
+    if (!productId || !variantSize) {
+      throw new Error(`Invalid product id format: ${item.id}`);
+    }
+
+    await decreaseProductStock(productId, variantSize, item.quantity);
   }
 
   return order;
