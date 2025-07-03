@@ -1,38 +1,33 @@
 import { backendClient } from '@/sanity/lib/backendClient';
 
-/**
- * Decrease product stock atomically in Sanity after purchase.
- * Throws error if insufficient stock.
- *
- * @param productId - Sanity document ID for the product
- * @param quantity - Quantity to subtract from current stock
- */
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 export async function decreaseProductStock(
   productId: string,
+  variantSize: string,
   quantity: number
 ) {
-  // Fetch current stock
-  const product = await backendClient.fetch<{ stock: number }>(
-    `*[_type == "product" && _id == $id][0]{stock}`,
-    { id: productId }
-  );
+  const product = await backendClient.fetch(`*[_id == $id][0]{ variants }`, {
+    id: productId,
+  });
 
-  if (!product) {
-    throw new Error(`Product not found: ${productId}`);
+  if (!product?.variants || !Array.isArray(product.variants)) {
+    throw new Error('Product or variants not found.');
   }
 
-  const currentStock = product.stock ?? 0;
+  const variantIndex = product.variants.findIndex(
+    (v: any) => v.size === variantSize
+  );
 
-  if (quantity > currentStock) {
-    throw new Error(
-      `Insufficient stock for product ${productId}. Requested ${quantity}, available ${currentStock}`
-    );
+  if (variantIndex === -1) {
+    throw new Error(`Variant with size "${variantSize}" not found.`);
   }
 
-  // Atomically decrement stock
-  await backendClient.patch(productId).inc({ stock: -quantity }).commit();
+  const variant = product.variants[variantIndex];
+  const newStock = Math.max((variant.stock ?? 0) - quantity, 0);
 
-  console.log(
-    `📦 Stock updated for ${productId}: ${currentStock} → ${currentStock - quantity}`
-  );
+  // Patch only the specific variant's stock
+  await backendClient
+    .patch(productId)
+    .set({ [`variants[${variantIndex}].stock`]: newStock })
+    .commit();
 }

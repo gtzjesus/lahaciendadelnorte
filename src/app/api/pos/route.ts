@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { backendClient } from '@/sanity/lib/backendClient';
+import { decreaseProductStock } from '@/sanity/lib/products/decreaseProductStock';
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 type OrderItem = {
-  productId: string;
+  productId: string; // Must be in format "productId-size"
   quantity: number;
   price: number;
 };
@@ -21,7 +23,6 @@ export async function POST(req: Request) {
     const body = await req.json();
     const items: OrderItem[] = body.items;
 
-    // ✅ new payment fields
     const paymentMethod = body.paymentMethod as 'cash' | 'card' | 'split';
     const cashReceived =
       typeof body.cashReceived === 'number' ? body.cashReceived : 0;
@@ -37,16 +38,26 @@ export async function POST(req: Request) {
       );
     }
 
+    // ✅ Validate item format
     for (const item of items) {
       if (
         typeof item.productId !== 'string' ||
         typeof item.quantity !== 'number' ||
-        item.quantity < 1 ||
-        typeof item.price !== 'number' ||
-        item.price < 0
+        typeof item.price !== 'number'
       ) {
         return NextResponse.json(
           { success: false, message: 'Invalid item format' },
+          { status: 400 }
+        );
+      }
+
+      const [productId, variantSize] = item.productId.split('-');
+      if (!productId || !variantSize) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: `Invalid productId format: "${item.productId}" (expected format: "productId-size")`,
+          },
           { status: 400 }
         );
       }
@@ -56,50 +67,31 @@ export async function POST(req: Request) {
       (sum, item) => sum + item.price * item.quantity,
       0
     );
-    const tax = subtotal * 0.0825;
+    const tax = +(subtotal * 0.0825).toFixed(2);
     const totalPrice = subtotal + tax;
+
     const orderNumber = generateOrderCode();
-
-    const clerkUserId = 'clerk-placeholder';
+    const clerkUserId = 'store-user-123'; // Replace later with real user
     const customerName = 'Walk-in Customer';
-    const email = 'customer@example.com';
+    const email = 'walkin@example.com';
 
-    const productsForSanity = items.map((item) => ({
-      _key: crypto.randomUUID(),
-      _type: 'object',
-      product: { _type: 'reference', _ref: item.productId },
-      quantity: item.quantity,
-      price: item.price,
-      finalPrice: item.price * item.quantity,
-    }));
-
+    // 🔄 Decrease variant stock
     for (const item of items) {
-      const product = await backendClient.fetch(
-        `*[_type == "product" && _id == $id][0]{stock}`,
-        { id: item.productId }
-      );
-      if (!product) {
-        return NextResponse.json(
-          { success: false, message: `Product not found: ${item.productId}` },
-          { status: 404 }
-        );
-      }
-      const currentStock = product.stock ?? 0;
-      const newStock = currentStock - item.quantity;
-      if (newStock < 0) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: `Insufficient stock for product ${item.productId}`,
-          },
-          { status: 400 }
-        );
-      }
-      await backendClient
-        .patch(item.productId)
-        .set({ stock: newStock })
-        .commit();
+      const [productId, variantSize] = item.productId.split('-');
+      await decreaseProductStock(productId, variantSize, item.quantity);
     }
+
+    // ✅ Format products for order doc
+    const productsForSanity = items.map((item) => {
+      const [productId] = item.productId.split('-');
+      return {
+        _key: crypto.randomUUID(),
+        _type: 'object',
+        product: { _type: 'reference', _ref: productId },
+        quantity: item.quantity,
+        price: item.price,
+      };
+    });
 
     const orderDoc = {
       _type: 'order',
@@ -107,7 +99,7 @@ export async function POST(req: Request) {
       clerkUserId,
       customerName,
       email,
-      products: productsForSanity, // los productos llevan itemNumber
+      products: productsForSanity,
       totalPrice,
       currency: 'usd',
       amountDiscount: 0,
@@ -132,11 +124,10 @@ export async function POST(req: Request) {
       },
       { status: 201 }
     );
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-  } catch (error: any) {
-    console.error('Error creating order:', error);
+  } catch (err: any) {
+    console.error('❌ Error creating order:', err);
     return NextResponse.json(
-      { success: false, message: error.message || 'Server error' },
+      { success: false, message: err.message || 'Unknown server error' },
       { status: 500 }
     );
   }

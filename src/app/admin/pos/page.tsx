@@ -1,187 +1,108 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
-import { Fireworks } from 'fireworks-js';
 import { useRouter } from 'next/navigation';
-import { Html5Qrcode } from 'html5-qrcode';
-
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 type Product = {
   _id: string;
+  baseName: string;
   name: string;
   slug: { current: string };
   price: number;
-  stock?: number;
+  stock: number;
   itemNumber?: string;
   imageUrl?: string;
+  size: string;
 };
 
 type CartItem = Product & { cartQty: number };
 
 export default function POSPage() {
-  const [showManualModal, setShowManualModal] = useState(false);
-  const [manualInput, setManualInput] = useState('');
-  const [manualError, setManualError] = useState('');
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [isScanning, setIsScanning] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
-  const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
-  const fireworksContainer = useRef<HTMLDivElement>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredResults, setFilteredResults] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
-  const [finalTotal, setFinalTotal] = useState<number | null>(null);
-  const [showCelebration, setShowCelebration] = useState(false);
-  const celebrationTimeout = useRef<NodeJS.Timeout | null>(null);
-  const router = useRouter();
-
-  const totalItems = cart.reduce((sum, item) => sum + item.cartQty, 0);
-  const subtotal = cart.reduce((sum, item) => {
-    if ((item.stock ?? 0) <= 0) return sum;
-    return sum + item.price * item.cartQty;
-  }, 0);
-  const tax = subtotal * 0.0825;
-  const total = subtotal + tax;
-
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'split'>(
     'card'
   );
-
   const [cashReceived, setCashReceived] = useState<number>(0);
   const [cardAmount, setCardAmount] = useState<number>(0);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const router = useRouter();
 
+  const totalItems = cart.reduce((sum, item) => sum + item.cartQty, 0);
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.price * item.cartQty,
+    0
+  );
+  const tax = subtotal * 0.0825;
+  const total = subtotal + tax;
+  const round2 = (n: number) => Math.round(n * 100) / 100;
   const changeGiven =
     paymentMethod === 'cash' ? Math.max(cashReceived - total, 0) : 0;
-
-  // Redondeo helper
-  const round2 = (num: number) => Math.round(num * 100) / 100;
 
   useEffect(() => {
     if (paymentMethod === 'split') {
       const remaining = total - cashReceived;
-      const rounded = round2(remaining);
-      setCardAmount(rounded > 0 ? rounded : 0);
+      setCardAmount(remaining > 0 ? round2(remaining) : 0);
     }
   }, [cashReceived, paymentMethod, total]);
 
   useEffect(() => {
     client
-      .fetch<Product[]>(
+      .fetch(
         `*[_type == "product"]{
-          _id, name, slug, itemNumber, price, stock,
-          "imageUrl": image.asset->url
-        }`
+        _id, name, slug, itemNumber, image, 
+        "imageUrl": image.asset->url,
+        variants[]{ size, price, stock }
+      }`
       )
-      .then(setProducts)
-      .catch(console.error);
+      .then((data) => {
+        const flatProducts = data.flatMap((product: any) =>
+          product.variants.map((variant: any) => ({
+            _id: product._id + '-' + variant.size,
+            baseName: product.name,
+            name: `${product.name} - ${variant.size}`,
+            slug: product.slug,
+            itemNumber: product.itemNumber,
+            price: variant.price,
+            stock: variant.stock,
+            size: variant.size,
+            imageUrl: product.imageUrl,
+          }))
+        );
+        setProducts(flatProducts);
+      });
   }, []);
 
   useEffect(() => {
-    return () => {
-      html5QrCodeRef.current?.stop().catch(() => {});
-    };
-  }, []);
+    if (searchTerm.trim() === '') return setFilteredResults([]);
+    const results = products.filter((p) =>
+      p.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredResults(results);
+  }, [searchTerm, products]);
 
-  const launchFireworks = () => {
-    if (!fireworksContainer.current) return;
-    fireworksContainer.current.innerHTML = '';
-    fireworksContainer.current.style.opacity = '1';
-    const fw = new Fireworks(fireworksContainer.current, {
-      opacity: 0.8,
-      acceleration: 1.2,
-      friction: 0.95,
-      gravity: 1.5,
-      explosion: 6,
-      particles: 80,
-      traceLength: 4,
-      traceSpeed: 7,
-      flickering: 20,
-      hue: { min: 0, max: 360 },
-      brightness: { min: 50, max: 100 },
-      delay: { min: 20, max: 50 },
-      autoresize: true,
-      sound: { enabled: false },
-    });
-    fw.start();
-    return fw;
+  const addToCart = (product: Product) => {
+    setCart((prev) => [...prev, { ...product, cartQty: 1 }]);
+    setSearchTerm('');
+    setFilteredResults([]);
   };
 
-  const startScanner = async () => {
-    if (html5QrCodeRef.current) return;
-
-    const scanner = new Html5Qrcode('reader');
-    html5QrCodeRef.current = scanner;
-
-    try {
-      const cameras = await Html5Qrcode.getCameras();
-      if (cameras && cameras.length > 0) {
-        const backCamera = cameras.find((cam) =>
-          cam.label.toLowerCase().includes('back')
-        );
-        const cameraId = backCamera?.id || cameras[cameras.length - 1].id;
-
-        await scanner.start(
-          cameraId,
-          {
-            fps: 10,
-            qrbox: 250,
-          },
-          async (decodedText) => {
-            const code = decodedText.trim().toLowerCase();
-            const matched = products.find(
-              (p) => p.slug.current.toLowerCase() === code
-            );
-            if (!matched) return;
-
-            await scanner.stop();
-            html5QrCodeRef.current = null;
-            setIsScanning(false); // 🔑 Stop tracking
-            setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
-
-            const fw = launchFireworks();
-            setTimeout(() => fw?.stop(), 2000);
-
-            setTimeout(() => {
-              startScanner();
-              setIsScanning(true); // 🔑 Resume tracking
-            }, 2000);
-          },
-          (err) => console.warn('QR error:', err)
-        );
-
-        setIsScanning(true); // 🔑 Set scanning active
-      }
-    } catch (err) {
-      console.error('Camera error', err);
-    }
-  };
-
-  const stopScanner = async () => {
-    if (html5QrCodeRef.current) {
-      await html5QrCodeRef.current.stop().catch(() => {});
-      html5QrCodeRef.current.clear();
-      html5QrCodeRef.current = null;
-      setIsScanning(false); // 🔑 Scanner is stopped
-    }
-  };
-
-  const updateQuantity = (index: number, qty: number) => {
+  const updateQuantity = (i: number, qty: number) => {
     setCart((prev) =>
-      prev.map((item, i) =>
-        i === index
-          ? { ...item, cartQty: Math.min(Math.max(qty, 1), item.stock || 1) }
-          : item
-      )
+      prev.map((item, idx) => (i === idx ? { ...item, cartQty: qty } : item))
     );
   };
 
+  const clearCart = () => setCart([]);
   const removeItem = (i: number) =>
     setCart((prev) => prev.filter((_, idx) => idx !== i));
-  const clearCart = () => setCart([]);
 
   const handleSale = async () => {
     if (!cart.length) return;
-
     if (
       paymentMethod === 'split' &&
       Math.abs(cashReceived + cardAmount - total) > 0.01
@@ -192,24 +113,15 @@ export default function POSPage() {
 
     setLoading(true);
 
-    const stockErrors = cart.filter((item) => {
-      const inStock = item.stock ?? 0;
-      return item.cartQty > inStock || inStock <= 0;
-    });
-
-    if (stockErrors.length) {
-      setLoading(false);
-      return;
-    }
+    const payload = cart.map((item) => ({
+      productId: item._id, // ✅ Already in correct format
+      quantity: item.cartQty,
+      price: item.price,
+      finalPrice: item.price * item.cartQty,
+      variantSize: item.size,
+    }));
 
     try {
-      const payload = cart.map((item) => ({
-        productId: item._id,
-        quantity: item.cartQty,
-        price: item.price,
-        finalPrice: item.price * item.cartQty,
-      }));
-
       const res = await fetch('/api/pos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -229,21 +141,26 @@ export default function POSPage() {
         }),
       });
 
-      const data = await res.json();
+      // Read response as raw text for debugging
+      const raw = await res.text();
+      console.log('🔍 Raw response from /api/pos:', raw);
+
+      let data;
+      try {
+        data = JSON.parse(raw);
+      } catch (jsonError) {
+        console.error('❌ Failed to parse JSON:', jsonError);
+        alert('❌ Server did not return valid JSON.');
+        return;
+      }
+
       if (!res.ok || !data.success) {
         alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
       } else {
-        setFinalTotal(total);
+        alert(`✅ Sale complete! Order #: ${data.orderNumber}`);
         clearCart();
-        setShowCelebration(true);
-        const fw = launchFireworks();
-        celebrationTimeout.current = setTimeout(() => {
-          fw?.stop();
-          setShowCelebration(false);
-          router.push('/admin/orders');
-        }, 10000);
+        router.push('/admin/orders');
       }
-      /* eslint-disable  @typescript-eslint/no-explicit-any */
     } catch (err: any) {
       alert(`❌ ${err.message || 'Unknown error'}`);
     } finally {
@@ -252,191 +169,78 @@ export default function POSPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-white">
-      <div
-        ref={fireworksContainer}
-        className="fixed inset-0 z-[2000] pointer-events-none"
-        style={{ opacity: '0', transition: 'opacity 0.5s' }}
+    <div className="p-4 max-w-3xl mx-auto bg-white min-h-screen">
+      <h1 className="text-2xl font-bold uppercase mb-4">POS System</h1>
+
+      <input
+        type="text"
+        placeholder="Search by product name..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full p-2 border rounded mb-2"
       />
 
-      {showCelebration && (
-        <div className="fixed inset-0 z-[210] flex flex-col items-center justify-center bg-flag-blue bg-opacity-90 text-white p-6 text-center">
-          <h1 className="text-5xl text-yellow font-extrabold mb-4 animate-bounce">
-            Sale Success!
-          </h1>
-          {finalTotal !== null && (
-            <p className="text-2xl text-yellow font-extrabold mb-4 animate-bounce">
-              Total: ${finalTotal.toFixed(2)}
-            </p>
-          )}
-          <button
-            onClick={() => {
-              setShowCelebration(false);
-              router.push('/admin/orders');
-            }}
-            className="bg-white text-flag-blue uppercase px-6 py-3 font-light"
-          >
-            View Orders
-          </button>
+      {filteredResults.length > 0 && (
+        <div className="border rounded shadow-md bg-white max-h-60 overflow-y-auto mb-4">
+          {filteredResults.map((product) => (
+            <div
+              key={product._id}
+              className="flex justify-between items-center p-2 border-b hover:bg-gray-100"
+            >
+              <div>
+                <div className="font-semibold">{product.name}</div>
+                <div className="text-xs text-gray-600">
+                  Stock: {product.stock}
+                </div>
+              </div>
+              <button
+                className="bg-green text-white text-xs px-3 py-1 rounded"
+                onClick={() => addToCart(product)}
+              >
+                Add
+              </button>
+            </div>
+          ))}
         </div>
       )}
 
-      <div className="p-3">
-        <h1 className="text-2xl uppercase font-bold mb-4">Point of Sale</h1>
-        {isScanning ? (
-          <button
-            onClick={stopScanner}
-            className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-red text-white w-full"
+      <div className="mb-4">
+        {cart.map((item, i) => (
+          <div
+            key={item._id}
+            className="flex justify-between items-center border-b py-2"
           >
-            Stop Scanning
-          </button>
-        ) : (
-          <button
-            onClick={startScanner}
-            className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-blue text-white w-full"
-          >
-            Start Scanning
-          </button>
-        )}
-
-        <button
-          onClick={() => {
-            setManualInput('');
-            setManualError('');
-            setShowManualModal(true);
-          }}
-          className="p-4 mb-4 block uppercase text-xs font-light text-center bg-flag-red text-white w-full"
-        >
-          Enter Manually
-        </button>
-
-        <div id="reader" className="w-full max-w-md mx-auto" />
-
-        {showManualModal && (
-          <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black bg-opacity-60">
-            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md mx-auto text-center">
-              <h2 className="text-sm font-bold mb-4 uppercase">
-                Enter firework Number
-              </h2>
-              <input
-                type="text"
-                value={manualInput}
-                onChange={(e) => setManualInput(e.target.value)}
-                placeholder=""
-                className="w-full p-2 border border-gray-300 rounded mb-4"
-              />
-              {manualError && (
-                <p className="text-red-500 text-sm mb-2">{manualError}</p>
-              )}
-              <div className=" flex justify-center space-x-4">
-                <button
-                  onClick={() => setShowManualModal(false)}
-                  className="uppercase text-xs px-3 py-1 bg-flag-red text-white"
+            <div>
+              <div className="font-semibold">{item.name}</div>
+              <div className="text-xs text-gray-600">
+                ${item.price.toFixed(2)} x{' '}
+                <select
+                  value={item.cartQty}
+                  onChange={(e) => updateQuantity(i, Number(e.target.value))}
+                  className="border px-1 py-0.5"
                 >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => {
-                    const code = manualInput.trim().toLowerCase();
-                    const matched = products.find(
-                      (p) => (p.itemNumber ?? '').toLowerCase() === code
-                    );
-
-                    if (!matched) {
-                      setManualError(
-                        '❌ No firework found with that item number.'
-                      );
-                      return;
-                    }
-
-                    setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
-                    setShowManualModal(false);
-
-                    const fw = launchFireworks();
-                    setTimeout(() => fw?.stop(), 2000);
-                  }}
-                  className="uppercase text-xs px-3 py-1 bg-flag-blue text-white"
-                >
-                  Add to Cart
-                </button>
+                  {Array.from({ length: item.stock }, (_, n) => (
+                    <option key={n + 1} value={n + 1}>
+                      {n + 1}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
-          </div>
-        )}
-
-        <div className="mt-6 space-y-4">
-          {cart.map((item, i) => {
-            const lineTotal = item.price * item.cartQty;
-            return (
-              <div
-                key={item._id}
-                className="flex items-center justify-between border-b py-2"
-              >
-                <div className="flex items-center">
-                  {item.imageUrl && (
-                    <div className="relative w-12 h-12 mr-3 flex-shrink-0">
-                      <Image
-                        src={item.imageUrl}
-                        alt={item.name}
-                        fill
-                        style={{ objectFit: 'cover' }}
-                        sizes="48px"
-                      />
-                    </div>
-                  )}
-                  <div className="uppercase">
-                    <div className="font-light">
-                      {item.name}
-                      <div className="text-xs text-gray-500">
-                        Item #:{' '}
-                        <span className="font-bold">
-                          {item.itemNumber || 'N/A'}
-                        </span>{' '}
-                        | Stock:{' '}
-                        <span className="font-bold">{item.stock ?? 0}</span>
-                      </div>
-                    </div>
-                    <div className="font-bold">
-                      ${item.price.toFixed(2)} x
-                      {(item.stock ?? 0) > 0 ? (
-                        <select
-                          className="ml-2 border px-1 py-0.5"
-                          value={item.cartQty}
-                          onChange={(e) =>
-                            updateQuantity(i, Number(e.target.value))
-                          }
-                        >
-                          {[...Array(item.stock)].map((_, n) => (
-                            <option key={n + 1} value={n + 1}>
-                              {n + 1}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <span className="ml-2 text-xs text-red-600 font-semibold">
-                          OUT OF STOCK
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col items-end text-green">
-                  <div className="font-semibold">
-                    ${(item.stock ?? 0) > 0 ? lineTotal.toFixed(2) : '--'}
-                  </div>
-                  <button
-                    onClick={() => removeItem(i)}
-                    className="text-flag-red mt-1"
-                  >
-                    ❌
-                  </button>
-                </div>
+            <div>
+              <div className="text-green font-bold">
+                ${(item.price * item.cartQty).toFixed(2)}
               </div>
-            );
-          })}
-        </div>
+              <button
+                className="text-red-500 text-sm"
+                onClick={() => removeItem(i)}
+              >
+                ❌
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-
       <div className="w-full lg:w-auto bg-flag-blue p-6 lg:p-12 shadow-md mt-6">
         <h3 className="uppercase text-sm font-light text-center text-white border-b pb-1">
           Sale Summary
@@ -580,6 +384,31 @@ export default function POSPage() {
           Clear Sale
         </button>
       </div>
+      {showConfirmModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded max-w-sm w-full">
+            <h2 className="text-lg font-bold mb-2">Confirm Sale</h2>
+            <p>Total: ${total.toFixed(2)}</p>
+            <div className="mt-4 flex justify-end space-x-2">
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="px-4 py-2 border rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  handleSale();
+                }}
+                className="px-4 py-2 bg-black text-white rounded"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
