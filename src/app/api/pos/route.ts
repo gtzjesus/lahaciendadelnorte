@@ -7,11 +7,21 @@ type OrderItem = {
   price: number;
 };
 
+function generateOrderCode(length = 6): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const items: OrderItem[] = body.items;
 
+    // ✅ new payment fields
     const paymentMethod = body.paymentMethod as 'cash' | 'card' | 'split';
     const cashReceived =
       typeof body.cashReceived === 'number' ? body.cashReceived : 0;
@@ -48,24 +58,8 @@ export async function POST(req: Request) {
     );
     const tax = subtotal * 0.0825;
     const totalPrice = subtotal + tax;
+    const orderNumber = generateOrderCode();
 
-    // ✅ 1. Fetch highest existing order number
-    const latestOrder: { orderNumber: string } | null =
-      await backendClient.fetch(
-        `*[_type == "order"] | order(orderDate desc)[0] { orderNumber }`
-      );
-
-    let nextOrderNumber = 1;
-    if (latestOrder?.orderNumber) {
-      const parsed = parseInt(latestOrder.orderNumber.replace(/\D/g, ''), 10);
-      if (!isNaN(parsed)) {
-        nextOrderNumber = parsed + 1;
-      }
-    }
-
-    const orderNumber = `#${nextOrderNumber}`;
-
-    // Example clerk / customer fallback
     const clerkUserId = 'clerk-placeholder';
     const customerName = 'Walk-in Customer';
     const email = 'customer@example.com';
@@ -79,7 +73,6 @@ export async function POST(req: Request) {
       finalPrice: item.price * item.quantity,
     }));
 
-    // ✅ 2. Check and update stock
     for (const item of items) {
       const product = await backendClient.fetch(
         `*[_type == "product" && _id == $id][0]{stock}`,
@@ -114,7 +107,7 @@ export async function POST(req: Request) {
       clerkUserId,
       customerName,
       email,
-      products: productsForSanity,
+      products: productsForSanity, // los productos llevan itemNumber
       totalPrice,
       currency: 'usd',
       amountDiscount: 0,

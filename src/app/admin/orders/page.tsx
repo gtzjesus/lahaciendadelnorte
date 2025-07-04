@@ -19,9 +19,9 @@ export default async function AdminOrdersPage() {
   });
 
   // Convert to sorted array of dates for display
-  const sortedDailySales = Object.entries(dailySalesMap).sort(
-    ([a], [b]) => new Date(b).getTime() - new Date(a).getTime() // Descending
-  );
+  // const sortedDailySales = Object.entries(dailySalesMap).sort(
+  //   ([a], [b]) => new Date(b).getTime() - new Date(a).getTime() // Descending
+  // );
 
   // Calculate total sales
   const totalSales = orders.reduce((acc: number, order: any) => {
@@ -48,7 +48,7 @@ export default async function AdminOrdersPage() {
       </div>
 
       {/* Daily breakdown */}
-      <div className="mt-6">
+      {/* <div className="mt-6">
         <p className="uppercase text-xs font-semibold text-gray-500 mb-2">
           Daily Sales Breakdown:
         </p>
@@ -62,7 +62,7 @@ export default async function AdminOrdersPage() {
             </li>
           ))}
         </ul>
-      </div>
+      </div> */}
 
       {orders.length === 0 ? (
         <p className="text-center text-gray-600 uppercase tracking-wide font-light">
