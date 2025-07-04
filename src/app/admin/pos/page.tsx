@@ -256,7 +256,7 @@ export default function POSPage() {
         celebrationTimeout.current = setTimeout(() => {
           fw?.stop();
           setShowCelebration(false);
-          router.push('/admin/orders');
+          router.push('/admin/pos');
         }, 10000);
       }
       /* eslint-disable  @typescript-eslint/no-explicit-any */
