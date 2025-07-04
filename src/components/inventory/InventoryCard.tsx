@@ -20,6 +20,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
   const [name, setName] = useState(product.name);
   const [price, setPrice] = useState(product.price.toString());
   const [stock, setStock] = useState(product.stock.toString());
+  const [description, setDescription] = useState(product.description || '');
 
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -33,6 +34,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
 
   const handleSaveProduct = async () => {
     setIsSaving(true);
+
     const res = await fetch('/api/update-product', {
       method: 'PATCH',
       headers: {
@@ -43,6 +45,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         name,
         price: parseFloat(price),
         stock: parseInt(stock, 10),
+        description,
         categoryIds: selectedCategoryIds,
       }),
     });
@@ -104,6 +107,16 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
             value={stock}
             onChange={(e) => setStock(e.target.value)}
             className="border border-gray-300 px-2 py-1 rounded text-sm"
+          />
+        </label>
+
+        <label className="flex flex-col text-left">
+          <span className="font-semibold">Description</span>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="border border-gray-300 px-2 py-1 rounded text-sm resize-none"
+            rows={3}
           />
         </label>
 

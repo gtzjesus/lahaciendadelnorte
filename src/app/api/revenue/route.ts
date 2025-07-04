@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { client } from '@/sanity/lib/client';
-import { currentUser } from '@clerk/nextjs/server';
 
-const ADMIN_EMAILS = ['elpasokaboom@gmail.com'];
+// Removed Clerk + admin logic
 
 function getWeekStart(date: string): string {
   const d = new Date(date);
@@ -14,13 +13,6 @@ function getWeekStart(date: string): string {
 
 export async function GET(req: Request) {
   try {
-    const user = await currentUser();
-    const email = user?.emailAddresses?.[0]?.emailAddress;
-
-    if (!user || !email || !ADMIN_EMAILS.includes(email)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
     const { searchParams } = new URL(req.url);
     const interval = searchParams.get('interval') || 'daily';
 

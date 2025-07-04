@@ -1,19 +1,8 @@
-// /app/api/recent-orders/route.ts
 import { client } from '@/sanity/lib/client';
 import { NextResponse } from 'next/server';
-import { currentUser } from '@clerk/nextjs/server';
-
-const ADMIN_EMAILS = ['elpasokaboom@gmail.com'];
 
 export async function GET() {
   try {
-    const user = await currentUser();
-    const email = user?.emailAddresses?.[0]?.emailAddress;
-
-    if (!user || !email || !ADMIN_EMAILS.includes(email)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
     const orders =
       (await client.fetch(`
         *[_type == "order" && status == "paid"] | order(orderDate desc)[0...5] {

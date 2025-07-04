@@ -1,33 +1,12 @@
 import { client } from '@/sanity/lib/client';
 import { NextResponse } from 'next/server';
-import { currentUser } from '@clerk/nextjs/server';
 
 type Order = {
   totalPrice?: number;
 };
 
-const ADMIN_EMAILS = ['elpasokaboom@gmail.com'];
-
 export async function GET() {
   try {
-    const user = await currentUser();
-
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized: User is not signed in.' },
-        { status: 401 }
-      );
-    }
-
-    const email = user.emailAddresses?.[0]?.emailAddress;
-
-    if (!email || !ADMIN_EMAILS.includes(email)) {
-      return NextResponse.json(
-        { error: 'Forbidden: User does not have admin access.' },
-        { status: 403 }
-      );
-    }
-
     const [totalOrders, activeProducts, paidOrders, activeCustomers] =
       await Promise.all([
         client.fetch<number>(`count(*[_type == "order" && status == "paid"])`),
@@ -35,14 +14,8 @@ export async function GET() {
         client.fetch<Order[]>(
           `*[_type == "order" && status == "paid"]{ totalPrice }`
         ),
-        client.fetch<number>(`count(*[_type == "customer"])`), // 💡 All customers
-        // To only count customers *with orders*, use the GROQ in comment below
+        client.fetch<number>(`count(*[_type == "customer"])`),
       ]);
-
-    // Optional: Filter for only customers that are referenced by at least 1 order
-    // const activeCustomers = await client.fetch<number>(`
-    //   count(*[_type == "customer" && count(*[_type == "order" && references(^._id)]) > 0])
-    // `);
 
     const totalRevenue = paidOrders.reduce((acc: number, order: Order) => {
       return acc + (order.totalPrice ?? 0);

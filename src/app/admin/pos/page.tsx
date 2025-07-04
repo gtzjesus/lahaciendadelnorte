@@ -15,6 +15,7 @@ type Product = {
   stock?: number;
   itemNumber?: string;
   imageUrl?: string;
+  description?: string;
 };
 
 type CartItem = Product & { cartQty: number };
@@ -22,6 +23,7 @@ type CartItem = Product & { cartQty: number };
 export default function POSPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const manualInputRef = useRef<HTMLInputElement>(null);
 
   const [showManualModal, setShowManualModal] = useState(false);
   const [manualInput, setManualInput] = useState('');
@@ -60,6 +62,12 @@ export default function POSPage() {
   const round2 = (num: number) => Math.round(num * 100) / 100;
 
   useEffect(() => {
+    if (showManualModal) {
+      manualInputRef.current?.focus();
+    }
+  }, [showManualModal]);
+
+  useEffect(() => {
     if (paymentMethod === 'split') {
       const remaining = total - cashReceived;
       const rounded = round2(remaining);
@@ -71,9 +79,15 @@ export default function POSPage() {
     client
       .fetch<Product[]>(
         `*[_type == "product"]{
-          _id, name, slug, itemNumber, price, stock,
-          "imageUrl": image.asset->url
-        }`
+        _id,
+        name,
+        slug,
+        itemNumber,
+        price,
+        stock,
+        description,
+        "imageUrl": image.asset->url
+      }`
       )
       .then(setProducts)
       .catch(console.error);
@@ -375,12 +389,14 @@ export default function POSPage() {
                 Enter firework Number
               </h2>
               <input
+                ref={manualInputRef}
                 type="text"
                 value={manualInput}
                 onChange={(e) => setManualInput(e.target.value)}
                 placeholder=""
                 className="w-full p-2 border border-gray-300 rounded mb-4"
               />
+
               {manualError && (
                 <p className="text-red-500 text-sm mb-2">{manualError}</p>
               )}
@@ -450,8 +466,14 @@ export default function POSPage() {
                         </span>{' '}
                         | Stock:{' '}
                         <span className="font-bold">{item.stock ?? 0}</span>
+                        {item.description && (
+                          <div className="text-xs text-gray-600 mt-1 normal-case">
+                            {item.description}
+                          </div>
+                        )}
                       </div>
                     </div>
+
                     <div className="font-bold">
                       ${item.price.toFixed(2)} x
                       {(item.stock ?? 0) > 0 ? (
