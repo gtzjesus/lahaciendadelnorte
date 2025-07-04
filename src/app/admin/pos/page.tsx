@@ -20,6 +20,9 @@ type Product = {
 type CartItem = Product & { cartQty: number };
 
 export default function POSPage() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+
   const [showManualModal, setShowManualModal] = useState(false);
   const [manualInput, setManualInput] = useState('');
   const [manualError, setManualError] = useState('');
@@ -81,6 +84,19 @@ export default function POSPage() {
       html5QrCodeRef.current?.stop().catch(() => {});
     };
   }, []);
+
+  useEffect(() => {
+    if (!searchTerm) {
+      setSearchResults([]);
+      return;
+    }
+
+    const term = searchTerm.toLowerCase();
+    const filtered = products.filter((p) =>
+      p.name.toLowerCase().includes(term)
+    );
+    setSearchResults(filtered.slice(0, 5)); // limit results to 5
+  }, [searchTerm, products]);
 
   const launchFireworks = () => {
     if (!fireworksContainer.current) return;
@@ -240,7 +256,7 @@ export default function POSPage() {
         celebrationTimeout.current = setTimeout(() => {
           fw?.stop();
           setShowCelebration(false);
-          router.push('/admin/pos');
+          router.push('/admin/orders');
         }, 10000);
       }
       /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -307,8 +323,37 @@ export default function POSPage() {
           }}
           className="p-4 mb-4 block uppercase text-xs font-light text-center bg-flag-red text-white w-full"
         >
-          Enter Manually
+          Enter firework Manually
         </button>
+
+        <div className="mb-4">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search firework"
+            className="uppercase text-xs w-full p-2 border border-gray-300 rounded mb-1"
+          />
+          {searchResults.length > 0 && (
+            <ul className="border border-gray-300 rounded max-h-40 overflow-y-auto bg-white shadow-md">
+              {searchResults.map((product) => (
+                <li
+                  key={product._id}
+                  onClick={() => {
+                    setCart((prev) => [...prev, { ...product, cartQty: 1 }]);
+                    setSearchTerm('');
+                    setSearchResults([]);
+                    const fw = launchFireworks();
+                    setTimeout(() => fw?.stop(), 2000);
+                  }}
+                  className="cursor-pointer px-4 py-2 hover:bg-flag-blue hover:text-white"
+                >
+                  {product.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
         <div id="reader" className="w-full max-w-md mx-auto" />
 

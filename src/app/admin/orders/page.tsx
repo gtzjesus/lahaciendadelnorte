@@ -71,7 +71,7 @@ export default async function AdminOrdersPage() {
       ) : (
         <div className="space-y-6 max-w-4xl mx-auto">
           {orders.map((order: any) => (
-            <OrderCard key={order.orderNumber || order._id} order={order} />
+            <OrderCard key={order._id} order={order} />
           ))}
         </div>
       )}
