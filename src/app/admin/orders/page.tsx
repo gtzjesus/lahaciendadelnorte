@@ -1,7 +1,7 @@
 import { getAllOrders } from '@/sanity/lib/orders/getAllOrders';
 import OrderCard from '@/components/orders/OrderCard';
 import { formatCurrency } from '@/lib/formatCurrency';
-import { format } from 'date-fns-tz'; // You can install date-fns if not yet
+import { format } from 'date-fns'; // You can install date-fns if not yet
 export const dynamic = 'force-dynamic'; // For real-time updates
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -13,18 +13,15 @@ export default async function AdminOrdersPage() {
 
   orders.forEach((order: any) => {
     if (order.orderDate && typeof order.totalPrice === 'number') {
-      const dateStr = format(new Date(order.orderDate), 'yyyy-MM-dd', {
-        timeZone: 'UTC',
-      });
-
+      const dateStr = format(new Date(order.orderDate), 'yyyy-MM-dd');
       dailySalesMap[dateStr] = (dailySalesMap[dateStr] || 0) + order.totalPrice;
     }
   });
 
   // Convert to sorted array of dates for display
-  const sortedDailySales = Object.entries(dailySalesMap).sort(
-    ([a], [b]) => new Date(b).getTime() - new Date(a).getTime() // Descending
-  );
+  // const sortedDailySales = Object.entries(dailySalesMap).sort(
+  //   ([a], [b]) => new Date(b).getTime() - new Date(a).getTime() // Descending
+  // );
 
   // Calculate total sales
   const totalSales = orders.reduce((acc: number, order: any) => {
@@ -51,7 +48,7 @@ export default async function AdminOrdersPage() {
       </div>
 
       {/* Daily breakdown */}
-      <div className="mt-6">
+      {/* <div className="mt-6">
         <p className="uppercase text-xs font-semibold text-gray-500 mb-2">
           Daily Sales Breakdown:
         </p>
@@ -65,7 +62,7 @@ export default async function AdminOrdersPage() {
             </li>
           ))}
         </ul>
-      </div>
+      </div> */}
 
       {orders.length === 0 ? (
         <p className="text-center text-gray-600 uppercase tracking-wide font-light">
