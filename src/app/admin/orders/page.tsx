@@ -52,7 +52,7 @@ export default async function AdminOrdersPage() {
         <p className="uppercase text-xs font-semibold text-gray-500 mb-2">
           Daily Sales Breakdown:
         </p>
-        <ul className="space-y-1 text-xs">
+        <ul className="space-y-1 text-xs mb-4">
           {sortedDailySales.map(([date, amount]) => (
             <li key={date} className="flex justify-between border-b pb-1">
               <span className="text-flag-blue">{date}</span>
