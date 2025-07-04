@@ -326,16 +326,16 @@ export default function POSPage() {
           Enter firework Manually
         </button>
 
-        <div className="mb-4">
+        <div className="">
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search firework"
-            className="uppercase text-xs w-full p-2 border border-gray-300 rounded mb-1"
+            className="uppercase text-xs w-full p-4 border border-flag-blue text-flag-blue mb-1"
           />
           {searchResults.length > 0 && (
-            <ul className="border border-gray-300 rounded max-h-40 overflow-y-auto bg-white shadow-md">
+            <ul className="border border-gray-300 py-4  rounded max-h-40 overflow-y-auto bg-white shadow-md">
               {searchResults.map((product) => (
                 <li
                   key={product._id}
@@ -346,9 +346,20 @@ export default function POSPage() {
                     const fw = launchFireworks();
                     setTimeout(() => fw?.stop(), 2000);
                   }}
-                  className="cursor-pointer px-4 py-2 hover:bg-flag-blue hover:text-white"
+                  className="border-b mx-2 cursor-pointer flex items-center gap-3 px-2 py-4 hover:bg-flag-blue hover:text-white"
                 >
-                  {product.name}
+                  {product.imageUrl && (
+                    <div className="relative w-9 h-9 flex-shrink-0 overflow-hidden">
+                      <Image
+                        src={product.imageUrl}
+                        alt={product.name}
+                        fill
+                        style={{ objectFit: 'cover' }}
+                        sizes="32px"
+                      />
+                    </div>
+                  )}
+                  <span className="uppercase">{product.name}</span>
                 </li>
               ))}
             </ul>
