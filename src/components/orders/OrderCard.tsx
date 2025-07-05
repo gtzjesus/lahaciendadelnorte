@@ -6,7 +6,7 @@ import { imageUrl } from '@/lib/imageUrl';
 import Image from 'next/image';
 import Link from 'next/link';
 
-/* eslint-disable  @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface OrderCardProps {
   order: any;
   showDetailButton?: boolean;
@@ -32,7 +32,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
     ? order.products
     : order.products?.slice(0, 3);
 
-  console.log('Order data:', order);
+  const currency = order.currency || 'usd';
 
   return (
     <div className="bg-white border border-flag-blue p-2 shadow-sm overflow-hidden">
@@ -68,13 +68,13 @@ const OrderCard: React.FC<OrderCardProps> = ({
         </p>
 
         <div>
-          {visibleProducts?.map((product: any) => {
+          {visibleProducts?.map((product: any, index: number) => {
             const prod = product.product;
             const slug = prod?.slug?.current;
 
             return (
               <div
-                key={prod?._id || product._key}
+                key={`${prod?._id || product._key}-${index}`}
                 className="flex flex-col border-b border-flag-blue last:border-b-0"
               >
                 <div className="flex items-center gap-6">
@@ -108,8 +108,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                     )}
                     {typeof prod?.price === 'number' && (
                       <p className="text-xs uppercase font-light text-gray-600">
-                        price:{' '}
-                        {formatCurrency(prod.price, order.currency || 'usd')}
+                        price: {formatCurrency(prod.price, currency)}
                       </p>
                     )}
                     {prod?.itemNumber && (
@@ -139,7 +138,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
             >
               {isExpanded
                 ? 'Hide fireworks'
-                : `expand fireworks (${order.products.length - 3})`}
+                : `Expand fireworks (${order.products.length - 3})`}
             </button>
           )}
         </div>
@@ -148,7 +147,6 @@ const OrderCard: React.FC<OrderCardProps> = ({
       {/* Totals & Payment */}
       <div className="border-t border-flag-blue font-mono p-4 flex flex-col space-y-2">
         {showDetailButton ? (
-          // Compact (list view)
           <>
             {order.paymentMethod && (
               <div className="flex justify-between">
@@ -162,13 +160,12 @@ const OrderCard: React.FC<OrderCardProps> = ({
               <div className="flex justify-between">
                 <p className="text-xs uppercase text-gray-600">card amount:</p>
                 <p className="text-xs font-bold">
-                  {formatCurrency(order.cardAmount, order.currency || 'usd')}
+                  {formatCurrency(order.cardAmount, currency)}
                 </p>
               </div>
             )}
           </>
         ) : (
-          // Detailed view
           <>
             <p className="text-xs border-b pb-3 uppercase font-semibold text-gray-500 mb-1">
               payment details
@@ -184,7 +181,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
             <div className="flex justify-between">
               <p className="uppercase text-xs mb-1 text-gray-600">subtotal:</p>
               <p className="font-bold text-xs">
-                {formatCurrency(subtotal, order.currency || 'usd')}
+                {formatCurrency(subtotal, currency)}
               </p>
             </div>
 
@@ -192,7 +189,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
               <div className="flex justify-between">
                 <p className="uppercase text-xs mb-1 text-gray-600">tax:</p>
                 <p className="font-bold text-xs">
-                  {formatCurrency(order.tax, order.currency || 'usd')}
+                  {formatCurrency(order.tax, currency)}
                 </p>
               </div>
             )}
@@ -201,7 +198,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
               <div className="flex justify-between pt-2">
                 <p className="uppercase text-xs text-gray-600">card amount:</p>
                 <p className="font-bold text-xs">
-                  {formatCurrency(order.cardAmount, order.currency || 'usd')}
+                  {formatCurrency(order.cardAmount, currency)}
                 </p>
               </div>
             )}
@@ -212,7 +209,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                   cash received:
                 </p>
                 <p className="font-bold text-xs">
-                  {formatCurrency(order.cashReceived, order.currency || 'usd')}
+                  {formatCurrency(order.cashReceived, currency)}
                 </p>
               </div>
             )}
@@ -221,7 +218,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
               <div className="flex justify-between pb-2 border-flag-blue">
                 <p className="uppercase text-xs text-gray-600">change given:</p>
                 <p className="font-bold text-xs">
-                  {formatCurrency(order.changeGiven, order.currency || 'usd')}
+                  {formatCurrency(order.changeGiven, currency)}
                 </p>
               </div>
             )}
@@ -241,11 +238,11 @@ const OrderCard: React.FC<OrderCardProps> = ({
         <div className="flex justify-between">
           <p className="uppercase text-xs mb-1 text-gray-600">sale total:</p>
           <p className="font-bold text-sm text-green">
-            {formatCurrency(order.totalPrice ?? 0, order.currency || 'usd')}
+            {formatCurrency(order.totalPrice ?? 0, currency)}
           </p>
         </div>
 
-        {/* Status (both views) */}
+        {/* Status */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2 border-t pt-2 border-flag-blue">
           <p className="text-xs font-light uppercase text-gray-600">
             payment status:{' '}
@@ -284,7 +281,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
         </div>
       </div>
 
-      {/* View Order Button (only list view) */}
+      {/* View Order Button */}
       {showDetailButton && (
         <div className="p-4 border-t border-flag-blue flex justify-center">
           <Link
