@@ -168,13 +168,10 @@ export default function POSPage() {
             setIsScanning(false); // 🔑 Stop tracking
             setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
 
-            const fw = launchFireworks();
-            setTimeout(() => fw?.stop(), 2000);
-
             setTimeout(() => {
               startScanner();
               setIsScanning(true); // 🔑 Resume tracking
-            }, 2000);
+            }, 1000);
           },
           (err) => console.warn('QR error:', err)
         );
@@ -271,7 +268,7 @@ export default function POSPage() {
           fw?.stop();
           setShowCelebration(false);
           router.push('/admin/pos');
-        }, 10000);
+        }, 5000);
       }
       /* eslint-disable  @typescript-eslint/no-explicit-any */
     } catch (err: any) {
@@ -316,14 +313,14 @@ export default function POSPage() {
         {isScanning ? (
           <button
             onClick={stopScanner}
-            className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-red text-white w-full"
+            className="p-4 mb-2 block uppercase text-md font-light text-center bg-flag-red text-white w-full"
           >
             Stop Scanning
           </button>
         ) : (
           <button
             onClick={startScanner}
-            className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-blue text-white w-full"
+            className="p-4 mb-2 block uppercase text-md font-light text-center bg-flag-blue text-white w-full"
           >
             Start Scanning
           </button>
@@ -335,7 +332,7 @@ export default function POSPage() {
             setManualError('');
             setShowManualModal(true);
           }}
-          className="p-4 mb-4 block uppercase text-xs font-light text-center bg-flag-red text-white w-full"
+          className="p-4 mb-4 block uppercase text-md font-light text-center bg-flag-red text-white w-full"
         >
           Enter firework Manually
         </button>
@@ -346,7 +343,7 @@ export default function POSPage() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search firework"
-            className="uppercase text-xs w-full p-4 border border-flag-blue text-flag-blue mb-1"
+            className="uppercase text-md w-full p-4 border border-flag-blue text-flag-blue mb-1"
           />
           {searchResults.length > 0 && (
             <ul className="border border-gray-300 py-4  rounded max-h-40 overflow-y-auto bg-white shadow-md">
@@ -385,7 +382,7 @@ export default function POSPage() {
         {showManualModal && (
           <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black bg-opacity-60">
             <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md mx-auto text-center">
-              <h2 className="text-sm font-bold mb-4 uppercase">
+              <h2 className="text-md font-bold mb-4 uppercase">
                 Enter firework Number
               </h2>
               <input
@@ -398,12 +395,12 @@ export default function POSPage() {
               />
 
               {manualError && (
-                <p className="text-red-500 text-sm mb-2">{manualError}</p>
+                <p className="text-red-500 text-md mb-2">{manualError}</p>
               )}
               <div className=" flex justify-center space-x-4">
                 <button
                   onClick={() => setShowManualModal(false)}
-                  className="uppercase text-xs px-3 py-1 bg-flag-red text-white"
+                  className="uppercase text-md px-3 py-1 bg-flag-red text-white"
                 >
                   Cancel
                 </button>
@@ -423,11 +420,8 @@ export default function POSPage() {
 
                     setCart((prev) => [...prev, { ...matched, cartQty: 1 }]);
                     setShowManualModal(false);
-
-                    const fw = launchFireworks();
-                    setTimeout(() => fw?.stop(), 2000);
                   }}
-                  className="uppercase text-xs px-3 py-1 bg-flag-blue text-white"
+                  className="uppercase text-md px-3 py-1 bg-flag-blue text-white"
                 >
                   Add to Cart
                 </button>
@@ -459,7 +453,7 @@ export default function POSPage() {
                   <div className="uppercase">
                     <div className="font-light">
                       {item.name}
-                      <div className="text-xs text-gray-500">
+                      <div className="text-md text-gray-500">
                         Item #:{' '}
                         <span className="font-bold">
                           {item.itemNumber || 'N/A'}
@@ -467,7 +461,7 @@ export default function POSPage() {
                         | Stock:{' '}
                         <span className="font-bold">{item.stock ?? 0}</span>
                         {item.description && (
-                          <div className="text-xs text-gray-600 mt-1 normal-case">
+                          <div className="text-md text-gray-600 mt-1 normal-case">
                             {item.description}
                           </div>
                         )}
@@ -491,7 +485,7 @@ export default function POSPage() {
                           ))}
                         </select>
                       ) : (
-                        <span className="ml-2 text-xs text-red-600 font-semibold">
+                        <span className="ml-2 text-md text-red-600 font-semibold">
                           OUT OF STOCK
                         </span>
                       )}
@@ -516,7 +510,7 @@ export default function POSPage() {
       </div>
 
       <div className="w-full lg:w-auto bg-flag-blue p-6 lg:p-12 shadow-md mt-6">
-        <h3 className="uppercase text-sm font-light text-center text-white border-b pb-1">
+        <h3 className="uppercase text-md font-light text-center text-white border-b pb-1">
           Sale Summary
         </h3>
         <div className="space-y-1 mt-2 mb-2 text-white uppercase text-md font-light">
@@ -528,7 +522,7 @@ export default function POSPage() {
 
         {/* Payment Method Section */}
         <div className="mt-4 mb-4 text-white">
-          <label className="block uppercase text-xs ">Payment Method</label>
+          <label className="block uppercase text-md ">Payment Method</label>
           <select
             value={paymentMethod}
             onChange={(e) => {
@@ -549,7 +543,7 @@ export default function POSPage() {
 
           {paymentMethod === 'cash' && (
             <div className="mt-2">
-              <label className="text-xs">Cash Received</label>
+              <label className="text-md">Cash Received</label>
               <input
                 type="number"
                 min="0"
@@ -562,7 +556,7 @@ export default function POSPage() {
                 className="w-full p-2 mt-1 text-black"
               />
 
-              <p className="text-xs mt-1">
+              <p className="text-md mt-1">
                 Change Due:{' '}
                 <span className="font-bold">${changeGiven.toFixed(2)}</span>
               </p>
@@ -572,7 +566,7 @@ export default function POSPage() {
           {paymentMethod === 'split' && (
             <div className=" space-y-2">
               <div>
-                <label className="text-xs">Cash Portion</label>
+                <label className="text-md">Cash Portion</label>
                 <input
                   type="number"
                   min="0"
@@ -586,7 +580,7 @@ export default function POSPage() {
                 />
               </div>
               <div>
-                <label className="text-xs">Card Portion</label>
+                <label className="text-md">Card Portion</label>
                 <input
                   type="number"
                   min="0"
@@ -600,7 +594,7 @@ export default function POSPage() {
                 />
               </div>
               {Math.abs(cashReceived + cardAmount - total) > 0.01 && (
-                <p className="text-xs text-yellow-300 font-semibold">
+                <p className="text-md text-yellow-300 font-semibold">
                   Amount does not match total.
                 </p>
               )}
@@ -611,8 +605,8 @@ export default function POSPage() {
         {showConfirmModal && (
           <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black bg-opacity-60">
             <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md mx-auto text-center">
-              <h2 className="text-sm uppercase font-bold mb-3">Confirm Sale</h2>
-              <p className="uppercase text-xs mb-4 text-gray-700">
+              <h2 className="text-md uppercase font-bold mb-3">Confirm Sale</h2>
+              <p className="uppercase text-md mb-4 text-gray-700">
                 Are you sure you want to complete this sale for{' '}
                 <span className="font-bold text-green">
                   ${total.toFixed(2)}
@@ -622,7 +616,7 @@ export default function POSPage() {
               <div className="flex justify-center space-x-4">
                 <button
                   onClick={() => setShowConfirmModal(false)}
-                  className="uppercase text-xs px-3 py-1 bg-flag-red text-white"
+                  className="uppercase text-md px-3 py-1 bg-flag-red text-white"
                 >
                   Cancel
                 </button>
@@ -631,7 +625,7 @@ export default function POSPage() {
                     setShowConfirmModal(false);
                     await handleSale();
                   }}
-                  className="uppercase text-xs px-3 py-1 bg-flag-blue text-white"
+                  className="uppercase text-md px-3 py-1 bg-flag-blue text-white"
                 >
                   Yes, Complete Sale
                 </button>
@@ -643,7 +637,7 @@ export default function POSPage() {
         <button
           onClick={() => setShowConfirmModal(true)}
           disabled={loading || cart.length === 0}
-          className="p-4 mb-2 block uppercase text-sm font-light text-center bg-green text-white w-full"
+          className="p-4 mb-2 block uppercase text-md font-light text-center bg-green text-white w-full"
         >
           {loading
             ? `Processing... $${total.toFixed(2)}`
@@ -653,7 +647,7 @@ export default function POSPage() {
         <button
           onClick={clearCart}
           disabled={cart.length === 0 || loading}
-          className="p-4 mb-2 block uppercase text-sm font-light text-center bg-flag-red text-white w-full"
+          className="p-4 mb-2 block uppercase text-md font-light text-center bg-flag-red text-white w-full"
         >
           Clear Sale
         </button>
