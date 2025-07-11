@@ -30,7 +30,7 @@ export default function AdminLayout({
           {/* Global header used across all screen sizes */}
           <header className="sticky top-0 z-50 bg-flag-red text-white p-4 flex justify-between items-center shadow-sm">
             <Link
-              href="/admin/dashboard"
+              href="/admin/pos"
               className="uppercase font-light text-md hover:underline"
             >
               la duena

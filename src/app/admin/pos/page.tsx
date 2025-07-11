@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 type Product = {
   _id: string;
@@ -14,6 +16,7 @@ type Product = {
   itemNumber?: string;
   imageUrl?: string;
   size: string;
+  category?: string;
 };
 
 type CartItem = Product & { cartQty: number };
@@ -56,6 +59,7 @@ export default function POSPage() {
         `*[_type == "product"]{
         _id, name, slug, itemNumber, image, 
         "imageUrl": image.asset->url,
+        "category": category->title,
         variants[]{ size, price, stock }
       }`
       )
@@ -71,6 +75,7 @@ export default function POSPage() {
             stock: variant.stock,
             size: variant.size,
             imageUrl: product.imageUrl,
+            category: product.category,
           }))
         );
         setProducts(flatProducts);
@@ -86,7 +91,29 @@ export default function POSPage() {
   }, [searchTerm, products]);
 
   const addToCart = (product: Product) => {
-    setCart((prev) => [...prev, { ...product, cartQty: 1 }]);
+    setCart((prevCart) => {
+      const existingIndex = prevCart.findIndex(
+        (item) => item._id === product._id
+      );
+
+      if (existingIndex !== -1) {
+        const updatedCart = [...prevCart];
+        const existingItem = updatedCart[existingIndex];
+
+        // Prevent exceeding stock
+        if (existingItem.cartQty < existingItem.stock) {
+          updatedCart[existingIndex] = {
+            ...existingItem,
+            cartQty: existingItem.cartQty + 1,
+          };
+        }
+
+        return updatedCart;
+      }
+
+      return [...prevCart, { ...product, cartQty: 1 }];
+    });
+
     setSearchTerm('');
     setFilteredResults([]);
   };
@@ -170,65 +197,85 @@ export default function POSPage() {
 
   return (
     <div className="overflow-x-hidden mx-auto bg-white min-h-screen">
-      <h1 className="text-2xl font-bold uppercase m-4">POS System</h1>
+      <h1 className="text-2xl font-bold uppercase m-4">Point of sale</h1>
 
-      <input
-        type="text"
-        placeholder="Search"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full p-3 border uppercase text-xs rounded"
-      />
+      <div className="px-4">
+        <input
+          type="text"
+          placeholder="Search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-4 border border-flag-red uppercase text-sm "
+        />
+      </div>
 
       {filteredResults.length > 0 && (
-        <div className="uppercase text-sm border rounded shadow-md bg-white max-h-60 overflow-y-auto mb-4">
+        <div className="uppercase text-md border rounded shadow-md bg-white max-h-60 overflow-y-auto mb-4 ">
           {filteredResults.map((product) => (
             <div
               key={product._id}
               onClick={() => addToCart(product)}
-              className="cursor-pointer flex justify-between items-center p-2 border-b  transition-colors"
+              className="cursor-pointer flex items-center space-x-3 p-2 border-b hover:bg-gray-100 transition"
             >
-              <div>
-                <div className="font-semibold">{product.name}</div>
-                <div className="text-xs text-gray-600">
-                  Stock: {product.stock}
+              {product.imageUrl && (
+                <Image
+                  src={product.imageUrl}
+                  alt={product.name}
+                  width={48}
+                  height={48}
+                  className="object-cover rounded w-12 h-12"
+                />
+              )}
+              <div className="flex text-xs">
+                <div className="">{product.name}</div>
+                <div className="px-2  font-semibold italic">
+                  {product.category}{' '}
                 </div>
+                <div className=" text-flag-blue">Stock: {product.stock}</div>
               </div>
-              <div className="text-xs font-medium"></div>
             </div>
           ))}
         </div>
       )}
 
-      <div className="mb-4">
+      <div className="mb-4 ">
         {cart.map((item, i) => (
           <div
             key={item._id}
-            className="flex justify-between items-center border-b py-2"
+            className="flex flex-col items-center border-b border-flag-red py-4 "
           >
-            <div>
-              <div className="font-semibold">{item.name}</div>
-              <div className="text-xs text-gray-600">
-                ${item.price.toFixed(2)} x{' '}
-                <select
-                  value={item.cartQty}
-                  onChange={(e) => updateQuantity(i, Number(e.target.value))}
-                  className="border px-1 py-0.5"
-                >
-                  {Array.from({ length: item.stock }, (_, n) => (
-                    <option key={n + 1} value={n + 1}>
-                      {n + 1}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {item.imageUrl && (
+              <Image
+                src={item.imageUrl}
+                alt={item.name}
+                width={56}
+                height={56}
+                className="object-cover  w-14 h-14"
+              />
+            )}
+            <div className="uppercase flex text-xs">
+              <div className="px-2  font-semibold">{item.category} </div>
+              <div className="">{item.name}</div>
+              <div className="px-2 text-flag-blue">stock: {item.stock}</div>
             </div>
-            <div>
-              <div className="text-green font-bold">
-                ${(item.price * item.cartQty).toFixed(2)}
-              </div>
+            <div className=" ">
+              ${item.price.toFixed(2)} x{' '}
+              <select
+                value={item.cartQty}
+                onChange={(e) => updateQuantity(i, Number(e.target.value))}
+                className="border p-1"
+              >
+                {Array.from({ length: item.stock }, (_, n) => (
+                  <option key={n + 1} value={n + 1}>
+                    {n + 1}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="text-green ">
+              ${(item.price * item.cartQty).toFixed(2)}
               <button
-                className="text-red-500 text-sm"
+                className="text-red-500 text-xs px-4"
                 onClick={() => removeItem(i)}
               >
                 ❌
@@ -238,7 +285,7 @@ export default function POSPage() {
         ))}
       </div>
       <div className="w-full lg:w-auto bg-flag-blue p-6 lg:p-12 shadow-md mt-6">
-        <h3 className="uppercase text-sm font-light text-center text-white border-b pb-1">
+        <h3 className="uppercase text-md font-light text-center text-white border-b pb-1">
           Sale Summary
         </h3>
         <div className="space-y-1 mt-2 mb-2 text-white uppercase text-md font-light">
@@ -250,7 +297,7 @@ export default function POSPage() {
 
         {/* Payment Method Section */}
         <div className="mt-4 mb-4 text-white">
-          <label className="block uppercase text-xs ">Payment Method</label>
+          <label className="block uppercase text-sm ">Payment Method</label>
           <select
             value={paymentMethod}
             onChange={(e) => {
@@ -271,7 +318,7 @@ export default function POSPage() {
 
           {paymentMethod === 'cash' && (
             <div className="mt-2">
-              <label className="text-xs">Cash Received</label>
+              <label className="text-sm">Cash Received</label>
               <input
                 type="number"
                 min="0"
@@ -284,7 +331,7 @@ export default function POSPage() {
                 className="w-full p-2 mt-1 text-black"
               />
 
-              <p className="text-xs mt-1">
+              <p className="text-sm mt-1">
                 Change Due:{' '}
                 <span className="font-bold">${changeGiven.toFixed(2)}</span>
               </p>
@@ -294,7 +341,7 @@ export default function POSPage() {
           {paymentMethod === 'split' && (
             <div className=" space-y-2">
               <div>
-                <label className="text-xs">Cash Portion</label>
+                <label className="text-sm">Cash Portion</label>
                 <input
                   type="number"
                   min="0"
@@ -308,7 +355,7 @@ export default function POSPage() {
                 />
               </div>
               <div>
-                <label className="text-xs">Card Portion</label>
+                <label className="text-sm">Card Portion</label>
                 <input
                   type="number"
                   min="0"
@@ -322,7 +369,7 @@ export default function POSPage() {
                 />
               </div>
               {Math.abs(cashReceived + cardAmount - total) > 0.01 && (
-                <p className="text-xs text-yellow-300 font-semibold">
+                <p className="text-sm text-yellow-300 font-semibold">
                   Amount does not match total.
                 </p>
               )}
@@ -333,8 +380,8 @@ export default function POSPage() {
         {showConfirmModal && (
           <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black bg-opacity-60">
             <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md mx-auto text-center">
-              <h2 className="text-sm uppercase font-bold mb-3">Confirm Sale</h2>
-              <p className="uppercase text-xs mb-4 text-gray-700">
+              <h2 className="text-md uppercase font-bold mb-3">Confirm Sale</h2>
+              <p className="uppercase text-sm mb-4 text-gray-700">
                 Are you sure you want to complete this sale for{' '}
                 <span className="font-bold text-green">
                   ${total.toFixed(2)}
@@ -344,7 +391,7 @@ export default function POSPage() {
               <div className="flex justify-center space-x-4">
                 <button
                   onClick={() => setShowConfirmModal(false)}
-                  className="uppercase text-xs px-3 py-1 bg-flag-red text-white"
+                  className="uppercase text-sm px-3 py-1 bg-flag-red text-white"
                 >
                   Cancel
                 </button>
@@ -353,7 +400,7 @@ export default function POSPage() {
                     setShowConfirmModal(false);
                     await handleSale();
                   }}
-                  className="uppercase text-xs px-3 py-1 bg-flag-blue text-white"
+                  className="uppercase text-sm px-3 py-1 bg-flag-blue text-white"
                 >
                   Yes, Complete Sale
                 </button>
@@ -365,7 +412,7 @@ export default function POSPage() {
         <button
           onClick={() => setShowConfirmModal(true)}
           disabled={loading || cart.length === 0}
-          className="p-4 mb-2 block uppercase text-sm font-light text-center bg-green text-white w-full"
+          className="p-4 mb-2 block uppercase text-md font-light text-center bg-green text-white w-full"
         >
           {loading
             ? `Processing... $${total.toFixed(2)}`
@@ -375,7 +422,7 @@ export default function POSPage() {
         <button
           onClick={clearCart}
           disabled={cart.length === 0 || loading}
-          className="p-4 mb-2 block uppercase text-sm font-light text-center bg-flag-red text-white w-full"
+          className="p-4 mb-2 block uppercase text-md font-light text-center bg-flag-red text-white w-full"
         >
           Clear Sale
         </button>
