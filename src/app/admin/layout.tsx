@@ -10,10 +10,9 @@ import AdminGuard from '@/components/auth/AdminGuard';
 import { Toaster } from 'sonner';
 
 const navItems = [
-  { name: 'Dashboard', href: '/admin/dashboard' },
+  { name: 'point of sale', href: '/admin/pos' },
   { name: 'Inventory', href: '/admin/inventory' },
   { name: 'Orders', href: '/admin/orders' },
-  { name: 'POS', href: '/admin/pos' },
   { name: 'QR Codes', href: '/admin/qrcodes' },
 ];
 
@@ -28,14 +27,14 @@ export default function AdminLayout({
   return (
     <ClerkProvider>
       <AdminGuard>
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen ">
           {/* Global header used across all screen sizes */}
           <header className="sticky top-0 z-50 bg-flag-red text-white p-4 flex justify-between items-center shadow-sm">
             <Link
               href="/admin/dashboard"
               className="uppercase font-light text-md hover:underline"
             >
-              kaboom HQ
+              kaboom hq
             </Link>
 
             <button
@@ -61,7 +60,7 @@ export default function AdminLayout({
 
           {/* Slide-down menu */}
           {menuOpen && (
-            <nav className="bg-flag-red text-white p-4 shadow-md">
+            <nav className="fixed top-12 left-0 right-0 z-40 bg-flag-red text-white p-4 shadow-md">
               <div className="flex flex-col space-y-2">
                 {navItems.map(({ name, href }) => (
                   <Link
@@ -70,7 +69,7 @@ export default function AdminLayout({
                     onClick={() => setMenuOpen(false)}
                     className={clsx(
                       'uppercase text-sm px-3 py-2 rounded hover:bg-black-100 transition',
-                      pathname === href && 'bg-gray-900'
+                      pathname === href && 'bg-flag-blue'
                     )}
                   >
                     {name}
