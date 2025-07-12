@@ -88,7 +88,9 @@ const Home = async () => {
   return (
     <div>
       <Header />
-      <VanillaShedViewer />
+      <div className="pt-20">
+        <VanillaShedViewer />
+      </div>
       <Footer />
       <Script
         id="category-jsonld"

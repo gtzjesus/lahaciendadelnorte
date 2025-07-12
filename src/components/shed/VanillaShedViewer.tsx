@@ -14,20 +14,26 @@ export default function VanillaShedViewer() {
     const width = containerRef.current.clientWidth;
     const height = 600;
 
+    // Scene setup
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#f0f0f0');
 
-    const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    camera.position.set(4, 3, 6);
+    // Camera setup - place it further back to see more
+    const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
+    camera.position.set(3, 3, 3);
 
+    // Renderer setup
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(window.devicePixelRatio);
     containerRef.current.appendChild(renderer.domElement);
 
+    // Controls setup
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
+    controls.enableDamping = false; // Disable damping for debugging
+    controls.enableZoom = false;
+    controls.enablePan = false;
+    controls.update();
 
     // Lighting
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
@@ -48,18 +54,47 @@ export default function VanillaShedViewer() {
     ground.receiveShadow = true;
     scene.add(ground);
 
+    // Debug box to confirm rendering works
+    // const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+    // const boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    // const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+    // scene.add(boxMesh);
+
     // Load model
     const loader = new GLTFLoader();
     loader.load(
       '/3D/shed.glb',
       (gltf) => {
-        gltf.scene.traverse((child) => {
+        const model = gltf.scene;
+        console.log('Model loaded:', model);
+
+        model.traverse((child) => {
           if ((child as THREE.Mesh).isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
           }
         });
-        scene.add(gltf.scene);
+
+        model.position.y -= 1;
+
+        // Calculate bounding box and log
+        const box = new THREE.Box3().setFromObject(model);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+
+        console.log('Bounding box size:', size);
+        console.log('Bounding box center:', center);
+
+        // Temporarily comment out centering to see if model is visible
+        // model.position.sub(center);
+
+        // Scale safely
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scaleFactor = maxDim > 0 ? 5 / maxDim : 1;
+        model.scale.setScalar(scaleFactor);
+        console.log('Scale factor:', scaleFactor);
+
+        scene.add(model);
       },
       undefined,
       (error) => {
@@ -67,7 +102,7 @@ export default function VanillaShedViewer() {
       }
     );
 
-    // Animate
+    // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
@@ -75,6 +110,7 @@ export default function VanillaShedViewer() {
     };
     animate();
 
+    // Handle resizing
     const handleResize = () => {
       const newWidth = containerRef.current!.clientWidth;
       camera.aspect = newWidth / height;
@@ -86,14 +122,16 @@ export default function VanillaShedViewer() {
     return () => {
       window.removeEventListener('resize', handleResize);
       renderer.dispose();
-      containerRef.current?.removeChild(renderer.domElement);
+      if (containerRef.current?.contains(renderer.domElement)) {
+        containerRef.current.removeChild(renderer.domElement);
+      }
     };
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className="w-full h-[600px] rounded-lg overflow-hidden shadow-lg"
+      className="w-full h-[600px] roundged-l overflow-hidden "
     />
   );
 }
