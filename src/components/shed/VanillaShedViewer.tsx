@@ -11,15 +11,14 @@ export default function VanillaShedViewer() {
     if (!container.current) return;
 
     const width = container.current.clientWidth;
-    const height = 600;
+    const height = 700;
 
     // Scene setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#f0f0f0');
 
     // Camera setup
     const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 2000);
-    camera.position.set(0, 2, 7);
+    camera.position.set(0, 3, 9);
     camera.lookAt(0, 0, 0);
 
     // Renderer setup
@@ -102,7 +101,5 @@ export default function VanillaShedViewer() {
     };
   }, []);
 
-  return (
-    <div ref={container} className="w-full h-[600px] rounded-lg bg-white" />
-  );
+  return <div ref={container} className="" />;
 }

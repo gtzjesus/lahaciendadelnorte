@@ -101,15 +101,15 @@ const Header = () => {
                 priority
               />
             </Link>
-            <Link
-              href="/"
-              className={`uppercase barlow-condensed-regular text-sm ${
-                scrolled ? 'text-white' : 'text-white'
-              }`}
-            >
-              elpasokaboom
-            </Link>
           </div>
+          <Link
+            href="/"
+            className={`uppercase barlow-condensed-regular text-sm ${
+              scrolled ? 'text-black' : 'text-black'
+            }`}
+          >
+            la hacienda del norte
+          </Link>
         </div>
 
         {/* Right side: Search, Cart, and Auth Buttons */}
@@ -133,13 +133,13 @@ const Header = () => {
         >
           {/* Top Bar (first line) */}
           <div
-            className={`w-5 h-0.5 ${scrolled ? 'bg-white' : 'bg-white'} transition-all duration-300 ease-in-out transform ${
+            className={`w-5 h-0.5 ${scrolled ? 'bg-black' : 'bg-black'} transition-all duration-300 ease-in-out transform ${
               isMenuOpen ? 'rotate-45 translate-y-0.5' : ''
             }`}
           />
           {/* Bottom Bar (third line) */}
           <div
-            className={`w-5 h-0.5 ${scrolled ? 'bg-white' : 'bg-white'} transition-all duration-300 ease-in-out transform ${
+            className={`w-5 h-0.5 ${scrolled ? 'bg-black' : 'bg-black'} transition-all duration-300 ease-in-out transform ${
               isMenuOpen ? '-rotate-45 -translate-y-0.5' : ''
             }`}
           />
