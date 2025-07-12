@@ -1,10 +1,8 @@
 // app/(store)/page.tsx
 import type { Metadata } from 'next';
 import { client } from '@/sanity/lib/client';
-import HeroSection from '@/components/common/HeroSection';
 import Footer from '@/components/common/Footer';
 import Header from '@/components/common/header';
-import Background from '@/components/common/Background';
 import { Category } from '@/types';
 import Script from 'next/script';
 import VanillaShedViewer from '@/components/shed/VanillaShedViewer';
