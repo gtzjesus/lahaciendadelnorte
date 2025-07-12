@@ -1,14 +1,13 @@
 // app/(store)/page.tsx
-
+import type { Metadata } from 'next';
 import { client } from '@/sanity/lib/client';
 import HeroSection from '@/components/common/HeroSection';
-import BlackFridayBanner from '@/components/common/BlackFridayBanner';
 import Footer from '@/components/common/Footer';
-import Categories from '@/components/categories/Categories';
 import Header from '@/components/common/header';
 import Background from '@/components/common/Background';
 import { Category } from '@/types';
 import Script from 'next/script';
+import ShedViewer from '@/components/shed/ShedViewer';
 
 /**
  * Home Component
@@ -29,8 +28,6 @@ import Script from 'next/script';
  *
  * @returns {JSX.Element} The complete home page layout with all major sections.
  */
-import type { Metadata } from 'next';
-import PickupLocation from '@/components/orders/PickupLocation';
 
 export const metadata: Metadata = {
   title: 'ElPasoKaBoom - Fireworks & Party Supplies',
@@ -95,11 +92,8 @@ const Home = async () => {
       <Header />
       <Background />
       <HeroSection />
-      <BlackFridayBanner />
-      <Categories categories={categories} />
-      <PickupLocation />
+      <ShedViewer />
       <Footer />
-
       <Script
         id="category-jsonld"
         type="application/ld+json"
