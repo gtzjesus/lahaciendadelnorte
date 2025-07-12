@@ -8,7 +8,6 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import AuthButtons from '../auth/AuthButtons'; // Import the AuthButtons component
 import CartButton from '../basket/CartButton'; // Import CartButton
-import SearchButton from '../search/SearchButton';
 
 const Header = () => {
   const { user } = useUser();
@@ -114,7 +113,6 @@ const Header = () => {
 
         {/* Right side: Search, Cart, and Auth Buttons */}
         <div className="flex items-center space-x-5 font-bold px-5">
-          <SearchButton scrolled={scrolled} />
           {/* Conditionally render CartButton only if the pathname is not '/basket' */}
           {pathname !== '/basket' && (
             <CartButton itemCount={itemCount} scrolled={scrolled} />

@@ -33,7 +33,7 @@ const config: Config = {
         // Static custom colors
         'custom-gray': '#D5D5D5',
         pearl: '#F5F5F5',
-        'flag-red': '#B22234',
+        'flag-red': '#F3EFE3',
         'flag-blue': '#0A3161',
         green: '#2E8B57',
         yellow: '#FFEB3B',
