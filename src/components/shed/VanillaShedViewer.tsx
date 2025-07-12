@@ -3,39 +3,36 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 export default function VanillaShedViewer() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!container.current) return;
 
-    const width = containerRef.current.clientWidth;
+    const width = container.current.clientWidth;
     const height = 600;
 
     // Scene setup
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#f0f0f0');
 
-    // Camera setup - place it further back to see more
-    const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
-    camera.position.set(3, 3, 3);
+    // Camera setup
+    const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 2000);
+    camera.position.set(0, 2, 5);
+    camera.lookAt(0, 0, 0);
 
     // Renderer setup
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    containerRef.current.appendChild(renderer.domElement);
 
-    // Controls setup
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = false; // Disable damping for debugging
-    controls.enableZoom = false;
-    controls.enablePan = false;
-    controls.update();
+    // Clear any existing canvas in container to prevent duplicates
+    while (container.current.firstChild) {
+      container.current.removeChild(container.current.firstChild);
+    }
+    container.current.appendChild(renderer.domElement);
 
-    // Lighting
+    // Lights
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
     hemiLight.position.set(0, 20, 0);
     scene.add(hemiLight);
@@ -44,57 +41,33 @@ export default function VanillaShedViewer() {
     dirLight.position.set(5, 10, 7.5);
     scene.add(dirLight);
 
-    // Floor
-    const ground = new THREE.Mesh(
-      new THREE.PlaneGeometry(100, 100),
-      new THREE.MeshStandardMaterial({ color: 0xeeeeee })
-    );
-    ground.rotation.x = -Math.PI / 2;
-    ground.position.y = -1;
-    ground.receiveShadow = true;
-    scene.add(ground);
-
-    // Debug box to confirm rendering works
-    // const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-    // const boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-    // const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
-    // scene.add(boxMesh);
-
     // Load model
     const loader = new GLTFLoader();
+    const pivot = new THREE.Group();
+    scene.add(pivot);
+
     loader.load(
       '/3D/shed.glb',
       (gltf) => {
         const model = gltf.scene;
-        console.log('Model loaded:', model);
 
-        model.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
-
-        model.position.y -= 1;
-
-        // Calculate bounding box and log
+        // Center and scale model
         const box = new THREE.Box3().setFromObject(model);
         const size = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
 
-        console.log('Bounding box size:', size);
-        console.log('Bounding box center:', center);
-
-        // Temporarily comment out centering to see if model is visible
-        // model.position.sub(center);
-
-        // Scale safely
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scaleFactor = maxDim > 0 ? 5 / maxDim : 1;
-        model.scale.setScalar(scaleFactor);
-        console.log('Scale factor:', scaleFactor);
+        const scale = 4 / (maxDim || 1);
+        model.scale.setScalar(scale);
 
-        scene.add(model);
+        // Center model on origin
+        model.position.sub(center.multiplyScalar(scale));
+
+        // Position model slightly down so it rests on “floor”
+        model.position.y = -1;
+
+        // Add model to pivot for rotation
+        pivot.add(model);
       },
       undefined,
       (error) => {
@@ -102,36 +75,35 @@ export default function VanillaShedViewer() {
       }
     );
 
-    // Animation loop
+    // Animation loop: spin pivot slowly on Y axis
     const animate = () => {
       requestAnimationFrame(animate);
-      controls.update();
+      pivot.rotation.y += 0.005;
       renderer.render(scene, camera);
     };
     animate();
 
-    // Handle resizing
+    // Handle window resize
     const handleResize = () => {
-      const newWidth = containerRef.current!.clientWidth;
+      if (!container.current) return;
+      const newWidth = container.current.clientWidth;
       camera.aspect = newWidth / height;
       camera.updateProjectionMatrix();
       renderer.setSize(newWidth, height);
     };
     window.addEventListener('resize', handleResize);
 
+    // Cleanup on unmount
     return () => {
       window.removeEventListener('resize', handleResize);
       renderer.dispose();
-      if (containerRef.current?.contains(renderer.domElement)) {
-        containerRef.current.removeChild(renderer.domElement);
+      if (container.current?.contains(renderer.domElement)) {
+        container.current.removeChild(renderer.domElement);
       }
     };
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-[600px] roundged-l overflow-hidden "
-    />
+    <div ref={container} className="w-full h-[600px] rounded-lg bg-white" />
   );
 }
