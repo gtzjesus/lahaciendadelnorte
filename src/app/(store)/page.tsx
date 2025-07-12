@@ -7,7 +7,7 @@ import Header from '@/components/common/header';
 import Background from '@/components/common/Background';
 import { Category } from '@/types';
 import Script from 'next/script';
-import ShedViewer from '@/components/shed/ShedViewer';
+import VanillaShedViewer from '@/components/shed/VanillaShedViewer';
 
 /**
  * Home Component
@@ -90,9 +90,7 @@ const Home = async () => {
   return (
     <div>
       <Header />
-      <Background />
-      <HeroSection />
-      <ShedViewer />
+      <VanillaShedViewer />
       <Footer />
       <Script
         id="category-jsonld"
