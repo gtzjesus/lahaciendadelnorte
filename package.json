@@ -38,6 +38,7 @@
     "html-to-image": "^1.11.13",
     "html5-qrcode": "^2.3.8",
     "lucide-react": "^0.462.0",
+    "meshoptimizer": "^0.24.0",
     "motion": "^11.13.1",
     "next": "^15.2.0",
     "next-sanity": "^9.8.19",
