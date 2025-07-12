@@ -19,7 +19,7 @@ export default function VanillaShedViewer() {
 
     // Camera setup
     const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 2000);
-    camera.position.set(0, 2, 5);
+    camera.position.set(0, 2, 7);
     camera.lookAt(0, 0, 0);
 
     // Renderer setup
@@ -64,7 +64,6 @@ export default function VanillaShedViewer() {
         model.position.sub(center.multiplyScalar(scale));
 
         // Position model slightly down so it rests on “floor”
-        model.position.y = -1;
 
         // Add model to pivot for rotation
         pivot.add(model);
@@ -78,7 +77,7 @@ export default function VanillaShedViewer() {
     // Animation loop: spin pivot slowly on Y axis
     const animate = () => {
       requestAnimationFrame(animate);
-      pivot.rotation.y += 0.005;
+      pivot.rotation.y += 0.01;
       renderer.render(scene, camera);
     };
     animate();
