@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { MeshoptDecoder } from 'meshoptimizer';
 
 export default function VanillaShedViewer() {
   const container = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!container.current) return;
@@ -30,7 +31,6 @@ export default function VanillaShedViewer() {
     scene.add(dirLight);
 
     const loader = new GLTFLoader();
-    // ⬇️ Set Meshopt decoder BEFORE loading
     loader.setMeshoptDecoder(MeshoptDecoder);
 
     const pivot = new THREE.Group();
@@ -43,7 +43,6 @@ export default function VanillaShedViewer() {
     ];
 
     const models: THREE.Object3D[] = [];
-
     let currentIndex = 0;
     let switchTimer = 0;
     let rotationSpeed = 0.01;
@@ -63,6 +62,7 @@ export default function VanillaShedViewer() {
             const scale = 4 / Math.max(size.x, size.y, size.z);
             model.scale.setScalar(scale);
             model.position.sub(center.multiplyScalar(scale));
+            model.visible = false;
             resolve(model);
           },
           undefined,
@@ -71,21 +71,24 @@ export default function VanillaShedViewer() {
       });
     };
 
-    loadModel(modelsURLs[0])
-      .then((model) => {
-        model.visible = true;
-        pivot.add(model);
-        models.push(model);
-        animate();
+    Promise.all(modelsURLs.map(loadModel))
+      .then((loadedModels) => {
+        loadedModels.forEach((model) => {
+          pivot.add(model);
+          models.push(model);
+        });
 
-        // Preload others
-        for (let i = 1; i < modelsURLs.length; i++) {
-          loadModel(modelsURLs[i]).then((nextModel) => {
-            nextModel.visible = false;
-            pivot.add(nextModel);
-            models.push(nextModel);
-          });
-        }
+        // 👇 Force render each model once to warm up the GPU
+        models.forEach((model) => {
+          model.visible = true;
+          renderer.render(scene, camera); // GPU upload
+          model.visible = false;
+        });
+
+        models[0].visible = true;
+
+        setLoading(false);
+        animate();
       })
       .catch(console.error);
 
@@ -129,5 +132,17 @@ export default function VanillaShedViewer() {
     };
   }, []);
 
-  return <div ref={container} className="" />;
+  return (
+    <div className="relative">
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70 z-10">
+          <span className="uppercase text-black text-center text-xl animate-pulse">
+            La Hacienda Del Norte Custom Storage <br />
+            Loading 3D...
+          </span>
+        </div>
+      )}
+      <div ref={container} className="w-full h-[700px]" />
+    </div>
+  );
 }
