@@ -1,8 +1,8 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -30,10 +30,11 @@ export default function POSPage() {
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'split'>(
     'card'
   );
+  const [saleSuccess, setSaleSuccess] = useState<null | string>(null);
+
   const [cashReceived, setCashReceived] = useState<number>(0);
   const [cardAmount, setCardAmount] = useState<number>(0);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const router = useRouter();
 
   const totalItems = cart.reduce((sum, item) => sum + item.cartQty, 0);
   const subtotal = cart.reduce(
@@ -45,6 +46,8 @@ export default function POSPage() {
   const round2 = (n: number) => Math.round(n * 100) / 100;
   const changeGiven =
     paymentMethod === 'cash' ? Math.max(cashReceived - total, 0) : 0;
+
+  const router = useRouter();
 
   useEffect(() => {
     if (paymentMethod === 'split') {
@@ -184,9 +187,12 @@ export default function POSPage() {
       if (!res.ok || !data.success) {
         alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
       } else {
-        alert(`✅ Sale complete! Order #: ${data.orderNumber}`);
         clearCart();
-        router.push('/admin/orders');
+        setSaleSuccess(data.orderNumber); // 💡 Show full-screen overlay
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 5000); // Reload after 5 seconds
       }
     } catch (err: any) {
       alert(`❌ ${err.message || 'Unknown error'}`);
@@ -209,32 +215,41 @@ export default function POSPage() {
         />
       </div>
 
-      {filteredResults.length > 0 && (
-        <div className="uppercase text-md border rounded shadow-md bg-white max-h-60 overflow-y-auto mb-4 ">
-          {filteredResults.map((product) => (
-            <div
-              key={product._id}
-              onClick={() => addToCart(product)}
-              className="cursor-pointer flex items-center space-x-3 p-2 border-b hover:bg-gray-100 transition"
-            >
-              {product.imageUrl && (
-                <Image
-                  src={product.imageUrl}
-                  alt={product.name}
-                  width={48}
-                  height={48}
-                  className="object-cover rounded w-12 h-12"
-                />
-              )}
-              <div className="flex text-xs">
-                <div className="font-semibold">{product.name}</div>
-                <div className="px-2">|</div>
-                <div className="text-flag-blue">{product.category} </div>
-              </div>
+      {filteredResults.map((product) => (
+        <div
+          key={product._id}
+          onClick={() => product.stock > 0 && addToCart(product)}
+          className={`cursor-pointer flex items-center space-x-3 p-2 border-b transition ${
+            product.stock > 0
+              ? 'hover:bg-gray-100'
+              : 'opacity-60 cursor-not-allowed'
+          }`}
+        >
+          {product.imageUrl && (
+            <Image
+              src={product.imageUrl}
+              alt={product.name}
+              width={48}
+              height={48}
+              className="object-cover rounded w-12 h-12"
+            />
+          )}
+          <div className="flex flex-col text-xs uppercase">
+            <div className="font-semibold">
+              {product.name} <strong className="px-2">|</strong>
+              <strong className="text-green">${product.price}</strong>
             </div>
-          ))}
+            <div className="flex items-center space-x-2">
+              <span className="text-flag-blue">{product.category}</span>
+              {product.stock === 0 && (
+                <p className="text-red-500 font-semibold text-xs ml-2">
+                  OUT OF STOCK
+                </p>
+              )}
+            </div>
+          </div>
         </div>
-      )}
+      ))}
 
       <div className="mb-4 ">
         {cart.map((item, i) => (
@@ -448,6 +463,24 @@ export default function POSPage() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+      {saleSuccess && (
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-flag-blue bg-opacity-95 text-white animate-fadeIn space-y-6 p-6">
+          <h2 className="text-4xl font-bold text-yellow uppercase">
+            Sale Success!
+          </h2>
+          <p className="text-md uppercase">Order: {saleSuccess}</p>
+
+          <button
+            onClick={async () => {
+              console.log('Navigating to /admin/orders');
+              await router.push('/admin/orders');
+            }}
+            className="px-6 py-3 bg-flag-red text-white font-bold  hover:bg-yellow-300 transition uppercase text-xs"
+          >
+            View order
+          </button>
         </div>
       )}
     </div>

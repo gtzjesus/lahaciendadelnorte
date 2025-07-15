@@ -27,6 +27,20 @@ const config: Config = {
       fontFamily: {
         anton: ['Anton', 'sans-serif'],
       },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        fadeOut: {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
+      },
+      animation: {
+        fadeIn: 'fadeIn 1s ease-out forwards',
+        fadeOut: 'fadeOut 1s ease-in forwards',
+      },
 
       // Custom colors including CSS variable-based themes and static colors
       colors: {
