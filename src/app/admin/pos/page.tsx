@@ -226,12 +226,9 @@ export default function POSPage() {
                   className="object-cover rounded w-12 h-12"
                 />
               )}
-              <div className="flex text-xs">
-                <div className="">{product.name}</div>
-                <div className="px-2  font-semibold italic">
-                  {product.category}{' '}
-                </div>
-                <div className=" text-flag-blue">Stock: {product.stock}</div>
+              <div className="flex text-sm">
+                <div className="px-2  font-semibold italic">{product.name}</div>
+                <div className="">{product.category} </div>
               </div>
             </div>
           ))}
@@ -250,20 +247,20 @@ export default function POSPage() {
                 alt={item.name}
                 width={56}
                 height={56}
-                className="object-cover  w-14 h-14"
+                className="object-cover  w-16 h-16"
               />
             )}
-            <div className="uppercase flex text-xs">
-              <div className="px-2  font-semibold">{item.category} </div>
+            <div className="my-2 uppercase flex text-sm">
               <div className="">{item.name}</div>
-              <div className="px-2 text-flag-blue">stock: {item.stock}</div>
+              <div className="">{item.category} </div>
             </div>
-            <div className=" ">
-              ${item.price.toFixed(2)} x{' '}
+            <div className="uppercase text-sm">
+              <div className="px-2 text-flag-blue">stock: {item.stock}</div>$
+              {item.price.toFixed(2)} x{' '}
               <select
                 value={item.cartQty}
                 onChange={(e) => updateQuantity(i, Number(e.target.value))}
-                className="border p-1"
+                className="border my-2"
               >
                 {Array.from({ length: item.stock }, (_, n) => (
                   <option key={n + 1} value={n + 1}>
@@ -275,7 +272,7 @@ export default function POSPage() {
             <div className="text-green ">
               ${(item.price * item.cartQty).toFixed(2)}
               <button
-                className="text-red-500 text-xs px-4"
+                className="text-red-500 text-sm px-4"
                 onClick={() => removeItem(i)}
               >
                 ❌
