@@ -226,9 +226,10 @@ export default function POSPage() {
                   className="object-cover rounded w-12 h-12"
                 />
               )}
-              <div className="flex text-sm">
-                <div className="px-2  font-semibold italic">{product.name}</div>
-                <div className="">{product.category} </div>
+              <div className="flex text-xs">
+                <div className="font-semibold">{product.name}</div>
+                <div className="px-2">|</div>
+                <div className="text-flag-blue">{product.category} </div>
               </div>
             </div>
           ))}
@@ -250,9 +251,9 @@ export default function POSPage() {
                 className="object-cover  w-16 h-16"
               />
             )}
-            <div className="my-2 uppercase flex text-sm">
-              <div className="">{item.name}</div>
-              <div className="">{item.category} </div>
+            <div className="my-2 uppercase flex text-xs">
+              <div className="px-2">{item.name}</div> <div className="">|</div>
+              <div className="px-2">{item.category} </div>
             </div>
             <div className="uppercase text-sm">
               <div className="px-2 text-flag-blue">stock: {item.stock}</div>$
