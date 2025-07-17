@@ -11,12 +11,17 @@ export async function getAllOrders() {
       products[] {
         quantity,
         itemNumber,
+        price,
         product->{
           _id,
           name,
           slug,
           image,
-          price
+          itemNumber,
+          stock,
+          category->{
+            title
+          }
         }
       },
       totalPrice,
@@ -26,10 +31,7 @@ export async function getAllOrders() {
       orderType,
       paymentStatus,
       pickupStatus,
-      orderDate,
-
-      // ✅ Campos de pago agregados
-   
+      orderDate
     }
   `;
 

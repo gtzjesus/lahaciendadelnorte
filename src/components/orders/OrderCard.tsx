@@ -33,16 +33,16 @@ const OrderCard: React.FC<OrderCardProps> = ({
     : order.products?.slice(0, 3);
 
   return (
-    <div className="bg-white border border-flag-blue p-2 shadow-sm overflow-hidden">
+    <div className="bg-flag-red border border-black p-2 shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="p-4 border-b border-flag-blue">
+      <div className="p-4 border-b border-black">
         <div className="flex flex-row justify-between">
           <div>
             <p className="text-xs uppercase font-light font-mono">
               order number
             </p>
             <span
-              className="font-mono uppercase font-light text-xs text-flag-blue dark:text-green"
+              className="font-mono uppercase font-light text-xs text-black dark:text-green"
               title={order.orderNumber || ''}
             >
               {order.orderNumber?.slice(-6)}
@@ -50,7 +50,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
           </div>
           <div>
             <p className="text-xs uppercase font-light font-mono">sale date</p>
-            <p className="font-light text-xs mt-1 text-flag-red">
+            <p className="font-light text-xs mt-1 text-black">
               {order.orderDate
                 ? new Date(order.orderDate).toLocaleDateString()
                 : 'n/a'}
@@ -79,7 +79,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
             return (
               <div
                 key={baseKey}
-                className="flex flex-col border-b border-flag-blue last:border-b-0"
+                className="flex flex-col border-b border-black last:border-b-0"
               >
                 <div className="flex items-center gap-6">
                   {prod?.image && slug && (
@@ -98,35 +98,46 @@ const OrderCard: React.FC<OrderCardProps> = ({
                     </Link>
                   )}
                   <div>
-                    {slug ? (
-                      <Link
-                        href={`/product/${slug}`}
-                        className="text-xs uppercase text-flag-red font-ligh mt-2 hover:underline"
-                      >
-                        {prod?.name}
-                      </Link>
-                    ) : (
-                      <p className="text-xs uppercase text-gray-600 font-light mt-2">
-                        {prod?.name}
-                      </p>
-                    )}
-                    {typeof prod?.price === 'number' && (
-                      <p className="text-xs uppercase font-light text-gray-600">
+                    <div className="flex">
+                      {slug ? (
+                        <Link
+                          href={`/product/${slug}`}
+                          className="text-xs uppercase text-black font-light  hover:underline"
+                        >
+                          {prod?.name}
+                        </Link>
+                      ) : (
+                        <p className="text-xs uppercase text-gray-600 font-light ">
+                          {prod?.name}
+                        </p>
+                      )}
+                      <p className="px-2"> </p>
+
+                      {prod?.category?.title && (
+                        <p className="text-xs uppercase font-light text-gray-600">
+                          {prod.category.title}
+                        </p>
+                      )}
+                    </div>
+
+                    {typeof product?.price === 'number' && (
+                      <p className="text-xs my-1 uppercase font-light text-gray-600">
                         price:{' '}
-                        {formatCurrency(prod.price, order.currency || 'usd')}
+                        {formatCurrency(product.price, order.currency || 'usd')}
                       </p>
                     )}
-                    {prod?.itemNumber && (
+
+                    {/* {prod?.itemNumber && (
                       <p className="text-xs uppercase font-light text-gray-600">
                         item #: {prod.itemNumber}
                       </p>
-                    )}
+                    )} */}
                     {typeof prod?.stock === 'number' && (
                       <p className="text-xs uppercase font-light text-gray-600">
                         stock: {prod.stock}
                       </p>
                     )}
-                    <p className="text-xs uppercase font-light text-flag-blue">
+                    <p className="text-xs uppercase font-light text-black">
                       quantity: {product.quantity ?? 'n/a'}
                     </p>
                   </div>
@@ -138,18 +149,18 @@ const OrderCard: React.FC<OrderCardProps> = ({
           {order.products?.length > 3 && (
             <button
               onClick={() => setIsExpanded((prev) => !prev)}
-              className="mt-2 uppercase text-xs text-white border p-2 bg-flag-blue"
+              className="mt-6 uppercase text-xs text-black border p-2 bg-flag-blue border-black"
             >
               {isExpanded
-                ? 'Hide fireworks'
-                : `expand fireworks (${order.products.length - 3})`}
+                ? 'Hide items'
+                : `expand items (${order.products.length - 3})`}
             </button>
           )}
         </div>
       </div>
 
       {/* Totals & Payment */}
-      <div className=" border-t border-flag-blue font-mono p-2 flex flex-col space-y-1">
+      <div className=" font-mono p-2 flex flex-col space-y-1">
         {(order.paymentMethod ||
           typeof order.cashReceived === 'number' ||
           typeof order.cardAmount === 'number' ||
@@ -221,7 +232,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
             )}
 
             {typeof order.changeGiven === 'number' && (
-              <div className="flex justify-between pb-2 border-flag-blue">
+              <div className="flex justify-between pb-2 border-black">
                 <p className="uppercase text-xs text-gray-600">change given:</p>
                 <p className="font-bold text-xs">
                   {formatCurrency(order.changeGiven, order.currency || 'usd')}
@@ -232,7 +243,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
         )}
 
         {/* Status */}
-        <div className=" flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2 border-t pt-2 border-flag-blue">
+        <div className=" flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2 border-t pt-2 border-black">
           <p className="text-xs font-light uppercase text-gray-600">
             payment status:{' '}
             <span
@@ -272,12 +283,12 @@ const OrderCard: React.FC<OrderCardProps> = ({
 
       {/* View Order Button */}
       {showDetailButton && (
-        <div className="p-4 border-t border-flag-blue flex justify-center">
+        <div className="p-4 border-t border-black flex justify-center">
           <Link
             href={`/admin/orders/${order.orderNumber}`}
-            className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-blue text-white w-full"
+            className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-blue text-black w-full"
           >
-            View firework Order
+            View Order
           </Link>
         </div>
       )}

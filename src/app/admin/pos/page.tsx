@@ -180,7 +180,9 @@ export default function POSPage() {
         data = JSON.parse(raw);
       } catch (jsonError) {
         console.error('❌ Failed to parse JSON:', jsonError);
-        alert('❌ Server did not return valid JSON.');
+        alert(
+          '❌ Server did not return valid JSON. Please try again to complete sale.'
+        );
         return;
       }
 
