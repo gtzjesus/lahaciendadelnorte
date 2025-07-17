@@ -470,7 +470,7 @@ export default function POSPage() {
           <h2 className="text-4xl font-bold text-yellow uppercase">
             Sale Success!
           </h2>
-          <p className="text-md uppercase">Order: {saleSuccess}</p>
+          <p className="text-md uppercase">Order #: {saleSuccess}</p>
 
           <button
             onClick={async () => {

@@ -4,19 +4,10 @@ import { decreaseProductStock } from '@/sanity/lib/products/decreaseProductStock
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 type OrderItem = {
-  productId: string; // Must be in format "productId-size"
+  productId: string;
   quantity: number;
   price: number;
 };
-
-function generateOrderCode(length = 6): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-}
 
 export async function POST(req: Request) {
   try {
@@ -38,7 +29,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ Validate item format
     for (const item of items) {
       if (
         typeof item.productId !== 'string' ||
@@ -70,20 +60,33 @@ export async function POST(req: Request) {
     const tax = +(subtotal * 0.0825).toFixed(2);
     const totalPrice = subtotal + tax;
 
-    const orderNumber = generateOrderCode();
-    const clerkUserId = 'store-user-123'; // Replace later with real user
+    // ✅ Ensure counter doc exists
+    await backendClient.createIfNotExists({
+      _id: 'order-counter-global',
+      _type: 'orderCounter',
+      lastOrderNumber: 0,
+    });
+
+    // 🔢 Increment counter safely
+    const orderCounter = await backendClient
+      .patch('order-counter-global')
+      .inc({ lastOrderNumber: 1 })
+      .commit({ autoGenerateArrayKeys: true });
+
+    const orderNumber = orderCounter.lastOrderNumber.toString();
+
+    const clerkUserId = 'store-user-123';
     const customerName = 'Walk-in Customer';
     const email = 'walkin@example.com';
 
-    // 🔄 Decrease variant stock
     for (const item of items) {
       const [productId, variantSize] = item.productId.split('-');
       await decreaseProductStock(productId, variantSize, item.quantity);
     }
 
-    // ✅ Format products for order doc
     const productsForSanity = items.map((item) => {
       const [productId] = item.productId.split('-');
+
       return {
         _key: crypto.randomUUID(),
         _type: 'object',

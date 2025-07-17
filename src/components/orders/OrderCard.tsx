@@ -32,8 +32,6 @@ const OrderCard: React.FC<OrderCardProps> = ({
     ? order.products
     : order.products?.slice(0, 3);
 
-  console.log('Order data:', order);
-
   return (
     <div className="bg-white border border-flag-blue p-2 shadow-sm overflow-hidden">
       {/* Header */}
@@ -68,13 +66,19 @@ const OrderCard: React.FC<OrderCardProps> = ({
         </p>
 
         <div>
-          {visibleProducts?.map((product: any) => {
+          {visibleProducts?.map((product: any, index: number) => {
             const prod = product.product;
             const slug = prod?.slug?.current;
 
+            const baseKey = `${prod?._id ?? 'noid'}-${product._key ?? index}`;
+
+            if (!prod?._id && !product._key) {
+              console.warn('⚠️ Product is missing both _id and _key:', product);
+            }
+
             return (
               <div
-                key={prod?._id || product._key}
+                key={baseKey}
                 className="flex flex-col border-b border-flag-blue last:border-b-0"
               >
                 <div className="flex items-center gap-6">
@@ -131,7 +135,6 @@ const OrderCard: React.FC<OrderCardProps> = ({
             );
           })}
 
-          {/* Expand / Collapse Button */}
           {order.products?.length > 3 && (
             <button
               onClick={() => setIsExpanded((prev) => !prev)}
