@@ -300,10 +300,10 @@ export default function POSPage() {
         ))}
       </div>
       <div className="w-full lg:w-auto bg-flag-blue p-6 lg:p-12 shadow-md mt-6">
-        <h3 className="uppercase text-md font-light text-center text-white border-b pb-1">
+        <h3 className="uppercase text-lg font-bold text-center text-black border-b pb-1">
           Sale Summary
         </h3>
-        <div className="space-y-1 mt-2 mb-2 text-white uppercase text-md font-light">
+        <div className="space-y-1 mt-2 mb-2 text-black uppercase text-md font-bold">
           <p>Total Items: {totalItems}</p>
           <p>Subtotal: ${subtotal.toFixed(2)}</p>
           <p>Tax: ${tax.toFixed(2)}</p>
@@ -311,7 +311,7 @@ export default function POSPage() {
         </div>
 
         {/* Payment Method Section */}
-        <div className="mt-4 mb-4 text-white">
+        <div className="mt-4 mb-4 text-black font-bold">
           <label className="block uppercase text-sm ">Payment Method</label>
           <select
             value={paymentMethod}
@@ -406,7 +406,7 @@ export default function POSPage() {
               <div className="flex justify-center space-x-4">
                 <button
                   onClick={() => setShowConfirmModal(false)}
-                  className="uppercase text-sm px-3 py-1 bg-flag-red text-white"
+                  className="uppercase text-sm px-3 py-1 bg-flag-red text-black"
                 >
                   Cancel
                 </button>
@@ -415,7 +415,7 @@ export default function POSPage() {
                     setShowConfirmModal(false);
                     await handleSale();
                   }}
-                  className="uppercase text-sm px-3 py-1 bg-flag-blue text-white"
+                  className="uppercase text-sm px-3 py-1 bg-flag-blue text-black"
                 >
                   Yes, Complete Sale
                 </button>
@@ -427,7 +427,7 @@ export default function POSPage() {
         <button
           onClick={() => setShowConfirmModal(true)}
           disabled={loading || cart.length === 0}
-          className="p-4 mb-2 block uppercase text-md font-light text-center bg-green text-white w-full"
+          className="p-4 mb-2 block uppercase text-md font-bold text-center bg-green text-black w-full"
         >
           {loading
             ? `Processing... $${total.toFixed(2)}`
@@ -437,7 +437,7 @@ export default function POSPage() {
         <button
           onClick={clearCart}
           disabled={cart.length === 0 || loading}
-          className="p-4 mb-2 block uppercase text-md font-light text-center bg-flag-red text-white w-full"
+          className="p-4 mb-2 block uppercase text-md font-bold text-center bg-flag-red text-black w-full"
         >
           Clear Sale
         </button>

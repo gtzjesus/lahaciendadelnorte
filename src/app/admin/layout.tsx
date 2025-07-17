@@ -26,7 +26,7 @@ export default function AdminLayout({
     <ClerkProvider>
       <div className="flex flex-col min-h-screen ">
         {/* Global header used across all screen sizes */}
-        <header className="sticky top-0 z-50 bg-flag-red text-white p-4 flex justify-between items-center shadow-sm">
+        <header className="sticky top-0 z-50 bg-flag-red text-black p-4 flex justify-between items-center shadow-sm">
           <Link
             href="/admin/pos"
             className="uppercase font-light text-md hover:underline"
@@ -57,7 +57,7 @@ export default function AdminLayout({
 
         {/* Slide-down menu */}
         {menuOpen && (
-          <nav className="fixed top-12 left-0 right-0 z-40 bg-flag-red text-white p-4 shadow-md">
+          <nav className="fixed top-12 left-0 right-0 z-40 bg-flag-red text-black p-4 shadow-md">
             <div className="flex flex-col space-y-2">
               {navItems.map(({ name, href }) => (
                 <Link
@@ -65,7 +65,7 @@ export default function AdminLayout({
                   href={href}
                   onClick={() => setMenuOpen(false)}
                   className={clsx(
-                    'uppercase text-sm px-3 py-2 rounded hover:bg-black-100 transition',
+                    'uppercase text-md px-3 py-2  hover:bg-black-100 transition',
                     pathname === href && 'bg-flag-blue'
                   )}
                 >
