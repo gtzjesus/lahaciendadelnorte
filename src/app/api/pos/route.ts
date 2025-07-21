@@ -85,7 +85,7 @@ export async function POST(req: Request) {
     }
 
     const productsForSanity = items.map((item) => {
-      const [productId] = item.productId.split('-');
+      const [productId, variantSize] = item.productId.split('-');
 
       return {
         _key: crypto.randomUUID(),
@@ -93,6 +93,7 @@ export async function POST(req: Request) {
         product: { _type: 'reference', _ref: productId },
         quantity: item.quantity,
         price: item.price,
+        variantSize, // add this line to explicitly save variant size
       };
     });
 
