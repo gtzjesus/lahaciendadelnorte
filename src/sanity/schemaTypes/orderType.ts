@@ -47,6 +47,13 @@ export const orderType = defineType({
               validation: (Rule) => Rule.required(),
             }),
             defineField({
+              name: 'price',
+              title: 'Unit Price',
+              type: 'number',
+              description: 'The price of the product at time of purchase.',
+            }),
+
+            defineField({
               name: 'quantity',
               title: 'Quantity',
               type: 'number',

@@ -63,18 +63,17 @@ export async function handleCheckoutSessionCompleted(
   // 🧱 Convert Stripe products to Sanity references
   const sanityProducts = lineItems.data.map((item) => {
     const stripeProduct = item.price?.product as Stripe.Product;
-    const productId = stripeProduct?.metadata?.id;
-
-    const matchingItem = productId ? itemMap[productId] : null;
+    const [, variantSize] = (item.description || '').split(' - '); // adjust if needed
 
     return {
       _key: crypto.randomUUID(),
       product: {
         _type: 'reference',
-        _ref: productId,
+        _ref: stripeProduct.metadata.id,
       },
-      quantity: matchingItem?.quantity || 0,
-      variantSize: matchingItem?.variantSize || '',
+      quantity: item.quantity || 0,
+      variantSize,
+      price: (item.amount_total || 0) / 100 / (item.quantity || 1), // unit price
     };
   });
 

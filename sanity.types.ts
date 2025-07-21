@@ -66,6 +66,7 @@ export type Order = {
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "product";
     };
+    price?: number;
     quantity?: number;
     variantSize?: string;
     _key: string;
@@ -372,6 +373,7 @@ export type MY_ORDERS_QUERYResult = Array<{
         [internalGroqTypeReferenceTo]?: "category";
       };
     } | null;
+    price?: number;
     quantity?: number;
     variantSize?: string;
     _key: string;

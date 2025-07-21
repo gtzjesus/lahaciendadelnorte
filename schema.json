@@ -308,6 +308,13 @@
                 },
                 "optional": true
               },
+              "price": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "number"
+                },
+                "optional": true
+              },
               "quantity": {
                 "type": "objectAttribute",
                 "value": {
