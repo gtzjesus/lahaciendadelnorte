@@ -52,7 +52,6 @@ export const orderType = defineType({
               type: 'number',
               description: 'The price of the product at time of purchase.',
             }),
-
             defineField({
               name: 'quantity',
               title: 'Quantity',
@@ -60,10 +59,14 @@ export const orderType = defineType({
               validation: (Rule) => Rule.required().min(1),
             }),
             defineField({
-              name: 'variantSize',
-              title: 'Variant Size',
-              type: 'string',
-              description: 'Size selected by the customer (e.g. Medium)',
+              name: 'variant',
+              title: 'Variant Details',
+              type: 'object',
+              fields: [
+                defineField({ name: 'size', title: 'Size', type: 'string' }),
+                defineField({ name: 'price', title: 'Price', type: 'number' }),
+                defineField({ name: 'stock', title: 'Stock', type: 'number' }),
+              ],
             }),
           ],
           preview: {
@@ -71,11 +74,12 @@ export const orderType = defineType({
               product: 'product.name',
               quantity: 'quantity',
               image: 'product.image',
-              price: 'product.price',
+              price: 'price',
+              variantSize: 'variant.size',
             },
-            prepare({ product, quantity, image, price }) {
+            prepare({ product, quantity, image, price, variantSize }) {
               return {
-                title: `${product} x ${quantity}`,
+                title: `${product} (${variantSize}) x ${quantity}`,
                 subtitle: `$${(price || 0) * quantity}`,
                 media: image,
               };
@@ -97,7 +101,6 @@ export const orderType = defineType({
       description: 'Tax amount applied to the order.',
       validation: (Rule) => Rule.min(0),
     }),
-
     defineField({
       name: 'currency',
       title: 'Currency',
@@ -156,9 +159,7 @@ export const orderType = defineType({
       type: 'datetime',
       validation: (Rule) => Rule.required(),
     }),
-
-    // ✅ NEW FIELDS BELOW
-
+    // NEW FIELDS BELOW
     {
       name: 'paymentMethod',
       title: 'Payment Method',
