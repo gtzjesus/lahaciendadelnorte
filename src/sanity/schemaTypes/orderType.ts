@@ -52,6 +52,12 @@ export const orderType = defineType({
               type: 'number',
               validation: (Rule) => Rule.required().min(1),
             }),
+            defineField({
+              name: 'variantSize',
+              title: 'Variant Size',
+              type: 'string',
+              description: 'Size selected by the customer (e.g. Medium)',
+            }),
           ],
           preview: {
             select: {

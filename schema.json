@@ -314,6 +314,13 @@
                   "type": "number"
                 },
                 "optional": true
+              },
+              "variantSize": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                },
+                "optional": true
               }
             },
             "rest": {

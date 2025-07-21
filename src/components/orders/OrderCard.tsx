@@ -69,6 +69,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
           {visibleProducts?.map((product: any, index: number) => {
             const prod = product.product;
             const slug = prod?.slug?.current;
+            console.log('🧪 product object:', product);
 
             const baseKey = `${prod?._id ?? 'noid'}-${product._key ?? index}`;
 
@@ -98,7 +99,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                     </Link>
                   )}
                   <div>
-                    <div className="flex">
+                    <div className="">
                       {slug ? (
                         <Link
                           href={`/product/${slug}`}
@@ -111,17 +112,23 @@ const OrderCard: React.FC<OrderCardProps> = ({
                           {prod?.name}
                         </p>
                       )}
-                      <p className="px-2"> </p>
+
+                      {/* ✅ Show Variant Size (if available) */}
+                      {product.variantSize && (
+                        <p className="text-xs uppercase font-light text-gray-700">
+                          size: {product.variantSize}
+                        </p>
+                      )}
 
                       {prod?.category?.title && (
-                        <p className="text-xs uppercase font-light text-gray-600">
+                        <p className="text-xs uppercase font-light">
                           {prod.category.title}
                         </p>
                       )}
                     </div>
 
                     {typeof product?.price === 'number' && (
-                      <p className="text-xs my-1 uppercase font-light text-gray-600">
+                      <p className="text-xs my-1 uppercase font-light ">
                         price:{' '}
                         {formatCurrency(product.price, order.currency || 'usd')}
                       </p>

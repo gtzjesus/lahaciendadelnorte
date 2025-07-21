@@ -40,21 +40,49 @@ export async function handleCheckoutSessionCompleted(
     expand: ['data.price.product'],
   });
 
-  // 🧱 Convert Stripe products to Sanity references
-  const sanityProducts = lineItems.data.map((item) => ({
-    _key: crypto.randomUUID(),
-    product: {
-      _type: 'reference',
-      _ref: (item.price?.product as Stripe.Product)?.metadata?.id,
-    },
-    quantity: item.quantity || 0,
-  }));
+  // 📦 Extract productId + variantSize from metadata.items
+  const items: Array<{ id: string; quantity: number }> = JSON.parse(
+    session.metadata?.items || '[]'
+  );
 
-  // 🧾 Create the order document
-  // 🧾 Create the order document
+  const itemMap: Record<string, { quantity: number; variantSize: string }> = {};
+
+  for (const item of items) {
+    const [productId, variantSize] = item.id.split('-');
+
+    if (!productId || !variantSize) {
+      throw new Error(`Invalid product id format: ${item.id}`);
+    }
+
+    itemMap[productId] = {
+      quantity: item.quantity,
+      variantSize,
+    };
+  }
+
+  // 🧱 Convert Stripe products to Sanity references
+  const sanityProducts = lineItems.data.map((item) => {
+    const stripeProduct = item.price?.product as Stripe.Product;
+    const productId = stripeProduct?.metadata?.id;
+
+    const matchingItem = productId ? itemMap[productId] : null;
+
+    return {
+      _key: crypto.randomUUID(),
+      product: {
+        _type: 'reference',
+        _ref: productId,
+      },
+      quantity: matchingItem?.quantity || 0,
+      variantSize: matchingItem?.variantSize || '',
+    };
+  });
+
+  // 💰 Compute totals
   const subtotal = (amount_total || 0) / 100;
   const tax = parseFloat((subtotal * 0.0825).toFixed(2)); // 8.25% tax
 
+  // 🧾 Create the order document
   const order = await backendClient.create({
     _type: 'order',
     orderNumber,
@@ -66,7 +94,7 @@ export async function handleCheckoutSessionCompleted(
     email: stripeCustomer.email,
     currency,
     amountDiscount: (total_details?.amount_discount || 0) / 100,
-    tax, // ✅ added tax field here
+    tax,
     products: sanityProducts,
     totalPrice: subtotal,
     status: 'paid',
@@ -75,7 +103,7 @@ export async function handleCheckoutSessionCompleted(
 
   console.log('✅ Order synced to Sanity:', order);
 
-  // 🔁 Patch the customer with the new order and increase totalSpent
+  // 🔁 Update the customer document with new order
   await backendClient
     .patch(stripeCustomer._id)
     .setIfMissing({ orders: [], totalSpent: 0 })
@@ -91,11 +119,7 @@ export async function handleCheckoutSessionCompleted(
 
   console.log(`✅ Customer order list updated for: ${stripeCustomer._id}`);
 
-  // 📉 Decrease product stock
-  const items: Array<{ id: string; quantity: number }> = JSON.parse(
-    session.metadata?.items || '[]'
-  );
-
+  // 📉 Decrease stock for each product variant
   for (const item of items) {
     const [productId, variantSize] = item.id.split('-');
 

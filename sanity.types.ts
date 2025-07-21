@@ -67,6 +67,7 @@ export type Order = {
       [internalGroqTypeReferenceTo]?: "product";
     };
     quantity?: number;
+    variantSize?: string;
     _key: string;
   }>;
   totalPrice?: number;
@@ -372,6 +373,7 @@ export type MY_ORDERS_QUERYResult = Array<{
       };
     } | null;
     quantity?: number;
+    variantSize?: string;
     _key: string;
   }> | null;
   totalPrice?: number;
