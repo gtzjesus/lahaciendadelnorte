@@ -60,15 +60,32 @@ const OrderCard: React.FC<OrderCardProps> = ({
 export default OrderCard;
 
 const Header = ({ order }: { order: any }) => (
-  <div className="flex justify-between border-b border-black pb-2 mb-3 text-sm font-mono">
-    <div className="flex">
+  <div className="flex border-b border-black pb-2 mb-3 text-sm font-mono">
+    {/* Left: Order Number */}
+    <div className="flex items-center w-1/3">
       <p className="uppercase font-light">Order # </p>
-      <span className="text-black"> {order.orderNumber?.slice(-6)}</span>
+      <span className="text-black ml-2">{order.orderNumber?.slice(-6)}</span>
     </div>
-    <div className="flex">
-      <p className="text-black">
+
+    {/* Center: Customer Name */}
+    <div className="flex justify-center items-center w-1/3">
+      {order.customerName && (
+        <p className="uppercase font-semibold">{order.customerName}</p>
+      )}
+    </div>
+
+    {/* Right: Order Date */}
+    <div className="flex justify-end items-center w-full">
+      <p className="text-black text-xs sm:text-sm ">
         {order.orderDate
-          ? new Date(order.orderDate).toLocaleDateString()
+          ? new Date(order.orderDate).toLocaleString(undefined, {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+            })
           : 'n/a'}
       </p>
     </div>

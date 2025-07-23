@@ -85,7 +85,7 @@ export async function POST(req: Request) {
     const orderNumber = orderCounter.lastOrderNumber.toString();
 
     const clerkUserId = 'store-user-123';
-    const customerName = 'Walk-in Customer';
+    const customerName = body.customerName || 'Walk-in Customer';
     const email = 'walkin@example.com';
 
     for (const item of items) {
@@ -100,13 +100,13 @@ export async function POST(req: Request) {
 
     const productsFromSanity = await backendClient.fetch<SanityProduct[]>(
       `*[_type == "product" && _id in $ids]{
-    _id,
-    variants[] {
-      size,
-      price,
-      stock
-    }
-  }`,
+        _id,
+        variants[] {
+          size,
+          price,
+          stock
+        }
+      }`,
       { ids: uniqueProductIds }
     );
 
@@ -137,6 +137,7 @@ export async function POST(req: Request) {
         },
       };
     });
+
     const orderDoc = {
       _type: 'order',
       orderNumber,

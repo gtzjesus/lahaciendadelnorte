@@ -31,6 +31,7 @@ export default function POSPage() {
     'card'
   );
   const [saleSuccess, setSaleSuccess] = useState<null | string>(null);
+  const [customerName, setCustomerName] = useState('');
 
   const [cashReceived, setCashReceived] = useState<number>(0);
   const [cardAmount, setCardAmount] = useState<number>(0);
@@ -168,6 +169,7 @@ export default function POSPage() {
               : undefined,
           changeGiven:
             paymentMethod === 'cash' ? round2(changeGiven) : undefined,
+          customerName,
         }),
       });
 
@@ -236,7 +238,7 @@ export default function POSPage() {
               className="object-cover rounded w-12 h-12"
             />
           )}
-          <div className="flex flex-col text-xs uppercase">
+          <div className="flex flex-col text-sm uppercase">
             <div className="font-semibold">
               {product.name} <strong className="px-2">|</strong>
               <strong className="text-green">${product.price}</strong>
@@ -244,7 +246,7 @@ export default function POSPage() {
             <div className="flex items-center space-x-2">
               <span className="text-flag-blue">{product.category}</span>
               {product.stock === 0 && (
-                <p className="text-red-500 font-semibold text-xs ml-2">
+                <p className="text-red-500 font-semibold text-sm ml-2">
                   OUT OF STOCK
                 </p>
               )}
@@ -268,7 +270,7 @@ export default function POSPage() {
                 className="object-cover  w-16 h-16"
               />
             )}
-            <div className="my-2 uppercase flex text-xs">
+            <div className="my-2 uppercase flex text-sm">
               <div className="px-2">{item.name}</div> <div className="">|</div>
               <div className="px-2">{item.category} </div>
             </div>
@@ -391,11 +393,20 @@ export default function POSPage() {
             </div>
           )}
         </div>
-
         {showConfirmModal && (
           <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black bg-opacity-60">
             <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md mx-auto text-center">
               <h2 className="text-md uppercase font-bold mb-3">Confirm Sale</h2>
+
+              <label className="block mb-2 text-left uppercase text-sm font-semibold text-gray-700"></label>
+              <input
+                type="text"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                placeholder="Enter customer name"
+                className="w-full uppercase text-xs p-2 mb-4 border border-gray-300 rounded text-black"
+              />
+
               <p className="uppercase text-sm mb-4 text-gray-700">
                 Are you sure you want to complete this sale for{' '}
                 <span className="font-bold text-green">
@@ -403,6 +414,7 @@ export default function POSPage() {
                 </span>
                 ?
               </p>
+
               <div className="flex justify-center space-x-4">
                 <button
                   onClick={() => setShowConfirmModal(false)}
@@ -479,7 +491,7 @@ export default function POSPage() {
               console.log('Navigating to /admin/orders');
               await router.push('/admin/orders');
             }}
-            className="px-6 py-3 bg-flag-red text-black font-bold  hover:bg-yellow-300 transition uppercase text-xs"
+            className="px-6 py-3 bg-flag-red text-black font-bold  hover:bg-yellow-300 transition uppercase text-sm"
           >
             View order
           </button>

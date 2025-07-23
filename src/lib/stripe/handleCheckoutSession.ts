@@ -96,7 +96,7 @@ export async function handleCheckoutSessionCompleted(
     tax,
     products: sanityProducts,
     totalPrice: subtotal,
-    status: 'paid',
+    paymentStatus: 'paid_in_store',
     orderDate: new Date().toISOString(),
     pickupStatus: 'pending',
   });
