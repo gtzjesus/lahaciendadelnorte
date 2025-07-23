@@ -165,16 +165,16 @@ const OrderSummary = ({
           {order.paymentStatus.replaceAll('_', ' ')}
         </strong>
       </p>
-      {/* <p className="text-gray-600">
+      <p className="text-gray-600">
         Pickup:{' '}
         <strong
           className={
-            order.pickupStatus === 'picked_up' ? 'text-green' : 'text-flag-red'
+            order.pickupStatus === 'completed' ? 'text-green' : 'text-flag-red'
           }
         >
           {order.pickupStatus.replaceAll('_', ' ')}
         </strong>
-      </p> */}
+      </p>
     </div>
   </div>
 );

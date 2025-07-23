@@ -144,13 +144,11 @@ export const orderType = defineType({
       type: 'string',
       options: {
         list: [
-          { title: 'Not Picked Up', value: 'not_picked_up' },
-          { title: 'Ready for Pickup', value: 'ready_for_pickup' },
-          { title: 'Picked Up', value: 'picked_up' },
-          { title: 'Cancelled', value: 'cancelled' },
+          { title: 'Pending', value: 'pending' },
+          { title: 'Completed', value: 'completed' },
         ],
       },
-      initialValue: 'not_picked_up',
+      initialValue: 'pending', // default on creation
       validation: (Rule) => Rule.required(),
     }),
     defineField({

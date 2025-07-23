@@ -81,7 +81,7 @@ export type Order = {
   amountDiscount?: number;
   orderType?: "reservation";
   paymentStatus?: "unpaid" | "paid_in_store" | "paid_online";
-  pickupStatus?: "not_picked_up" | "ready_for_pickup" | "picked_up" | "cancelled";
+  pickupStatus?: "pending" | "completed";
   orderDate?: string;
   paymentMethod?: "online_unpaid" | "cash" | "card" | "split";
   cashReceived?: number;
@@ -314,6 +314,68 @@ export type SanityAssetSourceData = {
 
 export type AllSanitySchemaTypes = Customer | Sale | Order | Product | Category | BlockContent | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: ./src/app/api/get-order/route.ts
+// Variable: query
+// Query: *[_type == "order" && orderNumber == $orderNumber][0]{        _id,        orderNumber,        clerkUserId,        customerName,        email,        products[] {          _key,          quantity,          itemNumber,          price,          variant,          product->{            _id,            name,            slug,            image,            itemNumber,            stock,            category->{              title            },            variants[] {              _key,              name,              price,              stock            }          }        },        totalPrice,        tax,        currency,        amountDiscount,        orderType,        paymentStatus,        pickupStatus,        orderDate,        paymentMethod,        cashReceived,        cardAmount,        changeGiven      }
+export type QueryResult = {
+  _id: string;
+  orderNumber: string | null;
+  clerkUserId: string | null;
+  customerName: string | null;
+  email: string | null;
+  products: Array<{
+    _key: string;
+    quantity: number | null;
+    itemNumber: null;
+    price: number | null;
+    variant: {
+      size?: string;
+      price?: number;
+      stock?: number;
+    } | null;
+    product: {
+      _id: string;
+      name: string | null;
+      slug: Slug | null;
+      image: {
+        asset?: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        };
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      } | null;
+      itemNumber: string | null;
+      stock: null;
+      category: {
+        title: string | null;
+      } | null;
+      variants: Array<{
+        _key: string;
+        name: null;
+        price: number | null;
+        stock: number | null;
+      }> | null;
+    } | null;
+  }> | null;
+  totalPrice: number | null;
+  tax: number | null;
+  currency: string | null;
+  amountDiscount: number | null;
+  orderType: "reservation" | null;
+  paymentStatus: "paid_in_store" | "paid_online" | "unpaid" | null;
+  pickupStatus: "completed" | "pending" | null;
+  orderDate: string | null;
+  paymentMethod: "card" | "cash" | "online_unpaid" | "split" | null;
+  cashReceived: number | null;
+  cardAmount: number | null;
+  changeGiven: number | null;
+} | null;
+
 // Source: ./src/sanity/lib/orders/getMyOrders.tsx
 // Variable: MY_ORDERS_QUERY
 // Query: *[_type == 'order' && clerkUserId == $userId] | order(orderDate desc) {        ...,        products[]{            ...,            product->        }    }
@@ -392,7 +454,7 @@ export type MY_ORDERS_QUERYResult = Array<{
   amountDiscount?: number;
   orderType?: "reservation";
   paymentStatus?: "paid_in_store" | "paid_online" | "unpaid";
-  pickupStatus?: "cancelled" | "not_picked_up" | "picked_up" | "ready_for_pickup";
+  pickupStatus?: "completed" | "pending";
   orderDate?: string;
   paymentMethod?: "card" | "cash" | "online_unpaid" | "split";
   cashReceived?: number;
@@ -607,6 +669,7 @@ export type ACTIVE_SALE_BY_COUPON_QUERYResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
+    "\n      *[_type == \"order\" && orderNumber == $orderNumber][0]{\n        _id,\n        orderNumber,\n        clerkUserId,\n        customerName,\n        email,\n        products[] {\n          _key,\n          quantity,\n          itemNumber,\n          price,\n          variant,\n          product->{\n            _id,\n            name,\n            slug,\n            image,\n            itemNumber,\n            stock,\n            category->{\n              title\n            },\n            variants[] {\n              _key,\n              name,\n              price,\n              stock\n            }\n          }\n        },\n        totalPrice,\n        tax,\n        currency,\n        amountDiscount,\n        orderType,\n        paymentStatus,\n        pickupStatus,\n        orderDate,\n        paymentMethod,\n        cashReceived,\n        cardAmount,\n        changeGiven\n      }\n    ": QueryResult;
     "\n    *[_type == 'order' && clerkUserId == $userId] | order(orderDate desc) {\n        ...,\n        products[]{\n            ...,\n            product->\n        }\n    }\n  ": MY_ORDERS_QUERYResult;
     "\n  *[_type == 'category'] | order(title asc) {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    slug,\n    description,\n    image\n  }\n": ALL_CATEGORIES_QUERYResult;
     "\n  *[_type == 'product'] | order(name asc)\n  ": ALL_PRODUCTS_QUERYResult;

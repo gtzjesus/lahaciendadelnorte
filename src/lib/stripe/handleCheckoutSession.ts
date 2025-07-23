@@ -98,6 +98,7 @@ export async function handleCheckoutSessionCompleted(
     totalPrice: subtotal,
     status: 'paid',
     orderDate: new Date().toISOString(),
+    pickupStatus: 'pending',
   });
 
   console.log('✅ Order synced to Sanity:', order);
