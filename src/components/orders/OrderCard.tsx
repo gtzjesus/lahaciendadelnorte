@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { formatCurrency } from '@/lib/formatCurrency';
-import { imageUrl } from '@/lib/imageUrl';
 import Image from 'next/image';
 import Link from 'next/link';
-
+import { formatCurrency } from '@/lib/formatCurrency';
+import { imageUrl } from '@/lib/imageUrl';
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 interface OrderCardProps {
   order: any;
@@ -17,299 +16,38 @@ const OrderCard: React.FC<OrderCardProps> = ({
   showDetailButton = true,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-
   const totalItems = order.products?.reduce(
     (sum: number, item: any) => sum + (item.quantity ?? 0),
     0
   );
-
-  const subtotal =
-    typeof order.totalPrice === 'number' && typeof order.tax === 'number'
-      ? order.totalPrice - order.tax
-      : 0;
-
+  const subtotal = (order.totalPrice ?? 0) - (order.tax ?? 0);
   const visibleProducts = isExpanded
     ? order.products
     : order.products?.slice(0, 3);
 
   return (
-    <div className="bg-flag-red border border-black p-2 shadow-sm overflow-hidden">
-      {/* Header */}
-      <div className="p-4 border-b border-black">
-        <div className="flex flex-row justify-between">
-          <div>
-            <p className="text-xs uppercase font-light font-mono">
-              order number
-            </p>
-            <span
-              className="font-mono uppercase font-light text-xs text-black dark:text-green"
-              title={order.orderNumber || ''}
-            >
-              {order.orderNumber?.slice(-6)}
-            </span>
-          </div>
-          <div>
-            <p className="text-xs uppercase font-light font-mono">sale date</p>
-            <p className="font-light text-xs mt-1 text-black">
-              {order.orderDate
-                ? new Date(order.orderDate).toLocaleDateString()
-                : 'n/a'}
-            </p>
-          </div>
-        </div>
-      </div>
+    <div className="bg-flag-red border border-black p-4 shadow-md overflow-hidden">
+      <Header order={order} />
+      <ProductList products={visibleProducts} order={order} />
 
-      {/* Items */}
-      <div className="font-mono p-4">
-        <p className="text-xs uppercase font-light text-gray-600">
-          items ({totalItems})
-        </p>
+      {order.products?.length > 3 && (
+        <button
+          onClick={() => setIsExpanded((prev) => !prev)}
+          className="mt-3 text-sm uppercase text-black border px-3 py-1 bg-flag-blue border-none rounded"
+        >
+          {isExpanded
+            ? 'Hide items'
+            : `Expand items (${order.products.length - 3})`}
+        </button>
+      )}
 
-        <div>
-          {visibleProducts?.map((product: any, index: number) => {
-            const prod = product.product;
-            const slug = prod?.slug?.current;
-            console.log('🧪 product object:', product);
+      <OrderSummary order={order} totalItems={totalItems} subtotal={subtotal} />
 
-            const baseKey = `${prod?._id ?? 'noid'}-${product._key ?? index}`;
-
-            if (!prod?._id && !product._key) {
-              console.warn('⚠️ Product is missing both _id and _key:', product);
-            }
-
-            return (
-              <div
-                key={baseKey}
-                className="flex flex-col border-b border-black last:border-b-0"
-              >
-                <div className="flex items-center gap-6">
-                  {prod?.image && slug && (
-                    <Link
-                      href={`/product/${slug}`}
-                      className="relative h-20 w-20 flex-shrink-0 mt-2 mb-2"
-                      aria-label={`View ${prod.name}`}
-                    >
-                      <Image
-                        src={imageUrl(prod.image).url()}
-                        alt={prod.name ?? ''}
-                        className="object-cover"
-                        fill
-                        priority
-                      />
-                    </Link>
-                  )}
-                  <div>
-                    <div className="">
-                      {slug ? (
-                        <Link
-                          href={`/product/${slug}`}
-                          className="text-xs uppercase text-black font-light  hover:underline"
-                        >
-                          {prod?.name}
-                        </Link>
-                      ) : (
-                        <p className="text-xs uppercase text-gray-600 font-light ">
-                          {prod?.name}
-                        </p>
-                      )}
-
-                      {/* ✅ Show Variant Size (if available) */}
-                      {product.variant?.size && (
-                        <p className="text-xs uppercase font-light text-gray-700">
-                          size: {product.variant.size}
-                        </p>
-                      )}
-
-                      {typeof product.variant?.price === 'number' && (
-                        <p className="text-xs uppercase font-light text-gray-700">
-                          variant price:{' '}
-                          {formatCurrency(
-                            product.variant.price,
-                            order.currency || 'usd'
-                          )}
-                        </p>
-                      )}
-
-                      {typeof product.variant?.stock === 'number' && (
-                        <p className="text-xs uppercase font-light text-gray-600">
-                          stock at order: {product.variant.stock}
-                        </p>
-                      )}
-
-                      {prod?.category?.title && (
-                        <p className="text-xs uppercase font-light">
-                          {prod.category.title}
-                        </p>
-                      )}
-                    </div>
-
-                    {typeof product?.price === 'number' && (
-                      <p className="text-xs my-1 uppercase font-light ">
-                        price:{' '}
-                        {formatCurrency(product.price, order.currency || 'usd')}
-                      </p>
-                    )}
-
-                    {/* {prod?.itemNumber && (
-                      <p className="text-xs uppercase font-light text-gray-600">
-                        item #: {prod.itemNumber}
-                      </p>
-                    )} */}
-                    {typeof prod?.stock === 'number' && (
-                      <p className="text-xs uppercase font-light text-gray-600">
-                        stock: {prod.stock}
-                      </p>
-                    )}
-                    <p className="text-xs uppercase font-light text-black">
-                      quantity: {product.quantity ?? 'n/a'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-
-          {order.products?.length > 3 && (
-            <button
-              onClick={() => setIsExpanded((prev) => !prev)}
-              className="mt-6 uppercase text-xs text-black border p-2 bg-flag-blue border-black"
-            >
-              {isExpanded
-                ? 'Hide items'
-                : `expand items (${order.products.length - 3})`}
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Totals & Payment */}
-      <div className=" font-mono p-2 flex flex-col space-y-1">
-        {(order.paymentMethod ||
-          typeof order.cashReceived === 'number' ||
-          typeof order.cardAmount === 'number' ||
-          typeof order.changeGiven === 'number') && (
-          <div className="mt-4">
-            <p className="text-xs border-b pb-3 uppercase font-semibold text-gray-500 mb-1">
-              payment details
-            </p>
-
-            <div className="flex justify-between">
-              <p className="uppercase text-xs mb-1 text-gray-600">
-                total items:
-              </p>
-              <p className="font-bold text-xs">{totalItems}</p>
-            </div>
-
-            <div className="flex justify-between">
-              <p className="uppercase text-xs mb-1 text-gray-600">subtotal:</p>
-              <p className="font-bold text-xs">
-                {formatCurrency(subtotal, order.currency || 'usd')}
-              </p>
-            </div>
-
-            {typeof order.tax === 'number' && (
-              <div className="flex justify-between">
-                <p className="uppercase text-xs mb-1 text-gray-600">tax:</p>
-                <p className="font-bold text-xs">
-                  {formatCurrency(order.tax, order.currency || 'usd')}
-                </p>
-              </div>
-            )}
-
-            <div className="flex justify-between border-b">
-              <p className="uppercase text-xs mb-1 text-gray-600 ">
-                sale total:
-              </p>
-              <p className="font-bold text-sm text-green">
-                {formatCurrency(order.totalPrice ?? 0, order.currency || 'usd')}
-              </p>
-            </div>
-
-            {order.paymentMethod && (
-              <div className="flex justify-between pt-3 border-b">
-                <p className="text-xs  pb-2 uppercase font-semibold text-gray-500 mb-1">
-                  payment method
-                </p>
-                <p className="font-bold text-xs">{order.paymentMethod}</p>
-              </div>
-            )}
-
-            {typeof order.cardAmount === 'number' && (
-              <div className="flex justify-between pt-2">
-                <p className="uppercase text-xs text-gray-600">card amount:</p>
-                <p className="font-bold text-xs">
-                  {formatCurrency(order.cardAmount, order.currency || 'usd')}
-                </p>
-              </div>
-            )}
-
-            {typeof order.cashReceived === 'number' && (
-              <div className="flex justify-between ">
-                <p className="uppercase text-xs text-gray-600">
-                  cash received:
-                </p>
-                <p className="font-bold text-xs">
-                  {formatCurrency(order.cashReceived, order.currency || 'usd')}
-                </p>
-              </div>
-            )}
-
-            {typeof order.changeGiven === 'number' && (
-              <div className="flex justify-between pb-2 border-black">
-                <p className="uppercase text-xs text-gray-600">change given:</p>
-                <p className="font-bold text-xs">
-                  {formatCurrency(order.changeGiven, order.currency || 'usd')}
-                </p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Status */}
-        <div className=" flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mt-2 border-t pt-2 border-black">
-          <p className="text-xs font-light uppercase text-gray-600">
-            payment status:{' '}
-            <span
-              className={`font-bold ${
-                order.paymentStatus === 'paid_in_store' ||
-                order.paymentStatus === 'paid_online'
-                  ? 'text-green'
-                  : 'text-flag-red'
-              }`}
-            >
-              {order.paymentStatus === 'paid_in_store'
-                ? 'Paid In Store'
-                : order.paymentStatus === 'paid_online'
-                  ? 'Paid Online'
-                  : order.paymentMethod === 'online_unpaid'
-                    ? 'Unpaid (Online Reservation)'
-                    : 'Unpaid online reservation'}
-            </span>
-          </p>
-
-          <p className="text-xs font-light uppercase text-gray-600">
-            pickup status:{' '}
-            <span
-              className={`font-bold ${
-                order.pickupStatus === 'picked_up'
-                  ? 'text-green'
-                  : 'text-flag-red'
-              }`}
-            >
-              {order.pickupStatus === 'picked_up'
-                ? 'Picked up'
-                : 'Not picked up'}
-            </span>
-          </p>
-        </div>
-      </div>
-
-      {/* View Order Button */}
       {showDetailButton && (
-        <div className="p-4 border-t border-black flex justify-center">
+        <div className="pt-4">
           <Link
             href={`/admin/orders/${order.orderNumber}`}
-            className="p-4 mb-2 block uppercase text-xs font-light text-center bg-flag-blue text-black w-full"
+            className="block text-center uppercase text-sm font-light bg-flag-blue text-black py-2 rounded"
           >
             View Order
           </Link>
@@ -320,3 +58,123 @@ const OrderCard: React.FC<OrderCardProps> = ({
 };
 
 export default OrderCard;
+
+const Header = ({ order }: { order: any }) => (
+  <div className="flex justify-between border-b border-black pb-2 mb-3 text-sm font-mono">
+    <div className="flex">
+      <p className="uppercase font-light">Order # </p>
+      <span className="text-black"> {order.orderNumber?.slice(-6)}</span>
+    </div>
+    <div className="flex">
+      <p className="text-black">
+        {order.orderDate
+          ? new Date(order.orderDate).toLocaleDateString()
+          : 'n/a'}
+      </p>
+    </div>
+  </div>
+);
+
+const ProductList = ({ products, order }: { products: any[]; order: any }) => (
+  <div className="space-y-3 mb-4">
+    {products?.map((product: any, index: number) => {
+      const prod = product.product;
+      const slug = prod?.slug?.current;
+      const image = prod?.image ? imageUrl(prod.image).url() : null;
+
+      return (
+        <div
+          key={product._key ?? index}
+          className="flex gap-3 items-start border-b border-black pb-2"
+        >
+          {image && (
+            <Link
+              href={`/product/${slug}`}
+              className="relative h-16 w-16 shrink-0"
+            >
+              <Image
+                src={image}
+                alt={prod.name}
+                fill
+                className="object-cover rounded"
+              />
+            </Link>
+          )}
+          <div className="text-sm text-black font-light uppercase">
+            <p className="font-semibold">{prod?.name}</p>
+            {product.variant?.size && <p>{product.variant.size}</p>}
+            {prod?.category?.title && <p>{prod.category.title}</p>}
+            {typeof product?.price === 'number' && (
+              <p>{formatCurrency(product.price, order.currency || 'usd')}</p>
+            )}
+            <p>Qty: {product.quantity}</p>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+);
+
+const OrderSummary = ({
+  order,
+  totalItems,
+  subtotal,
+}: {
+  order: any;
+  totalItems: number;
+  subtotal: number;
+}) => (
+  <div className="uppercase text-sm   pt-3 mt-3 space-y-1 font-mono text-black">
+    <div className="flex justify-between">
+      <span>Total items:</span>
+      <span>{totalItems}</span>
+    </div>
+    <div className="flex justify-between">
+      <span>Subtotal:</span>
+      <span>{formatCurrency(subtotal, order.currency || 'usd')}</span>
+    </div>
+    {order.tax && (
+      <div className="flex justify-between">
+        <span>Tax:</span>
+        <span>{formatCurrency(order.tax, order.currency || 'usd')}</span>
+      </div>
+    )}
+    <div className="flex justify-between border-t border-black pt-2">
+      <strong>Total:</strong>
+      <strong className="text-green">
+        {formatCurrency(order.totalPrice, order.currency || 'usd')}
+      </strong>
+    </div>
+
+    <div className="pt-2 space-y-1">
+      {order.paymentMethod && (
+        <p className="text-gray-600">
+          Payment: <strong>{order.paymentMethod}</strong>
+        </p>
+      )}
+      <p className="text-gray-600">
+        Status:{' '}
+        <strong
+          className={
+            order.paymentStatus === 'paid_in_store' ||
+            order.paymentStatus === 'paid_online'
+              ? 'text-green'
+              : 'text-flag-red'
+          }
+        >
+          {order.paymentStatus.replaceAll('_', ' ')}
+        </strong>
+      </p>
+      <p className="text-gray-600">
+        Pickup:{' '}
+        <strong
+          className={
+            order.pickupStatus === 'picked_up' ? 'text-green' : 'text-flag-red'
+          }
+        >
+          {order.pickupStatus.replaceAll('_', ' ')}
+        </strong>
+      </p>
+    </div>
+  </div>
+);
