@@ -5,12 +5,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminOrdersPage() {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL}/api/get-all-orders`,
-      {
-        cache: 'no-store',
-      }
-    );
+    const res = await fetch(`/api/get-all-orders`, {
+      cache: 'no-store',
+    });
 
     if (!res.ok) {
       throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
