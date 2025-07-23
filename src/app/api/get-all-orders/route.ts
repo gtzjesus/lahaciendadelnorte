@@ -3,40 +3,44 @@ import { client } from '@/sanity/lib/client';
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 export async function GET() {
   const query = `
-    *[_type == "order"] | order(orderDate desc) {
-      _id,
-      orderNumber,
-      clerkUserId,
-      customerName,
-      email,
-      products[] {
-        _key,
-        quantity,
+  *[_type == "order"] | order(orderDate desc) {
+    _id,
+    orderNumber,
+    clerkUserId,
+    customerName,
+    email,
+    products[] {
+      _key,
+      quantity,
+      itemNumber,
+      price,
+      variant,
+      product->{
+        _id,
+        name,
+        slug,
+        image,
         itemNumber,
-        price,
-        variant,
-        product->{
-          _id,
-          name,
-          slug,
-          image,
-          itemNumber,
-          stock,
-          category->{
-            title
-          }
+        stock,
+        category->{
+          title
         }
-      },
-      totalPrice,
-      tax,
-      currency,
-      amountDiscount,
-      orderType,
-      paymentStatus,
-      pickupStatus,
-      orderDate
-    }
-  `;
+      }
+    },
+    totalPrice,
+    tax,
+    currency,
+    amountDiscount,
+    orderType,
+    paymentStatus,
+    pickupStatus,
+    orderDate,
+    paymentMethod,    
+    cashReceived,     
+    cardAmount,    
+    changeGiven        
+  }
+`;
 
   try {
     const orders = await client.fetch(query);

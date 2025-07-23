@@ -1,4 +1,3 @@
-import DeleteButton from '@/components/orders/DeleteButton';
 import OrderCard from '@/components/orders/OrderCard';
 
 export const dynamic = 'force-dynamic';
@@ -27,7 +26,6 @@ export default async function AdminOrdersPage() {
   return (
     <div className="bg-gray-50 min-h-screen p-6">
       <h1 className="uppercase text-xl font-semibold mb-6">All Orders</h1>
-      <DeleteButton />
 
       {!success ? (
         <p className="text-center text-red-600 uppercase font-light">
