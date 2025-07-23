@@ -5,17 +5,17 @@ import { client } from '@/sanity/lib/client';
 import { groq } from 'next-sanity';
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const orderNumber = searchParams.get('orderNumber');
-
-  if (!orderNumber) {
-    return NextResponse.json(
-      { success: false, message: 'Missing orderNumber' },
-      { status: 400 }
-    );
-  }
-
   try {
+    const { searchParams } = new URL(req.url);
+    const orderNumber = searchParams.get('orderNumber');
+
+    if (!orderNumber) {
+      return NextResponse.json(
+        { success: false, message: 'Missing orderNumber' },
+        { status: 400 }
+      );
+    }
+
     const query = groq`
       *[_type == "order" && orderNumber == $orderNumber][0]{
         _id,
@@ -24,16 +24,27 @@ export async function GET(req: NextRequest) {
         customerName,
         email,
         products[] {
-          quantity,
           _key,
+          quantity,
+          itemNumber,
+          price,
+          variant,
           product->{
             _id,
             name,
             slug,
             image,
-            price,
             itemNumber,
-            stock
+            stock,
+            category->{
+              title
+            },
+            variants[] {
+              _key,
+              name,
+              price,
+              stock
+            }
           }
         },
         totalPrice,
@@ -64,7 +75,7 @@ export async function GET(req: NextRequest) {
   } catch (error: any) {
     console.error('❌ Error fetching order:', error);
     return NextResponse.json(
-      { success: false, message: 'Failed to fetch order' },
+      { success: false, message: error.message || 'Failed to fetch order' },
       { status: 500 }
     );
   }

@@ -1,28 +1,21 @@
-// /app/admin/orders/[orderNumber]/page.tsx
-
 import OrderCard from '@/components/orders/OrderCard';
 import { notFound } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
-export default async function OrderDetailPage({
-  params,
-}: {
-  params: { orderNumber: string }; // ❗ THIS is correct — no `Promise`!
+export default async function OrderDetailPage(props: {
+  params: Promise<{ orderNumber: string }>;
 }) {
-  const { orderNumber } = params;
-
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
-    'http://localhost:3000';
+  const { params } = props;
+  const { orderNumber } = await params;
 
   let order = null;
   let success = false;
 
   try {
+    // Replace with your actual API URL if different:
     const res = await fetch(
-      `${baseUrl}/api/get-order?orderNumber=${orderNumber}`,
+      `${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/get-order?orderNumber=${orderNumber}`,
       { cache: 'no-store' }
     );
 
@@ -30,7 +23,7 @@ export default async function OrderDetailPage({
     order = json.order;
     success = json.success;
   } catch (err) {
-    console.error('❌ Error fetching order:', err);
+    console.error('❌ Error fetching order from API:', err);
   }
 
   if (!success || !order) return notFound();
