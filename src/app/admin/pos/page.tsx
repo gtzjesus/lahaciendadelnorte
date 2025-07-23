@@ -468,7 +468,7 @@ export default function POSPage() {
         </div>
       )}
       {saleSuccess && (
-        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-flag-blue bg-opacity-95 text-white animate-fadeIn space-y-6 p-6">
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-flag-blue bg-opacity-95 text-black animate-fadeIn space-y-6 p-6">
           <h2 className="text-4xl font-bold text-yellow uppercase">
             Sale Success!
           </h2>
@@ -479,7 +479,7 @@ export default function POSPage() {
               console.log('Navigating to /admin/orders');
               await router.push('/admin/orders');
             }}
-            className="px-6 py-3 bg-flag-red text-white font-bold  hover:bg-yellow-300 transition uppercase text-xs"
+            className="px-6 py-3 bg-flag-red text-black font-bold  hover:bg-yellow-300 transition uppercase text-xs"
           >
             View order
           </button>

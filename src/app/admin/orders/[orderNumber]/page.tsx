@@ -1,31 +1,45 @@
-import { getOrderByOrderNumber } from '@/sanity/lib/orders/getOrderByOrderNumber';
-import { notFound } from 'next/navigation';
+// /app/admin/orders/[orderNumber]/page.tsx
+
 import OrderCard from '@/components/orders/OrderCard';
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-interface Order {
-  orderNumber?: string;
-  customerName?: string;
-  totalPrice?: number;
-  currency?: string;
-  paymentStatus?: string;
-  pickupStatus?: string;
-  orderDate?: string;
-  products?: any[];
-}
+import { notFound } from 'next/navigation';
+
+export const dynamic = 'force-dynamic';
 
 export default async function OrderDetailPage({
   params,
 }: {
-  params: Promise<{ orderNumber: string }>;
+  params: { orderNumber: string }; // ❗ THIS is correct — no `Promise`!
 }) {
-  const { orderNumber } = await params;
+  const { orderNumber } = params;
 
-  const order: Order | null = await getOrderByOrderNumber(orderNumber);
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
+    'http://localhost:3000';
 
-  if (!order) return notFound();
+  let order = null;
+  let success = false;
+
+  try {
+    const res = await fetch(
+      `${baseUrl}/api/get-order?orderNumber=${orderNumber}`,
+      { cache: 'no-store' }
+    );
+
+    const json = await res.json();
+    order = json.order;
+    success = json.success;
+  } catch (err) {
+    console.error('❌ Error fetching order:', err);
+  }
+
+  if (!success || !order) return notFound();
 
   return (
-    <div className="bg-gray-50 min-h-screen p-6 border-flag-blue">
+    <div className="bg-gray-50 min-h-screen p-6">
+      <h1 className="uppercase text-xl font-semibold mb-6">
+        Order #{order.orderNumber}
+      </h1>
       <OrderCard order={order} showDetailButton={false} />
     </div>
   );
