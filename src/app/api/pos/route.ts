@@ -9,6 +9,15 @@ type OrderItem = {
   price: number;
 };
 
+interface SanityProduct {
+  _id: string;
+  variants: Array<{
+    size: string;
+    price: number;
+    stock: number;
+  }>;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -84,8 +93,36 @@ export async function POST(req: Request) {
       await decreaseProductStock(productId, variantSize, item.quantity);
     }
 
+    // Fetch all product variants in one batch call
+    const uniqueProductIds = [
+      ...new Set(items.map((i) => i.productId.split('-')[0])),
+    ];
+
+    const productsFromSanity = await backendClient.fetch<SanityProduct[]>(
+      `*[_type == "product" && _id in $ids]{
+    _id,
+    variants[] {
+      size,
+      price,
+      stock
+    }
+  }`,
+      { ids: uniqueProductIds }
+    );
+
     const productsForSanity = items.map((item) => {
       const [productId, variantSize] = item.productId.split('-');
+
+      const product = productsFromSanity.find((p) => p._id === productId);
+      const matchedVariant = product?.variants?.find(
+        (v) => v.size === variantSize
+      );
+
+      if (!matchedVariant) {
+        throw new Error(
+          `Variant not found for product ${productId} with size ${variantSize}`
+        );
+      }
 
       return {
         _key: crypto.randomUUID(),
@@ -93,10 +130,13 @@ export async function POST(req: Request) {
         product: { _type: 'reference', _ref: productId },
         quantity: item.quantity,
         price: item.price,
-        variantSize, // add this line to explicitly save variant size
+        variant: {
+          size: matchedVariant.size,
+          price: matchedVariant.price,
+          stock: matchedVariant.stock,
+        },
       };
     });
-
     const orderDoc = {
       _type: 'order',
       orderNumber,

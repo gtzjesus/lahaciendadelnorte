@@ -114,9 +114,25 @@ const OrderCard: React.FC<OrderCardProps> = ({
                       )}
 
                       {/* ✅ Show Variant Size (if available) */}
-                      {product.variantSize && (
+                      {product.variant?.size && (
                         <p className="text-xs uppercase font-light text-gray-700">
-                          size: {product.variantSize}
+                          size: {product.variant.size}
+                        </p>
+                      )}
+
+                      {typeof product.variant?.price === 'number' && (
+                        <p className="text-xs uppercase font-light text-gray-700">
+                          variant price:{' '}
+                          {formatCurrency(
+                            product.variant.price,
+                            order.currency || 'usd'
+                          )}
+                        </p>
+                      )}
+
+                      {typeof product.variant?.stock === 'number' && (
+                        <p className="text-xs uppercase font-light text-gray-600">
+                          stock at order: {product.variant.stock}
                         </p>
                       )}
 
