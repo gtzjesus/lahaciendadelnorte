@@ -69,11 +69,13 @@ export async function handleCheckoutSessionCompleted(
       _key: crypto.randomUUID(),
       product: {
         _type: 'reference',
-        _ref: stripeProduct.metadata.id,
+        _ref: stripeProduct.metadata.id, // Make sure this is the Sanity product ID!
       },
       quantity: item.quantity || 0,
-      variantSize,
       price: (item.amount_total || 0) / 100 / (item.quantity || 1), // unit price
+      variant: {
+        size: variantSize || '',
+      },
     };
   });
 
@@ -81,7 +83,7 @@ export async function handleCheckoutSessionCompleted(
   const subtotal = (amount_total || 0) / 100;
   const tax = parseFloat((subtotal * 0.0825).toFixed(2)); // 8.25% tax
 
-  // 🧾 Create the order document
+  // 🧾 Create the order document with all required fields
   const order = await backendClient.create({
     _type: 'order',
     orderNumber,
@@ -97,8 +99,9 @@ export async function handleCheckoutSessionCompleted(
     products: sanityProducts,
     totalPrice: subtotal,
     paymentStatus: 'paid_in_store',
-    orderDate: new Date().toISOString(),
     pickupStatus: 'pending',
+    orderDate: new Date().toISOString(),
+    orderType: 'reservation', // REQUIRED field!
   });
 
   console.log('✅ Order synced to Sanity:', order);
