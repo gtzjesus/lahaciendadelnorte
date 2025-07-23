@@ -150,7 +150,7 @@ export async function POST(req: Request) {
       amountDiscount: 0,
       orderType: 'reservation',
       paymentStatus: 'paid_in_store',
-      pickupStatus: 'picked_up',
+      pickupStatus: 'pending',
       orderDate: new Date().toISOString(),
       tax,
       paymentMethod,

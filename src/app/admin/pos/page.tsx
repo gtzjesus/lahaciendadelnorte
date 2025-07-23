@@ -427,7 +427,12 @@ export default function POSPage() {
                     setShowConfirmModal(false);
                     await handleSale();
                   }}
-                  className="uppercase text-sm px-3 py-1 bg-flag-blue text-black"
+                  disabled={!customerName.trim()}
+                  className={`uppercase text-sm px-3 py-1 text-black ${
+                    customerName.trim()
+                      ? 'bg-flag-blue hover:bg-blue-700 cursor-pointer'
+                      : 'bg-gray-300 cursor-not-allowed'
+                  }`}
                 >
                   Yes, Complete Sale
                 </button>
@@ -439,7 +444,11 @@ export default function POSPage() {
         <button
           onClick={() => setShowConfirmModal(true)}
           disabled={loading || cart.length === 0}
-          className="p-4 mb-2 block uppercase text-md font-bold text-center bg-green text-black w-full"
+          className={`p-4 mb-2 block uppercase text-md font-bold text-center text-black w-full ${
+            loading
+              ? 'bg-yellow cursor-wait'
+              : 'bg-green hover:bg-green-700 cursor-pointer'
+          }`}
         >
           {loading
             ? `Processing... $${total.toFixed(2)}`
