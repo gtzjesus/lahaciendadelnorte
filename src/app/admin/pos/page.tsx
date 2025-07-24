@@ -301,7 +301,7 @@ export default function POSPage() {
           </div>
         ))}
       </div>
-      <div className="w-full lg:w-auto bg-flag-blue p-6 lg:p-12 shadow-md mt-6">
+      <div className="w-full lg:w-auto bg-flag-red p-6 lg:p-12 shadow-md mt-6">
         <h3 className="uppercase text-lg font-bold text-center text-black border-b pb-1">
           Sale Summary
         </h3>
@@ -447,7 +447,7 @@ export default function POSPage() {
           className={`p-4 mb-2 block uppercase text-md font-bold text-center text-black w-full ${
             loading
               ? 'bg-yellow cursor-wait'
-              : 'bg-green hover:bg-green-700 cursor-pointer'
+              : 'bg-green text-white hover:bg-green-700 cursor-pointer'
           }`}
         >
           {loading
@@ -458,7 +458,7 @@ export default function POSPage() {
         <button
           onClick={clearCart}
           disabled={cart.length === 0 || loading}
-          className="p-4 mb-2 block uppercase text-md font-bold text-center bg-flag-red text-black w-full"
+          className="p-4 mb-2 block uppercase text-md font-bold text-center bg-flag-blue text-black w-full"
         >
           Clear Sale
         </button>

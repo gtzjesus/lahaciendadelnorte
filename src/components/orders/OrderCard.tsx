@@ -57,7 +57,13 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
   }
 
   return (
-    <div className="bg-flag-red border border-black p-4 shadow-md overflow-hidden">
+    <div
+      className={`p-4 shadow-md overflow-hidden bg-flag-red  ${
+        pickupStatus === 'pending'
+          ? 'border-red-400 border-2'
+          : 'border-green border'
+      }`}
+    >
       <Header order={order} />
       <ProductList products={visibleProducts} order={order} />
 

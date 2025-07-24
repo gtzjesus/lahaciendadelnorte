@@ -10,18 +10,27 @@ export default function OrderList({ orders }: { orders: any[] }) {
   const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>(
     'pending'
   );
+  const filteredOrders = orders
+    .filter((order) => {
+      const term = searchTerm.toLowerCase();
+      const matchesOrderNumber = order.orderNumber
+        ?.toLowerCase()
+        .includes(term);
+      const matchesCustomerName = order.customerName
+        ?.toLowerCase()
+        .includes(term);
+      const matchesStatus =
+        filter === 'all' || order.pickupStatus?.toLowerCase() === filter;
 
-  const filteredOrders = orders.filter((order) => {
-    const term = searchTerm.toLowerCase();
-    const matchesOrderNumber = order.orderNumber?.toLowerCase().includes(term);
-    const matchesCustomerName = order.customerName
-      ?.toLowerCase()
-      .includes(term);
-    const matchesStatus =
-      filter === 'all' || order.pickupStatus?.toLowerCase() === filter;
-
-    return (matchesOrderNumber || matchesCustomerName) && matchesStatus;
-  });
+      return (matchesOrderNumber || matchesCustomerName) && matchesStatus;
+    })
+    .sort((a, b) => {
+      // Sort so "pending" comes before "completed"
+      if (a.pickupStatus === b.pickupStatus) return 0;
+      if (a.pickupStatus === 'pending') return -1;
+      if (b.pickupStatus === 'pending') return 1;
+      return 0;
+    });
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -58,8 +67,10 @@ export default function OrderList({ orders }: { orders: any[] }) {
       </div>
 
       {filteredOrders.length === 0 ? (
-        <p className="text-center text-gray-600 uppercase tracking-wide font-light">
-          No orders found.
+        <p className="text-center pt-6 text-green-600 uppercase tracking-wide font-semibold">
+          {filter === 'pending'
+            ? 'All pending orders completed!'
+            : 'No orders found.'}
         </p>
       ) : (
         <div className="space-y-6 max-w-xl mx-auto">
