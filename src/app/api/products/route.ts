@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { backendClient } from '@/sanity/lib/backendClient';
-
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 export async function GET() {
   try {
     const products = await backendClient.fetch(`
@@ -8,8 +8,7 @@ export async function GET() {
         _id,
         itemNumber,
         name,
-        price,
-        stock,
+        slug,
         image {
           asset->{
             _id,
@@ -25,12 +24,16 @@ export async function GET() {
         category->{
           _id,
           title,
-          slug
+          "slug": slug.current
+        },
+        variants[]{
+          size,
+          price,
+          stock
         }
       }
     `);
 
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
     const productsWithImageUrls = products.map((product: any) => ({
       ...product,
       imageUrl: product.image?.asset?.url || '',

@@ -343,14 +343,15 @@ export default function InventoryPage() {
         </>
       )}
 
-      <hr className="my-8" />
+      <hr className="my-8 border-black" />
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {[...products].map((p) => (
           <Link
             key={p._id}
             href={`/admin/inventory/${p.itemNumber}`}
-            className="flex flex-col border border-black bg-flag-red  transition"
+            className="flex flex-col border border-black bg-flag-red text-black transition px-4 py-4"
           >
+            {/* Product Image */}
             {p.imageUrl && (
               <div className="w-full h-40 relative mb-2">
                 <Image
@@ -361,10 +362,50 @@ export default function InventoryPage() {
                 />
               </div>
             )}
-            <div>
-              <p className="text-xs text-gray-200">#{p.itemNumber}</p>
-              <p className="text-sm font-semibold text-white">{p.name}</p>
+
+            {/* Basic Info */}
+            <div className="flex justify-center items-center uppercase text-sm gap-1 my-2">
+              <p>#{p.itemNumber}</p>
+              <p className="font-semibold">{p.name}</p>
             </div>
+
+            {/* Category */}
+            {p.category?.title && (
+              <p className="text-sm text-center uppercase mb-1">
+                {' '}
+                <span className="font-semibold">{p.category.title}</span>
+              </p>
+            )}
+
+            {/* Total Stock */}
+            {(p.variants ?? []).length > 0 && (
+              <p className="text-sm uppercase text-center mb-1">
+                stock:{' '}
+                <span className="font-semibold">
+                  {(p.variants ?? []).reduce(
+                    (sum, v) => sum + Number(v.stock || 0),
+                    0
+                  )}
+                </span>
+              </p>
+            )}
+
+            {/* Variants List */}
+            {(p.variants ?? []).length > 0 && (
+              <div className="mt-2 border-t border-black pt-2">
+                <ul className="text-xs space-y-1">
+                  {(p.variants ?? []).map((v, i) => (
+                    <li key={i} className="flex justify-between">
+                      <span>{v.size}</span>
+                      <span>
+                        ${parseFloat(v.price || '0').toFixed(2)} – {v.stock} in
+                        stock
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </Link>
         ))}
       </div>
