@@ -196,7 +196,7 @@ export default function POSPage() {
 
         setTimeout(() => {
           window.location.reload();
-        }, 5000); // Reload after 5 seconds
+        }, 15000); // Reload after 5 seconds
       }
     } catch (err: any) {
       alert(`❌ ${err.message || 'Unknown error'}`);
@@ -244,7 +244,7 @@ export default function POSPage() {
               <strong className="text-green">${product.price}</strong>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-flag-blue">{product.category}</span>
+              <span className="">{product.category}</span>
               {product.stock === 0 && (
                 <p className="text-red-500 font-semibold text-sm ml-2">
                   OUT OF STOCK
@@ -275,7 +275,7 @@ export default function POSPage() {
               <div className="px-2">{item.category} </div>
             </div>
             <div className="uppercase text-sm">
-              <div className="px-2 text-flag-blue">stock: {item.stock}</div>$
+              <div className="px-2">stock: {item.stock}</div>$
               {item.price.toFixed(2)} x{' '}
               <select
                 value={item.cartQty}
@@ -489,18 +489,24 @@ export default function POSPage() {
         </div>
       )}
       {saleSuccess && (
-        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-flag-blue bg-opacity-95 text-black animate-fadeIn space-y-6 p-6">
-          <h2 className="text-4xl font-bold text-yellow uppercase">
+        <div className="fixed inset-0  flex flex-col items-center justify-center bg-flag-blue  text-black animate-fadeIn space-y-6 p-6">
+          <h2 className="text-5xl font-bold text-yellow uppercase">
             Sale Success!
           </h2>
-          <p className="text-md uppercase">Order #: {saleSuccess}</p>
-
+          <p className="text-lg uppercase">Order #{saleSuccess}</p>
           <button
             onClick={async () => {
-              console.log('Navigating to /admin/orders');
-              await router.push('/admin/orders');
+              await router.push('/admin/pos');
             }}
             className="px-6 py-3 bg-flag-red text-black font-bold  hover:bg-yellow-300 transition uppercase text-sm"
+          >
+            new sale
+          </button>
+          <button
+            onClick={async () => {
+              await router.push('/admin/orders');
+            }}
+            className="px-6 py-3 bg-black text-white font-bold  hover:bg-yellow-300 transition uppercase text-sm"
           >
             View order
           </button>
