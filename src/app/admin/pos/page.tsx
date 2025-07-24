@@ -206,7 +206,7 @@ export default function POSPage() {
   };
 
   return (
-    <div className="overflow-x-hidden mx-auto bg-white min-h-screen">
+    <div className="overflow-x-hidden mx-auto bg-white min-h-screen max-w-2xl">
       <h1 className="text-2xl font-bold uppercase m-4">Point of sale</h1>
 
       <div className="px-4">
@@ -215,7 +215,7 @@ export default function POSPage() {
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-4 border border-flag-red uppercase text-sm "
+          className="w-full p-4 border border-black uppercase text-sm "
         />
       </div>
 
@@ -259,8 +259,25 @@ export default function POSPage() {
         {cart.map((item, i) => (
           <div
             key={item._id}
-            className="flex flex-col items-center border-b border-flag-red py-4 "
+            className="flex flex-col items-center border-black border m-4  bg-flag-red py-2 "
           >
+            <div className="w-full flex justify-between items-center px-4 text-md text-green">
+              <div className="text-black font-medium">
+                ${item.price.toFixed(2)}
+              </div>
+
+              <button
+                className="text-red-500 text-sm px-2"
+                onClick={() => removeItem(i)}
+              >
+                ❌
+              </button>
+            </div>
+
+            <div className="my-3 uppercase flex text-md font-semibold">
+              <div className="px-2">{item.name}</div> <div className="">|</div>
+              <div className="px-2">{item.category} </div>
+            </div>
             {item.imageUrl && (
               <Image
                 src={item.imageUrl}
@@ -270,33 +287,26 @@ export default function POSPage() {
                 className="object-cover  w-16 h-16"
               />
             )}
-            <div className="my-2 uppercase flex text-sm">
-              <div className="px-2">{item.name}</div> <div className="">|</div>
-              <div className="px-2">{item.category} </div>
-            </div>
-            <div className="uppercase text-sm">
-              <div className="px-2">stock: {item.stock}</div>$
-              {item.price.toFixed(2)} x{' '}
-              <select
-                value={item.cartQty}
-                onChange={(e) => updateQuantity(i, Number(e.target.value))}
-                className="border my-2"
-              >
-                {Array.from({ length: item.stock }, (_, n) => (
-                  <option key={n + 1} value={n + 1}>
-                    {n + 1}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="text-green ">
-              ${(item.price * item.cartQty).toFixed(2)}
-              <button
-                className="text-red-500 text-sm px-4"
-                onClick={() => removeItem(i)}
-              >
-                ❌
-              </button>
+            <div className="uppercase text-sm flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1">
+                <div className="text-xs text-gray-600">Stock: {item.stock}</div>
+
+                <span className="text-xs text-gray-600">Qty:</span>
+                <select
+                  value={item.cartQty}
+                  onChange={(e) => updateQuantity(i, Number(e.target.value))}
+                  className="border border-black rounded px-2 py-1 my-3 text-black text-xs"
+                >
+                  {Array.from({ length: item.stock }, (_, n) => (
+                    <option key={n + 1} value={n + 1}>
+                      {n + 1}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="text-green font-medium">
+                ${(item.price * item.cartQty).toFixed(2)}
+              </div>
             </div>
           </div>
         ))}
@@ -490,7 +500,7 @@ export default function POSPage() {
       )}
       {saleSuccess && (
         <div className="fixed inset-0  flex flex-col items-center justify-center bg-flag-blue  text-black animate-fadeIn space-y-6 p-6">
-          <h2 className="text-5xl font-bold text-yellow uppercase">
+          <h2 className="text-3xl font-bold text-yellow uppercase">
             Sale Success!
           </h2>
           <p className="text-lg uppercase">Order #{saleSuccess}</p>

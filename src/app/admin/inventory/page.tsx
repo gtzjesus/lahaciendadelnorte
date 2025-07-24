@@ -142,25 +142,22 @@ export default function InventoryPage() {
   const sizeOptions = ['Small', 'Medium', 'Large', 'Extra Large'];
 
   return (
-    <div className="relative min-h-screen bg-white p-3">
-      <h1 className="uppercase text-xl font-semibold mb-6">
-        inventory manager
-      </h1>
+    <div className="relative min-h-screen bg-white p-3 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-bold uppercase my-4">Inventory</h1>
 
-      <div className="flex flex-col">
-        <h1 className="uppercase text-sm font-semibold mb-2">add product</h1>
+      <div className="">
         <button
-          className="text-xs uppercase font-light mb-2 text-white bg-flag-blue px-3 py-2"
+          className="text-sm uppercase font-light mb-2 text-black bg-flag-red px-2 py-2"
           onClick={() => setShowForm((prev) => !prev)}
         >
-          {showForm ? 'Hide fields' : 'Show fields to Add Product'}
+          {showForm ? 'Hide fields' : 'add new product'}
         </button>
       </div>
 
       {showForm && (
         <>
-          <div className="grid grid-cols-1 gap-4 mb-6">
-            {['itemNumber', 'name', 'slug'].map((key) => (
+          <div className="grid grid-cols-1 gap-4 text-black mb-6">
+            {['product number', 'name', 'slug'].map((key) => (
               <input
                 key={key}
                 name={key}
@@ -171,12 +168,12 @@ export default function InventoryPage() {
                   setForm((prev) => ({ ...prev, [key]: e.target.value }))
                 }
                 readOnly={key === 'slug'}
-                className="uppercase text-sm border border-flag-red p-3"
+                className="uppercase text-sm border  border-black p-3"
               />
             ))}
 
             <select
-              className="uppercase text-sm border border-flag-red p-3"
+              className="uppercase text-sm border border-black p-3"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
@@ -189,9 +186,6 @@ export default function InventoryPage() {
             </select>
 
             <div>
-              <label className="block uppercase text-sm mb-1 font-semibold">
-                Variants (size, price, stock)
-              </label>
               {form.variants.map((v, i) => (
                 <div
                   key={i}
@@ -204,7 +198,7 @@ export default function InventoryPage() {
                       variants[i].size = e.target.value;
                       setForm({ ...form, variants });
                     }}
-                    className="border p-2 text-sm uppercase"
+                    className="border border-black p-2 text-sm uppercase"
                   >
                     <option value="">Size</option>
                     {sizeOptions.map((opt) => (
@@ -218,7 +212,7 @@ export default function InventoryPage() {
                     type="number"
                     step="0.01"
                     placeholder="Price"
-                    className="border p-2 text-sm"
+                    className="uppercase border border-black p-2 text-sm"
                     value={v.price}
                     onChange={(e) => {
                       const variants = [...form.variants];
@@ -230,7 +224,7 @@ export default function InventoryPage() {
                   <input
                     type="number"
                     placeholder="Stock"
-                    className="border p-2 text-sm"
+                    className="border border-black uppercase p-2 text-sm"
                     value={v.stock}
                     onChange={(e) => {
                       const variants = [...form.variants];
@@ -267,38 +261,81 @@ export default function InventoryPage() {
                     ],
                   })
                 }
-                className="text-xs underline"
+                className="text-sm uppercase font-light mb-2 text-black bg-flag-blue px-2 py-2"
               >
-                + Add variant
+                + Add new size
               </button>
             </div>
           </div>
 
-          <div className="border border-flag-red p-2 mb-4">
-            <input
-              ref={mainImageRef}
-              type="file"
-              accept="image/*"
-              onChange={(e) => setMainImageFile(e.target.files?.[0] || null)}
-            />
-            <input
-              ref={extraImagesRef}
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={(e) => {
-                const files = Array.from(e.target.files || []);
-                if (files.length > 4)
-                  return alert('Only up to 4 extra images allowed.');
-                setExtraImageFiles(files);
-              }}
-            />
+          <div className="border border-black p-4 mb-6 space-y-4">
+            {/* Main Image Upload */}
+            <div>
+              <label className="block text-sm uppercase font-light text-black mb-1">
+                Add main image
+              </label>
+              <button
+                type="button"
+                onClick={() => mainImageRef.current?.click()}
+                className="bg-flag-blue text-black text-xs uppercase px-2 py-2 rounded "
+              >
+                Upload Main Image
+              </button>
+              <input
+                ref={mainImageRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => setMainImageFile(e.target.files?.[0] || null)}
+              />
+              {mainImageFile && (
+                <p className="mt-2 text-sm text-black">
+                  Selected: <strong>{mainImageFile.name}</strong>
+                </p>
+              )}
+            </div>
+
+            {/* Extra Images Upload */}
+            <div>
+              <label className="block text-sm uppercase font-light text-black mb-1">
+                Add extra images
+              </label>
+              <button
+                type="button"
+                onClick={() => extraImagesRef.current?.click()}
+                className="bg-flag-blue text-black text-xs uppercase px-2 py-2 rounded "
+              >
+                Upload Extra Images
+              </button>
+              <input
+                ref={extraImagesRef}
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files || []);
+                  if (files.length > 4)
+                    return alert('Only up to 4 extra images allowed.');
+                  setExtraImageFiles(files);
+                }}
+              />
+              {extraImageFiles.length > 0 && (
+                <ul className="mt-2 list-disc list-inside text-sm text-black space-y-1">
+                  {extraImageFiles.map((file, i) => (
+                    <li key={i}>
+                      <strong>{file.name}</strong>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
 
           <button
             disabled={loading}
             onClick={handleUpload}
-            className="bg-flag-blue text-white uppercase px-6 py-3 font-light"
+            className="text-sm uppercase font-light mb-2 text-black bg-flag-red px-2 py-2"
           >
             {loading ? 'Adding...' : 'Add Product'}
           </button>
@@ -307,37 +344,30 @@ export default function InventoryPage() {
       )}
 
       <hr className="my-8" />
-      <h2 className="uppercase text-xl font-semibold mb-6">
-        product inventory
-      </h2>
-
-      <ul className="space-y-2">
-        {[...products]
-          .sort((a, b) => Number(a.itemNumber) - Number(b.itemNumber))
-          .map((p) => (
-            <li key={p._id}>
-              <Link
-                href={`/admin/inventory/${p.itemNumber}`}
-                className="flex gap-4 items-center p-2 border border-flag-blue"
-              >
-                {p.imageUrl && (
-                  <div className="w-20 h-20 relative">
-                    <Image
-                      src={p.imageUrl}
-                      alt={p.name}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                    />
-                  </div>
-                )}
-                <div>
-                  <p className="text-sm text-gray-500">#{p.itemNumber}</p>
-                  <p className="text-sm font-semibold">{p.name}</p>
-                </div>
-              </Link>
-            </li>
-          ))}
-      </ul>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {[...products].map((p) => (
+          <Link
+            key={p._id}
+            href={`/admin/inventory/${p.itemNumber}`}
+            className="flex flex-col border border-black bg-flag-red p-3 hover:shadow-md transition rounded"
+          >
+            {p.imageUrl && (
+              <div className="w-full h-40 relative mb-2">
+                <Image
+                  src={p.imageUrl}
+                  alt={p.name}
+                  fill
+                  className="object-cover rounded"
+                />
+              </div>
+            )}
+            <div>
+              <p className="text-xs text-gray-200">#{p.itemNumber}</p>
+              <p className="text-sm font-semibold text-white">{p.name}</p>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
