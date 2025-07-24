@@ -475,33 +475,6 @@ export default function POSPage() {
           Clear Sale
         </button>
       </div>
-      {showConfirmModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded max-w-sm w-full">
-            <h2 className="text-lg font-bold mb-2 ">Confirm Sale</h2>
-            <p>
-              Total: <strong className="text-green">${total.toFixed(2)}</strong>
-            </p>
-            <div className="mt-4 flex justify-end space-x-2">
-              <button
-                onClick={() => setShowConfirmModal(false)}
-                className="px-4 py-2 border rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  setShowConfirmModal(false);
-                  handleSale();
-                }}
-                className="px-4 py-2 bg-black text-white rounded"
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       {saleSuccess && (
         <div className="fixed inset-0  flex flex-col items-center justify-center bg-flag-blue  text-black animate-fadeIn space-y-6 p-6">
           <h2 className="text-3xl font-bold text-yellow uppercase">
