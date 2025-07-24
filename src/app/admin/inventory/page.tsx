@@ -142,12 +142,12 @@ export default function InventoryPage() {
   const sizeOptions = ['Small', 'Medium', 'Large', 'Extra Large'];
 
   return (
-    <div className="relative min-h-screen bg-white p-3 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold uppercase my-4">Inventory</h1>
+    <div className="relative min-h-screen bg-white p-1 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-bold uppercase m-4">Inventory</h1>
 
       <div className="">
         <button
-          className="text-sm uppercase font-light mb-2 text-black bg-flag-red px-2 py-2"
+          className="mx-4 text-sm uppercase font-light mb-2 text-black bg-flag-red px-2 py-2"
           onClick={() => setShowForm((prev) => !prev)}
         >
           {showForm ? 'Hide fields' : 'add new product'}
@@ -344,7 +344,7 @@ export default function InventoryPage() {
       )}
 
       <hr className="my-8 border-black" />
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-1">
         {[...products].map((p) => (
           <Link
             key={p._id}
@@ -364,14 +364,14 @@ export default function InventoryPage() {
             )}
 
             {/* Basic Info */}
-            <div className="flex justify-center items-center uppercase text-sm gap-1 my-2">
+            <div className="flex flex-col justify-center items-center uppercase text-sm">
               <p>#{p.itemNumber}</p>
               <p className="font-semibold">{p.name}</p>
             </div>
 
             {/* Category */}
             {p.category?.title && (
-              <p className="text-sm text-center uppercase mb-1">
+              <p className="text-sm text-center uppercase">
                 {' '}
                 <span className="font-semibold">{p.category.title}</span>
               </p>
@@ -392,14 +392,13 @@ export default function InventoryPage() {
 
             {/* Variants List */}
             {(p.variants ?? []).length > 0 && (
-              <div className="mt-2 border-t border-black pt-2">
+              <div className="uppercase mt-2 border-t border-black pt-2">
                 <ul className="text-xs space-y-1">
                   {(p.variants ?? []).map((v, i) => (
                     <li key={i} className="flex justify-between">
                       <span>{v.size}</span>
                       <span>
-                        ${parseFloat(v.price || '0').toFixed(2)} – {v.stock} in
-                        stock
+                        ${parseFloat(v.price || '0').toFixed(2)} – {v.stock}
                       </span>
                     </li>
                   ))}

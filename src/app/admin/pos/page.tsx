@@ -319,7 +319,9 @@ export default function POSPage() {
           <p>Total Items: {totalItems}</p>
           <p>Subtotal: ${subtotal.toFixed(2)}</p>
           <p>Tax: ${tax.toFixed(2)}</p>
-          <p>Total: ${total.toFixed(2)}</p>
+          <p>
+            Total: <strong className="text-green">${total.toFixed(2)}</strong>
+          </p>
         </div>
 
         {/* Payment Method Section */}
@@ -428,7 +430,7 @@ export default function POSPage() {
               <div className="flex justify-center space-x-4">
                 <button
                   onClick={() => setShowConfirmModal(false)}
-                  className="uppercase text-sm px-3 py-1 bg-flag-red text-black"
+                  className="uppercase text-sm px-3 py-1 bg-red-500 text-white "
                 >
                   Cancel
                 </button>
@@ -440,7 +442,7 @@ export default function POSPage() {
                   disabled={!customerName.trim()}
                   className={`uppercase text-sm px-3 py-1 text-black ${
                     customerName.trim()
-                      ? 'bg-flag-blue hover:bg-blue-700 cursor-pointer'
+                      ? 'bg-yellow cursor-pointer'
                       : 'bg-gray-300 cursor-not-allowed'
                   }`}
                 >
@@ -457,7 +459,7 @@ export default function POSPage() {
           className={`p-4 mb-2 block uppercase text-md font-bold text-center text-black w-full ${
             loading
               ? 'bg-yellow cursor-wait'
-              : 'bg-green text-white hover:bg-green-700 cursor-pointer'
+              : 'bg-green text-yellow hover:bg-green-700 cursor-pointer'
           }`}
         >
           {loading
@@ -476,8 +478,10 @@ export default function POSPage() {
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded max-w-sm w-full">
-            <h2 className="text-lg font-bold mb-2">Confirm Sale</h2>
-            <p>Total: ${total.toFixed(2)}</p>
+            <h2 className="text-lg font-bold mb-2 ">Confirm Sale</h2>
+            <p>
+              Total: <strong className="text-green">${total.toFixed(2)}</strong>
+            </p>
             <div className="mt-4 flex justify-end space-x-2">
               <button
                 onClick={() => setShowConfirmModal(false)}
