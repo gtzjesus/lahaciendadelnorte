@@ -3,7 +3,7 @@ import { client } from '@/sanity/lib/client';
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 export async function GET() {
   const query = `
-  *[_type == "order"] | order(orderDate desc) {
+  *[_type == "order"] | order(pickupStatus asc, orderDate asc) {
     _id,
     orderNumber,
     clerkUserId,
@@ -41,7 +41,6 @@ export async function GET() {
     changeGiven        
   }
 `;
-
   try {
     const orders = await client.fetch(query);
     return NextResponse.json({ success: true, orders });

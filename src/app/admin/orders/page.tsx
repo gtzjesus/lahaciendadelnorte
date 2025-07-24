@@ -1,6 +1,7 @@
-import OrderCard from '@/components/orders/OrderCard';
-
+// app/(admin)/orders/page.tsx
+import OrderList from '@/components/orders/OrderList'; // <- we'll create this
 export const dynamic = 'force-dynamic';
+
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 export default async function AdminOrdersPage() {
   const baseUrl =
@@ -31,16 +32,8 @@ export default async function AdminOrdersPage() {
         <p className="text-center text-red-600 uppercase font-light">
           Failed to fetch orders.
         </p>
-      ) : orders.length === 0 ? (
-        <p className="text-center text-gray-600 uppercase tracking-wide font-light">
-          No orders found.
-        </p>
       ) : (
-        <div className="space-y-6 max-w-4xl mx-auto">
-          {orders.map((order: any) => (
-            <OrderCard key={order.orderNumber || order._id} order={order} />
-          ))}
-        </div>
+        <OrderList orders={orders} />
       )}
     </div>
   );
