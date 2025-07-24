@@ -349,7 +349,7 @@ export default function InventoryPage() {
           <Link
             key={p._id}
             href={`/admin/inventory/${p.itemNumber}`}
-            className="flex flex-col border border-black bg-flag-red p-3 hover:shadow-md transition rounded"
+            className="flex flex-col border border-black bg-flag-red  transition"
           >
             {p.imageUrl && (
               <div className="w-full h-40 relative mb-2">
@@ -357,7 +357,7 @@ export default function InventoryPage() {
                   src={p.imageUrl}
                   alt={p.name}
                   fill
-                  className="object-cover rounded"
+                  className="object-cover"
                 />
               </div>
             )}

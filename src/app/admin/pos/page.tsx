@@ -274,9 +274,9 @@ export default function POSPage() {
               </button>
             </div>
 
-            <div className="my-3 uppercase flex text-md font-semibold">
-              <div className="px-2">{item.name}</div> <div className="">|</div>
-              <div className="px-2">{item.category} </div>
+            <div className="my-2 text-center uppercase flex flex-col text-md font-semibold">
+              <p>{item.name}</p>
+              <p>{item.category} </p>
             </div>
             {item.imageUrl && (
               <Image
@@ -284,18 +284,18 @@ export default function POSPage() {
                 alt={item.name}
                 width={56}
                 height={56}
-                className="object-cover  w-16 h-16"
+                className="object-cover  w-20 h-20"
               />
             )}
             <div className="uppercase text-sm flex items-center justify-between gap-2">
               <div className="flex items-center gap-1">
-                <div className="text-xs text-gray-600">Stock: {item.stock}</div>
+                <div className="text-sm text-gray-600">Stock: {item.stock}</div>
 
-                <span className="text-xs text-gray-600">Qty:</span>
+                <span className="text-sm text-gray-600">Qty:</span>
                 <select
                   value={item.cartQty}
                   onChange={(e) => updateQuantity(i, Number(e.target.value))}
-                  className="border border-black rounded px-2 py-1 my-3 text-black text-xs"
+                  className="border border-black rounded px-2 py-1 my-3 text-black text-sm"
                 >
                   {Array.from({ length: item.stock }, (_, n) => (
                     <option key={n + 1} value={n + 1}>
@@ -304,7 +304,7 @@ export default function POSPage() {
                   ))}
                 </select>
               </div>
-              <div className="text-green font-medium">
+              <div className="text-green font-bold">
                 ${(item.price * item.cartQty).toFixed(2)}
               </div>
             </div>
