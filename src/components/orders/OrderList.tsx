@@ -6,13 +6,21 @@ import OrderCard from './OrderCard';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 export default function OrderList({ orders }: { orders: any[] }) {
+  const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>(
     'pending'
   );
 
   const filteredOrders = orders.filter((order) => {
-    if (filter === 'all') return true;
-    return order.pickupStatus === filter;
+    const term = searchTerm.toLowerCase();
+    const matchesOrderNumber = order.orderNumber?.toLowerCase().includes(term);
+    const matchesCustomerName = order.customerName
+      ?.toLowerCase()
+      .includes(term);
+    const matchesStatus =
+      filter === 'all' || order.pickupStatus?.toLowerCase() === filter;
+
+    return (matchesOrderNumber || matchesCustomerName) && matchesStatus;
   });
 
   useEffect(() => {
@@ -21,23 +29,32 @@ export default function OrderList({ orders }: { orders: any[] }) {
 
   return (
     <div>
-      <div className="mb-6">
-        <label
-          htmlFor="filter"
-          className="block text-sm font-semibold uppercase mb-1"
-        ></label>
-        <select
-          id="filter"
-          value={filter}
-          onChange={(e) =>
-            setFilter(e.target.value as 'all' | 'pending' | 'completed')
-          }
-          className="uppercase text-sm border border-black px-2 py-2  bg-white text-black"
-        >
-          <option value="pending">Pending</option>
-          <option value="completed">Completed</option>
-          <option value="all">All</option>
-        </select>
+      <div className="mb-6 flex">
+        <div className="">
+          <select
+            id="filter"
+            value={filter}
+            onChange={(e) =>
+              setFilter(e.target.value as 'all' | 'pending' | 'completed')
+            }
+            className="uppercase text-sm border border-black px-2 py-2  w-full bg-white text-black"
+          >
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="all">All</option>
+          </select>
+        </div>
+
+        <div className="flex-1">
+          <input
+            type="text"
+            id="search"
+            placeholder="Search name or number"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="uppercase ml-2 text-sm border border-black px-2 py-2  w-full"
+          />
+        </div>
       </div>
 
       {filteredOrders.length === 0 ? (
@@ -45,7 +62,7 @@ export default function OrderList({ orders }: { orders: any[] }) {
           No orders found.
         </p>
       ) : (
-        <div className="space-y-6 max-w-4xl mx-auto">
+        <div className="space-y-6 max-w-xl mx-auto">
           {filteredOrders.map((order: any) => (
             <OrderCard key={order.orderNumber || order._id} order={order} />
           ))}
