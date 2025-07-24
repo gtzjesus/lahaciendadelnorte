@@ -196,7 +196,7 @@ export default function POSPage() {
 
         setTimeout(() => {
           window.location.reload();
-        }, 15000); // Reload after 5 seconds
+        }, 5000); // Reload after 5 seconds
       }
     } catch (err: any) {
       alert(`❌ ${err.message || 'Unknown error'}`);
@@ -481,14 +481,6 @@ export default function POSPage() {
             Sale Success!
           </h2>
           <p className="text-lg uppercase">Order #{saleSuccess}</p>
-          <button
-            onClick={async () => {
-              await router.push('/admin/pos');
-            }}
-            className="px-6 py-3 bg-flag-red text-black font-bold  hover:bg-yellow-300 transition uppercase text-sm"
-          >
-            new sale
-          </button>
           <button
             onClick={async () => {
               await router.push('/admin/orders');

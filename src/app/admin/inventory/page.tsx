@@ -153,195 +153,200 @@ export default function InventoryPage() {
           {showForm ? 'Hide fields' : 'add new product'}
         </button>
       </div>
-
-      {showForm && (
-        <>
-          <div className="grid grid-cols-1 gap-4 text-black mb-6">
-            {['product number', 'name', 'slug'].map((key) => (
-              <input
-                key={key}
-                name={key}
-                type="text"
-                placeholder={key === 'slug' ? 'Slug (auto)' : key}
-                value={(form as any)[key]}
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, [key]: e.target.value }))
-                }
-                readOnly={key === 'slug'}
-                className="uppercase text-sm border  border-black p-3"
-              />
-            ))}
-
-            <select
-              className="uppercase text-sm border border-black p-3"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              <option value="">Select category</option>
-              {categories.map((c) => (
-                <option key={c._id} value={c._id}>
-                  {c.title}
-                </option>
+      <div className="px-4">
+        {showForm && (
+          <>
+            <div className="grid grid-cols-1 gap-4 text-black mb-6">
+              {['product number', 'name', 'slug'].map((key) => (
+                <input
+                  key={key}
+                  name={key}
+                  type="text"
+                  placeholder={key === 'slug' ? 'Slug (auto)' : key}
+                  value={(form as any)[key]}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, [key]: e.target.value }))
+                  }
+                  readOnly={key === 'slug'}
+                  className="uppercase text-sm border  border-black p-3"
+                />
               ))}
-            </select>
 
-            <div>
-              {form.variants.map((v, i) => (
-                <div
-                  key={i}
-                  className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 mb-2"
-                >
-                  <select
-                    value={v.size}
-                    onChange={(e) => {
-                      const variants = [...form.variants];
-                      variants[i].size = e.target.value;
-                      setForm({ ...form, variants });
-                    }}
-                    className="border border-black p-2 text-sm uppercase"
+              <select
+                className="uppercase text-sm border border-black p-3"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <option value="">Select category</option>
+                {categories.map((c) => (
+                  <option key={c._id} value={c._id}>
+                    {c.title}
+                  </option>
+                ))}
+              </select>
+
+              <div>
+                {form.variants.map((v, i) => (
+                  <div
+                    key={i}
+                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 mb-2"
                   >
-                    <option value="">Size</option>
-                    {sizeOptions.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
-
-                  <input
-                    type="number"
-                    step="0.01"
-                    placeholder="Price"
-                    className="uppercase border border-black p-2 text-sm"
-                    value={v.price}
-                    onChange={(e) => {
-                      const variants = [...form.variants];
-                      variants[i].price = e.target.value;
-                      setForm({ ...form, variants });
-                    }}
-                  />
-
-                  <input
-                    type="number"
-                    placeholder="Stock"
-                    className="border border-black uppercase p-2 text-sm"
-                    value={v.stock}
-                    onChange={(e) => {
-                      const variants = [...form.variants];
-                      variants[i].stock = e.target.value;
-                      setForm({ ...form, variants });
-                    }}
-                  />
-
-                  {form.variants.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setForm({
-                          ...form,
-                          variants: form.variants.filter((_, idx) => idx !== i),
-                        })
-                      }
-                      className="text-red-600 font-bold"
+                    <select
+                      value={v.size}
+                      onChange={(e) => {
+                        const variants = [...form.variants];
+                        variants[i].size = e.target.value;
+                        setForm({ ...form, variants });
+                      }}
+                      className="border border-black p-2 text-sm uppercase"
                     >
-                      ✕
-                    </button>
-                  )}
-                </div>
-              ))}
+                      <option value="">Size</option>
+                      {sizeOptions.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
 
-              <button
-                type="button"
-                onClick={() =>
-                  setForm({
-                    ...form,
-                    variants: [
-                      ...form.variants,
-                      { size: '', price: '', stock: '' },
-                    ],
-                  })
-                }
-                className="text-sm uppercase font-light mb-2 text-black bg-flag-blue px-2 py-2"
-              >
-                + Add new size
-              </button>
+                    <input
+                      type="number"
+                      step="0.01"
+                      placeholder="Price"
+                      className="uppercase border border-black p-2 text-sm"
+                      value={v.price}
+                      onChange={(e) => {
+                        const variants = [...form.variants];
+                        variants[i].price = e.target.value;
+                        setForm({ ...form, variants });
+                      }}
+                    />
+
+                    <input
+                      type="number"
+                      placeholder="Stock"
+                      className="border border-black uppercase p-2 text-sm"
+                      value={v.stock}
+                      onChange={(e) => {
+                        const variants = [...form.variants];
+                        variants[i].stock = e.target.value;
+                        setForm({ ...form, variants });
+                      }}
+                    />
+
+                    {form.variants.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setForm({
+                            ...form,
+                            variants: form.variants.filter(
+                              (_, idx) => idx !== i
+                            ),
+                          })
+                        }
+                        className="text-red-600 font-bold"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setForm({
+                      ...form,
+                      variants: [
+                        ...form.variants,
+                        { size: '', price: '', stock: '' },
+                      ],
+                    })
+                  }
+                  className="text-sm uppercase font-light mb-2 text-black bg-flag-blue px-2 py-2"
+                >
+                  + Add new size
+                </button>
+              </div>
             </div>
-          </div>
 
-          <div className="border border-black p-4 mb-6 space-y-4">
-            {/* Main Image Upload */}
-            <div>
-              <label className="block text-sm uppercase font-light text-black mb-1">
-                Add main image
-              </label>
-              <button
-                type="button"
-                onClick={() => mainImageRef.current?.click()}
-                className="bg-flag-blue text-black text-xs uppercase px-2 py-2 rounded "
-              >
-                Upload Main Image
-              </button>
-              <input
-                ref={mainImageRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => setMainImageFile(e.target.files?.[0] || null)}
-              />
-              {mainImageFile && (
-                <p className="mt-2 text-sm text-black">
-                  Selected: <strong>{mainImageFile.name}</strong>
-                </p>
-              )}
+            <div className="border border-black p-4 mb-6 space-y-4">
+              {/* Main Image Upload */}
+              <div>
+                <label className="block text-sm uppercase font-light text-black mb-1">
+                  Add main image
+                </label>
+                <button
+                  type="button"
+                  onClick={() => mainImageRef.current?.click()}
+                  className="bg-flag-blue text-black text-xs uppercase px-2 py-2 rounded "
+                >
+                  Upload Main Image
+                </button>
+                <input
+                  ref={mainImageRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) =>
+                    setMainImageFile(e.target.files?.[0] || null)
+                  }
+                />
+                {mainImageFile && (
+                  <p className="mt-2 text-sm text-black">
+                    Selected: <strong>{mainImageFile.name}</strong>
+                  </p>
+                )}
+              </div>
+
+              {/* Extra Images Upload */}
+              <div>
+                <label className="block text-sm uppercase font-light text-black mb-1">
+                  Add extra images
+                </label>
+                <button
+                  type="button"
+                  onClick={() => extraImagesRef.current?.click()}
+                  className="bg-flag-blue text-black text-xs uppercase px-2 py-2 rounded "
+                >
+                  Upload Extra Images
+                </button>
+                <input
+                  ref={extraImagesRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files || []);
+                    if (files.length > 4)
+                      return alert('Only up to 4 extra images allowed.');
+                    setExtraImageFiles(files);
+                  }}
+                />
+                {extraImageFiles.length > 0 && (
+                  <ul className="mt-2 list-disc list-inside text-sm text-black space-y-1">
+                    {extraImageFiles.map((file, i) => (
+                      <li key={i}>
+                        <strong>{file.name}</strong>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
 
-            {/* Extra Images Upload */}
-            <div>
-              <label className="block text-sm uppercase font-light text-black mb-1">
-                Add extra images
-              </label>
-              <button
-                type="button"
-                onClick={() => extraImagesRef.current?.click()}
-                className="bg-flag-blue text-black text-xs uppercase px-2 py-2 rounded "
-              >
-                Upload Extra Images
-              </button>
-              <input
-                ref={extraImagesRef}
-                type="file"
-                accept="image/*"
-                multiple
-                className="hidden"
-                onChange={(e) => {
-                  const files = Array.from(e.target.files || []);
-                  if (files.length > 4)
-                    return alert('Only up to 4 extra images allowed.');
-                  setExtraImageFiles(files);
-                }}
-              />
-              {extraImageFiles.length > 0 && (
-                <ul className="mt-2 list-disc list-inside text-sm text-black space-y-1">
-                  {extraImageFiles.map((file, i) => (
-                    <li key={i}>
-                      <strong>{file.name}</strong>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-
-          <button
-            disabled={loading}
-            onClick={handleUpload}
-            className="text-sm uppercase font-light mb-2 text-black bg-flag-red px-2 py-2"
-          >
-            {loading ? 'Adding...' : 'Add Product'}
-          </button>
-          {message && <p className="mt-4">{message}</p>}
-        </>
-      )}
+            <button
+              disabled={loading}
+              onClick={handleUpload}
+              className="text-sm uppercase font-light mb-2 text-black bg-flag-red px-2 py-2"
+            >
+              {loading ? 'Adding...' : 'Add Product'}
+            </button>
+            {message && <p className="mt-4">{message}</p>}
+          </>
+        )}
+      </div>
 
       <hr className="my-8 border-black" />
       <div className="grid grid-cols-2 md:grid-cols-3 gap-1">
