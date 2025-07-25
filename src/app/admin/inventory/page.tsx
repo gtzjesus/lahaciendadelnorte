@@ -215,7 +215,7 @@ export default function InventoryPage() {
                 {form.variants.map((v, i) => (
                   <div
                     key={i}
-                    className="grid grid-cols-[120px_120px_120px_auto] gap-2 mb-2"
+                    className="grid grid-cols-[80px_80px_80px_auto] gap-2 mb-2"
                   >
                     <select
                       value={v.size}
