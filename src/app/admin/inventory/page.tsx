@@ -184,6 +184,10 @@ export default function InventoryPage() {
 
   const sizeOptions = ['Small', 'Medium', 'Large', 'Extra Large'];
 
+  const availableSizeOptions = sizeOptions.filter(
+    (size) => !form.variants.some((v) => v.size === size)
+  );
+
   return (
     <div className="relative min-h-screen bg-white p-1 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold uppercase m-4">Inventory</h1>
@@ -251,11 +255,18 @@ export default function InventoryPage() {
                       className="border border-black p-1 text-sm uppercase w-full"
                     >
                       <option value="">Size</option>
-                      {sizeOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
+                      {sizeOptions
+                        .filter(
+                          (opt) =>
+                            !form.variants.some(
+                              (v, j) => v.size === opt && j !== i
+                            )
+                        )
+                        .map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
                     </select>
 
                     <input
@@ -313,7 +324,12 @@ export default function InventoryPage() {
                       ],
                     })
                   }
-                  className="text-sm uppercase font-light mb-2 text-black bg-flag-blue px-2 py-2"
+                  disabled={availableSizeOptions.length === 0}
+                  className={`text-sm uppercase font-light mb-2 px-2 py-2 ${
+                    availableSizeOptions.length === 0
+                      ? 'bg-gray-400 text-white cursor-not-allowed'
+                      : 'bg-flag-blue text-black'
+                  }`}
                 >
                   + Add new size
                 </button>
@@ -352,7 +368,7 @@ export default function InventoryPage() {
               {/* Extra Images Upload */}
               <div>
                 <label className="block text-sm uppercase font-light text-black mb-1">
-                  Add extra images
+                  Add extra images (up to 4 more)
                 </label>
                 <button
                   type="button"
