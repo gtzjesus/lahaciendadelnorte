@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { client } from '@/sanity/lib/client'; // Adjust path if needed
 
 export async function GET() {
-  const baseUrl = 'https://elpasokaboom.com';
+  const baseUrl = 'laduenaice@gmail.com';
 
   // Static pages you want indexed
   const staticRoutes = ['', '/search?q=*', '/contact', '/categories'];

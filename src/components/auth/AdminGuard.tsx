@@ -4,7 +4,7 @@ import { SignInButton, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-const ADMIN_EMAILS = ['elpasokaboom@gmail.com'];
+const ADMIN_EMAILS = ['laduenaice@gmail.com'];
 
 const AdminGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, isLoaded, isSignedIn } = useUser();

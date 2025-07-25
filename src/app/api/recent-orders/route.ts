@@ -3,7 +3,7 @@ import { client } from '@/sanity/lib/client';
 import { NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs/server';
 
-const ADMIN_EMAILS = ['elpasokaboom@gmail.com'];
+const ADMIN_EMAILS = ['laduenaice@gmail.com'];
 
 export async function GET() {
   try {

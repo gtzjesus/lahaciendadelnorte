@@ -86,7 +86,7 @@ export async function createCheckoutSession(
 
       payment_intent_data: {
         description: `Order #${metadata.orderNumber} for ${metadata.customerEmail}`,
-        statement_descriptor: 'ELPASO KABOOM',
+        statement_descriptor: 'LA DUENA',
         metadata: {
           ...metadata,
           riskNote: 'Low risk – manually verified customer',

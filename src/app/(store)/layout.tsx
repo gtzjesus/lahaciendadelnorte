@@ -11,60 +11,49 @@ import { SanityLive } from '@/sanity/lib/live';
 import ScrollToTop from '@/components/common/ScrollToTop';
 
 /**
- * 📦 Store Layout
+ * 🍧 Store Layout – La Dueña
  *
- * Layout wrapper for all routes under `/store`.
- * Sets up shared context providers and tools used across the storefront pages.
- *
- * Providers:
- * - `ClerkProvider`: Handles authentication and session context from Clerk.
- * - `SanityLive`: Enables live-editing capabilities from Sanity Studio.
- * - `VisualEditing`: Allows Sanity Studio users to visually edit content when in draft mode.
- * - `DisableDraftMode`: UI ccontrol to disable draft mode from the frontend.
- *
- * Features:
- * - Dynamically checks if draft mode is active and conditionally renders visual editing tools.
- * - Wraps all content in a `<main>` tag for semantic structure and styling control.
- *
- * Metadata:
- * - Default metadata set for the basket/store layout. Can be overridden per page.
+ * Layout wrapper for all `/store` routes.
+ * Sets up providers and shared tooling for storefront.
  */
 
 export const metadata: Metadata = {
-  title: 'ElPasoKaBoom | Buy Fireworks Online in El Paso, TX',
+  title: 'La Dueña | Shaved Ice, Ice Cream & Snacks – El Paso, TX',
   description:
-    'ElPasoKaBoom is your go-to online fireworks store in El Paso, Texas. Shop safe, legal fireworks with fast pickup and unforgettable celebrations.',
+    'Craving something cool or spicy? La Dueña offers shaved ice, ice cream, raspas, and authentic snacks in El Paso, TX.',
   keywords: [
-    'ElPasoKaBoom',
-    'El Paso fireworks',
-    'buy fireworks online',
-    'Texas fireworks store',
-    'Fourth of July El Paso',
-    'El Paso party supplies',
-    'legal fireworks El Paso',
+    'La Dueña',
+    'shaved ice El Paso',
+    'raspas El Paso',
+    'ice cream El Paso',
+    'mexican snacks El Paso',
+    'snack shop El Paso',
+    'chamoy snacks',
+    'El Paso treats',
+    'La Dueña snack bar',
   ],
   openGraph: {
-    title: 'ElPasoKaBoom | Buy Fireworks Online in El Paso',
+    title: 'La Dueña | El Paso’s Spot for Raspas & Snacks',
     description:
-      'Shop fireworks in El Paso, TX from ElPasoKaBoom. Get ready for your next big celebration with top-tier pyrotechnics!',
-    url: 'https://elpasokaboom.com',
-    siteName: 'ElPasoKaBoom',
+      'Visit La Dueña in El Paso for refreshing shaved ice, creamy ice cream, and tasty Mexican-style snacks. Order online or stop by!',
+    url: 'https://laduena.store',
+    siteName: 'La Dueña',
     images: [
       {
-        url: '/images/elpaso.webp', // Use a real OG image here!
+        url: '/images/laduena-preview.webp', // Replace with actual OG image
         width: 1200,
         height: 630,
-        alt: 'ElPasoKaBoom Fireworks Store',
+        alt: 'La Dueña Shaved Ice & Snacks',
       },
     ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ElPasoKaBoom | Buy Fireworks Online in El Paso',
+    title: 'La Dueña | Shaved Ice, Ice Cream & Snacks – El Paso, TX',
     description:
-      'Shop fireworks online in El Paso, TX. Safe, legal, and ready to party — only at ElPasoKaBoom!',
-    images: ['/images/elpaso.webp'], // Same OG image
+      'El Paso’s go-to spot for raspas, ice cream, and authentic Mexican snacks. La Dueña keeps it cool!',
+    images: ['/images/laduena-preview.webp'], // Replace with actual OG image
   },
 };
 
@@ -86,10 +75,8 @@ export default async function StoreLayout({
 
       <ScrollToTop />
 
-      {/* Page content rendered inside main tag */}
       <main>{children}</main>
 
-      {/* Enables live Sanity updates */}
       <SanityLive />
     </ClerkProvider>
   );

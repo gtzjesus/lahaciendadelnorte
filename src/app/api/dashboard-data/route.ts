@@ -6,7 +6,7 @@ type Order = {
   totalPrice?: number;
 };
 
-const ADMIN_EMAILS = ['elpasokaboom@gmail.com'];
+const ADMIN_EMAILS = ['laduenaice@gmail.com'];
 
 export async function GET() {
   try {

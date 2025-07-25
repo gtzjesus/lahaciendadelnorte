@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { client } from '@/sanity/lib/client';
 import { currentUser } from '@clerk/nextjs/server';
 
-const ADMIN_EMAILS = ['elpasokaboom@gmail.com'];
+const ADMIN_EMAILS = ['laduenaice@gmail.com'];
 
 function getWeekStart(date: string): string {
   const d = new Date(date);

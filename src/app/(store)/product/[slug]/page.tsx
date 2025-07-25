@@ -20,23 +20,24 @@ export async function generateMetadata({
 
   if (!product) {
     return {
-      title: 'Product Not Found | ElPasoKaBoom',
+      title: 'Product Not Found | La Dueña',
       description: 'Sorry, this product does not exist.',
     };
   }
 
   const fallbackDescription =
-    product.description?.slice(0, 150) || 'Browse our delicious items.';
+    product.description?.slice(0, 150) ||
+    'Browse our delicious items at La Dueña.';
 
   const productImageUrl = product.image
     ? imageUrl(product.image).width(1200).height(630).url()
     : '/default-og.jpg';
 
   return {
-    title: `${product.name} | ElPasoKaBoom`,
+    title: `${product.name} | La Dueña`,
     description: fallbackDescription,
     openGraph: {
-      title: `${product.name} | ElPasoKaBoom`,
+      title: `${product.name} | La Dueña`,
       description: fallbackDescription,
       images: [
         {
@@ -49,12 +50,12 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${product.name} | ElPasoKaBoom`,
+      title: `${product.name} | La Dueña`,
       description: fallbackDescription,
       images: [productImageUrl],
     },
     alternates: {
-      canonical: `https://elpasokaboom.com/products/${product.slug?.current}`,
+      canonical: `https://laduena.store/products/${product.slug?.current}`,
     },
   };
 }
@@ -84,12 +85,12 @@ async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
 
           <InfoDropdown title="Details" info={product.description ?? ''} />
 
-          {/* Mostrar lista de sabores si hay */}
+          {/* Show flavors if any */}
           {product.flavors?.length ? (
             <InfoDropdown title="Flavors" info={product.flavors.join(', ')} />
           ) : null}
 
-          {/* Mostrar lista de tallas si hay */}
+          {/* Show sizes if any */}
           {product.sizes?.length ? (
             <InfoDropdown
               title="Sizes"

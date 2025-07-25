@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import Header from '@/components/common/header';
 import type { Metadata } from 'next';
 import { getCategoryBySlug } from '@/sanity/lib/products/getCategoryBySlug';
+
 /**
  * CategoryPage Component
  * Displays products for a specific category based on the 'slug' in the URL.
@@ -31,11 +32,12 @@ export async function generateMetadata({
     slug
       .split('-')
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ') || 'Fireworks';
+      .join(' ') || 'La Dueña';
 
   const title = category?.title || categoryTitle;
   const description =
-    category?.description || 'Fireworks and party supplies category.';
+    category?.description ||
+    'Delicious shaved ice, ice cream, and snacks from La Dueña in Canutillo, TX.';
 
   return {
     title,
@@ -43,15 +45,16 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: `https://elpasokaboom.com/categories/${slug}`,
-      siteName: 'ElPasoKaBoom',
+      url: `https://laduena.store/categories/${slug}`,
+      siteName: 'La Dueña',
       type: 'website',
     },
     alternates: {
-      canonical: `https://elpasokaboom.com/categories/${slug}`,
+      canonical: `https://laduena.store/categories/${slug}`,
     },
   };
 }
+
 export default async function CategoryPage({
   params,
 }: {
