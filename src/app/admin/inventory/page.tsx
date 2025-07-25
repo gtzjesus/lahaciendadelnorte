@@ -20,7 +20,7 @@ type Product = {
   _id?: string;
   itemNumber: string;
   name: string;
-  slug?: string;
+  slug?: { current: string };
   category?: Category;
   imageUrl?: string;
   extraImageUrls?: string[];
@@ -83,6 +83,10 @@ export default function InventoryPage() {
   }, []);
 
   const handleUpload = async () => {
+    if (isDuplicateSlugOrName()) {
+      return alert('PRODUCT WITH THIS NAME ALREADY EXISTS');
+    }
+
     if (!form.itemNumber || !form.name || !form.slug || !selectedCategory) {
       return alert('PLEASE FILL OUT ALL FIELDS!');
     }
@@ -181,6 +185,14 @@ export default function InventoryPage() {
 
     return true;
   };
+  const isDuplicateSlugOrName = () => {
+    const currentSlug = slugify(form.name);
+    return products.some(
+      (p) =>
+        p.name.toLowerCase().trim() === form.name.toLowerCase().trim() ||
+        p.slug?.current?.toLowerCase().trim() === currentSlug
+    );
+  };
 
   const sizeOptions = ['Small', 'Medium', 'Large', 'Extra Large'];
 
@@ -225,6 +237,11 @@ export default function InventoryPage() {
                 }
                 className="uppercase text-sm border border-black p-3"
               />
+              {isDuplicateSlugOrName() && form.name.trim() && (
+                <p className="text-sm text-red-600">
+                  PRODUCT WITH THIS NAME ALREADY EXISTS
+                </p>
+              )}
 
               <select
                 className="uppercase text-sm border border-black p-3"
