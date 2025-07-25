@@ -36,6 +36,7 @@ const slugify = (text: string) =>
     .replace(/-+/g, '-');
 
 export default function InventoryPage() {
+  const [searchTerm, setSearchTerm] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -202,6 +203,13 @@ export default function InventoryPage() {
     );
   };
 
+  const filteredProducts = products.filter((p) => {
+    const term = searchTerm.toLowerCase();
+    const matchesItemNumber = p.itemNumber.toLowerCase().includes(term);
+    const matchesName = p.name.toLowerCase().includes(term);
+    return matchesItemNumber || matchesName;
+  });
+
   const sizeOptions = ['Small', 'Medium', 'Large', 'Extra Large'];
 
   const availableSizeOptions = sizeOptions.filter(
@@ -212,14 +220,22 @@ export default function InventoryPage() {
     <div className="relative min-h-screen bg-white p-1 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold uppercase m-4">Inventory</h1>
 
-      <div className="">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 gap-2 mb-4">
+        <input
+          type="text"
+          placeholder="Search product by name or number"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="uppercase text-sm border border-black px-2 py-2 w-full sm:w-64"
+        />
         <button
-          className="mx-4 text-sm uppercase font-light mb-2 text-black bg-flag-red px-2 py-2"
+          className="text-sm uppercase font-light text-black bg-flag-red px-2 py-2"
           onClick={() => setShowForm((prev) => !prev)}
         >
-          {showForm ? 'Hide fields' : 'add new product'}
+          {showForm ? 'Hide fields' : 'Add New Product'}
         </button>
       </div>
+
       <div className="px-4">
         {showForm && (
           <>
@@ -444,9 +460,9 @@ export default function InventoryPage() {
         )}
       </div>
 
-      <hr className="my-8 border-black" />
+      <hr className="my-8 mx-4 border-black" />
       <div className="grid grid-cols-2 md:grid-cols-3 gap-1">
-        {[...products].map((p) => (
+        {filteredProducts.map((p) => (
           <Link
             key={p._id}
             href={`/admin/inventory/${p.itemNumber}`}
