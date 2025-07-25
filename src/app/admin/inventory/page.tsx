@@ -62,7 +62,20 @@ export default function InventoryPage() {
   useEffect(() => {
     fetch('/api/products')
       .then((res) => res.json())
-      .then((data) => setProducts(data.products || []));
+      .then((data) => {
+        const allProducts = data.products || [];
+        setProducts(allProducts);
+
+        const maxItemNumber = allProducts.reduce((max: number, p: Product) => {
+          const num = parseInt(p.itemNumber, 10);
+          return isNaN(num) ? max : Math.max(max, num);
+        }, 0);
+
+        setForm((prev) => ({
+          ...prev,
+          itemNumber: String(maxItemNumber + 1),
+        }));
+      });
 
     fetch('/api/categories')
       .then((res) => res.json())
@@ -114,12 +127,18 @@ export default function InventoryPage() {
 
       if (res.ok) {
         setMessage('✅ Product added!');
+        const nextItemNumber = String(
+          Math.max(...products.map((p) => parseInt(p.itemNumber, 10) || 0), 0) +
+            1
+        );
+
         setForm({
-          itemNumber: '',
+          itemNumber: nextItemNumber,
           name: '',
           slug: '',
           variants: [{ size: '', price: '', stock: '' }],
         });
+
         setSelectedCategory('');
         setMainImageFile(null);
         setExtraImageFiles([]);
@@ -157,20 +176,27 @@ export default function InventoryPage() {
         {showForm && (
           <>
             <div className="grid grid-cols-1 gap-4 text-black mb-6">
-              {['product number', 'name', 'slug'].map((key) => (
-                <input
-                  key={key}
-                  name={key}
-                  type="text"
-                  placeholder={key === 'slug' ? 'Slug (auto)' : key}
-                  value={(form as any)[key]}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, [key]: e.target.value }))
-                  }
-                  readOnly={key === 'slug'}
-                  className="uppercase text-sm border  border-black p-3"
-                />
-              ))}
+              <input
+                name="itemNumber"
+                type="text"
+                placeholder="Product number"
+                value={form.itemNumber}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, itemNumber: e.target.value }))
+                }
+                className="uppercase text-sm border border-black p-3"
+              />
+
+              <input
+                name="name"
+                type="text"
+                placeholder="Name"
+                value={form.name}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, name: e.target.value }))
+                }
+                className="uppercase text-sm border border-black p-3"
+              />
 
               <select
                 className="uppercase text-sm border border-black p-3"
@@ -189,7 +215,7 @@ export default function InventoryPage() {
                 {form.variants.map((v, i) => (
                   <div
                     key={i}
-                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 mb-2"
+                    className="grid grid-cols-[120px_120px_120px_auto] gap-2 mb-2"
                   >
                     <select
                       value={v.size}
@@ -198,7 +224,7 @@ export default function InventoryPage() {
                         variants[i].size = e.target.value;
                         setForm({ ...form, variants });
                       }}
-                      className="border border-black p-2 text-sm uppercase"
+                      className="border border-black p-1 text-sm uppercase w-full"
                     >
                       <option value="">Size</option>
                       {sizeOptions.map((opt) => (
@@ -212,7 +238,7 @@ export default function InventoryPage() {
                       type="number"
                       step="0.01"
                       placeholder="Price"
-                      className="uppercase border border-black p-2 text-sm"
+                      className="uppercase border border-black p-1 text-sm w-full"
                       value={v.price}
                       onChange={(e) => {
                         const variants = [...form.variants];
@@ -224,7 +250,7 @@ export default function InventoryPage() {
                     <input
                       type="number"
                       placeholder="Stock"
-                      className="border border-black uppercase p-2 text-sm"
+                      className="border border-black uppercase p-1 text-sm w-full"
                       value={v.stock}
                       onChange={(e) => {
                         const variants = [...form.variants];
@@ -244,7 +270,7 @@ export default function InventoryPage() {
                             ),
                           })
                         }
-                        className="text-red-600 font-bold"
+                        className="text-red-600 font-bold text-xl px-2"
                       >
                         ✕
                       </button>
@@ -279,7 +305,7 @@ export default function InventoryPage() {
                 <button
                   type="button"
                   onClick={() => mainImageRef.current?.click()}
-                  className="bg-flag-blue text-black text-xs uppercase px-2 py-2 rounded "
+                  className="bg-flag-blue text-black text-sm uppercase px-2 py-2 rounded "
                 >
                   Upload Main Image
                 </button>
@@ -307,7 +333,7 @@ export default function InventoryPage() {
                 <button
                   type="button"
                   onClick={() => extraImagesRef.current?.click()}
-                  className="bg-flag-blue text-black text-xs uppercase px-2 py-2 rounded "
+                  className="bg-flag-blue text-black text-sm uppercase px-2 py-2 rounded "
                 >
                   Upload Extra Images
                 </button>
@@ -398,7 +424,7 @@ export default function InventoryPage() {
             {/* Variants List */}
             {(p.variants ?? []).length > 0 && (
               <div className="uppercase mt-2 border-t border-black pt-2">
-                <ul className="text-xs space-y-1">
+                <ul className="text-sm space-y-1">
                   {(p.variants ?? []).map((v, i) => (
                     <li key={i} className="flex justify-between">
                       <span>{v.size}</span>
