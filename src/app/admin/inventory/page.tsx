@@ -135,27 +135,35 @@ export default function InventoryPage() {
 
       if (res.ok) {
         setMessage('NEW PRODUCT ADDED!');
-        const nextItemNumber = String(
-          Math.max(...products.map((p) => parseInt(p.itemNumber, 10) || 0), 0) +
-            1
-        );
-
-        setForm({
-          itemNumber: nextItemNumber,
-          name: '',
-          slug: '',
-          variants: [{ size: '', price: '', stock: '' }],
-        });
-
-        setSelectedCategory('');
-        setMainImageFile(null);
-        setExtraImageFiles([]);
-        if (mainImageRef.current) mainImageRef.current.value = '';
-        if (extraImagesRef.current) extraImagesRef.current.value = '';
 
         fetch('/api/products')
           .then((r) => r.json())
-          .then((d) => setProducts(d.products || []));
+          .then((d) => {
+            const updatedProducts = d.products || [];
+            setProducts(updatedProducts);
+
+            const nextItemNumber = String(
+              Math.max(
+                ...updatedProducts.map(
+                  (p: Product) => parseInt(p.itemNumber, 10) || 0
+                ),
+                0
+              ) + 1
+            );
+
+            setForm({
+              itemNumber: nextItemNumber,
+              name: '',
+              slug: '',
+              variants: [{ size: '', price: '', stock: '' }],
+            });
+
+            setSelectedCategory('');
+            setMainImageFile(null);
+            setExtraImageFiles([]);
+            if (mainImageRef.current) mainImageRef.current.value = '';
+            if (extraImagesRef.current) extraImagesRef.current.value = '';
+          });
       } else {
         setMessage(`❌ ${result.message}`);
       }
@@ -428,7 +436,7 @@ export default function InventoryPage() {
                   : 'bg-flag-red text-black'
               }`}
             >
-              {loading ? 'Adding...' : 'Add Product'}
+              {loading ? 'Adding product...' : 'Add Product'}
             </button>
 
             {message && <p className="mt-4">{message}</p>}
