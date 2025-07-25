@@ -13,18 +13,18 @@ export const metadata: Metadata = {
     template: '%s | La Dueña',
   },
   description:
-    'La Dueña serves refreshing shaved ice, delicious ice cream, and snacks in El Paso, TX. Visit us or order online!',
+    'La Dueña serves refreshing shaved ice, delicious ice cream, and snacks in Canutillo, TX. Visit us or order online!',
   authors: [{ name: 'La Dueña', url: 'https://laduena.store' }],
   metadataBase: new URL('https://laduena.store'),
   keywords: [
-    'La Dueña El Paso',
-    'shaved ice El Paso',
-    'ice cream El Paso',
-    'snack shop El Paso',
-    'raspas El Paso',
+    'La Dueña Canutillo',
+    'shaved ice Canutillo',
+    'ice cream Canutillo',
+    'snack shop Canutillo',
+    'raspas Canutillo',
     'chamoy snacks',
-    'el paso snacks',
-    'mexican snacks El Paso',
+    'Canutillo snacks',
+    'mexican snacks Canutillo',
     'La Dueña shaved ice',
   ],
   robots: {
@@ -32,9 +32,9 @@ export const metadata: Metadata = {
     follow: true,
   },
   openGraph: {
-    title: 'La Dueña | Shaved Ice, Ice Cream & Snacks – El Paso, TX',
+    title: 'La Dueña | Shaved Ice, Ice Cream & Snacks – Canutillo, TX',
     description:
-      'Your go-to spot in El Paso for shaved ice, ice cream, raspas, and tasty snacks. Cool off and treat yourself!',
+      'Your go-to spot in Canutillo for shaved ice, ice cream, raspas, and tasty snacks. Cool off and treat yourself!',
     url: 'https://laduena.store',
     siteName: 'La Dueña',
     images: [
@@ -49,9 +49,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'La Dueña | Shaved Ice, Ice Cream & Snacks – El Paso, TX',
+    title: 'La Dueña | Shaved Ice, Ice Cream & Snacks – Canutillo, TX',
     description:
-      'Craving something sweet or spicy? La Dueña has shaved ice, ice cream, and Mexican-style snacks in El Paso!',
+      'Craving something sweet or spicy? La Dueña has shaved ice, ice cream, and Mexican-style snacks in Canutillo!',
     images: ['/images/laduena-preview.webp'], // Replace with your real image
   },
 };

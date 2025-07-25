@@ -18,24 +18,24 @@ import ScrollToTop from '@/components/common/ScrollToTop';
  */
 
 export const metadata: Metadata = {
-  title: 'La Dueña | Shaved Ice, Ice Cream & Snacks – El Paso, TX',
+  title: 'La Dueña | Shaved Ice, Ice Cream & Snacks – Canutillo, TX',
   description:
-    'Craving something cool or spicy? La Dueña offers shaved ice, ice cream, raspas, and authentic snacks in El Paso, TX.',
+    'Craving something cool or spicy? La Dueña offers shaved ice, ice cream, raspas, and authentic snacks in Canutillo, TX.',
   keywords: [
     'La Dueña',
-    'shaved ice El Paso',
-    'raspas El Paso',
-    'ice cream El Paso',
-    'mexican snacks El Paso',
-    'snack shop El Paso',
+    'shaved ice Canutillo',
+    'raspas Canutillo',
+    'ice cream Canutillo',
+    'mexican snacks Canutillo',
+    'snack shop Canutillo',
     'chamoy snacks',
-    'El Paso treats',
+    'Canutillo treats',
     'La Dueña snack bar',
   ],
   openGraph: {
-    title: 'La Dueña | El Paso’s Spot for Raspas & Snacks',
+    title: 'La Dueña | Canutillo’s Spot for Raspas & Snacks',
     description:
-      'Visit La Dueña in El Paso for refreshing shaved ice, creamy ice cream, and tasty Mexican-style snacks. Order online or stop by!',
+      'Visit La Dueña in Canutillo for refreshing shaved ice, creamy ice cream, and tasty Mexican-style snacks. Order online or stop by!',
     url: 'https://laduena.store',
     siteName: 'La Dueña',
     images: [
@@ -50,9 +50,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'La Dueña | Shaved Ice, Ice Cream & Snacks – El Paso, TX',
+    title: 'La Dueña | Shaved Ice, Ice Cream & Snacks – Canutillo, TX',
     description:
-      'El Paso’s go-to spot for raspas, ice cream, and authentic Mexican snacks. La Dueña keeps it cool!',
+      'Canutillo’s go-to spot for raspas, ice cream, and authentic Mexican snacks. La Dueña keeps it cool!',
     images: ['/images/laduena-preview.webp'], // Replace with actual OG image
   },
 };
