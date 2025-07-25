@@ -84,7 +84,11 @@ export default function InventoryPage() {
 
   const handleUpload = async () => {
     if (!form.itemNumber || !form.name || !form.slug || !selectedCategory) {
-      return alert('Please fill out all required fields and select a category');
+      return alert('PLEASE FILL OUT ALL FIELDS!');
+    }
+
+    if (!mainImageFile) {
+      return alert('Main image is required!');
     }
 
     for (const v of form.variants) {
@@ -126,7 +130,7 @@ export default function InventoryPage() {
       const result = await res.json();
 
       if (res.ok) {
-        setMessage('✅ Product added!');
+        setMessage('NEW PRODUCT ADDED!');
         const nextItemNumber = String(
           Math.max(...products.map((p) => parseInt(p.itemNumber, 10) || 0), 0) +
             1
@@ -156,6 +160,26 @@ export default function InventoryPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const isFormValid = () => {
+    if (
+      !form.itemNumber ||
+      !form.name.trim() ||
+      !form.slug ||
+      !selectedCategory ||
+      !mainImageFile
+    ) {
+      return false;
+    }
+
+    for (const v of form.variants) {
+      if (!v.size || !v.price || !v.stock) return false;
+      if (isNaN(Number(v.price)) || Number(v.price) < 0) return false;
+      if (isNaN(Number(v.stock)) || Number(v.stock) < 0) return false;
+    }
+
+    return true;
   };
 
   const sizeOptions = ['Small', 'Medium', 'Large', 'Extra Large'];
@@ -363,12 +387,17 @@ export default function InventoryPage() {
             </div>
 
             <button
-              disabled={loading}
+              disabled={loading || !isFormValid()}
               onClick={handleUpload}
-              className="text-sm uppercase font-light mb-2 text-black bg-flag-red px-2 py-2"
+              className={`text-sm uppercase font-light mb-2 px-2 py-2 ${
+                loading || !isFormValid()
+                  ? 'bg-gray-400 text-white cursor-not-allowed'
+                  : 'bg-flag-red text-black'
+              }`}
             >
               {loading ? 'Adding...' : 'Add Product'}
             </button>
+
             {message && <p className="mt-4">{message}</p>}
           </>
         )}
@@ -395,14 +424,14 @@ export default function InventoryPage() {
             )}
 
             {/* Basic Info */}
-            <div className="flex flex-col justify-center items-center uppercase text-sm">
+            <div className="flex flex-col justify-center items-center uppercase text-xs">
               <p>#{p.itemNumber}</p>
               <p className="font-semibold">{p.name}</p>
             </div>
 
             {/* Category */}
             {p.category?.title && (
-              <p className="text-sm text-center uppercase">
+              <p className="text-xs text-center uppercase">
                 {' '}
                 <span className="font-semibold">{p.category.title}</span>
               </p>
@@ -410,7 +439,7 @@ export default function InventoryPage() {
 
             {/* Total Stock */}
             {(p.variants ?? []).length > 0 && (
-              <p className="text-sm uppercase text-center mb-1">
+              <p className="text-xs uppercase text-center mb-1">
                 stock:{' '}
                 <span className="font-semibold">
                   {(p.variants ?? []).reduce(
@@ -424,7 +453,7 @@ export default function InventoryPage() {
             {/* Variants List */}
             {(p.variants ?? []).length > 0 && (
               <div className="uppercase mt-2 border-t border-black pt-2">
-                <ul className="text-sm space-y-1">
+                <ul className="text-xs space-y-1">
                   {(p.variants ?? []).map((v, i) => (
                     <li key={i} className="flex justify-between">
                       <span>{v.size}</span>
