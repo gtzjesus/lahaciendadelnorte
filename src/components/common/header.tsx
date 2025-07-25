@@ -107,7 +107,7 @@ const Header = () => {
                 scrolled ? 'text-white' : 'text-white'
               }`}
             >
-              elpasokaboom
+              laduena
             </Link>
           </div>
         </div>

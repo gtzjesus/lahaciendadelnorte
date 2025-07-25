@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
         <div className="flex justify-center mb-16 lg:mb-24">
           <Image
             src="/icons/logo-black.webp"
-            alt="elpasokaboom"
+            alt="laduena"
             width={50}
             height={50}
             priority
@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
 
         {/* Copyright */}
         <p className="uppercase barlow-condensed-regular text-xs tracking-very-wide font-light text-flag-blue">
-          &copy; elpasokaboom {new Date().getFullYear()}.
+          &copy; laduena {new Date().getFullYear()}.
         </p>
       </div>
     </footer>

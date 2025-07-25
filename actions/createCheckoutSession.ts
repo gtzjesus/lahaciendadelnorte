@@ -96,7 +96,7 @@ export async function createCheckoutSession(
 
       metadata: {
         ...metadata,
-        source: 'ElPasoKaBoom',
+        source: 'laduena',
         basketItems: JSON.stringify(
           items.map((item) => ({
             id: item.product._id,

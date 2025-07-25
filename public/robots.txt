@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 Disallow: /studio
-Sitemap: https://elpasokaboom.com/sitemap.xml
+Sitemap: https://laduena.store/sitemap.xml
