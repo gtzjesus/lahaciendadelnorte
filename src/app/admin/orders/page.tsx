@@ -25,7 +25,7 @@ export default async function AdminOrdersPage() {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen p-6">
+    <div className="bg-white min-h-screen p-6">
       <h1 className="uppercase text-xl font-semibold mb-6">Orders</h1>
 
       {!success ? (

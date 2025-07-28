@@ -2,12 +2,15 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import clsx from 'clsx';
 
 interface SizeOption {
   label: string;
   price: number;
   stock: number;
 }
+
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 interface InventoryCardProps {
   product: any;
@@ -26,57 +29,53 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       stock: v.stock,
     })) || [{ label: '', price: 0, stock: 0 }]
   );
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(
-    product.category?._id || ''
-  );
-
-  const [allSizes, setAllSizes] = useState<string[]>([]);
+  const [categoryId, setCategoryId] = useState(product.category?._id || '');
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  // For image uploads:
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
-  const [extraImageFiles, setExtraImageFiles] = useState<File[]>([]);
+  const [mainPreview, setMainPreview] = useState<string | null>(null);
 
-  // 🚀 Fetch valid sizes from your backend
+  const [extraFiles, setExtraFiles] = useState<File[]>([]);
+  const [extraPreviews, setExtraPreviews] = useState<string[]>([]);
+
   useEffect(() => {
-    const fetchSizes = async () => {
-      try {
-        const res = await fetch('/api/sizes');
-        const data = await res.json();
-        setAllSizes(data.sizes || []);
-      } catch (error) {
-        console.error('Failed to load sizes', error);
-      }
-    };
-    fetchSizes();
-  }, []);
+    if (mainImageFile) {
+      setMainPreview(URL.createObjectURL(mainImageFile));
+    }
+  }, [mainImageFile]);
 
-  const handleSaveProduct = async () => {
+  useEffect(() => {
+    setExtraPreviews(extraFiles.map((f) => URL.createObjectURL(f)));
+  }, [extraFiles]);
+
+  const onDropMain = (files: File[]) => {
+    if (files[0]) setMainImageFile(files[0]);
+  };
+  const onDropExtra = (files: File[]) => {
+    setExtraFiles(files.slice(0, 4));
+  };
+
+  const { getRootProps: gm, getInputProps: gi } = useDropzone({
+    onDrop: onDropMain,
+    accept: { 'image/*': [] },
+    maxFiles: 1,
+  });
+  const { getRootProps: gx, getInputProps: gix } = useDropzone({
+    onDrop: onDropExtra,
+    accept: { 'image/*': [] },
+    maxFiles: 4,
+  });
+
+  const handleSave = async () => {
     setIsSaving(true);
-
     const formData = new FormData();
     formData.append('productId', product._id);
     formData.append('name', name);
-    formData.append('categoryId', selectedCategoryId);
-
-    const variants = sizes.map((s) => ({
-      size: s.label,
-      price: s.price,
-      stock: s.stock,
-    }));
-
-    formData.append('sizes', JSON.stringify(variants));
-
-    // Append main image file if selected
-    if (mainImageFile) {
-      formData.append('mainImage', mainImageFile);
-    }
-
-    // Append extra image files if any
-    extraImageFiles.forEach((file) => {
-      formData.append('extraImages', file);
-    });
+    formData.append('categoryId', categoryId);
+    formData.append('sizes', JSON.stringify(sizes));
+    if (mainImageFile) formData.append('mainImage', mainImageFile);
+    extraFiles.forEach((f) => formData.append('extraImages', f));
 
     const res = await fetch('/api/update-product', {
       method: 'PATCH',
@@ -86,225 +85,180 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
     if (res.ok) {
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-      setMainImageFile(null);
-      setExtraImageFiles([]);
     } else {
-      alert('Failed to update product');
+      alert('Failed to save');
     }
-
     setIsSaving(false);
   };
 
-  // For preview of newly selected images (optional)
-  const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
-  const [extraImagesPreview, setExtraImagesPreview] = useState<string[]>([]);
-
-  // Handle main image file selection + preview
-  const onMainImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) return;
-    const file = e.target.files[0];
-    setMainImageFile(file);
-    setMainImagePreview(URL.createObjectURL(file));
-  };
-
-  // Handle extra images file selection + preview
-  const onExtraImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) return;
-    const files = Array.from(e.target.files);
-    setExtraImageFiles(files);
-    setExtraImagesPreview(files.map((file) => URL.createObjectURL(file)));
-  };
-
   return (
-    <div className="border border-flag-blue bg-white p-4 flex flex-col items-center text-center space-y-4">
-      {/* Main Image Preview Priority: New upload preview > existing image */}
-      {(mainImagePreview || product.imageUrl) && (
-        <div className="relative w-40 h-40 rounded overflow-hidden">
-          <Image
-            src={mainImagePreview || product.imageUrl}
-            alt={product.name}
-            fill
-            style={{ objectFit: 'cover' }}
-            sizes="160px"
-            priority
-          />
+    <div className="max-w-lg mx-auto bg-flag-red border-black border shadow-lg p-6 space-y-6">
+      {/* Main Image Upload */}
+      <div
+        {...gm()}
+        className="mx-auto w-40 h-40 rounded-full bg-white flex items-center justify-center cursor-pointer border-2 border-dashed hover:border-flag-blue transition"
+      >
+        <input {...gi()} />
+        {mainPreview || product.imageUrl ? (
+          <div className="relative w-full h-full rounded-full overflow-hidden">
+            <Image
+              src={mainPreview || product.imageUrl}
+              alt={name}
+              fill
+              style={{ objectFit: 'cover' }}
+            />
+          </div>
+        ) : (
+          <p className="text-gray-500">Upload main image</p>
+        )}
+      </div>
+
+      {/* Name & Item # */}
+      <div className="grid grid-cols-1 gap-4">
+        <div className="flex">
+          <label className="block text-sm font-light uppercase">Item #</label>
+          <p className="text-sm">{product.itemNumber || '—'}</p>
         </div>
-      )}
-
-      <div className="flex flex-col space-y-2 uppercase text-sm font-mono w-full max-w-md">
-        <p>
-          <strong>Item #:</strong> {product.itemNumber}
-        </p>
-
-        {/* Name */}
-        <label className="flex flex-col text-left">
-          <span className="font-semibold">Name</span>
+        <div>
+          <label className="block text-xs font-light uppercase mb-2">
+            Name
+          </label>
           <input
-            type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="border border-gray-300 px-2 py-1 rounded text-sm"
+            className="uppercase w-full border px-2 py-2 border-flag-blue text-xs focus:outline-flag-blue"
           />
-        </label>
+        </div>
+      </div>
 
-        {/* Sizes */}
-        <div className="text-left">
-          <p className="font-semibold mt-4 mb-1">Sizes, Prices & Stock</p>
-          {sizes.map((size, i) => (
-            <div key={i} className="flex gap-2 mb-2 items-center">
-              {/* Size dropdown from Sanity */}
+      {/* Variants */}
+      <div>
+        <p className="block text-xs font-light uppercase mb-2">
+          Sizes & Pricing
+        </p>
+        <ul className="uppercase w-full  px-2 py-2  text-xs focus:outline-flag-blue">
+          {sizes.map((s, i) => (
+            <li
+              key={i}
+              className="flex border-flag-blue items-center gap-2 p-2 transition"
+            >
               <select
-                value={size.label}
+                value={s.label}
                 onChange={(e) => {
-                  const updated = [...sizes];
-                  updated[i].label = e.target.value;
-                  setSizes(updated);
+                  const arr = [...sizes];
+                  arr[i].label = e.target.value;
+                  setSizes(arr);
                 }}
-                className="border p-2 text-sm w-1/3"
+                className="border-flag-blue border uppercase flex-2 p-2 text-xs focus:outline-flag-blue"
               >
-                <option value="">Select Size</option>
-                {allSizes.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
+                <option value="">Select size</option>
+                {/** Assuming allSizes available */}
               </select>
-
               <input
                 type="number"
                 step="0.01"
-                value={size.price}
+                value={s.price}
                 onChange={(e) => {
-                  const updated = [...sizes];
-                  updated[i].price = parseFloat(e.target.value);
-                  setSizes(updated);
+                  const arr = [...sizes];
+                  arr[i].price = parseFloat(e.target.value);
+                  setSizes(arr);
                 }}
                 placeholder="Price"
-                className="border p-2 text-sm w-1/3"
+                className="w-24 border border-flag-blue p-2 text-xs focus:outline-flag-blue"
               />
               <input
                 type="number"
-                value={size.stock}
+                value={s.stock}
                 onChange={(e) => {
-                  const updated = [...sizes];
-                  updated[i].stock = parseInt(e.target.value);
-                  setSizes(updated);
+                  const arr = [...sizes];
+                  arr[i].stock = parseInt(e.target.value);
+                  setSizes(arr);
                 }}
                 placeholder="Stock"
-                className="border p-2 text-sm w-1/4"
+                className="w-20 border rounded p-2 text-xs focus:outline-flag-blue"
               />
               {sizes.length > 1 && (
                 <button
                   onClick={() => setSizes(sizes.filter((_, idx) => idx !== i))}
-                  className="text-red-500"
+                  className="text-red-500 text-lg"
                 >
                   ✕
                 </button>
               )}
-            </div>
+            </li>
           ))}
-          <button
-            className="text-xs underline"
-            onClick={() =>
-              setSizes([...sizes, { label: '', price: 0, stock: 0 }])
-            }
-          >
-            + Add Size
-          </button>
-        </div>
-
-        {/* Category */}
-        <div className="text-left">
-          <label className="block font-semibold mb-1">Category</label>
-          <select
-            value={selectedCategoryId}
-            onChange={(e) => setSelectedCategoryId(e.target.value)}
-            className="border border-gray-300 px-2 py-1 rounded w-full"
-          >
-            <option value="">Select category</option>
-            {allCategories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.title}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Extra Images Preview */}
-        <div className="text-left mt-4">
-          <p className="font-semibold mb-2">Additional Images:</p>
-          <div className="flex gap-2 flex-wrap">
-            {/* Existing images */}
-            {product.extraImageUrls?.map((url: string, idx: number) => (
-              <div
-                key={`existing-${idx}`}
-                className="relative w-20 h-20 rounded overflow-hidden"
-              >
-                <Image
-                  src={url}
-                  alt={`Extra image ${idx + 1}`}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                />
-              </div>
-            ))}
-
-            {/* Newly selected extra image previews */}
-            {extraImagesPreview.map((url, idx) => (
-              <div
-                key={`preview-${idx}`}
-                className="relative w-20 h-20 rounded overflow-hidden border-2 border-dashed border-gray-400"
-              >
-                <Image
-                  src={url}
-                  alt={`New extra image ${idx + 1}`}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* File inputs for images */}
-        <div className="text-left mt-4">
-          <label className="block font-semibold mb-1" htmlFor="mainImage">
-            Upload Main Image
-          </label>
-          <input
-            type="file"
-            id="mainImage"
-            accept="image/*"
-            onChange={onMainImageChange}
-          />
-        </div>
-
-        <div className="text-left mt-4">
-          <label className="block font-semibold mb-1" htmlFor="extraImages">
-            Upload Additional Images (max 4)
-          </label>
-          <input
-            type="file"
-            id="extraImages"
-            accept="image/*"
-            multiple
-            onChange={onExtraImagesChange}
-          />
-        </div>
-
-        {/* Save Button */}
+        </ul>
         <button
-          onClick={handleSaveProduct}
-          disabled={isSaving}
-          className="mt-4 bg-flag-blue text-white px-4 py-2 text-xs uppercase tracking-wide"
+          onClick={() =>
+            setSizes([...sizes, { label: '', price: 0, stock: 0 }])
+          }
+          className="block text-xs font-light uppercase"
         >
-          {isSaving
-            ? 'updating...'
-            : saved
-              ? '✔ firework updated!'
-              : 'update firework'}
+          + Add Size
         </button>
       </div>
+
+      {/* Category */}
+      <div>
+        <label className="uppercase p-2 text-xs">Category</label>
+        <select
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value)}
+          className="uppercase w-full border border-flag-blue px-2 py-1 text-xs focus:outline-flag-blue"
+        >
+          <option value="">Select category</option>
+          {allCategories.map((cat) => (
+            <option key={cat._id} value={cat._id}>
+              {cat.title}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Extra Images Upload */}
+      <div
+        {...gx()}
+        className="border-dashed border-2 p-4 rounded-lg hover:border-flag-blue transition cursor-pointer"
+      >
+        <input {...gix()} />
+        <p className="text-center text-gray-500 text-sm">
+          Drag extra images here or click
+        </p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {extraPreviews.map((url, idx) => (
+            <div
+              key={idx}
+              className="relative w-20 h-20 rounded overflow-hidden"
+            >
+              <Image
+                src={url}
+                alt={`extra ${idx}`}
+                fill
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Save */}
+      <button
+        onClick={handleSave}
+        disabled={isSaving}
+        className={clsx(
+          'p-4 mb-2 block uppercase text-md font-bold text-center  text-black w-full',
+          isSaving ? 'bg-gray-400' : 'bg-flag-blue hover:bg-flag-blue'
+        )}
+      >
+        {isSaving ? 'Saving item' : 'Save Changes'}
+      </button>
+
+      {/* Save Feedback */}
+      {saved && (
+        <div className="uppercase text-sm fixed bottom-4 right-4 bg-flag-blue text-white px-4 py-2 shadow-lg animate-pulse">
+          ✔ item Updated!
+        </div>
+      )}
     </div>
   );
 };
