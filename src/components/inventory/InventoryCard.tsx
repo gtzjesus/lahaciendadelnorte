@@ -152,8 +152,13 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                 className="border-flag-blue border uppercase flex-2 p-2 text-xs focus:outline-flag-blue"
               >
                 <option value="">Select size</option>
-                {/** Assuming allSizes available */}
+                {['Small', 'Medium', 'Large', 'Extra Large'].map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
               </select>
+
               <input
                 type="number"
                 step="0.01"

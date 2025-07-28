@@ -43,14 +43,15 @@ export interface Product extends SanityDocument {
   description?: string;
   extraImages?: SanityImage[];
 
-  // 🆕 New fields for shaved ice/snacks
-  sizes?: {
-    label: string; // e.g. "Small", "Medium", etc.
+  variants?: {
+    size: string;
     price: number;
+    stock: number;
   }[];
 
-  flavors?: string[]; // e.g. ["Mango", "Guava", "Tamarindo"]
-  categories?: Category[]; // in case you're querying expanded category data
+  flavors?: string[];
+  categories?: Category[];
+  category?: Category; // you use singular `category` in your schema
 }
 
 // 🧠 Basket Item

@@ -12,10 +12,11 @@ export async function getProductByItemNumber(itemNumber: string) {
       stock,
       "imageUrl": image.asset->url,
       "extraImageUrls": extraImages[].asset->url,
-      categories[]->{
-        _id,
-        title,
-        slug
+      category->{_id, title}, // updated from categories[]
+      variants[]{
+        size,
+        price,
+        stock
       }
     }`,
     { itemNumber }
