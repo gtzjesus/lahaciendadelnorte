@@ -149,7 +149,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                   arr[i].label = e.target.value;
                   setSizes(arr);
                 }}
-                className="border-flag-blue border uppercase flex-2 p-2 text-xs focus:outline-flag-blue"
+                className="border-flag-blue border uppercase p-2 text-xs focus:outline-flag-blue"
               >
                 <option value="">Select size</option>
                 {['Small', 'Medium', 'Large', 'Extra Large'].map((size) => (
@@ -180,7 +180,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                   setSizes(arr);
                 }}
                 placeholder="Stock"
-                className="w-20 border rounded p-2 text-xs focus:outline-flag-blue"
+                className="w-20 border rounded p-2 text-xs border-flag-blue focus:outline-flag-blue"
               />
               {sizes.length > 1 && (
                 <button
@@ -226,8 +226,8 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         className="border-dashed border-2 p-4 rounded-lg hover:border-flag-blue transition cursor-pointer"
       >
         <input {...gix()} />
-        <p className="text-center text-gray-500 text-sm">
-          Drag extra images here or click
+        <p className="text-center uppercase text-sm">
+          click to add more images
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
           {extraPreviews.map((url, idx) => (
