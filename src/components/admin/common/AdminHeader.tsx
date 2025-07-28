@@ -80,7 +80,7 @@ export default function AdminHeader() {
             initial={{ y: '-100%' }}
             animate={{ y: 0 }}
             exit={{ y: '-100%' }}
-            transition={{ duration: 1, ease: 'easeInOut' }}
+            transition={{ duration: 0.75, ease: 'easeInOut' }}
             className="fixed inset-0 z-40 bg-flag-red text-black flex flex-col justify-center items-center space-y-8 p-6 backdrop-blur-md"
           >
             {navItems.map(({ name, href }, i) => (

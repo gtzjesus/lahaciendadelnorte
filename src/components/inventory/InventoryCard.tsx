@@ -4,14 +4,13 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import clsx from 'clsx';
-
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 interface SizeOption {
   label: string;
-  price: number;
-  stock: number;
+  price: number | '';
+  stock: number | '';
 }
 
-/* eslint-disable  @typescript-eslint/no-explicit-any */
 interface InventoryCardProps {
   product: any;
   allCategories: { _id: string; title: string }[];
@@ -27,7 +26,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       label: v.size,
       price: v.price,
       stock: v.stock,
-    })) || [{ label: '', price: 0, stock: 0 }]
+    })) || [{ label: '', price: '', stock: '' }]
   );
   const [categoryId, setCategoryId] = useState(product.category?._id || '');
   const [isSaving, setIsSaving] = useState(false);
@@ -67,13 +66,40 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
     maxFiles: 4,
   });
 
+  // Validation function: returns true if all sizes are valid (no empty fields)
+  const allSizesValid = sizes.every(
+    (s) =>
+      s.label.trim() !== '' &&
+      s.price !== '' &&
+      s.price !== null &&
+      !isNaN(Number(s.price)) &&
+      s.stock !== '' &&
+      s.stock !== null &&
+      !isNaN(Number(s.stock))
+  );
+
   const handleSave = async () => {
+    if (!allSizesValid) {
+      alert(
+        'Please fill out all size fields (label, price, stock) before saving.'
+      );
+      return;
+    }
     setIsSaving(true);
     const formData = new FormData();
     formData.append('productId', product._id);
     formData.append('name', name);
     formData.append('categoryId', categoryId);
-    formData.append('sizes', JSON.stringify(sizes));
+    formData.append(
+      'sizes',
+      JSON.stringify(
+        sizes.map((s) => ({
+          size: s.label,
+          price: typeof s.price === 'string' ? 0 : s.price,
+          stock: typeof s.stock === 'string' ? 0 : s.stock,
+        }))
+      )
+    );
     if (mainImageFile) formData.append('mainImage', mainImageFile);
     extraFiles.forEach((f) => formData.append('extraImages', f));
 
@@ -96,11 +122,11 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       {/* Main Image Upload */}
       <div
         {...gm()}
-        className="mx-auto w-40 h-40 -full bg-white flex items-center justify-center cursor-pointer border-2 border-dashed hover:border-flag-blue transition"
+        className="mx-auto w-40 h-40 rounded-full bg-white flex items-center justify-center cursor-pointer border-2 border-dashed hover:border-flag-blue transition"
       >
         <input {...gi()} />
         {mainPreview || product.imageUrl ? (
-          <div className="relative w-full h-full -full overflow-hidden">
+          <div className="relative w-full h-full rounded-full overflow-hidden">
             <Image
               src={mainPreview || product.imageUrl}
               alt={name}
@@ -134,11 +160,14 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       {/* Variants */}
       <div>
         <p className="block text-xs font-light uppercase mb-2">
-          Sizes | Pricing | stock
+          Sizes | pricing | stock
         </p>
-        <ul className="uppercase w-full  px-2 py-2  text-xs focus:outline-flag-blue">
+        <ul className="uppercase w-full px-2 py-2 text-xs focus:outline-flag-blue">
           {sizes.map((s, i) => (
-            <li key={i} className="flex sm:items-center gap-2  p-2 ">
+            <li
+              key={i}
+              className="flex border-flag-blue items-start sm:items-center gap-2 p-2 transition"
+            >
               <select
                 value={s.label}
                 onChange={(e) => {
@@ -146,7 +175,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                   arr[i].label = e.target.value;
                   setSizes(arr);
                 }}
-                className="appearance-none bg-white border border-flag-blue text-xs uppercase p-2  focus:outline-flag-blue"
+                className="border-flag-blue border uppercase p-2 text-xs focus:outline-flag-blue"
               >
                 <option value="">Select size</option>
                 {['Small', 'Medium', 'Large', 'Extra Large'].map((size) => (
@@ -159,10 +188,11 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
               <input
                 type="number"
                 step="0.01"
-                value={s.price}
+                value={s.price === '' ? '' : s.price}
                 onChange={(e) => {
                   const arr = [...sizes];
-                  arr[i].price = parseFloat(e.target.value);
+                  const val = e.target.value;
+                  arr[i].price = val === '' ? '' : parseFloat(val);
                   setSizes(arr);
                 }}
                 placeholder="Price"
@@ -170,14 +200,15 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
               />
               <input
                 type="number"
-                value={s.stock}
+                value={s.stock === '' ? '' : s.stock}
                 onChange={(e) => {
                   const arr = [...sizes];
-                  arr[i].stock = parseInt(e.target.value);
+                  const val = e.target.value;
+                  arr[i].stock = val === '' ? '' : parseInt(val);
                   setSizes(arr);
                 }}
                 placeholder="Stock"
-                className="w-20 border  p-2 text-xs border-flag-blue focus:outline-flag-blue"
+                className="w-20 border rounded p-2 text-xs border-flag-blue focus:outline-flag-blue"
               />
               {sizes.length > 1 && (
                 <button
@@ -192,7 +223,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         </ul>
         <button
           onClick={() =>
-            setSizes([...sizes, { label: '', price: 0, stock: 0 }])
+            setSizes([...sizes, { label: '', price: '', stock: '' }])
           }
           className="block text-xs font-light uppercase"
         >
@@ -206,7 +237,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         <select
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
-          className="appearance-none bg-white border border-flag-blue text-xs uppercase p-2  focus:outline-flag-blue"
+          className="uppercase w-full border border-flag-blue px-2 py-1 text-xs focus:outline-flag-blue"
         >
           <option value="">Select category</option>
           {allCategories.map((cat) => (
@@ -220,7 +251,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       {/* Extra Images Upload */}
       <div
         {...gx()}
-        className="border-dashed border-2 p-4 -lg hover:border-flag-blue transition cursor-pointer"
+        className="border-dashed border-2 p-4 rounded-lg hover:border-flag-blue transition cursor-pointer"
       >
         <input {...gix()} />
         <p className="text-center uppercase text-sm">
@@ -228,7 +259,10 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
           {extraPreviews.map((url, idx) => (
-            <div key={idx} className="relative w-20 h-20  overflow-hidden">
+            <div
+              key={idx}
+              className="relative w-20 h-20 rounded overflow-hidden"
+            >
               <Image
                 src={url}
                 alt={`extra ${idx}`}
@@ -243,10 +277,12 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       {/* Save */}
       <button
         onClick={handleSave}
-        disabled={isSaving}
+        disabled={isSaving || !allSizesValid}
         className={clsx(
-          'p-4 mb-2 block uppercase text-md font-bold text-center  text-black w-full',
-          isSaving ? 'bg-gray-400' : 'bg-flag-blue hover:bg-flag-blue'
+          'p-4 mb-2 block uppercase text-md font-bold text-center text-black w-full',
+          isSaving || !allSizesValid
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-flag-blue hover:bg-flag-blue'
         )}
       >
         {isSaving ? 'Saving item' : 'Save Changes'}
