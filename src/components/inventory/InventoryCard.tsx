@@ -96,11 +96,11 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       {/* Main Image Upload */}
       <div
         {...gm()}
-        className="mx-auto w-40 h-40 rounded-full bg-white flex items-center justify-center cursor-pointer border-2 border-dashed hover:border-flag-blue transition"
+        className="mx-auto w-40 h-40 -full bg-white flex items-center justify-center cursor-pointer border-2 border-dashed hover:border-flag-blue transition"
       >
         <input {...gi()} />
         {mainPreview || product.imageUrl ? (
-          <div className="relative w-full h-full rounded-full overflow-hidden">
+          <div className="relative w-full h-full -full overflow-hidden">
             <Image
               src={mainPreview || product.imageUrl}
               alt={name}
@@ -134,14 +134,11 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       {/* Variants */}
       <div>
         <p className="block text-xs font-light uppercase mb-2">
-          Sizes & Pricing
+          Sizes | Pricing | stock
         </p>
         <ul className="uppercase w-full  px-2 py-2  text-xs focus:outline-flag-blue">
           {sizes.map((s, i) => (
-            <li
-              key={i}
-              className="flex flex-col sm:flex-row sm:items-center gap-2 border border-flag-blue p-2 rounded"
-            >
+            <li key={i} className="flex sm:items-center gap-2  p-2 ">
               <select
                 value={s.label}
                 onChange={(e) => {
@@ -149,7 +146,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                   arr[i].label = e.target.value;
                   setSizes(arr);
                 }}
-                className="appearance-none bg-white border border-flag-blue text-xs uppercase p-2 rounded focus:outline-flag-blue"
+                className="appearance-none bg-white border border-flag-blue text-xs uppercase p-2  focus:outline-flag-blue"
               >
                 <option value="">Select size</option>
                 {['Small', 'Medium', 'Large', 'Extra Large'].map((size) => (
@@ -180,7 +177,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                   setSizes(arr);
                 }}
                 placeholder="Stock"
-                className="w-20 border rounded p-2 text-xs border-flag-blue focus:outline-flag-blue"
+                className="w-20 border  p-2 text-xs border-flag-blue focus:outline-flag-blue"
               />
               {sizes.length > 1 && (
                 <button
@@ -209,7 +206,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         <select
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
-          className="appearance-none bg-white border border-flag-blue text-xs uppercase p-2 rounded focus:outline-flag-blue"
+          className="appearance-none bg-white border border-flag-blue text-xs uppercase p-2  focus:outline-flag-blue"
         >
           <option value="">Select category</option>
           {allCategories.map((cat) => (
@@ -223,7 +220,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       {/* Extra Images Upload */}
       <div
         {...gx()}
-        className="border-dashed border-2 p-4 rounded-lg hover:border-flag-blue transition cursor-pointer"
+        className="border-dashed border-2 p-4 -lg hover:border-flag-blue transition cursor-pointer"
       >
         <input {...gix()} />
         <p className="text-center uppercase text-sm">
@@ -231,10 +228,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
           {extraPreviews.map((url, idx) => (
-            <div
-              key={idx}
-              className="relative w-20 h-20 rounded overflow-hidden"
-            >
+            <div key={idx} className="relative w-20 h-20  overflow-hidden">
               <Image
                 src={url}
                 alt={`extra ${idx}`}

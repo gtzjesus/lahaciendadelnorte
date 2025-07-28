@@ -8,7 +8,7 @@ type Variant = {
   price: number;
   stock: number;
 };
-
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 export async function PATCH(req: NextRequest) {
   try {
     const formData = await req.formData();
@@ -23,15 +23,21 @@ export async function PATCH(req: NextRequest) {
 
     const name = formData.get('name')?.toString();
     const categoryId = formData.get('categoryId')?.toString();
-
     const sizesRaw = formData.get('sizes')?.toString();
     const flavorsRaw = formData.get('flavors')?.toString();
 
-    // Parse sizes/variants if provided
+    // ----- Parse sizes (variants) -----
     let sizes: Variant[] | undefined = undefined;
     if (sizesRaw) {
       try {
-        sizes = JSON.parse(sizesRaw);
+        const parsed = JSON.parse(sizesRaw);
+        if (Array.isArray(parsed)) {
+          sizes = parsed.map((v: any) => ({
+            size: String(v.label || v.size || '').trim(),
+            price: Number(v.price),
+            stock: Number(v.stock),
+          }));
+        }
       } catch (err) {
         return NextResponse.json(
           { error: `Invalid sizes JSON: ${err}` },
@@ -40,7 +46,7 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
-    if (sizes) {
+    if (sizes && sizes.length > 0) {
       const invalid = sizes.some(
         (v) =>
           !v.size ||
@@ -53,17 +59,20 @@ export async function PATCH(req: NextRequest) {
       );
       if (invalid) {
         return NextResponse.json(
-          { error: 'Invalid size data' },
+          { error: 'Invalid variant data: size, price, or stock invalid' },
           { status: 400 }
         );
       }
     }
 
-    // Parse flavors if provided
+    // ----- Parse flavors -----
     let flavors: string[] | undefined = undefined;
     if (flavorsRaw) {
       try {
-        flavors = JSON.parse(flavorsRaw);
+        const parsed = JSON.parse(flavorsRaw);
+        if (Array.isArray(parsed)) {
+          flavors = parsed.map((f) => String(f).trim());
+        }
       } catch (err) {
         return NextResponse.json(
           { error: `Invalid flavors JSON: ${err}` },
@@ -72,7 +81,7 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
-    // Upload main image (optional)
+    // ----- Upload main image -----
     const mainImage = formData.get('mainImage') as File | null;
     let mainImageRef = null;
 
@@ -86,9 +95,10 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
-    // Upload extra images (optional)
+    // ----- Upload extra images -----
     const extraImageRefs = [];
     const extraImages = formData.getAll('extraImages') as File[];
+
     for (const img of extraImages) {
       if (img.size > 0) {
         const uploaded = await backendClient.assets.upload('image', img);
@@ -101,30 +111,28 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
-    // Build patch
-    const patch = backendClient.patch(productId);
-
-    // Conditionally set fields only if they exist and are valid
+    // ----- Build patch -----
+    let patch = backendClient.patch(productId);
 
     if (name && name.trim() !== '') {
-      patch.set({ name });
+      patch = patch.set({ name: name.trim() });
     }
 
     if (categoryId && categoryId.trim() !== '') {
-      patch.set({
+      patch = patch.set({
         category: {
           _type: 'reference',
-          _ref: categoryId,
+          _ref: categoryId.trim(),
         },
       });
     }
 
     if (typeof flavors !== 'undefined') {
-      patch.set({ flavors });
+      patch = patch.set({ flavors });
     }
 
-    if (sizes) {
-      patch.set({
+    if (sizes && sizes.length > 0) {
+      patch = patch.set({
         variants: sizes.map((v) => ({
           _type: 'variant',
           size: v.size,
@@ -135,17 +143,16 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (mainImageRef) {
-      patch.set({ image: mainImageRef });
+      patch = patch.set({ image: mainImageRef });
     }
 
     if (extraImageRefs.length > 0) {
-      patch.set({ extraImages: extraImageRefs });
+      patch = patch.set({ extraImages: extraImageRefs });
     }
 
     await patch.commit();
 
     return NextResponse.json({ message: 'Product updated successfully' });
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
   } catch (error: any) {
     console.error('Update product error:', error);
     return NextResponse.json(
