@@ -91,11 +91,14 @@ async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
           ) : null}
 
           {/* Show sizes if any */}
-          {product.sizes?.length ? (
+          {/* Show variants if any */}
+          {product.variants?.length ? (
             <InfoDropdown
               title="Sizes"
-              info={product.sizes
-                .map((size) => `${size.label} ($${size.price.toFixed(2)})`)
+              info={product.variants
+                .map(
+                  (variant) => `${variant.size} ($${variant.price.toFixed(2)})`
+                )
                 .join(', ')}
             />
           ) : null}
