@@ -140,7 +140,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
           {sizes.map((s, i) => (
             <li
               key={i}
-              className="flex border-flag-blue items-center gap-2 p-2 transition"
+              className="flex flex-col sm:flex-row sm:items-center gap-2 border border-flag-blue p-2 rounded"
             >
               <select
                 value={s.label}
@@ -149,7 +149,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                   arr[i].label = e.target.value;
                   setSizes(arr);
                 }}
-                className="border-flag-blue border uppercase p-2 text-xs focus:outline-flag-blue"
+                className="appearance-none bg-white border border-flag-blue text-xs uppercase p-2 rounded focus:outline-flag-blue"
               >
                 <option value="">Select size</option>
                 {['Small', 'Medium', 'Large', 'Extra Large'].map((size) => (
@@ -209,7 +209,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         <select
           value={categoryId}
           onChange={(e) => setCategoryId(e.target.value)}
-          className="uppercase w-full border border-flag-blue px-2 py-1 text-xs focus:outline-flag-blue"
+          className="appearance-none bg-white border border-flag-blue text-xs uppercase p-2 rounded focus:outline-flag-blue"
         >
           <option value="">Select category</option>
           {allCategories.map((cat) => (
