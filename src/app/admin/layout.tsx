@@ -1,101 +1,18 @@
 'use client';
 
+import AdminHeader from '@/components/admin/common/AdminHeader';
 import { ClerkProvider } from '@clerk/nextjs';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import React, { useState } from 'react';
-import clsx from 'clsx';
-import '../globals.css';
 import { Toaster } from 'sonner';
-
-const navItems = [
-  { name: 'point of sale', href: '/admin/pos' },
-  { name: 'Orders', href: '/admin/orders' },
-  { name: 'Inventory', href: '/admin/inventory' },
-];
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
     <ClerkProvider>
-      <div className="flex flex-col min-h-screen ">
-        {/* Global header used across all screen sizes */}
-        <header className="sticky top-0 z-50 bg-flag-red text-black p-4 flex justify-between items-center shadow-sm">
-          <Link
-            href="/admin/pos"
-            className="uppercase font-light text-md hover:underline"
-          >
-            la duena
-          </Link>
-
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          >
-            {menuOpen ? (
-              // X icon SVG
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              // Hamburger icon SVG
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            )}
-          </button>
-        </header>
-
-        {/* Slide-down menu */}
-        {menuOpen && (
-          <nav className="fixed top-12 left-0 right-0 z-40 bg-flag-red text-black p-4 shadow-md">
-            <div className="flex flex-col space-y-2">
-              {navItems.map(({ name, href }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setMenuOpen(false)}
-                  className={clsx(
-                    'uppercase text-md px-3 py-2  hover:bg-black-100 transition',
-                    pathname === href && 'bg-flag-blue'
-                  )}
-                >
-                  {name}
-                </Link>
-              ))}
-            </div>
-          </nav>
-        )}
-
-        {/* Toasts */}
+      <div className="flex flex-col min-h-screen">
+        <AdminHeader />
         <Toaster
           position="top-right"
           richColors
@@ -106,8 +23,6 @@ export default function AdminLayout({
             className: 'mb-4 shadow-lg rounded-lg',
           }}
         />
-
-        {/* Page content */}
         <main className="flex-1">{children}</main>
       </div>
     </ClerkProvider>
