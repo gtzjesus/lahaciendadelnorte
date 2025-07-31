@@ -265,7 +265,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       >
         <input {...gix()} />
         <p className="text-center uppercase text-sm">
-          click to add more images
+          click to add more images (up to 4)
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
           {extraPreviews.map((url, idx) => (

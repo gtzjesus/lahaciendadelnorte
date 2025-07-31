@@ -223,7 +223,7 @@ export default function InventoryPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 gap-2 mb-4">
         <input
           type="text"
-          placeholder="Search product by name or number"
+          placeholder="Search item by name or number"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="uppercase text-sm border border-black px-2 py-2 w-full sm:w-64"
@@ -232,7 +232,7 @@ export default function InventoryPage() {
           className="text-sm uppercase font-light text-black bg-flag-red px-2 py-2"
           onClick={() => setShowForm((prev) => !prev)}
         >
-          {showForm ? 'Hide fields' : 'Add New Product'}
+          {showForm ? 'Hide fields' : 'Add New item'}
         </button>
       </div>
 

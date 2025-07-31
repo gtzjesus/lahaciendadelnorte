@@ -235,7 +235,7 @@ export default function POSPage() {
               alt={product.name}
               width={48}
               height={48}
-              className="object-cover rounded w-12 h-12"
+              className="object-cover  w-12 h-12"
             />
           )}
           <div className="flex flex-col text-sm uppercase">
@@ -289,14 +289,14 @@ export default function POSPage() {
             )}
             <div className="uppercase text-sm flex items-center justify-between gap-2">
               <div className="flex items-center gap-1">
-                <div className="text-sm text-gray-600">Stock: {item.stock}</div>
+                <div className="text-s">Stock: {item.stock}</div>
 
-                <span className="text-sm text-gray-600">Qty:</span>
+                <span className="text-s">Qty:</span>
                 <div className="relative my-3">
                   <select
                     value={item.cartQty}
                     onChange={(e) => updateQuantity(i, Number(e.target.value))}
-                    className="appearance-none border border-black rounded px-2 py-1 pr-8 text-black text-sm uppercase w-full focus:outline-none"
+                    className="appearance-none border border-black  px-2 py-1 pr-8 text-black text-sm uppercase w-full focus:outline-none"
                   >
                     {Array.from({ length: item.stock }, (_, n) => (
                       <option key={n + 1} value={n + 1}>
@@ -344,7 +344,7 @@ export default function POSPage() {
                   setCashReceived(0);
                 }
               }}
-              className="appearance-none w-full p-2 pr-8 border border-black bg-white text-black rounded text-sm uppercase focus:outline-none"
+              className="appearance-none w-full p-2 pr-8 border border-black bg-white text-black  text-sm uppercase focus:outline-none"
             >
               <option value="cash">Cash</option>
               <option value="card">Card</option>
@@ -417,7 +417,7 @@ export default function POSPage() {
         </div>
         {showConfirmModal && (
           <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black bg-opacity-60">
-            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md mx-auto text-center">
+            <div className="bg-white p-6 -lg shadow-xl w-full max-w-md mx-auto text-center">
               <h2 className="text-md uppercase font-bold mb-3">Confirm Sale</h2>
 
               <label className="block mb-2 text-left uppercase text-sm font-semibold text-gray-700"></label>
@@ -426,7 +426,7 @@ export default function POSPage() {
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="Enter customer name"
-                className="w-full uppercase text-xs p-2 mb-4 border border-gray-300 rounded text-black"
+                className="w-full uppercase text-xs p-2 mb-4 border border-gray-300  text-black"
               />
 
               <p className="uppercase text-sm mb-4 text-gray-700">
@@ -486,8 +486,8 @@ export default function POSPage() {
         </button>
       </div>
       {saleSuccess && (
-        <div className="fixed inset-0  flex flex-col items-center justify-center bg-flag-blue  text-black animate-fadeIn space-y-6 p-6">
-          <h2 className="text-3xl font-bold text-yellow uppercase">
+        <div className="fixed inset-0  flex flex-col items-center justify-center bg-flag-red  text-black animate-fadeIn space-y-6 p-6">
+          <h2 className="text-3xl font-bold text-green uppercase">
             Sale Success!
           </h2>
           <p className="text-lg uppercase">Order #{saleSuccess}</p>
