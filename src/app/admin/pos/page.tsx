@@ -3,8 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
-import Image from 'next/image';
 import ProductSearch from '@/components/admin/pos/ProductSearch';
+import CartList from '@/components/admin/pos/CartList';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 type Product = {
@@ -198,67 +198,11 @@ export default function POSPage() {
       <h1 className="text-2xl font-bold uppercase m-4">Point of sale</h1>
 
       <ProductSearch products={products} onAddToCartAction={addToCart} />
-      <div className="mb-4 ">
-        {cart.map((item, i) => (
-          <div
-            key={item._id}
-            className="flex flex-col items-center border-black border m-4  bg-flag-red py-2 "
-          >
-            <div className="w-full flex justify-between items-center px-4 text-md text-green">
-              <div className="text-black font-medium">
-                ${item.price.toFixed(2)}
-              </div>
-
-              <button
-                className="text-red-500 text-sm px-2"
-                onClick={() => removeItem(i)}
-              >
-                ❌
-              </button>
-            </div>
-
-            <div className="my-2 text-center uppercase flex flex-col text-md font-semibold">
-              <p>{item.name}</p>
-              <p>{item.category} </p>
-            </div>
-            {item.imageUrl && (
-              <Image
-                src={item.imageUrl}
-                alt={item.name}
-                width={56}
-                height={56}
-                className="object-cover  w-20 h-20"
-              />
-            )}
-            <div className="uppercase text-sm flex items-center justify-between gap-2">
-              <div className="flex items-center gap-1">
-                <div className="text-s">Stock: {item.stock}</div>
-
-                <span className="text-s">Qty:</span>
-                <div className="relative my-3">
-                  <select
-                    value={item.cartQty}
-                    onChange={(e) => updateQuantity(i, Number(e.target.value))}
-                    className="appearance-none border border-black  px-2 py-1 pr-8 text-black text-sm uppercase w-full focus:outline-none"
-                  >
-                    {Array.from({ length: item.stock }, (_, n) => (
-                      <option key={n + 1} value={n + 1}>
-                        {n + 1}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-black text-xs">
-                    ▼
-                  </div>
-                </div>
-              </div>
-              <div className="text-green font-bold">
-                ${(item.price * item.cartQty).toFixed(2)}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <CartList
+        cart={cart}
+        updateQuantityAction={updateQuantity}
+        removeItemAction={removeItem}
+      />
       <div className="w-full lg:w-auto bg-flag-red p-6 lg:p-12 shadow-md mt-6">
         <h3 className="uppercase text-lg font-bold text-center text-black border-b pb-1">
           Sale Summary
