@@ -1,30 +1,7 @@
 'use client';
 
 import React from 'react';
-
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-type Props = {
-  totalItems: number;
-  subtotal: number;
-  tax: number;
-  total: number;
-  paymentMethod: 'cash' | 'card' | 'split';
-  setPaymentMethodAction: (method: 'cash' | 'card' | 'split') => void;
-  cashReceived: number;
-  setCashReceivedAction: (amount: number) => void;
-  cardAmount: number;
-  setCardAmountAction: (amount: number) => void;
-  round2Action: (n: number) => number;
-  changeGiven: number;
-  showConfirmModal: boolean;
-  setShowConfirmModalAction: (v: boolean) => void;
-  customerName: string;
-  setCustomerNameAction: (name: string) => void;
-  loading: boolean;
-  handleSaleAction: () => Promise<void>;
-  clearCartAction: () => void;
-  cartEmpty: boolean;
-};
+import type { SaleSummaryProps } from '@/types/admin/pos';
 
 export default function SaleSummary({
   totalItems,
@@ -47,7 +24,7 @@ export default function SaleSummary({
   handleSaleAction,
   clearCartAction,
   cartEmpty,
-}: Props) {
+}: SaleSummaryProps) {
   return (
     <div className="w-full lg:w-auto bg-flag-red p-6 lg:p-12 shadow-md mt-6">
       <h3 className="uppercase text-lg font-bold text-center text-black border-b pb-1">

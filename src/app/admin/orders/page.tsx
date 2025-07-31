@@ -1,8 +1,9 @@
 // app/(admin)/orders/page.tsx
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
 import OrderList from '@/components/admin/orders/OrderList'; // <- we'll create this
 export const dynamic = 'force-dynamic';
 
-/* eslint-disable  @typescript-eslint/no-explicit-any */
 export default async function AdminOrdersPage() {
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL ||

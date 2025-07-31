@@ -2,24 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-
-/* Types (consider moving to a shared `types.ts` later) */
-export type Product = {
-  _id: string;
-  baseName: string;
-  name: string;
-  slug: { current: string };
-  price: number;
-  stock: number;
-  itemNumber?: string;
-  imageUrl?: string;
-  size: string;
-  category?: string;
-};
+import type { POSProduct } from '@/types/admin/pos';
 
 type ProductSearchProps = {
-  products: Product[];
-  onAddToCartAction: (product: Product) => void;
+  products: POSProduct[];
+  onAddToCartAction: (product: POSProduct) => void;
 };
 
 export default function ProductSearch({
@@ -27,7 +14,7 @@ export default function ProductSearch({
   onAddToCartAction,
 }: ProductSearchProps) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredResults, setFilteredResults] = useState<Product[]>([]);
+  const [filteredResults, setFilteredResults] = useState<POSProduct[]>([]);
 
   useEffect(() => {
     if (searchTerm.trim() === '') return setFilteredResults([]);

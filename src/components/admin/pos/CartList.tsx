@@ -1,30 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import React from 'react';
-
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-type CartItem = {
-  _id: string;
-  name: string;
-  price: number;
-  cartQty: number;
-  stock: number;
-  imageUrl?: string;
-  category?: string;
-};
-
-type Props = {
-  cart: CartItem[];
-  updateQuantityAction: (index: number, qty: number) => void;
-  removeItemAction: (index: number) => void;
-};
+import type { CartListProps } from '@/types/admin/pos';
 
 export default function CartList({
   cart,
   updateQuantityAction,
   removeItemAction,
-}: Props) {
+}: CartListProps) {
   return (
     <div className="mb-4">
       {cart.map((item, i) => (
