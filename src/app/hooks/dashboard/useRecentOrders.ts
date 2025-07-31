@@ -17,7 +17,7 @@ const fetcher = (url: string) =>
 
 export function useRecentOrders() {
   const { data, isLoading, error } = useSWR<RecentOrder[]>(
-    '/api/recent-orders',
+    '/api/admin/orders/recent-orders',
     fetcher,
     {
       refreshInterval: 5000,

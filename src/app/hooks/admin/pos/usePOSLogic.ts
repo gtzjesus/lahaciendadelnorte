@@ -88,7 +88,7 @@ export function usePOSLogic({
     }));
 
     try {
-      const res = await fetch('/api/pos', {
+      const res = await fetch('/api/admin/pos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

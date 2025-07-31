@@ -1,4 +1,4 @@
-import OrderCard from '@/components/orders/OrderCard';
+import OrderCard from '@/components/admin/orders/OrderCard';
 import { notFound } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';

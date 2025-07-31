@@ -6,7 +6,7 @@ import { client } from '@/sanity/lib/client';
 import ProductSearch from '@/components/admin/pos/ProductSearch';
 import CartList from '@/components/admin/pos/CartList';
 import SaleSummary from '@/components/admin/pos/SaleSummary';
-import { usePOSLogic } from '@/app/hooks/admin/usePOSLogic';
+import { usePOSLogic } from '@/app/hooks/admin/pos/usePOSLogic';
 import SaleSuccessModal from '../../../components/admin/pos/SaleSuccessModal';
 
 export default function POSClient() {
