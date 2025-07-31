@@ -1,5 +1,5 @@
 // app/(admin)/orders/page.tsx
-import OrderList from '@/components/orders/OrderList'; // <- we'll create this
+import OrderList from '@/components/admin/orders/OrderList'; // <- we'll create this
 export const dynamic = 'force-dynamic';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */

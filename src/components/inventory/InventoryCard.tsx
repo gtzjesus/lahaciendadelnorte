@@ -168,22 +168,27 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
               key={i}
               className="flex border-flag-blue items-start sm:items-center gap-2 p-2 transition"
             >
-              <select
-                value={s.label}
-                onChange={(e) => {
-                  const arr = [...sizes];
-                  arr[i].label = e.target.value;
-                  setSizes(arr);
-                }}
-                className="border-flag-blue border uppercase p-2 text-xs focus:outline-flag-blue"
-              >
-                <option value="">Select size</option>
-                {['Small', 'Medium', 'Large', 'Extra Large'].map((size) => (
-                  <option key={size} value={size}>
-                    {size}
-                  </option>
-                ))}
-              </select>
+              <div className="relative w-full max-w-[120px]">
+                <select
+                  value={s.label}
+                  onChange={(e) => {
+                    const arr = [...sizes];
+                    arr[i].label = e.target.value;
+                    setSizes(arr);
+                  }}
+                  className="appearance-none border-flag-blue border uppercase p-2 pr-6 text-xs w-full bg-white rounded focus:outline-flag-blue"
+                >
+                  <option value="">Select size</option>
+                  {['Small', 'Medium', 'Large', 'Extra Large'].map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-black text-[10px]">
+                  ▼
+                </div>
+              </div>
 
               <input
                 type="number"
@@ -234,18 +239,23 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       {/* Category */}
       <div>
         <label className="uppercase p-2 text-xs">Category</label>
-        <select
-          value={categoryId}
-          onChange={(e) => setCategoryId(e.target.value)}
-          className="uppercase w-full border border-flag-blue px-2 py-1 text-xs focus:outline-flag-blue"
-        >
-          <option value="">Select category</option>
-          {allCategories.map((cat) => (
-            <option key={cat._id} value={cat._id}>
-              {cat.title}
-            </option>
-          ))}
-        </select>
+        <div className="relative w-full">
+          <select
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value)}
+            className="appearance-none uppercase w-full border border-flag-blue px-2 py-2 pr-8 text-xs bg-white rounded focus:outline-flag-blue"
+          >
+            <option value="">Select category</option>
+            {allCategories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.title}
+              </option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-black text-[12px]">
+            ▼
+          </div>
+        </div>
       </div>
 
       {/* Extra Images Upload */}

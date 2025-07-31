@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import OrderCard from './OrderCard';
+import OrderCard from '../../orders/OrderCard';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 export default function OrderList({ orders }: { orders: any[] }) {

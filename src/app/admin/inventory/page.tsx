@@ -267,18 +267,23 @@ export default function InventoryPage() {
                 </p>
               )}
 
-              <select
-                className="uppercase text-sm border border-black p-3"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              >
-                <option value="">Select category</option>
-                {categories.map((c) => (
-                  <option key={c._id} value={c._id}>
-                    {c.title}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  className="appearance-none uppercase text-sm border border-black p-3 pr-8 w-full bg-white text-black rounded"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                  <option value="">Select category</option>
+                  {categories.map((c) => (
+                    <option key={c._id} value={c._id}>
+                      {c.title}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-black">
+                  ▼
+                </div>
+              </div>
 
               <div>
                 {form.variants.map((v, i) => (
@@ -286,29 +291,23 @@ export default function InventoryPage() {
                     key={i}
                     className="grid grid-cols-[80px_80px_80px_auto] gap-2 mb-2"
                   >
-                    <select
-                      value={v.size}
-                      onChange={(e) => {
-                        const variants = [...form.variants];
-                        variants[i].size = e.target.value;
-                        setForm({ ...form, variants });
-                      }}
-                      className="border border-black p-1 text-sm uppercase w-full"
-                    >
-                      <option value="">Size</option>
-                      {sizeOptions
-                        .filter(
-                          (opt) =>
-                            !form.variants.some(
-                              (v, j) => v.size === opt && j !== i
-                            )
-                        )
-                        .map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                    </select>
+                    <div className="relative">
+                      <select
+                        value={v.size}
+                        onChange={(e) => {
+                          const variants = [...form.variants];
+                          variants[i].size = e.target.value;
+                          setForm({ ...form, variants });
+                        }}
+                        className="appearance-none border border-black p-1 pr-6 text-sm uppercase w-full bg-white rounded"
+                      >
+                        <option value="">Size</option>
+                        ...
+                      </select>
+                      <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">
+                        ▼
+                      </div>
+                    </div>
 
                     <input
                       type="number"
