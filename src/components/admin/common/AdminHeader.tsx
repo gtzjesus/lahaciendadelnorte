@@ -81,7 +81,7 @@ export default function AdminHeader() {
             animate={{ y: 0 }}
             exit={{ y: '-100%' }}
             transition={{ duration: 0.7, ease: 'easeInOut' }}
-            className="fixed inset-0 z-40 bg-flag-red text-black flex flex-col justify-center items-center space-y-8 p-6 backdrop-blur-md opacity-95"
+            className="fixed inset-0 z-40 bg-flag-red text-black flex flex-col justify-center items-center space-y-8 p-6 backdrop-blur-md"
           >
             {navItems.map(({ name, href }, i) => (
               <motion.div

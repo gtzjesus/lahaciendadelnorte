@@ -292,17 +292,22 @@ export default function POSPage() {
                 <div className="text-sm text-gray-600">Stock: {item.stock}</div>
 
                 <span className="text-sm text-gray-600">Qty:</span>
-                <select
-                  value={item.cartQty}
-                  onChange={(e) => updateQuantity(i, Number(e.target.value))}
-                  className="border border-black rounded px-2 py-1 my-3 text-black text-sm"
-                >
-                  {Array.from({ length: item.stock }, (_, n) => (
-                    <option key={n + 1} value={n + 1}>
-                      {n + 1}
-                    </option>
-                  ))}
-                </select>
+                <div className="relative my-3">
+                  <select
+                    value={item.cartQty}
+                    onChange={(e) => updateQuantity(i, Number(e.target.value))}
+                    className="appearance-none border border-black rounded px-2 py-1 pr-8 text-black text-sm uppercase w-full focus:outline-none"
+                  >
+                    {Array.from({ length: item.stock }, (_, n) => (
+                      <option key={n + 1} value={n + 1}>
+                        {n + 1}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-black text-xs">
+                    ▼
+                  </div>
+                </div>
               </div>
               <div className="text-green font-bold">
                 ${(item.price * item.cartQty).toFixed(2)}
@@ -327,23 +332,28 @@ export default function POSPage() {
         {/* Payment Method Section */}
         <div className="mt-4 mb-4 text-black font-bold">
           <label className="block uppercase text-sm ">Payment Method</label>
-          <select
-            value={paymentMethod}
-            onChange={(e) => {
-              const method = e.target.value as 'cash' | 'card' | 'split';
-              setPaymentMethod(method);
-              if (method === 'cash') {
-                setCardAmount(0);
-              } else if (method === 'card') {
-                setCashReceived(0);
-              }
-            }}
-            className="w-full p-2 text-black"
-          >
-            <option value="cash">Cash</option>
-            <option value="card">Card</option>
-            <option value="split">Split</option>
-          </select>
+          <div className="relative w-full mt-2">
+            <select
+              value={paymentMethod}
+              onChange={(e) => {
+                const method = e.target.value as 'cash' | 'card' | 'split';
+                setPaymentMethod(method);
+                if (method === 'cash') {
+                  setCardAmount(0);
+                } else if (method === 'card') {
+                  setCashReceived(0);
+                }
+              }}
+              className="appearance-none w-full p-2 pr-8 border border-black bg-white text-black rounded text-sm uppercase focus:outline-none"
+            >
+              <option value="cash">Cash</option>
+              <option value="card">Card</option>
+              <option value="split">Split</option>
+            </select>
+            <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-black text-xs">
+              ▼
+            </div>
+          </div>
 
           {paymentMethod === 'cash' && (
             <div className="mt-2">
@@ -470,7 +480,7 @@ export default function POSPage() {
         <button
           onClick={clearCart}
           disabled={cart.length === 0 || loading}
-          className="p-4 mb-2 block uppercase text-md font-bold text-center bg-flag-blue text-black w-full"
+          className="p-4 mb-2 block uppercase text-md font-bold text-center bg-red-500 text-white w-full"
         >
           Clear Sale
         </button>

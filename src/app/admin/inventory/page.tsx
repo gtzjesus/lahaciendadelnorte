@@ -302,7 +302,18 @@ export default function InventoryPage() {
                         className="appearance-none border border-black p-1 pr-6 text-sm uppercase w-full bg-white rounded"
                       >
                         <option value="">Size</option>
-                        ...
+                        {sizeOptions
+                          .filter(
+                            (opt) =>
+                              !form.variants.some(
+                                (v, j) => v.size === opt && j !== i
+                              )
+                          )
+                          .map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
                       </select>
                       <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">
                         ▼
