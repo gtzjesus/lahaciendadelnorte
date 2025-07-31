@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
 import Image from 'next/image';
+import ProductSearch from '@/components/admin/pos/ProductSearch';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 type Product = {
@@ -24,8 +25,6 @@ type CartItem = Product & { cartQty: number };
 export default function POSPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredResults, setFilteredResults] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'split'>(
     'card'
@@ -86,14 +85,6 @@ export default function POSPage() {
       });
   }, []);
 
-  useEffect(() => {
-    if (searchTerm.trim() === '') return setFilteredResults([]);
-    const results = products.filter((p) =>
-      p.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredResults(results);
-  }, [searchTerm, products]);
-
   const addToCart = (product: Product) => {
     setCart((prevCart) => {
       const existingIndex = prevCart.findIndex(
@@ -117,9 +108,6 @@ export default function POSPage() {
 
       return [...prevCart, { ...product, cartQty: 1 }];
     });
-
-    setSearchTerm('');
-    setFilteredResults([]);
   };
 
   const updateQuantity = (i: number, qty: number) => {
@@ -209,52 +197,7 @@ export default function POSPage() {
     <div className="overflow-x-hidden mx-auto bg-white min-h-screen max-w-2xl">
       <h1 className="text-2xl font-bold uppercase m-4">Point of sale</h1>
 
-      <div className="px-4">
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-4 border border-black uppercase text-sm "
-        />
-      </div>
-
-      {filteredResults.map((product) => (
-        <div
-          key={product._id}
-          onClick={() => product.stock > 0 && addToCart(product)}
-          className={`cursor-pointer flex items-center space-x-3 p-2 border-b transition ${
-            product.stock > 0
-              ? 'hover:bg-gray-100'
-              : 'opacity-60 cursor-not-allowed'
-          }`}
-        >
-          {product.imageUrl && (
-            <Image
-              src={product.imageUrl}
-              alt={product.name}
-              width={48}
-              height={48}
-              className="object-cover  w-12 h-12"
-            />
-          )}
-          <div className="flex flex-col text-sm uppercase">
-            <div className="font-semibold">
-              {product.name} <strong className="px-2">|</strong>
-              <strong className="text-green">${product.price}</strong>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="">{product.category}</span>
-              {product.stock === 0 && (
-                <p className="text-red-500 font-semibold text-sm ml-2">
-                  OUT OF STOCK
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      ))}
-
+      <ProductSearch products={products} onAddToCartAction={addToCart} />
       <div className="mb-4 ">
         {cart.map((item, i) => (
           <div
