@@ -11,16 +11,20 @@ import type {
   AdminProduct,
   Variant,
 } from '@/types/admin/inventory';
-import {
-  fetchAdminCategories,
-  fetchAdminProducts,
-  uploadAdminProduct,
-} from '@/app/services/admin/inventory/inventoryService';
+import { uploadAdminProduct } from '@/app/services/admin/inventory/inventoryService';
 
-export default function InventoryPage() {
+type Props = {
+  initialProducts: AdminProduct[];
+  initialCategories: AdminCategory[];
+};
+
+export default function InventoryClient({
+  initialProducts,
+  initialCategories,
+}: Props) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [products, setProducts] = useState<AdminProduct[]>([]);
-  const [categories, setCategories] = useState<AdminCategory[]>([]);
+  const [products, setProducts] = useState<AdminProduct[]>(initialProducts);
+  const [categories] = useState<AdminCategory[]>(initialCategories);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [form, setForm] = useState({
     itemNumber: '',
@@ -37,31 +41,10 @@ export default function InventoryPage() {
   const mainImageRef = useRef<HTMLInputElement | null>(null);
   const extraImagesRef = useRef<HTMLInputElement | null>(null);
 
-  // Generate slug on name change
   useEffect(() => {
     const newSlug = slugify(form.name);
     setForm((prev) => ({ ...prev, slug: newSlug }));
   }, [form.name]);
-
-  // Fetch categories
-  useEffect(() => {
-    fetchAdminCategories()
-      .then(setCategories)
-      .catch((err) => {
-        console.error('[Categories Fetch Error]', err);
-        setCategories([]);
-      });
-  }, []);
-
-  // Fetch products
-  useEffect(() => {
-    fetchAdminProducts()
-      .then(setProducts)
-      .catch((err) => {
-        console.error('[Products Fetch Error]', err);
-        setProducts([]);
-      });
-  }, []);
 
   const filteredProducts = products.filter((p) => {
     const nameMatch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -126,24 +109,23 @@ export default function InventoryPage() {
   };
 
   return (
-    <main className="max-w-4xl mx-auto px-2 pb-20">
-      <div className="sticky top-12  z-10 p-4  flex flex-col  gap-4">
+    <main className="max-w-5xl mx-auto px-2 pb-20">
+      <div className="flex justify-between items-center mt-8 mb-6 gap-2">
         <input
           type="text"
           placeholder="Search products..."
-          className="uppercase border border-black text-black p-3 w-full md:w-auto flex-grow"
+          className="uppercase border border-black text-black p-3 rounded"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-      </div>
-      <div className=" bg-white z-50 p-4  flex flex-col  gap-4">
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-flag-red text-black font-semibold uppercase px-4 py-3 w-full md:w-auto"
+          className="bg-flag-red text-black font-semibold uppercase px-4 py-3"
         >
-          {showForm ? 'Hide ' : 'Add New item'}
+          {showForm ? 'Close Form' : 'Add New Product'}
         </button>
       </div>
+
       <ProductForm
         form={form}
         setFormAction={setForm}
