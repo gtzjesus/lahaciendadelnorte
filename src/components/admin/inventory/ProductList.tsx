@@ -1,15 +1,15 @@
 'use client';
 
+import type { AdminProduct } from '@/types/admin/inventory';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { AdminProduct } from '@/types/admin/inventory';
 
-type Props = {
+type ProductListProps = {
   products: AdminProduct[];
 };
 
-export default function ProductList({ products }: Props) {
-  if (products.length === 0) {
+export default function ProductList({ products }: ProductListProps) {
+  if (!products.length) {
     return (
       <p className="text-center text-sm uppercase text-black font-medium mt-6">
         No products found. Try again
@@ -25,13 +25,11 @@ export default function ProductList({ products }: Props) {
           href={`/admin/inventory/${p.itemNumber}`}
           className="flex flex-col border border-black bg-flag-red text-black transition px-4 py-4"
         >
-          {/* Basic Info */}
           <div className="flex flex-col justify-center items-center uppercase text-xs mb-1">
             <p className="text-sm">#{p.itemNumber}</p>
             <p className="text-sm font-semibold">{p.name}</p>
           </div>
 
-          {/* Product Image */}
           {p.imageUrl && (
             <div className="w-full h-40 relative mb-2">
               <Image
@@ -43,14 +41,12 @@ export default function ProductList({ products }: Props) {
             </div>
           )}
 
-          {/* Category */}
           {p.category?.title && (
             <p className="text-xs text-center uppercase">
               <span className="font-semibold">{p.category.title}</span>
             </p>
           )}
 
-          {/* Total Stock */}
           {(p.variants ?? []).length > 0 && (
             <p className="text-xs uppercase text-center mb-1">
               stock:{' '}
@@ -63,7 +59,6 @@ export default function ProductList({ products }: Props) {
             </p>
           )}
 
-          {/* Variants List */}
           {(p.variants ?? []).length > 0 && (
             <div className="uppercase mt-2 border-t border-black pt-2">
               <ul className="text-xs space-y-1">

@@ -91,7 +91,7 @@ export default function InventoryPage() {
     setMessage('');
 
     try {
-      const newProduct = await uploadAdminProduct({
+      await uploadAdminProduct({
         itemNumber: form.itemNumber,
         name: form.name,
         slug: form.slug,
@@ -101,7 +101,11 @@ export default function InventoryPage() {
         extraImages: extraImageFiles,
       });
 
-      setProducts((prev) => [...prev, newProduct]);
+      // 🔁 Re-fetch instead of appending
+      const refreshedProducts = await fetchAdminProducts();
+      setProducts(refreshedProducts);
+      setSearchTerm('');
+      setSelectedCategory('');
 
       // Reset form
       setForm({
@@ -110,16 +114,16 @@ export default function InventoryPage() {
         slug: '',
         variants: [{ size: '', price: '', stock: '' }],
       });
-      setSelectedCategory('');
       setMainImageFile(null);
       setExtraImageFiles([]);
       if (mainImageRef.current) mainImageRef.current.value = '';
       if (extraImagesRef.current) extraImagesRef.current.value = '';
-      setMessage('Product added successfully!');
+
+      setMessage('✅ Product added successfully!');
       setShowForm(false);
     } catch (err) {
       console.error('[Upload Error]', err);
-      setMessage('Failed to add product.');
+      setMessage('❌ Failed to add product.');
     } finally {
       setLoading(false);
     }

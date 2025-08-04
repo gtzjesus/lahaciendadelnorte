@@ -91,7 +91,7 @@ export default function ProductForm({
 
         <div className="relative">
           <select
-            className="appearance-none uppercase text-sm border border-black p-3 pr-8 w-full bg-white text-black rounded"
+            className="appearance-none uppercase text-sm border border-black p-3 pr-8 w-full bg-white text-black "
             value={selectedCategory}
             onChange={(e) => setSelectedCategoryAction(e.target.value)}
           >
@@ -121,7 +121,7 @@ export default function ProductForm({
                     variants[i].size = e.target.value;
                     setFormAction({ ...form, variants });
                   }}
-                  className="appearance-none border border-black p-1 pr-6 text-sm uppercase w-full bg-white rounded"
+                  className="appearance-none border border-black p-1 pr-6 text-sm uppercase w-full bg-white "
                 >
                   <option value="">Size</option>
                   {sizeOptions
@@ -214,7 +214,7 @@ export default function ProductForm({
           <button
             type="button"
             onClick={() => mainImageRef.current?.click()}
-            className="bg-flag-blue text-black text-sm uppercase px-2 py-2 rounded "
+            className="bg-flag-blue text-black text-sm uppercase px-2 py-2  "
           >
             Upload Main Image
           </button>
@@ -242,7 +242,7 @@ export default function ProductForm({
           <button
             type="button"
             onClick={() => extraImagesRef.current?.click()}
-            className="bg-flag-blue text-black text-sm uppercase px-2 py-2 rounded "
+            className="bg-flag-blue text-black text-sm uppercase px-2 py-2  "
           >
             Upload Extra Images
           </button>
@@ -270,7 +270,6 @@ export default function ProductForm({
           )}
         </div>
       </div>
-
       <button
         disabled={loading || !isFormValidAction()}
         onClick={handleUploadAction}
@@ -282,7 +281,6 @@ export default function ProductForm({
       >
         {loading ? 'Adding product...' : 'Add Product'}
       </button>
-
       {message && <p className="mt-4">{message}</p>}
     </>
   );

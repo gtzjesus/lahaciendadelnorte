@@ -7,13 +7,13 @@ import type {
 } from '@/types/admin/inventory';
 
 export async function fetchAdminProducts(): Promise<AdminProduct[]> {
-  const res = await fetch('/api/products');
+  const res = await fetch('/api/admin/products');
   const json = await res.json();
   return Array.isArray(json.products) ? json.products : json;
 }
 
 export async function fetchAdminCategories(): Promise<AdminCategory[]> {
-  const res = await fetch('/api/categories');
+  const res = await fetch('/api/admin/categories');
   const json = await res.json();
   return json.categories || [];
 }
@@ -36,7 +36,7 @@ export async function uploadAdminProduct(data: {
   formData.append('mainImage', data.mainImage);
   data.extraImages.forEach((file) => formData.append('extraImages', file));
 
-  const res = await fetch('/api/products', {
+  const res = await fetch('/api/admin/products', {
     method: 'POST',
     body: formData,
   });
