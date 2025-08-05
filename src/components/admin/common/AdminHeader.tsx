@@ -32,7 +32,7 @@ export default function AdminHeader() {
           href="/admin/pos"
           className="uppercase font-light text-md hover:underline"
         >
-          la duena
+          La Dueña
         </Link>
 
         <button
@@ -77,11 +77,12 @@ export default function AdminHeader() {
         {menuOpen && (
           <motion.div
             key="admin-menu"
-            initial={{ y: '-100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '-100%' }}
-            transition={{ duration: 0.7, ease: 'easeInOut' }}
-            className="fixed inset-0 z-40 bg-flag-red text-black flex flex-col justify-center items-center space-y-8 p-6 backdrop-blur-md"
+            initial={{ y: '-100%', opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: '-100%', opacity: 0 }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            className="fixed inset-0 z-40 bg-flag-red text-black flex flex-col justify-center items-center space-y-8 p-6"
+            style={{ willChange: 'transform' }}
           >
             {navItems.map(({ name, href }, i) => (
               <motion.div
@@ -94,7 +95,7 @@ export default function AdminHeader() {
                   href={href}
                   onClick={() => setMenuOpen(false)}
                   className={clsx(
-                    'text-3xl md:text-4xl uppercase font-bold tracking-wide transition-transform',
+                    'text-2xl md:text-4xl uppercase font-bold tracking-wide transition-transform',
                     pathname === href && 'text-flag-blue'
                   )}
                 >
