@@ -25,7 +25,7 @@ export default function ProductSearch({
   }, [searchTerm, products]);
 
   return (
-    <div className="fixed w-full z-50 p-4 flex flex-col">
+    <div className="fixed w-full z-10 p-4 flex flex-col">
       <input
         type="text"
         placeholder="Search items to sale"

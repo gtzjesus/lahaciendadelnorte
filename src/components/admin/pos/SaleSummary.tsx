@@ -210,9 +210,7 @@ export default function SaleSummary({
           : 'bg-green hover:bg-gray-800 text-white active:scale-[0.98]'
       }`}
         >
-          {loading
-            ? `Processing... $${total.toFixed(2)}`
-            : `Complete Sale ($${total.toFixed(2)})`}
+          {loading ? `Processing... $${total.toFixed(2)}` : `Complete Sale`}
         </button>
       </div>
     </div>
