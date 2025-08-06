@@ -31,7 +31,7 @@ export default function CartList({
 
     const typingDelay = setTimeout(() => {
       setIsTyping(true); // Set isTyping to true after delay
-    }, 2500); // Delay in milliseconds (1.5 seconds)
+    }, 2000); // Delay in milliseconds (2 seconds)
 
     return () => clearTimeout(typingDelay);
   }, [cart]);
@@ -50,12 +50,23 @@ export default function CartList({
 
   if (!cart || cart.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-[10rem] px-4 mt-20 text-center">
-        <p className="uppercase font-semibold text-lg select-none">
+      <div className="flex items-center justify-center min-h-[10rem] px-4 mt-20 text-center flex-col">
+        <p className="uppercase font-semibold text-lg select-none mt-10">
           {currentMessage}
           <span> </span>
           <span className="animate-pulse">|</span>
         </p>
+
+        {/* Add the image below the message */}
+        <div className="mt-6">
+          <Image
+            src="/icons/order.webp" // Path to your image in the public folder
+            alt="Order Illustration"
+            width={100} // Smaller width for better scaling
+            height={100} // Smaller height for better scaling
+            className="mx-auto object-contain" // Ensures the image doesn't get chopped off
+          />
+        </div>
       </div>
     );
   }

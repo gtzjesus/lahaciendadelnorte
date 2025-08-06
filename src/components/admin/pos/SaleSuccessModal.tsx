@@ -20,7 +20,7 @@ export default function SaleSuccessModal({
       initial={{ y: '-100%', opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: '-100%', opacity: 0 }}
-      transition={{ duration: 0.4, ease: 'easeInOut' }}
+      transition={{ duration: 0.75, ease: 'easeInOut' }}
     >
       {/* Animated Success Message */}
       <motion.h2

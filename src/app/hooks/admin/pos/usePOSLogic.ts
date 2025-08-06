@@ -130,7 +130,7 @@ export function usePOSLogic({
 
         setTimeout(() => {
           window.location.reload();
-        }, 50000);
+        }, 5000);
       }
     } catch (err: any) {
       console.error('❌ Network/server error:', err);
