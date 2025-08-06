@@ -26,23 +26,41 @@ export default function SaleSummary({
   cartEmpty,
 }: SaleSummaryProps) {
   return (
-    <div className="p-4">
-      <h3 className="uppercase text-lg font-bold text-center text-black border-b pb-1">
-        Sale Summary
-      </h3>
-      <div className="space-y-1 mt-2 mb-2 text-black uppercase text-md font-bold">
-        <p>Total Items: {totalItems}</p>
-        <p>Subtotal: ${subtotal.toFixed(2)}</p>
-        <p>Tax: ${tax.toFixed(2)}</p>
+    <div className="p-4 ">
+      <div className="flex justify-between uppercase text-sm font-semibold text-center text-black border-black border-b ">
+        <h3 className="mb-2">Sale Summary</h3>
+        <p> Items: {totalItems}</p>
+      </div>
+      <div className="flex justify-between mt-2  text-sm uppercase font-light space-y-1">
         <p>
-          Total: <strong className="text-green">${total.toFixed(2)}</strong>
+          <span>Subtotal:</span>{' '}
+        </p>
+        <p>
+          <span> ${subtotal.toFixed(2)}</span>
+        </p>
+      </div>
+
+      <div className="flex justify-between mt-2  text-sm uppercase font-light space-y-1">
+        <p>
+          <span>tax:</span>{' '}
+        </p>
+        <p>
+          <span> ${tax.toFixed(2)}</span>
+        </p>
+      </div>
+
+      <div className="flex justify-between mt-2  text-sm uppercase font-light space-y-1">
+        <p>
+          <span>total:</span>{' '}
+        </p>
+        <p>
+          <span className="text-green"> ${total.toFixed(2)}</span>
         </p>
       </div>
 
       {/* Payment Method */}
-      <div className="mt-4 mb-4 text-black font-bold">
-        <label className="block uppercase text-sm">Payment Method</label>
-        <div className="relative w-full mt-2">
+      <div className="mt-2 mb-2 text-black font-semibold">
+        <div className="relative w-full">
           <select
             value={paymentMethod}
             onChange={(e) => {
@@ -166,27 +184,37 @@ export default function SaleSummary({
       )}
 
       {/* Final Action Buttons */}
-      <button
-        onClick={() => setShowConfirmModalAction(true)}
-        disabled={loading || cartEmpty}
-        className={`p-4 mb-2 block uppercase text-md font-bold text-center text-black w-full ${
-          loading
-            ? 'bg-yellow cursor-wait'
-            : 'bg-green text-yellow hover:bg-green-700 cursor-pointer'
-        }`}
-      >
-        {loading
-          ? `Processing... $${total.toFixed(2)}`
-          : `Complete Sale ($${total.toFixed(2)})`}
-      </button>
+      <div className="flex gap-3 w-full">
+        {/* Clear Sale Button */}
+        <button
+          onClick={clearCartAction}
+          disabled={cartEmpty || loading}
+          className={`w-full py-3 rounded-full text-sm font-semibold uppercase transition duration-200 ease-in-out shadow-sm 
+      ${
+        cartEmpty || loading
+          ? 'bg-red-300 cursor-not-allowed text-white'
+          : 'bg-red-500 hover:bg-red-600 active:bg-red-700 text-white'
+      }`}
+        >
+          Clear Sale
+        </button>
 
-      <button
-        onClick={clearCartAction}
-        disabled={cartEmpty || loading}
-        className="p-4 mb-2 block uppercase text-md font-bold text-center bg-red-500 text-white w-full"
-      >
-        Clear Sale
-      </button>
+        {/* Complete Sale Button */}
+        <button
+          onClick={() => setShowConfirmModalAction(true)}
+          disabled={loading || cartEmpty}
+          className={`w-full py-3 rounded-full text-sm font-semibold uppercase transition duration-200 ease-in-out shadow-sm 
+      ${
+        loading || cartEmpty
+          ? 'bg-gray-300 cursor-not-allowed text-gray-600'
+          : 'bg-green hover:bg-gray-800 text-white active:scale-[0.98]'
+      }`}
+        >
+          {loading
+            ? `Processing... $${total.toFixed(2)}`
+            : `Complete Sale ($${total.toFixed(2)})`}
+        </button>
+      </div>
     </div>
   );
 }

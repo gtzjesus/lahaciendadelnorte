@@ -81,7 +81,7 @@ export default function POSClient() {
           removeItemAction={removeItem}
         />
       </div>
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-flag-red  border-t border-black max-h-[90vh] overflow-y-auto">
+      <div className="fixed bottom-0 left-0 right-0 z-25 bg-flag-red  border-t border-black max-h-[90vh] overflow-y-auto">
         <SaleSummary
           totalItems={totalItems}
           subtotal={subtotal}
