@@ -74,11 +74,13 @@ export default function POSClient() {
   return (
     <div className="overflow-x-hidden mx-auto bg-white min-h-screen max-w-2xl">
       <ProductSearch products={products} onAddToCartAction={addToCart} />
-      <CartList
-        cart={cart}
-        updateQuantityAction={updateQuantity}
-        removeItemAction={removeItem}
-      />
+      <div className="mt-20">
+        <CartList
+          cart={cart}
+          updateQuantityAction={updateQuantity}
+          removeItemAction={removeItem}
+        />
+      </div>
       <SaleSummary
         totalItems={totalItems}
         subtotal={subtotal}

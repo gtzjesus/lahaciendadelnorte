@@ -131,7 +131,7 @@ export default function InventoryPage() {
 
   return (
     <main className="max-w-4xl mx-auto px-2 pb-20">
-      <div className="sticky top-12  z-10 p-4  flex flex-col  gap-4">
+      <div className="sticky top-12 z-10 p-4  flex flex-col">
         <input
           type="text"
           placeholder="Search items"

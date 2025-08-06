@@ -25,7 +25,7 @@ export default function ProductSearch({
   }, [searchTerm, products]);
 
   return (
-    <div className="sticky p-4 flex flex-col">
+    <div className="fixed w-full z-50 p-4 flex flex-col">
       <input
         type="text"
         placeholder="Search items to sale"
@@ -44,10 +44,8 @@ export default function ProductSearch({
               setFilteredResults([]);
             }
           }}
-          className={`cursor-pointer flex items-center space-x-3 p-2 border-b transition ${
-            product.stock > 0
-              ? 'hover:bg-gray-100'
-              : 'opacity-60 cursor-not-allowed'
+          className={`bg-white cursor-pointer flex items-center space-x-3 p-2 border-b transition ${
+            product.stock > 0 ? '' : ' cursor-not-allowed'
           }`}
         >
           {product.imageUrl && (
