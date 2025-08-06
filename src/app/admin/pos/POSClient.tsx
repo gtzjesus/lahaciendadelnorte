@@ -73,8 +73,6 @@ export default function POSClient() {
 
   return (
     <div className="overflow-x-hidden mx-auto bg-white min-h-screen max-w-2xl">
-      <h1 className="text-2xl font-bold uppercase m-4">Point of sale</h1>
-
       <ProductSearch products={products} onAddToCartAction={addToCart} />
       <CartList
         cart={cart}

@@ -25,10 +25,10 @@ export default function ProductSearch({
   }, [searchTerm, products]);
 
   return (
-    <div className="px-4">
+    <div className="sticky p-4 flex flex-col">
       <input
         type="text"
-        placeholder="Search"
+        placeholder="Search items to sale"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full p-4 border border-black uppercase text-sm"

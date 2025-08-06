@@ -134,8 +134,8 @@ export default function InventoryPage() {
       <div className="sticky top-12  z-10 p-4  flex flex-col  gap-4">
         <input
           type="text"
-          placeholder="Search products..."
-          className="uppercase border border-black text-black p-3 w-full md:w-auto flex-grow"
+          placeholder="Search items"
+          className="w-full p-4 border border-black uppercase text-sm"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
