@@ -26,7 +26,7 @@ export default function SaleSummary({
   cartEmpty,
 }: SaleSummaryProps) {
   return (
-    <div className="w-full lg:w-auto bg-flag-red p-6 lg:p-12 shadow-md mt-6">
+    <div className="p-4">
       <h3 className="uppercase text-lg font-bold text-center text-black border-b pb-1">
         Sale Summary
       </h3>

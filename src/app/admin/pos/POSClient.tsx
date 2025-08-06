@@ -81,29 +81,30 @@ export default function POSClient() {
           removeItemAction={removeItem}
         />
       </div>
-      <SaleSummary
-        totalItems={totalItems}
-        subtotal={subtotal}
-        tax={tax}
-        total={total}
-        paymentMethod={paymentMethod}
-        setPaymentMethodAction={setPaymentMethod}
-        cashReceived={cashReceived}
-        setCashReceivedAction={setCashReceived}
-        cardAmount={cardAmount}
-        setCardAmountAction={setCardAmount}
-        round2Action={(n: number) => Math.round(n * 100) / 100}
-        changeGiven={changeGiven}
-        showConfirmModal={showConfirmModal}
-        setShowConfirmModalAction={setShowConfirmModal}
-        customerName={customerName}
-        setCustomerNameAction={setCustomerName}
-        loading={loading}
-        handleSaleAction={handleSale}
-        clearCartAction={clearCart}
-        cartEmpty={cart.length === 0}
-      />
-
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-flag-red  border-t border-black max-h-[90vh] overflow-y-auto">
+        <SaleSummary
+          totalItems={totalItems}
+          subtotal={subtotal}
+          tax={tax}
+          total={total}
+          paymentMethod={paymentMethod}
+          setPaymentMethodAction={setPaymentMethod}
+          cashReceived={cashReceived}
+          setCashReceivedAction={setCashReceived}
+          cardAmount={cardAmount}
+          setCardAmountAction={setCardAmount}
+          round2Action={(n: number) => Math.round(n * 100) / 100}
+          changeGiven={changeGiven}
+          showConfirmModal={showConfirmModal}
+          setShowConfirmModalAction={setShowConfirmModal}
+          customerName={customerName}
+          setCustomerNameAction={setCustomerName}
+          loading={loading}
+          handleSaleAction={handleSale}
+          clearCartAction={clearCart}
+          cartEmpty={cart.length === 0}
+        />
+      </div>
       {saleSuccess && (
         <SaleSuccessModal
           orderNumber={saleSuccess}
