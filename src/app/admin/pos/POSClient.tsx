@@ -41,6 +41,7 @@ export default function POSClient() {
   const [products, setProducts] = useState<any[]>([]);
   const [showSummary, setShowSummary] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -103,7 +104,7 @@ export default function POSClient() {
       {cart.length > 0 && (
         <div
           className={`fixed bottom-0 left-0 right-0 z-25 bg-flag-red border-t border-black transition-transform duration-300 ease-in-out ${
-            showSummary ? 'translate-y-0' : 'translate-y-full'
+            showSummary || isInputFocused ? 'translate-y-0' : 'translate-y-full'
           }`}
         >
           <SaleSummary
@@ -127,6 +128,8 @@ export default function POSClient() {
             handleSaleAction={handleSale}
             clearCartAction={clearCart}
             cartEmpty={cart.length === 0}
+            onInputFocus={() => setIsInputFocused(true)}
+            onInputBlur={() => setIsInputFocused(false)}
           />
         </div>
       )}

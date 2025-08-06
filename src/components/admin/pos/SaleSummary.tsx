@@ -24,7 +24,12 @@ export default function SaleSummary({
   handleSaleAction,
   clearCartAction,
   cartEmpty,
-}: SaleSummaryProps) {
+  onInputFocus,
+  onInputBlur,
+}: SaleSummaryProps & {
+  onInputFocus?: () => void;
+  onInputBlur?: () => void;
+}) {
   return (
     <div className="p-4 ">
       <div className="flex justify-between uppercase text-sm font-semibold text-center text-black border-black border-b ">
@@ -70,6 +75,8 @@ export default function SaleSummary({
               if (method === 'card') setCashReceivedAction(0);
             }}
             className="appearance-none w-full p-2 pr-8 border border-black bg-white text-black text-sm uppercase focus:outline-none"
+            onFocus={onInputFocus}
+            onBlur={onInputBlur}
           >
             <option value="cash">Cash</option>
             <option value="card">Card</option>
@@ -92,6 +99,8 @@ export default function SaleSummary({
                 const val = parseFloat(e.target.value);
                 setCashReceivedAction(isNaN(val) ? 0 : round2Action(val));
               }}
+              onFocus={onInputFocus}
+              onBlur={onInputBlur}
               className="w-full p-2 mt-1 text-black"
             />
             <p className="text-sm mt-1">
@@ -114,6 +123,8 @@ export default function SaleSummary({
                   const val = parseFloat(e.target.value);
                   setCashReceivedAction(isNaN(val) ? 0 : round2Action(val));
                 }}
+                onFocus={onInputFocus}
+                onBlur={onInputBlur}
                 className="w-full p-2 mt-1 text-black"
               />
             </div>
@@ -128,6 +139,8 @@ export default function SaleSummary({
                   const val = parseFloat(e.target.value);
                   setCardAmountAction(isNaN(val) ? 0 : round2Action(val));
                 }}
+                onFocus={onInputFocus}
+                onBlur={onInputBlur}
                 className="w-full p-2 text-black"
               />
             </div>
@@ -149,6 +162,8 @@ export default function SaleSummary({
               type="text"
               value={customerName}
               onChange={(e) => setCustomerNameAction(e.target.value)}
+              onFocus={onInputFocus}
+              onBlur={onInputBlur}
               placeholder="Enter customer name"
               className="w-full uppercase text-xs p-2 mb-4 border border-gray-300 text-black"
             />
