@@ -6,9 +6,9 @@ import type { CartListProps } from '@/types/admin/pos';
 
 const messages = [
   ' Start searching to add items to this sale',
-  ' This cart is lonely... give it some items!',
   ' Add an item and let the order begin!',
   ' Search for products to get rolling',
+  ' This cart is lonely... give it some items!',
 ];
 
 export default function CartList({
@@ -31,7 +31,7 @@ export default function CartList({
 
     const typingDelay = setTimeout(() => {
       setIsTyping(true); // Set isTyping to true after delay
-    }, 1500); // Delay in milliseconds (1.5 seconds)
+    }, 2500); // Delay in milliseconds (1.5 seconds)
 
     return () => clearTimeout(typingDelay);
   }, [cart]);

@@ -17,17 +17,17 @@ export default function SaleSuccessModal({
   return (
     <motion.div
       className="fixed inset-0 z-20 flex flex-col items-center justify-center bg-flag-red text-black space-y-6 p-6"
-      initial={{ opacity: 0, y: '-100%' }}
-      animate={{ opacity: 1, y: '0' }}
-      exit={{ opacity: 0, y: '100%' }}
-      transition={{ duration: 1.5, ease: 'easeInOut' }}
+      initial={{ y: '-100%', opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: '-100%', opacity: 0 }}
+      transition={{ duration: 0.4, ease: 'easeInOut' }}
     >
       {/* Animated Success Message */}
       <motion.h2
         className="text-xl font-semibold text-green uppercase"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
+        initial={{ y: '-100%', opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4, ease: 'easeInOut' }}
       >
         Order Created Successfully!
       </motion.h2>
