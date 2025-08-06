@@ -59,13 +59,14 @@ export default function POSClient() {
             name: `${product.name} - ${variant.size}`,
             slug: product.slug,
             itemNumber: product.itemNumber,
-            price: variant.price,
+            price: Number(variant.price ?? 0),
             stock: variant.stock,
             size: variant.size,
             imageUrl: product.imageUrl,
             category: product.category,
           }))
         );
+
         setProducts(flatProducts);
       });
   }, []);

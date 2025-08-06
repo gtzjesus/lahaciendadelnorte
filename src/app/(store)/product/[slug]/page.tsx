@@ -96,9 +96,10 @@ async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
             <InfoDropdown
               title="Sizes"
               info={product.variants
-                .map(
-                  (variant) => `${variant.size} ($${variant.price.toFixed(2)})`
-                )
+                .map((variant) => {
+                  const price = Number(variant.price ?? 0);
+                  return `${variant.size} ($${price.toFixed(2)})`;
+                })
                 .join(', ')}
             />
           ) : null}
