@@ -1,12 +1,12 @@
-// app/api/pos/route.ts
-/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
 import { backendClient } from '@/sanity/lib/backendClient';
 import { decreaseProductStock } from '@/sanity/lib/products/decreaseProductStock';
-import { CartItem, PaymentMethod } from '@/types/admin/pos'; // ✅ reuse your types
 
-type OrderItem = Pick<CartItem, '_id' | 'price' | 'cartQty' | 'size'> & {
-  productId: string; // formatted as productId-size
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+type OrderItem = {
+  productId: string;
+  quantity: number;
+  price: number;
 };
 
 interface SanityProduct {
@@ -21,17 +21,15 @@ interface SanityProduct {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-
     const items: OrderItem[] = body.items;
 
-    const paymentMethod = body.paymentMethod as PaymentMethod;
+    const paymentMethod = body.paymentMethod as 'cash' | 'card' | 'split';
     const cashReceived =
       typeof body.cashReceived === 'number' ? body.cashReceived : 0;
     const cardAmount =
       typeof body.cardAmount === 'number' ? body.cardAmount : 0;
     const changeGiven =
       typeof body.changeGiven === 'number' ? body.changeGiven : 0;
-    const customerName = body.customerName || 'Walk-in Customer';
 
     if (!Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
@@ -43,7 +41,7 @@ export async function POST(req: Request) {
     for (const item of items) {
       if (
         typeof item.productId !== 'string' ||
-        typeof item.cartQty !== 'number' ||
+        typeof item.quantity !== 'number' ||
         typeof item.price !== 'number'
       ) {
         return NextResponse.json(
@@ -65,7 +63,7 @@ export async function POST(req: Request) {
     }
 
     const subtotal = items.reduce(
-      (sum, item) => sum + item.price * item.cartQty,
+      (sum, item) => sum + item.price * item.quantity,
       0
     );
     const tax = +(subtotal * 0.0825).toFixed(2);
@@ -83,12 +81,14 @@ export async function POST(req: Request) {
       .commit({ autoGenerateArrayKeys: true });
 
     const orderNumber = orderCounter.lastOrderNumber.toString();
-    const clerkUserId = 'store-user-123'; // Replace with real ID
+
+    const clerkUserId = 'store-user-123';
+    const customerName = body.customerName || 'Walk-in Customer';
     const email = 'walkin@example.com';
 
     for (const item of items) {
       const [productId, variantSize] = item.productId.split('-');
-      await decreaseProductStock(productId, variantSize, item.cartQty);
+      await decreaseProductStock(productId, variantSize, item.quantity);
     }
 
     const uniqueProductIds = [
@@ -125,7 +125,7 @@ export async function POST(req: Request) {
         _key: crypto.randomUUID(),
         _type: 'object',
         product: { _type: 'reference', _ref: productId },
-        quantity: item.cartQty,
+        quantity: item.quantity,
         price: item.price,
         variant: {
           size: matchedVariant.size,
@@ -173,12 +173,7 @@ export async function POST(req: Request) {
       {
         success: false,
         message:
-          'Oops! Something went wrong while creating the order. Please try again or ask a manager.',
-        errorDetails:
-          process.env.NODE_ENV === 'development'
-            ? err.message || err.toString()
-            : undefined,
-        errorCode: 'ORDER_CREATE_500',
+          err?.message || 'Unexpected server error while creating order.',
       },
       { status: 500 }
     );
