@@ -1,7 +1,7 @@
 // app/error.tsx
-'use client'; // Yes — this needs to be a client component
+'use client';
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 export default function GlobalError({
   error,
@@ -15,19 +15,17 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="min-h-screen text-white bg-flag-red uppercase flex items-center justify-center text-center p-4">
-      <div>
-        <h1 className="text-xl font-bold  mb-4">Oops! Something went wrong.</h1>
-        <p className="mb-4 text-xs">
-          A server-side or rendering error occurred. Try again.
-        </p>
-        <button
-          onClick={() => reset()}
-          className="px-4 py-2 bg-flag-blue uppercase text-sm   transition"
-        >
-          Try Again
-        </button>
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-red-50 text-red-900">
+      <h1 className="text-xl font-bold mb-4">Oops! Something went wrong.</h1>
+      <p className="mb-6 max-w-xl text-center whitespace-pre-wrap">
+        {error?.message || 'Unknown error occurred.'}
+      </p>
+      <button
+        onClick={() => reset()}
+        className="px-4 py-2 uppercase bg-red-600 hover:bg-red-700 text-white rounded"
+      >
+        Try Again
+      </button>
     </div>
   );
 }

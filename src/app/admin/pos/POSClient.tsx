@@ -39,7 +39,6 @@ export default function POSClient() {
   } = usePOSLogic();
 
   const [products, setProducts] = useState<any[]>([]);
-
   const [showSummary, setShowSummary] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
