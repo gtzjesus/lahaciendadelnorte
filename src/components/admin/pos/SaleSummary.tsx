@@ -31,36 +31,25 @@ export default function SaleSummary({
   onInputBlur?: () => void;
 }) {
   return (
-    <div className="p-4 ">
-      <div className="flex justify-between uppercase text-sm font-semibold text-center text-black border-black border-b ">
+    <div className="p-4">
+      <div className="flex justify-between uppercase text-xs font-semibold text-center text-black border-black border-b">
         <h3 className="mb-2">Sale Summary</h3>
         <p> Items: {totalItems}</p>
       </div>
-      <div className="flex justify-between mt-2  text-sm uppercase font-light space-y-1">
-        <p>
-          <span>Subtotal:</span>{' '}
-        </p>
-        <p>
-          <span> ${subtotal.toFixed(2)}</span>
-        </p>
+
+      <div className="flex justify-between mt-2 text-sm uppercase font-light">
+        <p>Subtotal:</p>
+        <p>${subtotal.toFixed(2)}</p>
       </div>
 
-      <div className="flex justify-between mt-2  text-sm uppercase font-light space-y-1">
-        <p>
-          <span>tax:</span>{' '}
-        </p>
-        <p>
-          <span> ${tax.toFixed(2)}</span>
-        </p>
+      <div className="flex justify-between mt-2 text-sm uppercase font-light">
+        <p>Tax:</p>
+        <p>${tax.toFixed(2)}</p>
       </div>
 
-      <div className="flex justify-between mt-2  text-sm uppercase font-light space-y-1">
-        <p>
-          <span>total:</span>{' '}
-        </p>
-        <p>
-          <span className="text-green"> ${total.toFixed(2)}</span>
-        </p>
+      <div className="flex justify-between mt-2 text-sm uppercase font-light">
+        <p>Total:</p>
+        <p className="text-green">${total.toFixed(2)}</p>
       </div>
 
       {/* Payment Method */}
@@ -162,16 +151,15 @@ export default function SaleSummary({
               type="text"
               value={customerName}
               onChange={(e) => setCustomerNameAction(e.target.value)}
+              placeholder="Enter customer name"
               onFocus={onInputFocus}
               onBlur={onInputBlur}
-              placeholder="Enter customer name"
               className="w-full uppercase text-xs p-2 mb-4 border border-gray-300 text-black"
             />
             <p className="uppercase text-sm mb-4 text-gray-700">
               Are you sure you want to complete this sale for{' '}
               <span className="font-bold text-green">${total.toFixed(2)}</span>?
             </p>
-
             <div className="flex justify-center space-x-4">
               <button
                 onClick={() => setShowConfirmModalAction(false)}
@@ -199,31 +187,29 @@ export default function SaleSummary({
       )}
 
       {/* Final Action Buttons */}
-      <div className="flex gap-3 w-full">
-        {/* Clear Sale Button */}
+      <div className="flex gap-3 w-full mt-4">
         <button
           onClick={clearCartAction}
           disabled={cartEmpty || loading}
           className={`w-full py-3 rounded-full text-sm font-semibold uppercase transition duration-200 ease-in-out shadow-sm 
-      ${
-        cartEmpty || loading
-          ? 'bg-red-300 cursor-not-allowed text-white'
-          : 'bg-red-500 hover:bg-red-600 active:bg-red-700 text-white'
-      }`}
+            ${
+              cartEmpty || loading
+                ? 'bg-red-300 cursor-not-allowed text-white'
+                : 'bg-red-500 hover:bg-red-600 active:bg-red-700 text-white'
+            }`}
         >
           Clear Sale
         </button>
 
-        {/* Complete Sale Button */}
         <button
           onClick={() => setShowConfirmModalAction(true)}
           disabled={loading || cartEmpty}
           className={`w-full py-3 rounded-full text-sm font-semibold uppercase transition duration-200 ease-in-out shadow-sm 
-      ${
-        loading || cartEmpty
-          ? 'bg-gray-300 cursor-not-allowed text-gray-600'
-          : 'bg-green hover:bg-gray-800 text-white active:scale-[0.98]'
-      }`}
+            ${
+              loading || cartEmpty
+                ? 'bg-gray-300 cursor-not-allowed text-gray-600'
+                : 'bg-green hover:bg-gray-800 text-white active:scale-[0.98]'
+            }`}
         >
           {loading ? `Processing... $${total.toFixed(2)}` : `Complete Sale`}
         </button>

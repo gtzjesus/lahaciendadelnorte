@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
 
@@ -6,8 +7,8 @@ import ProductSearch from '@/components/admin/pos/ProductSearch';
 import CartList from '@/components/admin/pos/CartList';
 import SaleSummary from '@/components/admin/pos/SaleSummary';
 import { usePOSLogic } from '@/app/hooks/admin/pos/usePOSLogic';
-import SaleSuccessModal from '../../../components/admin/pos/SaleSuccessModal';
-/* eslint-disable  @typescript-eslint/no-explicit-any */
+import SaleSuccessModal from '@/components/admin/pos/SaleSuccessModal';
+
 export default function POSClient() {
   const {
     cart,
@@ -39,39 +40,62 @@ export default function POSClient() {
 
   const [products, setProducts] = useState<any[]>([]);
   const [showSummary, setShowSummary] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [isInputFocused, setIsInputFocused] = useState(false);
 
+  // 🧠 Scroll behavior
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+    let lastY = window.scrollY;
+    let ticking = false;
+    let hideTimeout: ReturnType<typeof setTimeout> | null = null;
 
-      // Only trigger scroll behavior if input is NOT focused
+    const update = () => {
+      const currentY = window.scrollY;
+
       if (!isInputFocused) {
-        if (currentScrollY > lastScrollY + 10) {
-          setShowSummary(false); // scrolling down → hide
-        } else if (currentScrollY < lastScrollY - 10) {
-          setShowSummary(true); // scrolling up → show
+        if (currentY > lastY + 10) {
+          if (!hideTimeout) {
+            hideTimeout = setTimeout(() => {
+              setShowSummary(false);
+              hideTimeout = null;
+            }, 150);
+          }
+        } else if (currentY < lastY - 10) {
+          if (hideTimeout) {
+            clearTimeout(hideTimeout);
+            hideTimeout = null;
+          }
+          setShowSummary(true);
         }
       }
 
-      setLastScrollY(currentScrollY);
+      lastY = currentY;
+      ticking = false;
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY, isInputFocused]);
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
 
-  // Fetch products once
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (hideTimeout) clearTimeout(hideTimeout);
+    };
+  }, [isInputFocused]);
+
+  // 🛒 Fetch products once
   useEffect(() => {
     client
       .fetch(
         `*[_type == "product"]{
-      _id, name, slug, itemNumber, image, 
-      "imageUrl": image.asset->url,
-      "category": category->title,
-      variants[]{ size, price, stock }
-    }`
+          _id, name, slug, itemNumber, image, 
+          "imageUrl": image.asset->url,
+          "category": category->title,
+          variants[]{ size, price, stock }
+        }`
       )
       .then((data) => {
         const flatProducts = data.flatMap((product: any) =>
@@ -103,6 +127,7 @@ export default function POSClient() {
           removeItemAction={removeItem}
         />
       </div>
+
       {cart.length > 0 && (
         <div
           className={`fixed bottom-0 left-0 right-0 z-25 bg-flag-red border-t border-black transition-transform duration-300 ease-in-out ${
