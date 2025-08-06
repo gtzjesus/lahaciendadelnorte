@@ -27,19 +27,19 @@ export default function ProductSearch({
   }, [searchTerm, products]);
 
   return (
-    <div className="max-w-xl fixed w-full z-10 p-4 flex flex-col">
+    <div className="max-w-xl fixed w-full z-10  flex flex-col">
       <input
         type="text"
         placeholder="What are we selling today?"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className=" p-2 uppercase text-sm focus:outline-none focus:ring-0"
+        className=" p-2 mt-4 mx-4 border-b  uppercase text-sm focus:outline-none focus:ring-0"
       />
 
       {/* Attach ref to this scrolling container */}
       <div
         ref={productListRef}
-        className="max-h-[300px] overflow-y-auto bg-white border border-gray mt-2 rounded"
+        className="max-h-[1000px] overflow-y-auto bg-white "
       >
         {filteredResults.map((product) => (
           <div
@@ -52,7 +52,7 @@ export default function ProductSearch({
               }
             }}
             className={`bg-white cursor-pointer flex items-center space-x-3 p-2 border-b transition ${
-              product.stock > 0 ? '' : ' cursor-not-allowed opacity-50'
+              product.stock > 0 ? '' : ' cursor-not-allowed opacity-40'
             }`}
           >
             {product.imageUrl && (
@@ -69,10 +69,10 @@ export default function ProductSearch({
                 {product.name} <strong className="px-2">|</strong>
                 <strong className="text-green">${product.price}</strong>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex  items-center space-x-2">
                 <span>{product.category}</span>
                 {product.stock === 0 && (
-                  <p className="text-red-500 font-semibold text-sm ml-2">
+                  <p className="text-red-500  font-semibold text-sm ml-2">
                     OUT OF STOCK
                   </p>
                 )}

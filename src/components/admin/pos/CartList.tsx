@@ -23,25 +23,37 @@ export default function CartList({
     const randIndex = Math.floor(Math.random() * messages.length);
     return messages[randIndex];
   });
+  const [isTyping, setIsTyping] = useState(false); // Added state to control the delay before typing
 
   useEffect(() => {
-    if (!cart || cart.length > 0) return;
+    // Start typing after a 1-2 second delay
+    if (!cart || cart.length > 0) return; // Only show message if cart is empty
 
-    if (charIndex < message.length) {
-      const timeout = setTimeout(() => {
-        setCurrentMessage((prev) => prev + message[charIndex]);
-        setCharIndex((prev) => prev + 1);
-      }, 50);
-      return () => clearTimeout(timeout);
-    }
-    // Once message is fully typed, stop
-  }, [charIndex, cart, message]);
+    const typingDelay = setTimeout(() => {
+      setIsTyping(true); // Set isTyping to true after delay
+    }, 1500); // Delay in milliseconds (1.5 seconds)
+
+    return () => clearTimeout(typingDelay);
+  }, [cart]);
+
+  useEffect(() => {
+    if (!isTyping || charIndex >= message.length) return;
+
+    // Typing effect
+    const timeout = setTimeout(() => {
+      setCurrentMessage((prev) => prev + message[charIndex]);
+      setCharIndex((prev) => prev + 1);
+    }, 50); // Adjust typing speed here (in ms)
+
+    return () => clearTimeout(timeout);
+  }, [charIndex, message, isTyping]);
 
   if (!cart || cart.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[10rem] px-4 mt-20 text-center">
-        <p className="uppercase  font-semibold text-lg select-none">
+        <p className="uppercase font-semibold text-lg select-none">
           {currentMessage}
+          <span> </span>
           <span className="animate-pulse">|</span>
         </p>
       </div>
