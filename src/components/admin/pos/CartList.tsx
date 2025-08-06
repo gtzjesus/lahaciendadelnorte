@@ -1,13 +1,53 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import type { CartListProps } from '@/types/admin/pos';
 
+const messages = [
+  ' Start searching to add items to this sale',
+  ' This cart is lonely... give it some items!',
+  ' Add an item and let the order begin!',
+  ' Search for products to get rolling',
+];
+
 export default function CartList({
-  cart,
+  cart = [], // default empty array
   updateQuantityAction,
   removeItemAction,
 }: CartListProps) {
+  const [currentMessage, setCurrentMessage] = useState('');
+  const [charIndex, setCharIndex] = useState(0);
+  const [message] = useState(() => {
+    // Pick random message only once on mount
+    const randIndex = Math.floor(Math.random() * messages.length);
+    return messages[randIndex];
+  });
+
+  useEffect(() => {
+    if (!cart || cart.length > 0) return;
+
+    if (charIndex < message.length) {
+      const timeout = setTimeout(() => {
+        setCurrentMessage((prev) => prev + message[charIndex]);
+        setCharIndex((prev) => prev + 1);
+      }, 50);
+      return () => clearTimeout(timeout);
+    }
+    // Once message is fully typed, stop
+  }, [charIndex, cart, message]);
+
+  if (!cart || cart.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[10rem] px-4 mt-20 text-center">
+        <p className="uppercase  font-semibold text-lg select-none">
+          {currentMessage}
+          <span className="animate-pulse">|</span>
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="mb-4 px-4">
       {cart.map((item, i) => (
@@ -43,7 +83,6 @@ export default function CartList({
 
           <div className="uppercase text-sm flex items-center justify-between gap-2">
             <div className="flex items-center gap-1">
-              <span className="text-s"></span>
               <div className="relative my-3">
                 <select
                   value={item.cartQty}

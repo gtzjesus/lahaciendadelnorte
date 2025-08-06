@@ -31,7 +31,7 @@ export default function SaleSummary({
   onInputBlur?: () => void;
 }) {
   return (
-    <div className="p-4">
+    <div className="max-w-xl flex flex-col align-center p-4">
       <div className="flex justify-between uppercase text-xs font-semibold text-center text-black border-black border-b">
         <h3 className="mb-2">Sale Summary</h3>
         <p> Items: {totalItems}</p>

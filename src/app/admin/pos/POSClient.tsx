@@ -1,6 +1,6 @@
 'use client';
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { client } from '@/sanity/lib/client';
 
 import ProductSearch from '@/components/admin/pos/ProductSearch';
@@ -42,7 +42,10 @@ export default function POSClient() {
   const [showSummary, setShowSummary] = useState(true);
   const [isInputFocused, setIsInputFocused] = useState(false);
 
-  // 🧠 Scroll behavior
+  // Create a ref to the product list container for scrolling
+  const productListRef = useRef<HTMLDivElement>(null);
+
+  // 🧠 Scroll behavior (your existing code)
   useEffect(() => {
     let lastY = window.scrollY;
     let ticking = false;
@@ -117,9 +120,22 @@ export default function POSClient() {
       });
   }, []);
 
+  // Wrapped addToCart to scroll product list to top after adding
+  function handleAddToCart(product: any) {
+    addToCart(product);
+    // Scroll filtered product list to top smoothly
+    if (productListRef.current) {
+      productListRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
   return (
-    <div className="overflow-x-hidden mx-auto bg-white min-h-screen max-w-2xl">
-      <ProductSearch products={products} onAddToCartAction={addToCart} />
+    <div className="overflow-x-hidden mx-auto bg-white min-h-screen max-w-xl">
+      <ProductSearch
+        products={products}
+        onAddToCartAction={handleAddToCart}
+        productListRef={productListRef} // pass the ref down here
+      />
       <div className="mt-20">
         <CartList
           cart={cart}
@@ -130,34 +146,36 @@ export default function POSClient() {
 
       {cart.length > 0 && (
         <div
-          className={`fixed bottom-0 left-0 right-0 z-25 bg-flag-red border-t border-black transition-transform duration-300 ease-in-out ${
+          className={`fixed bottom-0 left-0 right-0 z-25 bg-flag-red transition-transform duration-300 ease-in-out ${
             showSummary ? 'translate-y-0' : 'translate-y-full'
           }`}
         >
-          <SaleSummary
-            totalItems={totalItems}
-            subtotal={subtotal}
-            tax={tax}
-            total={total}
-            paymentMethod={paymentMethod}
-            setPaymentMethodAction={setPaymentMethod}
-            cashReceived={cashReceived}
-            setCashReceivedAction={setCashReceived}
-            cardAmount={cardAmount}
-            setCardAmountAction={setCardAmount}
-            round2Action={(n: number) => Math.round(n * 100) / 100}
-            changeGiven={changeGiven}
-            showConfirmModal={showConfirmModal}
-            setShowConfirmModalAction={setShowConfirmModal}
-            customerName={customerName}
-            setCustomerNameAction={setCustomerName}
-            loading={loading}
-            handleSaleAction={handleSale}
-            clearCartAction={clearCart}
-            cartEmpty={cart.length === 0}
-            onInputFocus={() => setIsInputFocused(true)}
-            onInputBlur={() => setIsInputFocused(false)}
-          />
+          <div className="w-full max-w-xl mx-auto px-4">
+            <SaleSummary
+              totalItems={totalItems}
+              subtotal={subtotal}
+              tax={tax}
+              total={total}
+              paymentMethod={paymentMethod}
+              setPaymentMethodAction={setPaymentMethod}
+              cashReceived={cashReceived}
+              setCashReceivedAction={setCashReceived}
+              cardAmount={cardAmount}
+              setCardAmountAction={setCardAmount}
+              round2Action={(n: number) => Math.round(n * 100) / 100}
+              changeGiven={changeGiven}
+              showConfirmModal={showConfirmModal}
+              setShowConfirmModalAction={setShowConfirmModal}
+              customerName={customerName}
+              setCustomerNameAction={setCustomerName}
+              loading={loading}
+              handleSaleAction={handleSale}
+              clearCartAction={clearCart}
+              cartEmpty={cart.length === 0}
+              onInputFocus={() => setIsInputFocused(true)}
+              onInputBlur={() => setIsInputFocused(false)}
+            />
+          </div>
         </div>
       )}
 
