@@ -1,5 +1,4 @@
 'use client';
-/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
 
@@ -8,7 +7,7 @@ import CartList from '@/components/admin/pos/CartList';
 import SaleSummary from '@/components/admin/pos/SaleSummary';
 import { usePOSLogic } from '@/app/hooks/admin/pos/usePOSLogic';
 import SaleSuccessModal from '../../../components/admin/pos/SaleSuccessModal';
-
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 export default function POSClient() {
   const {
     cart,
@@ -47,10 +46,13 @@ export default function POSClient() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > lastScrollY + 10) {
-        setShowSummary(false); // scrolling down → hide
-      } else if (currentScrollY < lastScrollY - 10) {
-        setShowSummary(true); // scrolling up → show
+      // Only trigger scroll behavior if input is NOT focused
+      if (!isInputFocused) {
+        if (currentScrollY > lastScrollY + 10) {
+          setShowSummary(false); // scrolling down → hide
+        } else if (currentScrollY < lastScrollY - 10) {
+          setShowSummary(true); // scrolling up → show
+        }
       }
 
       setLastScrollY(currentScrollY);
@@ -58,7 +60,7 @@ export default function POSClient() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, isInputFocused]);
 
   // Fetch products once
   useEffect(() => {
@@ -104,7 +106,7 @@ export default function POSClient() {
       {cart.length > 0 && (
         <div
           className={`fixed bottom-0 left-0 right-0 z-25 bg-flag-red border-t border-black transition-transform duration-300 ease-in-out ${
-            showSummary || isInputFocused ? 'translate-y-0' : 'translate-y-full'
+            showSummary ? 'translate-y-0' : 'translate-y-full'
           }`}
         >
           <SaleSummary
@@ -137,7 +139,7 @@ export default function POSClient() {
       {saleSuccess && (
         <SaleSuccessModal
           orderNumber={saleSuccess}
-          onClose={() => setSaleSuccess(null)} // optional if you want to clear modal on close instead of reload
+          onClose={() => setSaleSuccess(null)}
         />
       )}
     </div>
