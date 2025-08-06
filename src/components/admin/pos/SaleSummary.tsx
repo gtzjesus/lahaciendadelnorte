@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import type { SaleSummaryProps } from '@/types/admin/pos';
+import CustomerNameModal from './CustomerNameModal'; // Import the new modal component
 
 export default function SaleSummary({
   totalItems,
@@ -16,8 +17,6 @@ export default function SaleSummary({
   setCardAmountAction,
   round2Action,
   changeGiven,
-  showConfirmModal,
-  setShowConfirmModalAction,
   customerName,
   setCustomerNameAction,
   loading,
@@ -30,15 +29,23 @@ export default function SaleSummary({
   onInputFocus?: () => void;
   onInputBlur?: () => void;
 }) {
+  const [isModalOpen, setIsModalOpen] = useState(false); // Track modal state
   const isCashValid = cashReceived >= total;
+
+  const handleModalSubmit = async () => {
+    // Close the modal and process the sale
+    setIsModalOpen(false);
+    await handleSaleAction();
+  };
 
   return (
     <div className="max-w-xl flex flex-col align-center py-2">
-      <div className="flex justify-between uppercase text-xs font-semibold text-center text-black border-black border-b">
+      <div className="flex justify-between uppercase text-xs font-semibold text-center text-black border-red-200 border-b">
         <h3 className="mb-2">Sale Summary</h3>
         <p> Items: {totalItems}</p>
       </div>
 
+      {/* Sale Summary Information */}
       <div className="flex justify-between mt-2 text-sm uppercase font-light">
         <p className="text-xs">Subtotal:</p>
         <p>${subtotal.toFixed(2)}</p>
@@ -94,17 +101,13 @@ export default function SaleSummary({
               onBlur={onInputBlur}
               className="w-full p-2 text-black focus:outline-none focus:ring-0"
             />
-
-            {/* Show "Not enough funds" message if cashReceived < total */}
             {cashReceived < total && cashReceived !== 0 && (
               <p className="text-xs text-red-500 pt-1 font-semibold">
                 Not enough funds. Please provide more cash.
               </p>
             )}
-
-            {/* Show "Change Due" if enough cash is received */}
             {cashReceived >= total && (
-              <div className="text-xs flex justify-between  py-1">
+              <div className="text-xs flex justify-between py-1">
                 <p className="">Change Due: </p>
                 <p className="font-bold text-sm">${changeGiven.toFixed(2)}</p>
               </div>
@@ -155,51 +158,7 @@ export default function SaleSummary({
         )}
       </div>
 
-      {/* Confirm Modal */}
-      {showConfirmModal && (
-        <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black bg-opacity-60">
-          <div className="bg-white p-6 -lg shadow-xl w-full max-w-md mx-auto text-center">
-            <h2 className="text-md uppercase font-bold mb-3">Confirm Sale</h2>
-            <input
-              type="text"
-              value={customerName}
-              onChange={(e) => setCustomerNameAction(e.target.value)}
-              placeholder="Enter customer name"
-              onFocus={onInputFocus}
-              onBlur={onInputBlur}
-              className="w-full uppercase text-xs p-2 mb-4 border border-gray-300 text-black focus:outline-none focus:ring-0"
-            />
-            <p className="uppercase text-sm mb-4 text-gray-700">
-              Are you sure you want to complete this sale for{' '}
-              <span className="font-bold text-green">${total.toFixed(2)}</span>?
-            </p>
-            <div className="flex justify-center space-x-4">
-              <button
-                onClick={() => setShowConfirmModalAction(false)}
-                className="uppercase text-sm px-3 py-1 bg-red-500 text-white"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={async () => {
-                  setShowConfirmModalAction(false);
-                  await handleSaleAction();
-                }}
-                disabled={!customerName.trim()}
-                className={`uppercase text-sm px-3 py-1 text-black ${
-                  customerName.trim()
-                    ? 'bg-yellow cursor-pointer'
-                    : 'bg-gray-300 cursor-not-allowed'
-                }`}
-              >
-                Yes, Complete Sale
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Final Action Buttons */}
+      {/* Confirm Modal Trigger */}
       <div className="flex gap-5 w-full mt-4">
         <button
           onClick={clearCartAction}
@@ -215,7 +174,7 @@ export default function SaleSummary({
         </button>
 
         <button
-          onClick={() => setShowConfirmModalAction(true)}
+          onClick={() => setIsModalOpen(true)} // Open the modal
           disabled={
             loading || cartEmpty || (paymentMethod === 'cash' && !isCashValid)
           }
@@ -229,6 +188,16 @@ export default function SaleSummary({
           {loading ? `Processing... $${total.toFixed(2)}` : `Complete Sale`}
         </button>
       </div>
+
+      {/* Show the customer name modal */}
+      {isModalOpen && (
+        <CustomerNameModal
+          customerName={customerName}
+          setCustomerNameAction={setCustomerNameAction}
+          handleSubmit={handleModalSubmit}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
