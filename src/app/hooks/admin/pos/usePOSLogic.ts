@@ -80,17 +80,18 @@ export function usePOSLogic({
     setLoading(true);
 
     const payload = cart.map((item) => ({
-      productId: item._id,
+      productId: `${item._id}-${item.size}`, // important format
       quantity: item.cartQty,
       price: item.price,
-      finalPrice: item.price * item.cartQty,
-      variantSize: item.size,
     }));
 
     try {
       const res = await fetch('/api/admin/pos', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json', // ✅ Ensures Android gets JSON only
+        },
         body: JSON.stringify({
           items: payload,
           paymentMethod,
@@ -108,7 +109,18 @@ export function usePOSLogic({
         }),
       });
 
-      const data = await res.json();
+      let data: any;
+      try {
+        data = await res.json();
+      } catch (jsonError) {
+        const text = await res.text();
+        console.error('❌ Could not parse JSON:', text);
+        alert(
+          `❌ Unexpected server response. Please try again or ask your dev.${jsonError}`
+        );
+        setLoading(false);
+        return;
+      }
 
       if (!res.ok || !data.success) {
         alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
@@ -121,6 +133,7 @@ export function usePOSLogic({
         }, 5000);
       }
     } catch (err: any) {
+      console.error('❌ Network/server error:', err);
       alert(`❌ ${err.message || 'Unknown error'}`);
     } finally {
       setLoading(false);
