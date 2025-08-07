@@ -49,13 +49,19 @@ export default function ProductSearch({
         placeholder="What are we selling today?"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className={`uppercase text-center p-4 mt-4 border-b text-sm focus:outline-none focus:ring-0 transition-all ${
+        className={`uppercase p-4 mt-4 border-none text-sm focus:outline-none focus:ring-0 transition-all ${
           isScrolled
             ? 'fixed top-10 border-none left-0 w-full bg-white text-white z-20' // Scroll down state
             : 'bg-white text-black'
         }`}
+        style={{
+          backgroundImage: `url('/icons/search.png')`,
+          backgroundPosition: '10px center', // Adjust to your preference
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '16px 16px', // Set size of the icon
+          paddingLeft: '40px', // Make room for the icon on the left side
+        }}
       />
-
       {/* Attach ref to this scrolling container */}
       <div
         ref={productListRef}
