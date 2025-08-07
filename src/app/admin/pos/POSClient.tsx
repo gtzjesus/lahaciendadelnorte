@@ -130,7 +130,10 @@ export default function POSClient() {
   }
 
   return (
-    <div className="overflow-x-hidden mx-auto bg-white max-w-xl">
+    <div
+      className="overflow-x-hidden mx-auto bg-white max-w-xl"
+      style={{ height: '100%', overflowY: 'auto' }} // <-- set fixed height + scrolling only when needed
+    >
       <ProductSearch
         products={products}
         onAddToCartAction={handleAddToCart}
