@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
 
 interface CustomerNameModalProps {
   customerName: string;
@@ -18,35 +17,16 @@ const CustomerNameModal = ({
   onClose,
   total, // Destructure total
 }: CustomerNameModalProps) => {
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      // Check if the viewport height changes due to keyboard opening
-      if (window.innerHeight < 500) {
-        setIsKeyboardOpen(true);
-      } else {
-        setIsKeyboardOpen(false);
-      }
-    };
-
-    // Listen for resize events
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup listener
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   return (
     <motion.div
-      className={`fixed inset-0 z-[2000] bg-opacity-60 flex justify-center items-center ${isKeyboardOpen ? 'overflow-y-auto' : ''}`}
+      className="fixed inset-0 z-[2000] bg-opacity-60 flex justify-center items-center overflow-y-auto" // Ensure overflow-y-auto for scrolling
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="bg-flag-red p-4 shadow-xl w-full max-w-xl mx-auto text-center space-y-3 max-h-[90vh] overflow-auto"
+        className="bg-flag-red p-4 shadow-xl w-full h-full max-w-xl mx-auto text-center space-y-3 max-h-[90vh] overflow-auto" // max-h-[90vh] to ensure modal is visible on small screens
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         exit={{ y: 100 }}
