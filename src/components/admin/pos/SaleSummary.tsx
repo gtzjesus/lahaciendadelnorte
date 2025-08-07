@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { SaleSummaryProps } from '@/types/admin/pos';
 import CustomerNameModal from './CustomerNameModal'; // Reimport the modal
+import LoaderOrder from '../common/LoaderOrder';
 
 export default function SaleSummary({
   totalItems,
@@ -37,7 +38,14 @@ export default function SaleSummary({
   };
 
   return (
-    <div className="max-w-xl flex flex-col align-center py-2">
+    <div className="max-w-xl flex flex-col align-center py-2 relative">
+      {/* Fullscreen Loading Overlay */}
+      {loading && (
+        <div className="fixed inset-0 z-50 bg-flag-red bg-opacity-50 flex justify-center items-center">
+          <LoaderOrder />
+        </div>
+      )}
+
       <div className="flex justify-between uppercase text-xs font-semibold text-center text-black border-red-200 border-b">
         <h3 className="mb-2">Sale Summary</h3>
         <p> Items: {totalItems}</p>

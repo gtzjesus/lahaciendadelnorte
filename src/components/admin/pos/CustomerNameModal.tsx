@@ -19,14 +19,14 @@ const CustomerNameModal = ({
 }: CustomerNameModalProps) => {
   return (
     <motion.div
-      className="fixed inset-0 z-[2000] bg-opacity-60 flex justify-center items-center"
+      className="fixed inset-0 z-[2000] bg-opacity-60 flex justify-center items-center overflow-y-auto" // Ensure overflow-y-auto for scrolling
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="bg-flag-red p-4 shadow-xl w-full h-full max-w-xl mx-auto text-center space-y-3"
+        className="bg-flag-red p-4 shadow-xl w-full h-full max-w-xl mx-auto text-center space-y-3 max-h-[90vh] overflow-auto" // max-h-[90vh] to ensure modal is visible on small screens
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         exit={{ y: 100 }}
