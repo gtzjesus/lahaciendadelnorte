@@ -72,22 +72,22 @@ export default function CartList({
   }
 
   return (
-    <div className="mb-4 px-4">
+    <div className="px-1 ">
       {cart.map((item, i) => (
         <div
           key={item._id}
-          className="flex flex-col items-center m-4 bg-flag-red py-2"
+          className="mb-1 flex flex-col items-center bg-flag-red"
         >
-          <div className="w-full flex justify-between items-center px-4 text-sm">
+          <div className="w-full flex justify-between items-center px-2 text-sm">
             <div className="text-black font-medium">
               ${item.price.toFixed(2)}
             </div>
-            <div className="my-2 text-center uppercase flex flex-col text-md font-semibold">
+            <div className="my-2 text-center uppercase flex flex-col font-semibold">
               <p>{item.name}</p>
               <p className="font-light">{item.category}</p>
             </div>
             <button
-              className="text-red-500 text-sm px-2"
+              className="text-red-500 text-xs px-2"
               onClick={() => removeItemAction(i)}
             >
               ❌

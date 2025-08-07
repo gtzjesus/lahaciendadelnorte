@@ -69,18 +69,18 @@ export function usePOSLogic({
 
   const handleSale = useCallback(async () => {
     if (!cart.length) return;
+
     if (
       paymentMethod === 'split' &&
       Math.abs(cashReceived + cardAmount - total) > 0.01
     ) {
-      alert('❌ Split payment does not add up to total.');
-      return;
+      throw new Error('❌ Split payment does not add up to total.');
     }
 
     setLoading(true);
 
     const payload = cart.map((item) => ({
-      productId: `${item._id}-${item.size}`, // important format
+      productId: `${item._id}-${item.size}`,
       quantity: item.cartQty,
       price: item.price,
     }));
@@ -90,7 +90,7 @@ export function usePOSLogic({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Accept: 'application/json', // ✅ Ensures Android gets JSON only
+          Accept: 'application/json',
         },
         body: JSON.stringify({
           items: payload,
@@ -109,32 +109,37 @@ export function usePOSLogic({
         }),
       });
 
-      let data: any;
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error(
+          '❌ Sale failed with non-OK response:',
+          res.status,
+          errorText
+        );
+        throw new Error(`❌ Sale failed: ${errorText}`); // Explicitly throw an error
+      }
+
+      let data;
       try {
         data = await res.json();
       } catch (jsonError) {
         const text = await res.text();
         console.error('❌ Could not parse JSON:', text);
-        alert(
-          `❌ Unexpected server response. Please try again or ask your dev.${jsonError}`
-        );
-        setLoading(false);
-        return;
+        throw new Error(`❌ Unexpected server response: ${jsonError}`); // Explicitly throw an error
       }
 
-      if (!res.ok || !data.success) {
-        alert(`❌ Sale failed: ${data.message || 'Unknown error'}`);
-      } else {
-        clearCart();
-        setSaleSuccess(data.orderNumber);
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 5000);
+      if (!data.success) {
+        throw new Error(`❌ Sale failed: ${data.message || 'Unknown error'}`); // Explicitly throw an error
       }
+
+      // If sale is successful
+      clearCart();
+      setSaleSuccess(data.orderNumber);
+      setTimeout(() => window.location.reload(), 5000);
     } catch (err: any) {
-      console.error('❌ Network/server error:', err);
-      alert(`❌ ${err.message || 'Unknown error'}`);
+      // Catching any errors and throwing them explicitly
+      console.error('❌ Network error during sale:', err);
+      throw new Error(`❌ ${err.message || 'Unknown error'}`); // Explicitly throw an error
     } finally {
       setLoading(false);
     }

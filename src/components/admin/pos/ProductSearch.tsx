@@ -17,6 +17,7 @@ export default function ProductSearch({
 }: ProductSearchProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredResults, setFilteredResults] = useState<POSProduct[]>([]);
+  const [isScrolled, setIsScrolled] = useState(false); // Track if the user has scrolled
 
   useEffect(() => {
     if (searchTerm.trim() === '') return setFilteredResults([]);
@@ -26,20 +27,39 @@ export default function ProductSearch({
     setFilteredResults(results);
   }, [searchTerm, products]);
 
+  // Scroll event handler
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        // If scrolled more than 50px
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="max-w-xl fixed w-full z-10  flex flex-col">
+    <div className="max-w-xl fixed w-full z-10 flex flex-col">
       <input
         type="text"
         placeholder="What are we selling today?"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className=" p-2 mt-4 mx-4 border-b  uppercase text-sm focus:outline-none focus:ring-0"
+        className={`uppercase p-2 mt-4 border-b text-sm focus:outline-none focus:ring-0 transition-all ${
+          isScrolled
+            ? 'fixed top-10 border-none left-0 w-full bg-white text-white z-20' // Scroll down state
+            : 'bg-white text-black'
+        }`}
       />
 
       {/* Attach ref to this scrolling container */}
       <div
         ref={productListRef}
-        className="max-h-[1000px] overflow-y-auto bg-white "
+        className="max-h-[1000px] overflow-y-auto bg-white"
       >
         {filteredResults.map((product) => (
           <div
@@ -69,10 +89,10 @@ export default function ProductSearch({
                 {product.name} <strong className="px-2">|</strong>
                 <strong className="text-green">${product.price}</strong>
               </div>
-              <div className="flex  items-center space-x-2">
+              <div className="flex items-center space-x-2">
                 <span>{product.category}</span>
                 {product.stock === 0 && (
-                  <p className="text-red-500  font-semibold text-sm ml-2">
+                  <p className="text-red-500 font-semibold text-sm ml-2">
                     OUT OF STOCK
                   </p>
                 )}
