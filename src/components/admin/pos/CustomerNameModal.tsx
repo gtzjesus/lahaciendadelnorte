@@ -1,5 +1,3 @@
-'use client';
-
 import { motion } from 'framer-motion';
 
 interface CustomerNameModalProps {
@@ -7,7 +5,9 @@ interface CustomerNameModalProps {
   setCustomerNameAction: (name: string) => void;
   handleSubmit: () => void;
   onClose: () => void;
-  total: number; // Add total as a prop
+  total: number;
+  onInputFocus?: () => void; // <-- add these optional props
+  onInputBlur?: () => void;
 }
 
 const CustomerNameModal = ({
@@ -15,18 +15,20 @@ const CustomerNameModal = ({
   setCustomerNameAction,
   handleSubmit,
   onClose,
-  total, // Destructure total
+  total,
+  onInputFocus, // <-- destructure here
+  onInputBlur,
 }: CustomerNameModalProps) => {
   return (
     <motion.div
-      className="fixed inset-0 z-[2000] bg-opacity-60 flex justify-center items-center overflow-y-auto" // Ensure overflow-y-auto for scrolling
+      className="fixed inset-0 z-[2000] bg-opacity-60 flex justify-center items-center overflow-y-auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="bg-flag-red p-4 shadow-xl w-full h-full max-w-xl mx-auto text-center space-y-3 max-h-[90vh] overflow-auto" // max-h-[90vh] to ensure modal is visible on small screens
+        className="bg-flag-red p-4 shadow-xl w-full h-full max-w-xl mx-auto text-center space-y-3 max-h-[90vh] overflow-auto"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         exit={{ y: 100 }}
@@ -42,6 +44,8 @@ const CustomerNameModal = ({
           onChange={(e) => setCustomerNameAction(e.target.value)}
           placeholder="Enter customer name"
           className="w-full p-2 text-black uppercase text-xs border-none focus:outline-none focus:ring-0"
+          onFocus={onInputFocus} // <-- use them here
+          onBlur={onInputBlur}
         />
 
         <p className="text-xs uppercase text-gray-700">

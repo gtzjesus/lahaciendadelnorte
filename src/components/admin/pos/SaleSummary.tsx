@@ -200,9 +200,11 @@ export default function SaleSummary({
         <CustomerNameModal
           customerName={customerName}
           setCustomerNameAction={setCustomerNameAction}
-          handleSubmit={handleModalSubmit} // Call handleModalSubmit to proceed with sale after confirming name
+          handleSubmit={handleModalSubmit}
           onClose={() => setIsModalOpen(false)}
           total={total}
+          onInputFocus={onInputFocus} // <-- pass here
+          onInputBlur={onInputBlur} // <-- pass here
         />
       )}
     </div>
