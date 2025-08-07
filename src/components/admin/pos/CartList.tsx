@@ -82,7 +82,7 @@ export default function CartList({
             <div className="text-black font-medium">
               ${item.price.toFixed(2)}
             </div>
-            <div className="my-2 text-center uppercase flex flex-col font-semibold">
+            <div className="mt-4 text-center uppercase flex flex-col font-semibold">
               <p>{item.name}</p>
               <p className="font-light">{item.category}</p>
             </div>
@@ -105,7 +105,7 @@ export default function CartList({
           )}
 
           <div className="uppercase text-sm flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center">
               <div className="relative my-3">
                 <select
                   value={item.cartQty}
@@ -129,7 +129,7 @@ export default function CartList({
               ${(item.price * item.cartQty).toFixed(2)}
             </div>
           </div>
-          <div className="text-xs font-light">{item.stock} available</div>
+          <div className="text-xs font-light pb-1">{item.stock} available</div>
         </div>
       ))}
     </div>

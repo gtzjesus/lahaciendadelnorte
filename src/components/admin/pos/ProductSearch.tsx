@@ -49,7 +49,7 @@ export default function ProductSearch({
         placeholder="What are we selling today?"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className={`uppercase p-2 mt-4 border-b text-sm focus:outline-none focus:ring-0 transition-all ${
+        className={`uppercase text-center p-4 mt-4 border-b text-sm focus:outline-none focus:ring-0 transition-all ${
           isScrolled
             ? 'fixed top-10 border-none left-0 w-full bg-white text-white z-20' // Scroll down state
             : 'bg-white text-black'
