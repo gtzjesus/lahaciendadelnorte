@@ -1,8 +1,6 @@
-'use client';
-
 import React, { useState } from 'react';
 import type { SaleSummaryProps } from '@/types/admin/pos';
-import CustomerNameModal from './CustomerNameModal'; // Import the new modal component
+import CustomerNameModal from './CustomerNameModal'; // Reimport the modal
 
 export default function SaleSummary({
   totalItems,
@@ -174,7 +172,7 @@ export default function SaleSummary({
         </button>
 
         <button
-          onClick={() => setIsModalOpen(true)} // Open the modal
+          onClick={() => setIsModalOpen(true)} // Open the modal to confirm customer name
           disabled={
             loading || cartEmpty || (paymentMethod === 'cash' && !isCashValid)
           }
@@ -194,8 +192,9 @@ export default function SaleSummary({
         <CustomerNameModal
           customerName={customerName}
           setCustomerNameAction={setCustomerNameAction}
-          handleSubmit={handleModalSubmit}
+          handleSubmit={handleModalSubmit} // Call handleModalSubmit to proceed with sale after confirming name
           onClose={() => setIsModalOpen(false)}
+          total={total}
         />
       )}
     </div>
