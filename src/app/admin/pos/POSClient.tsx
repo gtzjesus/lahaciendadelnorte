@@ -150,7 +150,7 @@ export default function POSClient() {
             showSummary ? 'translate-y-0' : 'translate-y-full'
           }`}
         >
-          <div className="w-full max-w-xl mx-auto px-4">
+          <div className="w-full max-w-xl mx-auto px-4 border-t ">
             <SaleSummary
               totalItems={totalItems}
               subtotal={subtotal}
