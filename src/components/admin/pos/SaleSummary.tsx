@@ -57,7 +57,7 @@ export default function SaleSummary({
       className={`
   fixed bottom-0 left-0 right-0 z-30 bg-flag-red w-full max-w-xl mx-auto
   transition-all duration-700 ease-in-out
-  ${isExpanded ? 'h-[90dvh]' : 'h-[50px]'}
+  ${isExpanded ? 'h-[60dvh]' : 'h-[50px]'}
   rounded-t-xl shadow-xl overflow-hidden
 `}
       onClick={() => {
@@ -94,7 +94,7 @@ export default function SaleSummary({
       <div className="flex justify-between uppercase text-xs font-semibold text-center text-black border-red-200 border-b px-4">
         <h3 className="mb-2">Summary</h3>
         <p className="text-green font-bolightld">${total.toFixed(2)}</p>
-        <p> Items: {totalItems}</p>
+        <p> Items {totalItems}</p>
       </div>
 
       {/* 💸 Summary Info */}

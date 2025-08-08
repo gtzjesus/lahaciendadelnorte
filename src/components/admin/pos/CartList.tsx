@@ -72,20 +72,25 @@ export default function CartList({
   }
 
   return (
-    <div className="px-1 ">
+    <div className=" grid grid-cols-2 gap-2">
       {cart.map((item, i) => (
         <div
           key={item._id}
-          className="mb-1 flex flex-col items-center bg-flag-red"
+          className="bg-flag-red p-1 flex flex-col items-center text-center"
         >
-          <div className="w-full flex justify-between items-center px-2 text-sm">
+          <div className="w-full flex justify-between items-center px-1 text-sm">
             <div className="text-black font-medium">
               ${item.price.toFixed(2)}
             </div>
-            <div className="mt-4 text-center uppercase flex flex-col font-semibold">
-              <p>{item.name}</p>
-              <p className="font-light">{item.category}</p>
-            </div>
+            {item.imageUrl && (
+              <Image
+                src={item.imageUrl}
+                alt={item.name}
+                width={56}
+                height={56}
+                className="object-cover w-20 h-20"
+              />
+            )}
             <button
               className="text-red-500 text-xs px-2"
               onClick={() => removeItemAction(i)}
@@ -93,16 +98,10 @@ export default function CartList({
               ❌
             </button>
           </div>
-
-          {item.imageUrl && (
-            <Image
-              src={item.imageUrl}
-              alt={item.name}
-              width={56}
-              height={56}
-              className="object-cover w-20 h-20"
-            />
-          )}
+          <div className="w-full  justify-between items-center px-1 text-sm text-center uppercase flex flex-col font-semibold">
+            <p>{item.name}</p>
+            <p className="font-light">{item.category}</p>
+          </div>
 
           <div className="uppercase text-sm flex items-center justify-between gap-2">
             <div className="flex items-center">
