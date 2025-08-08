@@ -72,46 +72,46 @@ export default function CartList({
   }
 
   return (
-    <div className="pt-20 grid grid-cols-2 gap-2">
+    <div className="py-20 grid grid-cols-2 gap-1">
       {cart.map((item, i) => (
         <div
           key={item._id}
           className="bg-flag-red p-1 flex flex-col items-center text-center"
         >
-          <div className="w-full flex justify-between items-center px-1 text-sm">
-            <div className="text-black font-medium">
+          <div className="w-full flex justify-between items-center px-1 text-xs">
+            <div className="text-black font-semibold">
               ${item.price.toFixed(2)}
             </div>
-            {item.imageUrl && (
-              <Image
-                src={item.imageUrl}
-                alt={item.name}
-                width={56}
-                height={56}
-                className="object-cover w-20 h-20"
-              />
-            )}
             <button
-              className="text-red-500 text-xs px-2"
+              className="text-red-500 text-xs px-1"
               onClick={() => removeItemAction(i)}
             >
               ❌
             </button>
           </div>
-          <div className="w-full  justify-between items-center px-1 text-sm text-center uppercase flex flex-col font-semibold">
+          {item.imageUrl && (
+            <Image
+              src={item.imageUrl}
+              alt={item.name}
+              width={56}
+              height={56}
+              className="object-cover w-20 h-20 p-1"
+            />
+          )}
+          <div className="w-full  justify-between items-center py-1 text-xs text-center uppercase flex flex-col font-semibold">
             <p>{item.name}</p>
             <p className="font-light">{item.category}</p>
           </div>
 
-          <div className="uppercase text-sm flex items-center justify-between gap-2">
+          <div className="uppercase text-sm flex items-center justify-between gap-1">
             <div className="flex items-center">
-              <div className="relative my-3">
+              <div className="relative my-2">
                 <select
                   value={item.cartQty}
                   onChange={(e) =>
                     updateQuantityAction(i, Number(e.target.value))
                   }
-                  className="appearance-none border border-none bg-white px-2 py-1 pr-8 text-black text-sm uppercase w-full focus:outline-none"
+                  className="appearance-none border border-none bg-white px-2 py-1 text-black text-xs uppercase w-[10vw] focus:outline-none"
                 >
                   {Array.from({ length: item.stock }, (_, n) => (
                     <option key={n + 1} value={n + 1}>
