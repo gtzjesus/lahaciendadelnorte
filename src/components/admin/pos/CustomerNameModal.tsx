@@ -28,10 +28,10 @@ const CustomerNameModal = ({
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="bg-flag-red p-4 shadow-xl w-full h-full max-w-xl mx-auto text-center space-y-3 max-h-[90vh] overflow-auto"
-        initial={{ y: -100 }}
+        className="bg-flag-red p-6 shadow-xl w-full h-full max-w-xl mx-auto text-center space-y-3 max-h-[20vh] overflow-auto"
+        initial={{ y: 100 }}
         animate={{ y: 0 }}
-        exit={{ y: 100 }}
+        exit={{ y: -100 }}
         transition={{ duration: 0.5 }}
       >
         <h2 className="text-xs font-semibold text-black uppercase">

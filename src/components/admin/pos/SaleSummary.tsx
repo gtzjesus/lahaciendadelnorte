@@ -25,9 +25,11 @@ export default function SaleSummary({
   cartEmpty,
   onInputFocus,
   onInputBlur,
+  postSaleDelay,
 }: SaleSummaryProps & {
   onInputFocus?: () => void;
   onInputBlur?: () => void;
+  postSaleDelay: boolean;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -52,6 +54,8 @@ export default function SaleSummary({
     };
   }, [isExpanded]);
 
+  if (postSaleDelay) return null;
+
   return (
     <div
       className={`
@@ -66,7 +70,7 @@ export default function SaleSummary({
     >
       {/* ⏳ Fullscreen Loader */}
       {loading && (
-        <div className="fixed inset-0 z-50 bg-flag-red bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 z-50 bg-flag-red bg-opacity-80 flex justify-center items-center">
           <LoaderOrder />
         </div>
       )}

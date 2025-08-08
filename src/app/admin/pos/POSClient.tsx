@@ -24,6 +24,7 @@ export default function POSClient() {
     tax,
     total,
     changeGiven,
+    postSaleDelay,
 
     setPaymentMethod,
     setSaleSuccess,
@@ -170,6 +171,7 @@ export default function POSClient() {
           cartEmpty={cart.length === 0}
           onInputFocus={() => setIsInputFocused(true)}
           onInputBlur={() => setIsInputFocused(false)}
+          postSaleDelay={postSaleDelay}
         />
       )}
 

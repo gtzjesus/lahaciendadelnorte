@@ -1,5 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { POSProduct, CartItem } from '@/types/admin/pos';
+import { delay } from '@/utils/delay';
+
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
@@ -15,6 +17,8 @@ export function usePOSLogic({
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'split'>(
     initialPaymentMethod
   );
+  const [postSaleDelay, setPostSaleDelay] = useState(false);
+
   const [saleSuccess, setSaleSuccess] = useState<string | null>(null);
   const [customerName, setCustomerName] = useState('');
   const [cashReceived, setCashReceived] = useState(0);
@@ -135,7 +139,14 @@ export function usePOSLogic({
       // If sale is successful
       clearCart();
       setSaleSuccess(data.orderNumber);
-      setTimeout(() => window.location.reload(), 5000);
+      setPostSaleDelay(true); // 🛑 block UI flash
+
+      await delay(1); // keep loader on during this
+
+      setPostSaleDelay(false); // ✅ allow SaleSummary UI now
+      setLoading(false);
+
+      setTimeout(() => window.location.reload(), 4000);
     } catch (err: any) {
       // Catching any errors and throwing them explicitly
       console.error('❌ Network error during sale:', err);
@@ -168,6 +179,7 @@ export function usePOSLogic({
     tax,
     total,
     changeGiven,
+    postSaleDelay,
 
     setCart,
     setLoading,

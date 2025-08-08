@@ -10,8 +10,8 @@
 export default function Loader() {
   return (
     <div className="flex flex-col gap-2 items-center justify-center min-h-screen">
-      <div className="h-10 w-10 animate-spin rounded-full border-4 text-white border-flag-red border-t-primary" />
-      <h2 className="uppercase text-sm">processing your order!</h2>
+      <div className="h-20 w-20 animate-spin rounded-full border-4 text-white border-flag-red border-t-primary" />
+      <h2 className="uppercase text-sm">processing order! hang tight!</h2>
     </div>
   );
 }
