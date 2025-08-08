@@ -130,17 +130,13 @@ export default function POSClient() {
   }
 
   return (
-    <div
-      className={`overflow-x-hidden mx-auto bg-flag-red max-w-xl ${
-        cart.length === 0 ? 'overflow-y-hidden h-[100dvh]' : 'min-h-screen'
-      }`}
-    >
+    <div className="overflow-x-hidden mx-auto bg-white max-w-xl">
       <ProductSearch
         products={products}
         onAddToCartAction={handleAddToCart}
         productListRef={productListRef} // pass the ref down here
       />
-      <div className="mt-20">
+      <div className="pt-20">
         <CartList
           cart={cart}
           updateQuantityAction={updateQuantity}
