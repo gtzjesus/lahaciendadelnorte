@@ -1,6 +1,5 @@
 'use client';
 
-import AdminHeader from '@/components/admin/common/AdminHeader';
 import { ErrorBoundary } from '@/components/admin/common/ErrorBoundary';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from 'sonner';
@@ -13,7 +12,6 @@ export default function AdminLayout({
   return (
     <ClerkProvider>
       <ErrorBoundary>
-        <AdminHeader />
         <Toaster
           position="top-right"
           richColors
