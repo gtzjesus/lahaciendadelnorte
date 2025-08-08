@@ -69,47 +69,65 @@ export async function POST(req: Request) {
     const tax = +(subtotal * 0.0825).toFixed(2);
     const totalPrice = subtotal + tax;
 
+    // Ensure counter exists
     await backendClient.createIfNotExists({
       _id: 'order-counter-global',
       _type: 'orderCounter',
       lastOrderNumber: 0,
     });
 
+    // Increment counter
     const orderCounter = await backendClient
       .patch('order-counter-global')
       .inc({ lastOrderNumber: 1 })
       .commit({ autoGenerateArrayKeys: true });
 
     const orderNumber = orderCounter.lastOrderNumber.toString();
-
     const clerkUserId = 'store-user-123';
     const customerName = body.customerName || 'Walk-in Customer';
     const email = 'walkin@example.com';
 
-    for (const item of items) {
-      const [productId, variantSize] = item.productId.split('-');
-      await decreaseProductStock(productId, variantSize, item.quantity);
-    }
+    // 🔄 Decrease stock in parallel
+    await Promise.all(
+      items.map(async (item) => {
+        const [productId, variantSize] = item.productId.split('-');
+        await decreaseProductStock(productId, variantSize, item.quantity);
+      })
+    );
 
+    // 📦 Fetch product data in chunks if large
     const uniqueProductIds = [
       ...new Set(items.map((i) => i.productId.split('-')[0])),
     ];
 
-    const productsFromSanity = await backendClient.fetch<SanityProduct[]>(
-      `*[_type == "product" && _id in $ids]{
-        _id,
-        variants[] {
-          size,
-          price,
-          stock
-        }
-      }`,
-      { ids: uniqueProductIds }
+    const CHUNK_SIZE = 20;
+    const chunkedIds = Array.from(
+      { length: Math.ceil(uniqueProductIds.length / CHUNK_SIZE) },
+      (_, i) =>
+        uniqueProductIds.slice(i * CHUNK_SIZE, i * CHUNK_SIZE + CHUNK_SIZE)
     );
 
+    const productsFromSanity: SanityProduct[] = (
+      await Promise.all(
+        chunkedIds.map((idsChunk) =>
+          backendClient.fetch<SanityProduct[]>(
+            `*[_type == "product" && _id in $ids]{
+              _id,
+              variants[] {
+                size,
+                price,
+                stock
+              }
+            }`,
+            { ids: idsChunk }
+          )
+        )
+      )
+    ).flat();
+
+    // 🧾 Format products for order
     const productsForSanity = items.map((item) => {
       const [productId, variantSize] = item.productId.split('-');
-
       const product = productsFromSanity.find((p) => p._id === productId);
       const matchedVariant = product?.variants?.find(
         (v) => v.size === variantSize
@@ -135,6 +153,7 @@ export async function POST(req: Request) {
       };
     });
 
+    // 🧾 Create order document
     const orderDoc = {
       _type: 'order',
       orderNumber,
@@ -156,6 +175,7 @@ export async function POST(req: Request) {
       changeGiven,
     };
 
+    // ✅ Final creation
     const createdOrder = await backendClient.create(orderDoc);
 
     return NextResponse.json(
@@ -167,7 +187,7 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (err: any) {
-    console.error('❌ Error creating order:', err);
+    console.error('❌ Error creating order:', err.message || err);
 
     return NextResponse.json(
       {
