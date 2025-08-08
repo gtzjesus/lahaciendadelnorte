@@ -146,7 +146,7 @@ export function usePOSLogic({
       setPostSaleDelay(false); // ✅ allow SaleSummary UI now
       setLoading(false);
 
-      setTimeout(() => window.location.reload(), 4000);
+      setTimeout(() => window.location.reload(), 8000);
     } catch (err: any) {
       // Catching any errors and throwing them explicitly
       console.error('❌ Network error during sale:', err);
