@@ -109,7 +109,7 @@ export default function CartList({
                   onChange={(e) =>
                     updateQuantityAction(i, Number(e.target.value))
                   }
-                  className="appearance-none border border-none bg-white px-2 py-1 text-black text-xs uppercase w-[20vw] focus:outline-none"
+                  className="appearance-none border border-none bg-white px-2 py-1 text-black text-xs uppercase w-[8vh] focus:outline-none"
                 >
                   {Array.from({ length: item.stock }, (_, n) => (
                     <option key={n + 1} value={n + 1}>

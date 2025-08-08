@@ -51,13 +51,16 @@ export default function ProductSearch({
         onChange={(e) => setSearchTerm(e.target.value)}
         className={`uppercase text-center p-4 mt-4 border-b text-sm focus:outline-none focus:ring-0 transition-all ${
           isScrolled
-            ? 'fixed border-none left-0 w-full bg-white text-white z-20' // Scroll down state
+            ? 'fixed top-10 border-none left-0 w-full bg-white text-white z-20' // Scroll down state
             : 'bg-white text-black'
         }`}
       />
 
       {/* Attach ref to this scrolling container */}
-      <div ref={productListRef} className="h-full overflow-y-auto bg-white">
+      <div
+        ref={productListRef}
+        className="max-h-[1000px] overflow-y-auto bg-white"
+      >
         {filteredResults.map((product) => (
           <div
             key={product._id}
