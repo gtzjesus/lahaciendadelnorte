@@ -131,8 +131,9 @@ export default function POSClient() {
 
   return (
     <div
-      className="overflow-x-hidden mx-auto bg-white max-w-xl"
-      style={{ height: '100%', overflowY: 'auto' }} // <-- set fixed height + scrolling only when needed
+      className={`overflow-x-hidden mx-auto bg-flag-red max-w-xl ${
+        cart.length === 0 ? 'overflow-y-hidden h-[100dvh]' : 'min-h-screen'
+      }`}
     >
       <ProductSearch
         products={products}
