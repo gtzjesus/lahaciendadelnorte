@@ -59,11 +59,12 @@ export default function SaleSummary({
   return (
     <div
       className={`
-  fixed bottom-0 left-0 right-0 z-30 bg-flag-red w-full max-w-xl md:max-w-4xl mx-auto
-  transition-all duration-700 ease-in-out
-  ${isExpanded ? 'h-[60dvh]' : 'h-[50px]'}
-  rounded-t-xl shadow-xl overflow-hidden
-`}
+    fixed bottom-0 left-0 right-0 z-30 w-full max-w-xl md:max-w-4xl mx-auto
+    transition-all duration-700 ease-in-out
+    ${isExpanded ? 'h-[60dvh]' : 'h-[50px]'}
+    rounded-t-xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat
+  `}
+      style={{ backgroundImage: "url('/admin/summary.webp')" }}
       onClick={() => {
         if (!isExpanded) setIsExpanded(true);
       }}
