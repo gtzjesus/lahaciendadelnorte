@@ -50,7 +50,7 @@ export default function CartList({
 
   if (!cart || cart.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-[10rem] px-4 mt-20 text-center flex-col">
+      <div className="flex flex-col items-center justify-center flex-1 min-h-screen px-4 text-center">
         <p className="uppercase font-semibold text-lg select-none mt-10">
           {currentMessage}
           <span> </span>
