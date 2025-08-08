@@ -72,7 +72,7 @@ export default function CartList({
   }
 
   return (
-    <div className=" grid grid-cols-2 gap-2">
+    <div className="pt-20 grid grid-cols-2 gap-2">
       {cart.map((item, i) => (
         <div
           key={item._id}
