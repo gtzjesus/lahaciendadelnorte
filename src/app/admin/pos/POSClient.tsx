@@ -130,7 +130,7 @@ export default function POSClient() {
   }
 
   return (
-    <div className="overflow-x-hidden mx-auto bg-white max-w-xl">
+    <div className="flex flex-col min-h-screen overflow-hidden mx-auto bg-white max-w-xl">
       <ProductSearch
         products={products}
         onAddToCartAction={handleAddToCart}

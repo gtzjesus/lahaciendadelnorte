@@ -84,16 +84,16 @@ export default function SaleSummary({
               e.stopPropagation();
               setIsExpanded(false);
             }}
-            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-semibold uppercase"
+            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-semibold uppercase mb-5"
           >
-            hide ↓
+            hide summary ↓
           </button>
         </div>
       )}
 
       <div className="flex justify-between uppercase text-xs font-semibold text-center text-black border-red-200 border-b px-4">
         <h3 className="mb-2">Summary</h3>
-        <p className="text-green font-bolightld">${total.toFixed(2)}</p>
+        <p className="text-green font-bolightld pr-4">${total.toFixed(2)}</p>
         <p> Items {totalItems}</p>
       </div>
 

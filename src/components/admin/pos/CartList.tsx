@@ -76,9 +76,9 @@ export default function CartList({
       {cart.map((item, i) => (
         <div
           key={item._id}
-          className="bg-flag-red p-1 flex flex-col items-center text-center"
+          className="bg-flag-red pt-2 flex flex-col items-center text-center"
         >
-          <div className="w-full flex justify-between items-center px-1 text-xs">
+          <div className="w-full flex justify-between items-center px-2 text-xs">
             <div className="text-black font-semibold">
               ${item.price.toFixed(2)}
             </div>
@@ -111,7 +111,7 @@ export default function CartList({
                   onChange={(e) =>
                     updateQuantityAction(i, Number(e.target.value))
                   }
-                  className="appearance-none border border-none bg-white px-2 py-1 text-black text-xs uppercase w-[10vw] focus:outline-none"
+                  className="appearance-none border border-none bg-white px-2 py-1 text-black text-xs uppercase w-[20vw] focus:outline-none"
                 >
                   {Array.from({ length: item.stock }, (_, n) => (
                     <option key={n + 1} value={n + 1}>
