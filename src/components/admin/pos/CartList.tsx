@@ -51,22 +51,20 @@ export default function CartList({
   if (!cart || cart.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center flex-1 min-h-screen px-4 text-center">
-        <p className="uppercase font-semibold text-lg select-none mt-10">
+        <p className="uppercase font-semibold text-lg select-none">
           {currentMessage}
           <span> </span>
           <span className="animate-pulse">|</span>
         </p>
 
         {/* Add the image below the message */}
-        <div className="mt-6">
-          <Image
-            src="/icons/order.webp" // Path to your image in the public folder
-            alt="Order Illustration"
-            width={100} // Smaller width for better scaling
-            height={100} // Smaller height for better scaling
-            className="mx-auto object-contain" // Ensures the image doesn't get chopped off
-          />
-        </div>
+        <Image
+          src="/icons/order.webp" // Path to your image in the public folder
+          alt="Order Illustration"
+          width={100} // Smaller width for better scaling
+          height={100} // Smaller height for better scaling
+          className="mx-auto mt-6 object-contain" // Ensures the image doesn't get chopped off
+        />
       </div>
     );
   }

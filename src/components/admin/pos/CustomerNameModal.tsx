@@ -21,14 +21,14 @@ const CustomerNameModal = ({
 }: CustomerNameModalProps) => {
   return (
     <motion.div
-      className="fixed inset-0 z-[2000] bg-opacity-60 flex justify-center items-center overflow-y-auto"
+      className="fixed inset-0 z-[2000]  flex justify-center items-center min-h-screen my-20"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="bg-flag-red p-6 shadow-xl w-full h-full max-w-xl mx-auto text-center space-y-3 max-h-[20vh] overflow-auto"
+        className="bg-flag-red p-6 shadow-xl w-full h-[25%] max-w-xl text-center space-y-3  overflow-auto"
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         exit={{ y: -100 }}
