@@ -76,7 +76,7 @@ export default function RootLayout({
         <meta charSet="UTF-8" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="min-h-screen bg-flag-red text-black">
+      <body className="min-h-screen bg-custom-background text-black">
         <ClerkProvider>
           <ErrorBoundary>{children}</ErrorBoundary>
           <SanityLive />
