@@ -21,7 +21,7 @@ export default function OrderList({ orders }: OrderListProps) {
   }, [filter]);
 
   return (
-    <div>
+    <div className="relative z-10">
       <OrderFilterControls
         filter={filter}
         setFilterAction={setFilter}

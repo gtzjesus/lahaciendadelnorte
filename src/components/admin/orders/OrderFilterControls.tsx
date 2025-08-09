@@ -29,10 +29,8 @@ export default function OrderFilterControls({
 
   return (
     <div
-      className={`sticky top-0 z-30 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-flag-red/95 backdrop-blur-sm shadow-md border-b border-black'
-          : 'bg-transparent'
+      className={`sticky transition-all duration-300 ${
+        isScrolled ? 'bg-white' : 'bg-transparent'
       }`}
     >
       <div className="p-3 max-w-4xl mx-auto flex flex-col sm:flex-row items-center sm:items-end gap-2">
@@ -65,7 +63,7 @@ export default function OrderFilterControls({
         </div>
 
         {/* SEARCH */}
-        <div className="flex-1 w-full">
+        <div className="sticky top-0 z-30 flex-1 w-full">
           <input
             type="text"
             id="search"

@@ -16,7 +16,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   subtotal,
   pickupStatus,
 }) => (
-  <div className="uppercase text-xs  space-y-1 px-4">
+  <div className="uppercase text-xs  space-y-1 px-4 mt-2">
     <div className="flex justify-between">
       <span>items</span>
       <span>{totalItems}</span>

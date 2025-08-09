@@ -23,7 +23,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
   const subtotal = (order.totalPrice ?? 0) - (order.tax ?? 0);
   const visibleProducts = isExpanded
     ? order.products
-    : order.products?.slice(0, 3);
+    : order.products?.slice(0, 1);
 
   async function finishPickup() {
     if (!order._id) {
@@ -56,7 +56,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
   return (
     <div
-      className={`p-1  overflow-hidden bg-flag-red  ${
+      className={`p-2 mb-4  overflow-hidden bg-flag-red  ${
         pickupStatus === 'pending'
           ? 'border-red-300 border'
           : 'border-green border'
@@ -73,7 +73,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           >
             {isExpanded
               ? 'Hide items'
-              : `Expand all items (${order.products.length - 3})`}
+              : `expand items (${order.products.length - 1})`}
           </button>
         </div>
       )}
