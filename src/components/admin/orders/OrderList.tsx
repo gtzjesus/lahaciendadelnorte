@@ -36,7 +36,7 @@ export default function OrderList({ orders }: OrderListProps) {
             : 'No orders found.'}
         </p>
       ) : (
-        <div className="max-w-xl mx-auto gap-1 grid grid-cols-2">
+        <div className="max-w-xl mx-auto gap-1 grid grid-cols-1 px-4">
           {filteredOrders.map((order) => (
             <OrderCard key={order.orderNumber || order._id} order={order} />
           ))}

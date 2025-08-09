@@ -90,13 +90,15 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
       )}
 
       {pickupStatus !== 'completed' && (
-        <button
-          disabled={isLoading}
-          onClick={finishPickup}
-          className="my-2 w-full bg-flag-blue py-2 text-xs uppercase font-semibold disabled:opacity-50"
-        >
-          {isLoading ? 'Finishing Pickup...' : 'Finish Pickup'}
-        </button>
+        <div className="px-4">
+          <button
+            disabled={isLoading}
+            onClick={finishPickup}
+            className="my-2 w-full bg-flag-blue py-2 text-xs uppercase font-semibold disabled:opacity-50"
+          >
+            {isLoading ? 'Finishing Pickup...' : 'Finish Pickup'}
+          </button>
+        </div>
       )}
       <div className="flex justify-center items-center w-full">
         <p className="text-xs pb-1">
