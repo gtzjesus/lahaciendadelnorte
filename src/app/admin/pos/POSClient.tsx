@@ -132,7 +132,7 @@ export default function POSClient() {
 
   return (
     <div
-      className={`flex flex-col  min-h-screen mx-auto max-w-xl bg-cover bg-center bg-no-repeat ${
+      className={`flex flex-col  min-h-screen mx-auto max-w-xl ${
         cart.length === 0 ? 'overflow-hidden' : 'overflow-auto'
       }`}
     >

@@ -8,10 +8,9 @@ export default async function AdminOrdersPage() {
   const { orders, success } = await fetchOrders();
 
   return (
-    <div className="bg-white min-h-screen p-6">
-      <h1 className="uppercase text-xl font-semibold mb-6">Orders</h1>
+    <div className="flex flex-col overflow-x-hidden  min-h-screen mx-auto max-w-xl">
       {!success ? (
-        <p className="text-center text-red-600 uppercase font-light">
+        <p className="text-center text-red-200 uppercase font-light">
           Failed to fetch orders.
         </p>
       ) : (

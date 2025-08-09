@@ -30,13 +30,13 @@ export default function OrderList({ orders }: OrderListProps) {
       />
 
       {filteredOrders.length === 0 ? (
-        <p className="text-center pt-6 text-green-600 uppercase tracking-wide font-semibold">
+        <p className="text-center pt-6 uppercase tracking-wide font-semibold">
           {filter === 'pending'
             ? 'All pending orders completed!'
             : 'No orders found.'}
         </p>
       ) : (
-        <div className="space-y-6 max-w-xl mx-auto">
+        <div className="max-w-xl mx-auto gap-1 grid grid-cols-2">
           {filteredOrders.map((order) => (
             <OrderCard key={order.orderNumber || order._id} order={order} />
           ))}

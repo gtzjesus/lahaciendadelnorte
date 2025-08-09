@@ -20,7 +20,7 @@ export default function ProductListItem({
   const image = prod?.image ? imageUrl(prod.image).url() : null;
 
   return (
-    <div className="flex gap-3 items-start border-b border-black pb-2">
+    <div className="flex flex-col justify-center items-center text-center border-b border-red-200 pb-2">
       {image && slug && (
         <Link href={`/product/${slug}`} className="relative h-16 w-16 shrink-0">
           <Image
@@ -31,7 +31,7 @@ export default function ProductListItem({
           />
         </Link>
       )}
-      <div className="text-sm text-black font-light uppercase">
+      <div className="text-xs font-light uppercase">
         <p className="font-semibold">{prod?.name}</p>
         {product.variant?.size && <p>{product.variant.size}</p>}
         {prod?.category?.title && <p>{prod.category.title}</p>}

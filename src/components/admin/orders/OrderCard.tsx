@@ -56,9 +56,9 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
   return (
     <div
-      className={`p-4 shadow-md overflow-hidden bg-flag-red  ${
+      className={`p-1  overflow-hidden bg-flag-red  ${
         pickupStatus === 'pending'
-          ? 'border-red-400 border-2'
+          ? 'border-red-200 border'
           : 'border-green border'
       }`}
     >
@@ -68,7 +68,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
       {order.products?.length > 3 && (
         <button
           onClick={() => setIsExpanded((prev) => !prev)}
-          className="mt-3 text-sm uppercase text-black border px-3 py-1 bg-flag-blue border-none rounded"
+          className="text-xs uppercase text-black border p-1 bg-flag-blue border-none "
         >
           {isExpanded
             ? 'Hide items'
@@ -84,14 +84,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
       />
 
       {error && (
-        <p className="mt-2 text-red-600 text-sm font-semibold">{error}</p>
+        <p className="mt-1 text-red-200 text-xs font-semibold">{error}</p>
       )}
 
       {pickupStatus !== 'completed' && (
         <button
           disabled={isLoading}
           onClick={finishPickup}
-          className="mt-4 w-full bg-green-600 text-black bg-flag-blue py-2 text-sm uppercase font-semibold disabled:opacity-50"
+          className="mt-2 w-full  text-black bg-flag-blue py-2 text-xs uppercase font-semibold disabled:opacity-50"
         >
           {isLoading ? 'Finishing Pickup...' : 'Finish Pickup'}
         </button>

@@ -9,9 +9,9 @@ interface ProductListProps {
 }
 
 const ProductList: React.FC<ProductListProps> = ({ products, order }) => (
-  <div className="space-y-3 mb-4">
-    <div className="flex justify-end items-center w-full">
-      <p className="text-black text-xs sm:text-sm">
+  <div className="space-y-1 my-1 text-xs">
+    <div className="flex justify-center items-center w-full">
+      <p>
         {order.orderDate
           ? new Date(order.orderDate).toLocaleString(undefined, {
               year: 'numeric',
