@@ -66,14 +66,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
       <ProductList products={visibleProducts} order={order} />
 
       {order.products?.length > 3 && (
-        <button
-          onClick={() => setIsExpanded((prev) => !prev)}
-          className="text-xs uppercase text-black border p-1 bg-flag-blue border-none "
-        >
-          {isExpanded
-            ? 'Hide items'
-            : `Expand items (${order.products.length - 3})`}
-        </button>
+        <div className="flex justify-center py-2">
+          <button
+            onClick={() => setIsExpanded((prev) => !prev)}
+            className="text-xs uppercase text-black border p-2 bg-flag-blue border-none "
+          >
+            {isExpanded
+              ? 'Hide items'
+              : `Expand all items (${order.products.length - 3})`}
+          </button>
+        </div>
       )}
 
       <OrderSummary
@@ -91,13 +93,13 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         <button
           disabled={isLoading}
           onClick={finishPickup}
-          className="mt-2 w-full  text-black bg-flag-blue py-2 text-xs uppercase font-semibold disabled:opacity-50"
+          className="my-2 w-full bg-flag-blue py-2 text-xs uppercase font-semibold disabled:opacity-50"
         >
           {isLoading ? 'Finishing Pickup...' : 'Finish Pickup'}
         </button>
       )}
       <div className="flex justify-center items-center w-full">
-        <p>
+        <p className="text-xs pb-1">
           {order.orderDate
             ? new Date(order.orderDate).toLocaleString(undefined, {
                 year: 'numeric',

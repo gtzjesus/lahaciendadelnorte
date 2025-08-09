@@ -16,23 +16,23 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   subtotal,
   pickupStatus,
 }) => (
-  <div className="uppercase text-sm pt-3 mt-3 space-y-1 font-mono text-black">
+  <div className="uppercase text-xs  space-y-1">
     <div className="flex justify-between">
-      <span>Total items:</span>
+      <span>items</span>
       <span>{totalItems}</span>
     </div>
     <div className="flex justify-between">
-      <span>Subtotal:</span>
+      <span>Subtotal</span>
       <span>{formatCurrency(subtotal, order.currency || 'usd')}</span>
     </div>
     {order.tax && (
       <div className="flex justify-between">
-        <span>Tax:</span>
+        <span>Tax</span>
         <span>{formatCurrency(order.tax, order.currency || 'usd')}</span>
       </div>
     )}
-    <div className="flex justify-between border-b border-black pb-2">
-      <strong>Total:</strong>
+    <div className="flex justify-between border-b border-red-200 pb-1">
+      <strong>Total</strong>
       <strong className="text-green">
         {formatCurrency(order.totalPrice ?? 0, order.currency || 'usd')}
       </strong>
@@ -40,11 +40,11 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
 
     <div className=" space-y-1 ">
       {order.paymentMethod && (
-        <p>
-          Payment: <strong>{order.paymentMethod}</strong>
-        </p>
+        <div className="flex justify-between">
+          <p>Payment</p>
+          <p className="font-bold">{order.paymentMethod}</p>
+        </div>
       )}
-
       {order.paymentMethod === 'cash' && (
         <>
           <p>
@@ -84,31 +84,32 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           </p>
         </>
       )}
-
-      <p className="border-t pt-2 border-black">
+      <div className=" flex justify-between border-t pt-1 border-red-200">
         Status:{' '}
-        <strong
+        <p
           className={
             order.paymentStatus === 'paid_in_store' ||
             order.paymentStatus === 'paid_online'
-              ? 'text-green'
-              : 'text-flag-red'
+              ? 'text-green font-bold'
+              : 'text-flag-red font-bold'
           }
         >
           {(order.paymentStatus ?? 'unknown').replaceAll('_', ' ')}
-        </strong>
-      </p>
-      <p>
+        </p>
+      </div>
+      <div className=" flex justify-between  ">
         Pickup:{' '}
-        <strong
+        <p
           className={
-            pickupStatus === 'completed' ? 'text-green' : 'text-red-600'
+            pickupStatus === 'completed'
+              ? 'text-green font-bold'
+              : 'text-red-600 font-bold'
           }
         >
           {pickupStatus?.replaceAll('_', ' ') ??
             order.pickupStatus.replaceAll('_', ' ')}
-        </strong>
-      </p>
+        </p>
+      </div>
     </div>
   </div>
 );
