@@ -27,7 +27,7 @@ export default function AdminHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-flag-red text-black p-4 flex justify-between items-center shadow-sm">
+      <header className="fixed top-0 z-50 bg-flag-red text-black p-4 flex justify-between items-center shadow-sm">
         <Link
           href="/admin/pos"
           className="uppercase font-light text-md hover:underline"
