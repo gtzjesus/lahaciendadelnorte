@@ -20,7 +20,7 @@ export default function OrderFilterControls({
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -33,9 +33,9 @@ export default function OrderFilterControls({
         isScrolled ? 'bg-white' : 'bg-transparent'
       }`}
     >
-      <div className="p-3 max-w-4xl mx-auto flex flex-col sm:flex-row items-center sm:items-end gap-2">
+      <div className="py-3 max-w-4xl mx-auto flex flex-col sm:flex-row items-center sm:items-end gap-2">
         {/* FILTER */}
-        <div className="relative w-full sm:max-w-[150px]">
+        <div className="relative w-full sm:max-w-[200px]">
           <select
             id="filter"
             value={filter}
@@ -70,7 +70,7 @@ export default function OrderFilterControls({
             placeholder="Search order by name/number"
             value={searchTerm}
             onChange={(e) => setSearchTermAction(e.target.value)}
-            className="uppercase text-sm border-none p-4 w-full bg-white focus:outline-none focus:ring-0 "
+            className="uppercase text-sm border-b border-red-300 p-4 w-full bg-white focus:outline-none focus:ring-0 "
           />
         </div>
       </div>
