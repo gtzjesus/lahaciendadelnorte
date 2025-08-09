@@ -24,16 +24,14 @@ export default function OrderList({ orders }: OrderListProps) {
     <div>
       <OrderFilterControls
         filter={filter}
-        setFilter={setFilter}
+        setFilterAction={setFilter}
         searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
+        setSearchTermAction={setSearchTerm}
       />
 
       {filteredOrders.length === 0 ? (
         <p className="text-center pt-6 uppercase tracking-wide font-semibold">
-          {filter === 'pending'
-            ? 'All pending orders completed!'
-            : 'No orders found.'}
+          {filter === 'pending' ? 'All orders completed!' : 'No orders found.'}
         </p>
       ) : (
         <div className="max-w-xl mx-auto gap-1 grid grid-cols-1 px-4">

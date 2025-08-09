@@ -7,7 +7,7 @@ interface OrderHeaderProps {
 }
 
 const Header: React.FC<OrderHeaderProps> = ({ order }) => (
-  <div className="flex flex-col items-center gap-1 justify-center border-b border-red-200 py-1 text-xs  ">
+  <div className="flex flex-col items-center gap-1 justify-center border-b border-red-300 py-1 text-xs  ">
     <div>
       <p className="uppercase font-bold">
         Order #{order.orderNumber?.slice(-6)}{' '}

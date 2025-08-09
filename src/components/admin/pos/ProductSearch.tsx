@@ -51,7 +51,7 @@ export default function ProductSearch({
         onChange={(e) => setSearchTerm(e.target.value)}
         className={`uppercase text-center p-4 border-b border-gray-300  text-sm focus:outline-none focus:ring-0 transition-all ${
           isScrolled
-            ? 'fixed border-none left-0 w-full bg-flag-red text-black z-20' // Scroll down state
+            ? 'fixed border-none left-0 w-full bg-white text-black z-20' // Scroll down state
             : 'bg-transparent text-black font-bold'
         }`}
       />

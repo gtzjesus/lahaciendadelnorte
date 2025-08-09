@@ -31,7 +31,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         <span>{formatCurrency(order.tax, order.currency || 'usd')}</span>
       </div>
     )}
-    <div className="flex justify-between border-b border-red-200 pb-1">
+    <div className="flex justify-between border-b border-red-300 pb-1">
       <strong>Total</strong>
       <strong className="text-green">
         {formatCurrency(order.totalPrice ?? 0, order.currency || 'usd')}
@@ -84,7 +84,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           </p>
         </>
       )}
-      <div className=" flex justify-between border-t pt-1 border-red-200">
+      <div className=" flex justify-between border-t pt-1 border-red-300">
         Status:{' '}
         <p
           className={

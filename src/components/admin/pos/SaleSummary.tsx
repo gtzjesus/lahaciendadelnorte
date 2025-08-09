@@ -96,7 +96,7 @@ export default function SaleSummary({
         </div>
       )}
 
-      <div className="flex justify-between uppercase text-xs font-semibold text-center text-black border-red-200 border-b px-4">
+      <div className="flex justify-between uppercase text-xs font-semibold text-center text-black border-red-300 border-b px-4">
         <h3 className="mb-2">Summary</h3>
         <p className="text-green font-bolightld pr-3">${total.toFixed(2)}</p>
         <p> Items {totalItems}</p>

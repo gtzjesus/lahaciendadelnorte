@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 const navItems = [
   { name: 'point of sale', href: '/admin/pos' },
@@ -27,12 +28,15 @@ export default function AdminHeader() {
 
   return (
     <>
-      <header className="fixed top-0 z-50 bg-flag-red text-black p-4 flex justify-between items-center shadow-sm">
-        <Link
-          href="/admin/pos"
-          className="uppercase font-light text-md hover:underline"
-        >
-          La Dueña
+      <header className="sticky top-0 z-50 bg-flag-red text-black p-4 flex justify-between items-center shadow-sm">
+        <Link href="/">
+          <Image
+            src="/icons/logo-black.webp"
+            alt="worldhello"
+            width={30}
+            height={30}
+            priority
+          />
         </Link>
 
         <button

@@ -74,7 +74,7 @@ export default function CartList({
       {cart.map((item, i) => (
         <div
           key={item._id}
-          className="bg-flag-red pt-2 flex flex-col items-center text-center border border-red-200"
+          className="bg-flag-red pt-2 flex flex-col items-center text-center border border-red-300"
         >
           <div className="w-full flex justify-between items-center px-2 text-xs">
             <div className="text-black font-semibold">

@@ -58,7 +58,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
     <div
       className={`p-1  overflow-hidden bg-flag-red  ${
         pickupStatus === 'pending'
-          ? 'border-red-200 border'
+          ? 'border-red-300 border'
           : 'border-green border'
       }`}
     >
@@ -86,7 +86,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
       />
 
       {error && (
-        <p className="mt-1 text-red-200 text-xs font-semibold">{error}</p>
+        <p className="mt-1 text-red-300 text-xs font-semibold">{error}</p>
       )}
 
       {pickupStatus !== 'completed' && (

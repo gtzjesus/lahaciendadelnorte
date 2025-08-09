@@ -10,7 +10,7 @@ export default async function AdminOrdersPage() {
   return (
     <div className="flex flex-col overflow-x-hidden  min-h-screen mx-auto max-w-xl">
       {!success ? (
-        <p className="text-center text-red-200 uppercase font-light">
+        <p className="text-center text-red-300 uppercase font-light">
           Failed to fetch orders.
         </p>
       ) : (
