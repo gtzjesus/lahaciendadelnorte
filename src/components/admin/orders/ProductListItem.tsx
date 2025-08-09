@@ -19,26 +19,48 @@ export default function ProductListItem({
   const slug = prod?.slug?.current;
   const image = prod?.image ? imageUrl(prod.image).url() : null;
 
+  const lineTotal =
+    typeof product?.price === 'number' && typeof product?.quantity === 'number'
+      ? product.price * product.quantity
+      : 0;
+
   return (
-    <div className="flex flex-col justify-center items-center text-center border-b border-red-200 pb-2">
+    <div className="flex flex-col justify-center items-center text-center border-b border-red-200 py-2">
       {image && slug && (
-        <Link href={`/product/${slug}`} className="relative h-16 w-16 shrink-0">
+        <Link href={`/product/${slug}`} className="relative h-12 w-12 shrink-0">
           <Image
             src={image}
             alt={prod?.name || 'Product image'}
             fill
-            className="object-cover rounded"
+            className="object-cover"
           />
         </Link>
       )}
-      <div className="text-xs font-light uppercase">
-        <p className="font-semibold">{prod?.name}</p>
-        {product.variant?.size && <p>{product.variant.size}</p>}
+
+      <div className="flex flex-col text-xs py-2 font-light uppercase">
+        <div className="flex justify-center items-center gap-1">
+          <p className="font-semibold">{prod?.name}</p>
+          <p>|</p>
+          {product.variant?.size && (
+            <p className="font-semibold">{product.variant.size}</p>
+          )}
+        </div>
+
         {prod?.category?.title && <p>{prod.category.title}</p>}
-        {typeof product?.price === 'number' && (
-          <p>{formatCurrency(product.price, currency || 'usd')}</p>
-        )}
-        <p>Qty: {product.quantity}</p>
+
+        <div className="flex justify-center items-center gap-1">
+          {typeof product?.price === 'number' && (
+            <p className="lowercase">
+              {formatCurrency(product.price, currency || 'usd')}/ea
+            </p>
+          )}
+          <p>Qty: {product.quantity}</p>
+        </div>
+
+        {/* 🧮 Line Total */}
+        <div className="text-xs text-green font-light">
+          {formatCurrency(lineTotal, currency || 'usd')}
+        </div>
       </div>
     </div>
   );

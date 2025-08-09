@@ -96,6 +96,20 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           {isLoading ? 'Finishing Pickup...' : 'Finish Pickup'}
         </button>
       )}
+      <div className="flex justify-center items-center w-full">
+        <p>
+          {order.orderDate
+            ? new Date(order.orderDate).toLocaleString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+              })
+            : 'n/a'}
+        </p>
+      </div>
     </div>
   );
 };
