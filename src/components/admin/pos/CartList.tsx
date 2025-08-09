@@ -70,11 +70,11 @@ export default function CartList({
   }
 
   return (
-    <div className="py-20 px-2 grid grid-cols-2 gap-1">
+    <div className="py-20 px-2 grid grid-cols-2 gap-1 ">
       {cart.map((item, i) => (
         <div
           key={item._id}
-          className="bg-flag-red pt-2 flex flex-col items-center text-center"
+          className="bg-flag-red pt-2 flex flex-col items-center text-center border border-red-200"
         >
           <div className="w-full flex justify-between items-center px-2 text-xs">
             <div className="text-black font-semibold">
