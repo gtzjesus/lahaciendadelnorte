@@ -73,7 +73,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           >
             {isExpanded
               ? 'Hide items'
-              : `expand items (${order.products.length - 1})`}
+              : `show items (${order.products.length - 1})`}
           </button>
         </div>
       )}
@@ -94,9 +94,9 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           <button
             disabled={isLoading}
             onClick={finishPickup}
-            className="my-2 w-full bg-flag-blue py-2 text-xs uppercase font-semibold disabled:opacity-50"
+            className="my-2 w-full bg-green text-white py-2 text-xs uppercase font-semibold disabled:opacity-25"
           >
-            {isLoading ? 'Finishing Pickup...' : 'Finish Pickup'}
+            {isLoading ? 'way to go! Finishing Pickup...' : 'Finish Pickup'}
           </button>
         </div>
       )}

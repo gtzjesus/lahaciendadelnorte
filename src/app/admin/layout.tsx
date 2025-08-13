@@ -25,7 +25,7 @@ export default function AdminLayout({
               className: 'mb-4 shadow-lg rounded-lg',
             }}
           />
-          <main className="flex-1 overflow-auto">{children}</main>
+          <main className="flex-1 ">{children}</main>
         </div>
       </ErrorBoundary>
     </ClerkProvider>

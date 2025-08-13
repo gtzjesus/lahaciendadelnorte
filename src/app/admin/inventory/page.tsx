@@ -130,12 +130,12 @@ export default function InventoryPage() {
   };
 
   return (
-    <main className="max-w-4xl mx-auto px-2 pb-20">
+    <main className="max-w-4xl mx-auto px-2 ">
       <div className="sticky top-12 z-10 p-4  flex flex-col">
         <input
           type="text"
-          placeholder="Search items"
-          className="w-full p-4 border border-black uppercase text-sm"
+          placeholder="Search inventory"
+          className="uppercase text-center p-4 border-b border-red-300  text-sm focus:outline-none focus:ring-0 transition-all"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

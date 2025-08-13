@@ -84,7 +84,7 @@ export default function AdminHeader() {
             initial={{ y: '-100%', opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: '-100%', opacity: 0 }}
-            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            transition={{ duration: 0.75, ease: 'easeInOut' }}
             className="fixed inset-0 z-40 bg-flag-red text-black flex flex-col justify-center items-center space-y-8 p-6"
             style={{ willChange: 'transform' }}
           >
@@ -99,7 +99,7 @@ export default function AdminHeader() {
                   href={href}
                   onClick={() => setMenuOpen(false)}
                   className={clsx(
-                    'text-2xl md:text-4xl uppercase font-bold tracking-wide transition-transform',
+                    'text-xl md:text-2xl uppercase font-bold tracking-wide transition-transform',
                     pathname === href && 'text-flag-blue'
                   )}
                 >
