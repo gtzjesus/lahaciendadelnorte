@@ -118,11 +118,11 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
   };
 
   return (
-    <div className="max-w-lg mx-auto bg-flag-red border-black border shadow-lg p-6 space-y-6">
+    <div className="max-w-lg mx-auto bg-flag-red border-red-300 border shadow-lg p-6 space-y-6">
       {/* Main Image Upload */}
       <div
         {...gm()}
-        className="mx-auto w-40 h-40 rounded-full bg-white flex items-center justify-center cursor-pointer border-2 border-dashed hover:border-flag-blue transition"
+        className="mx-auto w-40 h-40 rounded-full  flex items-center justify-center cursor-pointer border-2 border-dashed  transition"
       >
         <input {...gi()} />
         {mainPreview || product.imageUrl ? (
@@ -152,7 +152,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="uppercase w-full border px-2 py-2 border-flag-blue text-xs focus:outline-flag-blue"
+            className="uppercase w-full border px-2 py-2 border-red-300 text-xs focus:outline-flag-blue"
           />
         </div>
       </div>
@@ -162,11 +162,11 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         <p className="block text-xs font-light uppercase mb-2">
           Sizes | pricing | stock
         </p>
-        <ul className="uppercase w-full px-2 py-2 text-xs focus:outline-flag-blue">
+        <ul className="uppercase w-full px-2 py-2 text-xs focus:outline-flag-red-2">
           {sizes.map((s, i) => (
             <li
               key={i}
-              className="flex border-flag-blue items-start sm:items-center gap-2 p-2 transition"
+              className="flex border-red-300 items-start sm:items-center gap-2 p-2 transition"
             >
               <div className="relative w-full max-w-[120px]">
                 <select
@@ -176,7 +176,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                     arr[i].label = e.target.value;
                     setSizes(arr);
                   }}
-                  className="appearance-none border-flag-blue border uppercase p-2 pr-6 text-xs w-full bg-white rounded focus:outline-flag-blue"
+                  className="appearance-none border-red-300 border uppercase p-2 pr-6 text-xs w-full bg-white rounded focus:outline-flag-blue"
                 >
                   <option value="">Select size</option>
                   {['Small', 'Medium', 'Large', 'Extra Large'].map((size) => (
@@ -201,7 +201,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                   setSizes(arr);
                 }}
                 placeholder="Price"
-                className="w-24 border border-flag-blue p-2 text-xs focus:outline-flag-blue"
+                className="w-24 border border-red-300 p-2 text-xs focus:outline-flag-blue"
               />
               <input
                 type="number"
@@ -213,7 +213,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                   setSizes(arr);
                 }}
                 placeholder="Stock"
-                className="w-20 border rounded p-2 text-xs border-flag-blue focus:outline-flag-blue"
+                className="w-20 border rounded p-2 text-xs border-red-300 focus:outline-flag-blue"
               />
               {sizes.length > 1 && (
                 <button
@@ -243,7 +243,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
-            className="appearance-none uppercase w-full border border-flag-blue px-2 py-2 pr-8 text-xs bg-white rounded focus:outline-flag-blue"
+            className="appearance-none uppercase w-full border border-red-300 px-2 py-2 pr-8 text-xs bg-white rounded focus:outline-flag-blue"
           >
             <option value="">Select category</option>
             {allCategories.map((cat) => (
@@ -261,7 +261,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       {/* Extra Images Upload */}
       <div
         {...gx()}
-        className="border-dashed border-2 p-4 rounded-lg hover:border-flag-blue transition cursor-pointer"
+        className="border-dashed border-2 p-4 rounded-lg hover:border-red-300 transition cursor-pointer"
       >
         <input {...gix()} />
         <p className="text-center uppercase text-sm">
@@ -289,10 +289,10 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         onClick={handleSave}
         disabled={isSaving || !allSizesValid}
         className={clsx(
-          'p-4 mb-2 block uppercase text-md font-bold text-center text-black w-full',
+          'w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm ',
           isSaving || !allSizesValid
             ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-flag-blue hover:bg-flag-blue'
+            : 'bg-green text-white '
         )}
       >
         {isSaving ? 'Saving item' : 'Save Changes'}
@@ -300,7 +300,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
 
       {/* Save Feedback */}
       {saved && (
-        <div className="uppercase text-sm fixed bottom-4 right-4 bg-flag-blue text-white px-4 py-2 shadow-lg animate-pulse">
+        <div className="uppercase text-sm fixed bottom-4 right-4 bg-flag-red text-black px-4 py-2 shadow-lg animate-pulse">
           ✔ item Updated!
         </div>
       )}
