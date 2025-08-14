@@ -8,7 +8,7 @@ export default async function AdminOrdersPage() {
   const { orders, success } = await fetchOrders();
 
   return (
-    <div className="flex flex-col overflow-x-hidden  min-h-screen mx-auto max-w-xl">
+    <main className="flex flex-col  mx-auto max-w-4xl">
       {!success ? (
         <p className="text-center text-red-300 uppercase font-light">
           Failed to fetch orders.
@@ -16,6 +16,6 @@ export default async function AdminOrdersPage() {
       ) : (
         <OrderList orders={orders} />
       )}
-    </div>
+    </main>
   );
 }
