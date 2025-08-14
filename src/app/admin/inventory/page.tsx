@@ -19,6 +19,7 @@ import {
 } from '@/app/services/admin/inventory/inventoryService';
 
 export default function InventoryPage() {
+  const [isScrolled, setIsScrolled] = useState(false); // Track if the user has scrolled
   const [searchTerm, setSearchTerm] = useState('');
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [categories, setCategories] = useState<AdminCategory[]>([]);
@@ -153,13 +154,32 @@ export default function InventoryPage() {
     }
   };
 
+  // Scroll event handler
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        // If scrolled more than 50px
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <main className="max-w-4xl mx-auto px-2">
-      <div className="sticky top-12 z-10 p-4 flex flex-col">
+    <main className="flex flex-col  min-h-screen mx-auto max-w-4xl">
+      <div className="max-w-4xl fixed w-full z-10 flex flex-col">
         <input
           type="text"
           placeholder="Search inventory"
-          className="uppercase text-center p-4 border-b border-red-300 text-sm focus:outline-none focus:ring-0 transition-all"
+          className={`uppercase text-center p-4 border-b border-red-300  text-sm focus:outline-none focus:ring-0 transition-all  ${
+            isScrolled
+              ? 'fixed border-none left-0 w-full bg-white  z-20' // Scroll down state
+              : 'bg-transparent font-bold'
+          }`}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -190,8 +210,9 @@ export default function InventoryPage() {
         isExpanded={isExpanded}
         setIsExpanded={setIsExpanded}
       />
-
-      <ProductList products={filteredProducts} />
+      <div className="mt-20">
+        <ProductList products={filteredProducts} />
+      </div>
     </main>
   );
 }
