@@ -57,38 +57,39 @@ export default function ProductForm({
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 text-black mb-6">
-        <input
-          name="itemNumber"
-          type="text"
-          placeholder="Product number"
-          value={form.itemNumber}
-          onChange={(e) =>
-            setFormAction((prev) => ({ ...prev, itemNumber: e.target.value }))
-          }
-          className="uppercase text-sm border border-red-300 p-3"
-        />
+      <div className="grid grid-cols-1 gap-2 text-black mb-2">
+        <div className="flex justify-evenly">
+          <input
+            name="itemNumber"
+            type="text"
+            placeholder="Product number"
+            value={form.itemNumber}
+            onChange={(e) =>
+              setFormAction((prev) => ({ ...prev, itemNumber: e.target.value }))
+            }
+            className="uppercase text-center p-2  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all"
+          />
 
-        <input
-          name="name"
-          type="text"
-          placeholder="Name"
-          value={form.name}
-          onChange={(e) =>
-            setFormAction((prev) => ({ ...prev, name: e.target.value }))
-          }
-          className="uppercase text-sm border border-red-300 p-3"
-        />
-
+          <input
+            name="name"
+            type="text"
+            placeholder="Name"
+            value={form.name}
+            onChange={(e) =>
+              setFormAction((prev) => ({ ...prev, name: e.target.value }))
+            }
+            className="uppercase text-center p-2  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all"
+          />
+        </div>
         {isDuplicateSlugOrNameAction() && form.name.trim() && (
-          <p className="text-sm text-red-600">
+          <p className="text-xs text-red-600">
             PRODUCT WITH THIS NAME ALREADY EXISTS
           </p>
         )}
 
         <div className="relative">
           <select
-            className="appearance-none uppercase text-sm border border-red-300 p-3 pr-8 w-full bg-white text-black "
+            className="appearance-none uppercase text-center p-2  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all w-full "
             value={selectedCategory}
             onChange={(e) => setSelectedCategoryAction(e.target.value)}
           >
@@ -99,7 +100,7 @@ export default function ProductForm({
               </option>
             ))}
           </select>
-          <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-black">
+          <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-flag-blue">
             ▼
           </div>
         </div>
@@ -110,7 +111,7 @@ export default function ProductForm({
               key={i}
               className="grid grid-cols-[80px_80px_80px_auto] gap-2 mb-2"
             >
-              <div className="relative">
+              <div className="relative flex">
                 <select
                   value={v.size}
                   onChange={(e) => {
@@ -118,7 +119,7 @@ export default function ProductForm({
                     variants[i].size = e.target.value;
                     setFormAction({ ...form, variants });
                   }}
-                  className="appearance-none border border-red-300 p-1 pr-6 text-sm uppercase w-full bg-white "
+                  className="appearance-none uppercase text-center p-1  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all "
                 >
                   <option value="">Size</option>
                   {sizeOptions
@@ -132,50 +133,50 @@ export default function ProductForm({
                       </option>
                     ))}
                 </select>
-                <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs">
+                <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-flag-blue text-xs">
                   ▼
                 </div>
+
+                <input
+                  type="number"
+                  step="0.01"
+                  placeholder="Price"
+                  className="uppercase text-center p-1  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all"
+                  value={v.price}
+                  onChange={(e) => {
+                    const variants = [...form.variants];
+                    variants[i].price = e.target.value;
+                    setFormAction({ ...form, variants });
+                  }}
+                />
+
+                <input
+                  type="number"
+                  placeholder="Stock"
+                  className="uppercase text-center p-1  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all"
+                  value={v.stock}
+                  onChange={(e) => {
+                    const variants = [...form.variants];
+                    variants[i].stock = e.target.value;
+                    setFormAction({ ...form, variants });
+                  }}
+                />
+
+                {form.variants.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFormAction({
+                        ...form,
+                        variants: form.variants.filter((_, idx) => idx !== i),
+                      })
+                    }
+                    className="text-red-600 font-bold text-xl px-2"
+                  >
+                    ✕
+                  </button>
+                )}
               </div>
-
-              <input
-                type="number"
-                step="0.01"
-                placeholder="Price"
-                className="uppercase border border-red-300 p-1 text-sm w-full"
-                value={v.price}
-                onChange={(e) => {
-                  const variants = [...form.variants];
-                  variants[i].price = e.target.value;
-                  setFormAction({ ...form, variants });
-                }}
-              />
-
-              <input
-                type="number"
-                placeholder="Stock"
-                className="border border-red-300 uppercase p-1 text-sm w-full"
-                value={v.stock}
-                onChange={(e) => {
-                  const variants = [...form.variants];
-                  variants[i].stock = e.target.value;
-                  setFormAction({ ...form, variants });
-                }}
-              />
-
-              {form.variants.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setFormAction({
-                      ...form,
-                      variants: form.variants.filter((_, idx) => idx !== i),
-                    })
-                  }
-                  className="text-red-600 font-bold text-xl px-2"
-                >
-                  ✕
-                </button>
-              )}
             </div>
           ))}
 
@@ -191,7 +192,7 @@ export default function ProductForm({
               })
             }
             disabled={availableSizeOptions.length === 0}
-            className={`text-sm uppercase font-light mb-2 px-2 py-2 ${
+            className={`w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm ${
               availableSizeOptions.length === 0
                 ? 'bg-gray-400 text-white cursor-not-allowed'
                 : 'bg-flag-blue text-black'
@@ -203,15 +204,15 @@ export default function ProductForm({
       </div>
 
       <div className="border border-red-300 p-4 mb-6 space-y-4">
+        <p className="flex justify-center text-xs uppercase font-light text-black mb-1">
+          add images
+        </p>
         {/* Main Image Upload */}
-        <div>
-          <label className="block text-sm uppercase font-light text-black mb-1">
-            Add main image
-          </label>
+        <div className="flex gap-5 w-full mt-4">
           <button
             type="button"
             onClick={() => mainImageRef.current?.click()}
-            className="bg-flag-blue text-black text-sm uppercase px-2 py-2  "
+            className="w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm bg-flag-blue"
           >
             Upload Main Image
           </button>
@@ -225,21 +226,14 @@ export default function ProductForm({
             }
           />
           {mainImageFile && (
-            <p className="mt-2 text-sm text-black">
+            <p className="mt-2 text-xs text-black">
               Selected: <strong>{mainImageFile.name}</strong>
             </p>
           )}
-        </div>
-
-        {/* Extra Images Upload */}
-        <div>
-          <label className="block text-sm uppercase font-light text-black mb-1">
-            Add extra images (up to 4 more)
-          </label>
           <button
             type="button"
             onClick={() => extraImagesRef.current?.click()}
-            className="bg-flag-blue text-black text-sm uppercase px-2 py-2  "
+            className="w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm bg-flag-blue"
           >
             Upload Extra Images
           </button>
@@ -257,7 +251,7 @@ export default function ProductForm({
             }}
           />
           {extraImageFiles.length > 0 && (
-            <ul className="mt-2 list-disc list-inside text-sm text-black space-y-1">
+            <ul className="mt-2 list-disc list-inside text-xs text-black space-y-1">
               {extraImageFiles.map((file, i) => (
                 <li key={i}>
                   <strong>{file.name}</strong>
@@ -270,10 +264,10 @@ export default function ProductForm({
       <button
         disabled={loading || !isFormValidAction()}
         onClick={handleUploadAction}
-        className={`text-sm uppercase font-light mb-2 px-2 py-2 ${
+        className={`w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm bg-flag-blue ${
           loading || !isFormValidAction()
             ? 'bg-gray-400 text-white cursor-not-allowed'
-            : 'bg-flag-red text-black'
+            : 'bg-green text-white'
         }`}
       >
         {loading ? 'Adding product...' : 'Add Product'}
