@@ -65,6 +65,29 @@ export default function InventoryPage() {
       });
   }, []);
 
+  useEffect(() => {
+    fetchAdminProducts()
+      .then((data) => {
+        setProducts(data);
+
+        // ✅ Determine the next available item number
+        const maxItemNumber = data.reduce((max, product) => {
+          const num = parseInt(product.itemNumber, 10);
+          return isNaN(num) ? max : Math.max(max, num);
+        }, 0);
+
+        // Set form with next available number
+        setForm((prev) => ({
+          ...prev,
+          itemNumber: (maxItemNumber + 1).toString().padStart(4, '0'), // optional formatting
+        }));
+      })
+      .catch((err) => {
+        console.error('[Products Fetch Error]', err);
+        setProducts([]);
+      });
+  }, []);
+
   const filteredProducts = products.filter((p) => {
     const nameMatch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
     const categoryMatch = selectedCategory
@@ -121,12 +144,10 @@ export default function InventoryPage() {
       if (mainImageRef.current) mainImageRef.current.value = '';
       if (extraImagesRef.current) extraImagesRef.current.value = '';
 
-      setMessage('✅ Product added successfully!');
       setShowForm(false);
       setIsExpanded(false);
     } catch (err) {
       console.error('[Upload Error]', err);
-      setMessage('❌ Failed to add product.');
     } finally {
       setLoading(false);
     }

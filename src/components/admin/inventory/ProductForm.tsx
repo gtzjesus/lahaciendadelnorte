@@ -111,7 +111,7 @@ export default function ProductForm({
               key={i}
               className="grid grid-cols-[80px_80px_80px_auto] gap-2 mb-2"
             >
-              <div className="relative flex">
+              <div className="relative gap-1 ">
                 <select
                   value={v.size}
                   onChange={(e) => {
@@ -119,7 +119,7 @@ export default function ProductForm({
                     variants[i].size = e.target.value;
                     setFormAction({ ...form, variants });
                   }}
-                  className="appearance-none uppercase text-center p-1  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all "
+                  className="appearance-none uppercase text-center p-2  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all mb-2 "
                 >
                   <option value="">Size</option>
                   {sizeOptions
@@ -133,49 +133,50 @@ export default function ProductForm({
                       </option>
                     ))}
                 </select>
-                <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-flag-blue text-xs">
+                <div className="pointer-events-none absolute right-1 top-4 -translate-y-1/2 text-flag-blue text-xs">
                   ▼
                 </div>
+                <div className="flex justify-between gap-2 ">
+                  <input
+                    type="number"
+                    step="0.01"
+                    placeholder="Price"
+                    className="uppercase text-center p-2  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all "
+                    value={v.price}
+                    onChange={(e) => {
+                      const variants = [...form.variants];
+                      variants[i].price = e.target.value;
+                      setFormAction({ ...form, variants });
+                    }}
+                  />
 
-                <input
-                  type="number"
-                  step="0.01"
-                  placeholder="Price"
-                  className="uppercase text-center p-1  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all"
-                  value={v.price}
-                  onChange={(e) => {
-                    const variants = [...form.variants];
-                    variants[i].price = e.target.value;
-                    setFormAction({ ...form, variants });
-                  }}
-                />
+                  <input
+                    type="number"
+                    placeholder="Stock"
+                    className="uppercase text-center p-2  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all"
+                    value={v.stock}
+                    onChange={(e) => {
+                      const variants = [...form.variants];
+                      variants[i].stock = e.target.value;
+                      setFormAction({ ...form, variants });
+                    }}
+                  />
 
-                <input
-                  type="number"
-                  placeholder="Stock"
-                  className="uppercase text-center p-1  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all"
-                  value={v.stock}
-                  onChange={(e) => {
-                    const variants = [...form.variants];
-                    variants[i].stock = e.target.value;
-                    setFormAction({ ...form, variants });
-                  }}
-                />
-
-                {form.variants.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setFormAction({
-                        ...form,
-                        variants: form.variants.filter((_, idx) => idx !== i),
-                      })
-                    }
-                    className="text-red-600 font-bold text-xl px-2"
-                  >
-                    ✕
-                  </button>
-                )}
+                  {form.variants.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormAction({
+                          ...form,
+                          variants: form.variants.filter((_, idx) => idx !== i),
+                        })
+                      }
+                      className="text-red-600 font-bold text-xl px-2"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           ))}
