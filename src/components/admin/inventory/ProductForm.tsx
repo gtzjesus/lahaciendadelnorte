@@ -48,15 +48,12 @@ export default function ProductForm({
   handleUploadAction,
   loading,
   message,
-  showForm,
   isDuplicateSlugOrNameAction,
   isFormValidAction,
 }: FormProps) {
   const availableSizeOptions = sizeOptions.filter(
     (size) => !form.variants.some((v) => v.size === size)
   );
-
-  if (!showForm) return null;
 
   return (
     <>
@@ -69,7 +66,7 @@ export default function ProductForm({
           onChange={(e) =>
             setFormAction((prev) => ({ ...prev, itemNumber: e.target.value }))
           }
-          className="uppercase text-sm border border-black p-3"
+          className="uppercase text-sm border border-red-300 p-3"
         />
 
         <input
@@ -80,7 +77,7 @@ export default function ProductForm({
           onChange={(e) =>
             setFormAction((prev) => ({ ...prev, name: e.target.value }))
           }
-          className="uppercase text-sm border border-black p-3"
+          className="uppercase text-sm border border-red-300 p-3"
         />
 
         {isDuplicateSlugOrNameAction() && form.name.trim() && (
@@ -91,7 +88,7 @@ export default function ProductForm({
 
         <div className="relative">
           <select
-            className="appearance-none uppercase text-sm border border-black p-3 pr-8 w-full bg-white text-black "
+            className="appearance-none uppercase text-sm border border-red-300 p-3 pr-8 w-full bg-white text-black "
             value={selectedCategory}
             onChange={(e) => setSelectedCategoryAction(e.target.value)}
           >
@@ -121,7 +118,7 @@ export default function ProductForm({
                     variants[i].size = e.target.value;
                     setFormAction({ ...form, variants });
                   }}
-                  className="appearance-none border border-black p-1 pr-6 text-sm uppercase w-full bg-white "
+                  className="appearance-none border border-red-300 p-1 pr-6 text-sm uppercase w-full bg-white "
                 >
                   <option value="">Size</option>
                   {sizeOptions
@@ -144,7 +141,7 @@ export default function ProductForm({
                 type="number"
                 step="0.01"
                 placeholder="Price"
-                className="uppercase border border-black p-1 text-sm w-full"
+                className="uppercase border border-red-300 p-1 text-sm w-full"
                 value={v.price}
                 onChange={(e) => {
                   const variants = [...form.variants];
@@ -156,7 +153,7 @@ export default function ProductForm({
               <input
                 type="number"
                 placeholder="Stock"
-                className="border border-black uppercase p-1 text-sm w-full"
+                className="border border-red-300 uppercase p-1 text-sm w-full"
                 value={v.stock}
                 onChange={(e) => {
                   const variants = [...form.variants];
@@ -205,7 +202,7 @@ export default function ProductForm({
         </div>
       </div>
 
-      <div className="border border-black p-4 mb-6 space-y-4">
+      <div className="border border-red-300 p-4 mb-6 space-y-4">
         {/* Main Image Upload */}
         <div>
           <label className="block text-sm uppercase font-light text-black mb-1">
