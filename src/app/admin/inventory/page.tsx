@@ -1,16 +1,17 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import ProductForm from '@/components/admin/inventory/ProductForm';
 import ProductList from '@/components/admin/inventory/ProductList';
+import AddProductDrawer from '@/components/admin/inventory/AddProductDrawer';
 
 import { slugify } from '@/utils/slugify';
 import { isDuplicateSlugOrName } from '@/utils/validate';
 import type {
   AdminCategory,
   AdminProduct,
-  Variant,
+  AdminProductForm,
 } from '@/types/admin/inventory';
+
 import {
   fetchAdminCategories,
   fetchAdminProducts,
@@ -22,17 +23,18 @@ export default function InventoryPage() {
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [categories, setCategories] = useState<AdminCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<AdminProductForm>({
     itemNumber: '',
     name: '',
     slug: '',
-    variants: [{ size: '', price: '', stock: '' }] as Variant[],
+    variants: [{ size: '', price: '', stock: '' }],
   });
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
   const [extraImageFiles, setExtraImageFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const mainImageRef = useRef<HTMLInputElement | null>(null);
   const extraImagesRef = useRef<HTMLInputElement | null>(null);
@@ -101,7 +103,7 @@ export default function InventoryPage() {
         extraImages: extraImageFiles,
       });
 
-      // 🔁 Re-fetch instead of appending
+      // Re-fetch products after upload
       const refreshedProducts = await fetchAdminProducts();
       setProducts(refreshedProducts);
       setSearchTerm('');
@@ -121,6 +123,7 @@ export default function InventoryPage() {
 
       setMessage('✅ Product added successfully!');
       setShowForm(false);
+      setIsExpanded(false);
     } catch (err) {
       console.error('[Upload Error]', err);
       setMessage('❌ Failed to add product.');
@@ -130,25 +133,19 @@ export default function InventoryPage() {
   };
 
   return (
-    <main className="max-w-4xl mx-auto px-2 ">
-      <div className="sticky top-12 z-10 p-4  flex flex-col">
+    <main className="max-w-4xl mx-auto px-2">
+      <div className="sticky top-12 z-10 p-4 flex flex-col">
         <input
           type="text"
           placeholder="Search inventory"
-          className="uppercase text-center p-4 border-b border-red-300  text-sm focus:outline-none focus:ring-0 transition-all"
+          className="uppercase text-center p-4 border-b border-red-300 text-sm focus:outline-none focus:ring-0 transition-all"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <div className=" bg-white z-50 p-4  flex flex-col  gap-4">
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-flag-red text-black font-semibold uppercase px-4 py-3 w-full md:w-auto"
-        >
-          {showForm ? 'Hide ' : 'Add New item'}
-        </button>
-      </div>
-      <ProductForm
+
+      {/* AddProductDrawer always rendered */}
+      <AddProductDrawer
         form={form}
         setFormAction={setForm}
         categories={categories}
@@ -169,6 +166,8 @@ export default function InventoryPage() {
           isDuplicateSlugOrName(products, form.slug, form.name)
         }
         isFormValidAction={isFormValid}
+        isExpanded={isExpanded}
+        setIsExpanded={setIsExpanded}
       />
 
       <ProductList products={filteredProducts} />

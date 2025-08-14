@@ -1,7 +1,7 @@
 import { getProductByItemNumber } from '@/sanity/lib/products/getProductByItemNumber';
 import { notFound } from 'next/navigation';
-import InventoryCard from '@/components/inventory/InventoryCard';
 import { getAllCategories } from '@/sanity/lib/categories/getAllCategories';
+import InventoryCard from '@/components/admin/inventory/InventoryCard';
 
 interface Props {
   params: Promise<{ itemNumber: string }>;
@@ -16,7 +16,7 @@ export default async function ProductDetailPage({ params }: Props) {
   if (!product) return notFound();
 
   return (
-    <div className="bg-white min-h-screen pt-6 px-2">
+    <div className="bg-white min-h-screen p-6">
       <InventoryCard product={product} allCategories={allCategories} />
     </div>
   );
