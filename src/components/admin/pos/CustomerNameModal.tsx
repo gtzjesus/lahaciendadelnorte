@@ -46,6 +46,7 @@ const CustomerNameModal = ({
           className="w-full p-2 text-black  text-sm border-none focus:outline-none focus:ring-0"
           onFocus={onInputFocus} // <-- use them here
           onBlur={onInputBlur}
+          autoFocus
         />
 
         <p className="text-sm  text-gray-700">
