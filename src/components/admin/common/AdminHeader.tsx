@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 
 const navItems = [
-  { name: 'point of sale', href: '/admin/pos' },
+  { name: 'Point of sale', href: '/admin/pos' },
   { name: 'Orders', href: '/admin/orders' },
   { name: 'Inventory', href: '/admin/inventory' },
 ];
@@ -17,7 +17,6 @@ export default function AdminHeader() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Optional: ESC to close
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setMenuOpen(false);
@@ -27,8 +26,19 @@ export default function AdminHeader() {
   }, []);
 
   return (
-    <>
-      <header className="sticky top-0 z-50 bg-flag-red text-black p-4 flex justify-between items-center shadow-sm">
+    <motion.header
+      initial={false}
+      animate={{
+        height: menuOpen ? '100vh' : '3.5vh',
+      }}
+      transition={{ duration: 0.5, ease: 'easeInOut' }}
+      className={clsx(
+        'z-50 bg-flag-red text-black px-4 py-2 w-full overflow-hidden flex flex-col items-center shadow-md',
+        menuOpen ? 'justify-start' : 'justify-between'
+      )}
+    >
+      {/* Top Row: Logo + Hamburger */}
+      <div className="w-full flex justify-between items-center">
         <Link href="/">
           <Image
             src="/icons/logo-black.webp"
@@ -49,7 +59,6 @@ export default function AdminHeader() {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
             >
               <path
                 strokeLinecap="round"
@@ -64,7 +73,6 @@ export default function AdminHeader() {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
             >
               <path
                 strokeLinecap="round"
@@ -75,32 +83,41 @@ export default function AdminHeader() {
             </svg>
           )}
         </button>
-      </header>
+      </div>
 
+      {/* Animate the nav items in */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            key="admin-menu"
-            initial={{ y: '-100%', opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: '-100%', opacity: 0 }}
-            transition={{ duration: 0.75, ease: 'easeInOut' }}
-            className="fixed inset-0 z-40 bg-flag-red text-black flex flex-col justify-center items-center space-y-8 p-6"
-            style={{ willChange: 'transform' }}
+            key="nav-links"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+            className="flex flex-col items-center justify-center flex-1 space-y-4 w-full"
           >
+            <Image
+              src="/icons/logo-black.webp"
+              alt="worldhello"
+              width={30}
+              height={30}
+              priority
+            />
             {navItems.map(({ name, href }, i) => (
               <motion.div
                 key={href}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.1 }}
+                transition={{ delay: 0.3 + i * 0.1 }}
               >
                 <Link
                   href={href}
                   onClick={() => setMenuOpen(false)}
                   className={clsx(
-                    'text-xl md:text-2xl uppercase font-bold tracking-wide transition-transform',
-                    pathname === href && 'text-flag-blue'
+                    'text-2xl transition-colors',
+                    pathname === href
+                      ? 'text-flag-blue'
+                      : 'text-black hover:text-flag-blue'
                   )}
                 >
                   {name}
@@ -110,6 +127,6 @@ export default function AdminHeader() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </motion.header>
   );
 }
