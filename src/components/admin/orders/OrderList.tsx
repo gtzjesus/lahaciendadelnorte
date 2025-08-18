@@ -63,7 +63,7 @@ export default function OrderList({ orders }: OrderListProps) {
       <div className="max-w-xl fixed w-full z-10 flex flex-col">
         <input
           type="text"
-          placeholder="Search by name or number"
+          placeholder="Search order by name or #"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className={`uppercase text-center p-4 border-b border-red-300  text-sm focus:outline-none focus:ring-0 transition-all  ${

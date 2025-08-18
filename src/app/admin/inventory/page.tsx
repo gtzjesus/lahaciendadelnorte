@@ -90,11 +90,13 @@ export default function InventoryPage() {
   }, []);
 
   const filteredProducts = products.filter((p) => {
-    const nameMatch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const lowerSearch = searchTerm.toLowerCase();
+    const nameMatch = p.name.toLowerCase().includes(lowerSearch);
+    const itemNumberMatch = p.itemNumber.toLowerCase().includes(lowerSearch);
     const categoryMatch = selectedCategory
       ? p.category?._id === selectedCategory
       : true;
-    return nameMatch && categoryMatch;
+    return (nameMatch || itemNumberMatch) && categoryMatch;
   });
 
   const isFormValid = () => {
@@ -174,7 +176,7 @@ export default function InventoryPage() {
       <div className="max-w-4xl fixed w-full z-10 flex flex-col">
         <input
           type="text"
-          placeholder="Search inventory"
+          placeholder="Search inventory by name or #"
           className={`uppercase text-center p-4 border-b border-red-300  text-sm focus:outline-none focus:ring-0 transition-all  ${
             isScrolled
               ? 'fixed border-none left-0 w-full bg-white  z-20' // Scroll down state

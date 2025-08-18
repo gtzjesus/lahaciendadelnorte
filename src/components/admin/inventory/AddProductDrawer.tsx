@@ -64,7 +64,7 @@ export default function AddProductDrawer({
       {!isExpanded && (
         <div className="w-10 h-1 bg-black bg-opacity-30 rounded-full mx-auto my-2"></div>
       )}
-      <div className="flex justify-center uppercase text-xs font-semibold text-center text-black border-red-300 border-b pt-1">
+      <div className="flex justify-center uppercase text-xs font-semibold text-center text-black border-red-300 border-b pt-">
         <h3 className="mb-2">add new item</h3>
       </div>
 
