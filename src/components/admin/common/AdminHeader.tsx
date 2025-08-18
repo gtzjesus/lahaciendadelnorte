@@ -29,11 +29,11 @@ export default function AdminHeader() {
     <motion.header
       initial={false}
       animate={{
-        height: menuOpen ? '100vh' : '100%',
+        height: menuOpen ? '100vh' : '5vh',
       }}
       transition={{ duration: 0.5, ease: 'easeInOut' }}
       className={clsx(
-        'z-50 bg-flag-red text-black px-4 py-2 w-full overflow-hidden flex flex-col items-center shadow-md',
+        'sticky top-0 z-50 bg-flag-red text-black px-4 py-2 w-full overflow-hidden flex flex-col items-center shadow-md',
         menuOpen ? 'justify-start' : 'justify-between'
       )}
     >
