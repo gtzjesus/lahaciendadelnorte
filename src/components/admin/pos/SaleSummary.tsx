@@ -59,7 +59,7 @@ export default function SaleSummary({
   return (
     <div
       className={`
-    fixed bottom-0 left-0 right-0 z-30 w-full max-w-xl md:max-w-4xl mx-auto
+    fixed bottom-0  left-0 right-0 z-30 w-full max-w-xl md:max-w-4xl mx-auto
     transition-all duration-700 ease-in-out
     ${isExpanded ? 'h-[80dvh]' : 'h-[50px]'}
     rounded-t-xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat
@@ -89,38 +89,40 @@ export default function SaleSummary({
               e.stopPropagation();
               setIsExpanded(false);
             }}
-            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-semibold uppercase mb-5"
+            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-bold uppercase mb-5"
           >
             hide summary ↓
           </button>
         </div>
       )}
-
-      <div className="flex justify-between uppercase text-xs font-semibold text-center text-black border-red-300 border-b px-4">
-        <h3 className="mb-2">Summary</h3>
-        <p className="text-green font-bolightld pr-3">${total.toFixed(2)}</p>
-        <p> Items {totalItems}</p>
-      </div>
+      {!isExpanded && (
+        <div className="flex justify-between  text-xs font-bold text-center text-black border-red-300 border-b px-4">
+          <h3 className="mb-2">Summary</h3>
+          <p className="text-green font-bolightld pr-3">${total.toFixed(2)}</p>
+          <p> Items {totalItems}</p>
+        </div>
+      )}
 
       {/* 💸 Summary Info */}
-      <div className="px-4">
-        <div className="flex justify-between mt-2 text-sm uppercase font-light">
-          <p className="text-xs">Subtotal:</p>
+      <div className="px-4 font-bold">
+        <div className="flex justify-between mt-2 text-md uppercase ">
+          <p>Subtotal:</p>
           <p>${subtotal.toFixed(2)}</p>
         </div>
 
-        <div className="flex justify-between text-sm uppercase font-light">
-          <p className="text-xs">Tax:</p>
+        <div className="flex justify-between text-md uppercase ">
+          <p>Tax:</p>
           <p>${tax.toFixed(2)}</p>
         </div>
 
-        <div className="flex justify-between text-sm uppercase font-light">
-          <p className="text-xs">Total:</p>
+        <div className="flex justify-between text-md uppercase ">
+          <p>Total:</p>
           <p className="text-green font-bold">${total.toFixed(2)}</p>
         </div>
 
         {/* 🏦 Payment Method */}
-        <div className="text-xs text-black font-light mt-4">
+        <div className="text-sm text-black  mt-4">
+          <p className="text-xs mb-1 ">Please select the payment method.</p>
           <div className="relative w-full">
             <select
               value={paymentMethod}
@@ -130,7 +132,7 @@ export default function SaleSummary({
                 if (method === 'cash') setCardAmountAction(0);
                 if (method === 'card') setCashReceivedAction(0);
               }}
-              className="appearance-none w-full p-1 bg-white text-black text-sm uppercase focus:outline-none focus:ring-0"
+              className="appearance-none w-full p-1 bg-white text-black text-md uppercase focus:outline-none focus:ring-0"
               onFocus={() => {
                 setIsExpanded(true);
                 onInputFocus?.();
@@ -167,14 +169,14 @@ export default function SaleSummary({
                 className="w-full p-2 text-black focus:outline-none focus:ring-0"
               />
               {cashReceived < total && cashReceived !== 0 && (
-                <p className="text-xs text-red-500 pt-1 font-semibold">
+                <p className="text-xs text-red-500 pt-1 font-bold">
                   Not enough funds. Please provide more cash.
                 </p>
               )}
               {cashReceived >= total && (
                 <div className="text-xs flex justify-between py-1">
                   <p className="">Change Due: </p>
-                  <p className="font-bold text-sm">${changeGiven.toFixed(2)}</p>
+                  <p className="font-bold text-md">${changeGiven.toFixed(2)}</p>
                 </div>
               )}
             </div>
@@ -222,7 +224,7 @@ export default function SaleSummary({
                 />
               </div>
               {Math.abs(cashReceived + cardAmount - total) > 0.01 && (
-                <p className="text-xs py-1 text-yellow-300 font-semibold">
+                <p className="text-xs py-1 text-yellow-300 font-bold">
                   Amount does not match total.
                 </p>
               )}
@@ -235,7 +237,7 @@ export default function SaleSummary({
           <button
             onClick={clearCartAction}
             disabled={cartEmpty || loading}
-            className={`w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm 
+            className={`w-full py-2 rounded-full text-xs font-bold uppercase transition duration-200 ease-in-out shadow-sm 
               ${
                 cartEmpty || loading
                   ? 'bg-red-300 cursor-not-allowed text-white'
@@ -253,7 +255,7 @@ export default function SaleSummary({
             disabled={
               loading || cartEmpty || (paymentMethod === 'cash' && !isCashValid)
             }
-            className={`w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm 
+            className={`w-full py-2 rounded-full text-xs font-bold uppercase transition duration-200 ease-in-out shadow-sm 
               ${
                 loading ||
                 cartEmpty ||

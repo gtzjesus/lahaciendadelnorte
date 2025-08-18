@@ -51,7 +51,7 @@ export default function CartList({
   if (!cart || cart.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center flex-1 min-h-screen px-4 text-center">
-        <p className="uppercase font-semibold text-lg select-none">
+        <p className=" font-semibold text-lg select-none">
           {currentMessage}
           <span> </span>
           <span className="animate-pulse">|</span>
