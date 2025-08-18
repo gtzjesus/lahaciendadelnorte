@@ -21,7 +21,7 @@ export default function SaleSuccessModal({
       initial={{ y: '-100%', opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: '-100%', opacity: 0 }}
-      transition={{ duration: 0.75, ease: 'easeInOut' }}
+      transition={{ duration: 0.65, ease: 'easeInOut' }}
     >
       {/* Animated Success Message */}
       <motion.h2
@@ -53,9 +53,8 @@ export default function SaleSuccessModal({
           router.push('/admin/orders');
           if (onClose) onClose();
         }}
-        className="py-2 px-6 rounded-full bg-flag-red text-white text-xs font-semibold 
+        className="py-2 px-6 rounded-full bg-flag-blue text-white text-xs font-semibold 
          transition duration-200 ease-in-out shadow-sm z-50"
-        whileHover={{ scale: 1.05 }} // Slight hover effect
       >
         View Order
       </motion.button>
