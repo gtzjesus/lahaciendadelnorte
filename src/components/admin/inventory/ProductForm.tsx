@@ -57,11 +57,11 @@ export default function ProductForm({
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-2 text-black mb-2 font-bold overflow-x-hidden">
-        <p className="text-xs text-center text-white mb-2 ">
+      <div className="grid grid-cols-1 gap-1 text-black mb-1 font-bold overflow-x-hidden">
+        <p className="text-xs text-center text-white mb-1 ">
           Please fill out all fields below to add a new item.
         </p>
-        <div className="flex flex-col  gap-2">
+        <div className="flex flex-col  gap-1">
           <p className="text-xs  text-white ">Item number (auto-generated)</p>
           <input
             name="itemNumber"
@@ -112,11 +112,11 @@ export default function ProductForm({
         </div>
 
         <div>
-          <p className="text-xs text-white mb-2 ">
+          <p className="text-xs text-white mb-1 ">
             Item sizes (must include at least 1 size)
           </p>
           {form.variants.map((v, i) => (
-            <div key={i} className="grid gap-2 mb-2 border border-white p-4">
+            <div key={i} className="grid gap-1 mb-1 border border-white p-4">
               <div className="relative gap-1  ">
                 <div className="flex justify-between">
                   <select
@@ -126,7 +126,7 @@ export default function ProductForm({
                       variants[i].size = e.target.value;
                       setFormAction({ ...form, variants });
                     }}
-                    className="appearance-none p-2  border-white text-xs focus:outline-none focus:ring-0 transition-all mb-2 w-3/4"
+                    className="appearance-none p-2  border-white text-xs focus:outline-none focus:ring-0 transition-all mb-1 w-3/4"
                   >
                     <option value="">Size</option>
                     {sizeOptions
@@ -152,14 +152,14 @@ export default function ProductForm({
                           variants: form.variants.filter((_, idx) => idx !== i),
                         })
                       }
-                      className="text-red-600 font-bold text-lg px-2"
+                      className="text-red-600 font-bold text-2xl px-2"
                     >
                       ✕
                     </button>
                   )}
                 </div>
 
-                <div className="flex flex-col gap-2 ">
+                <div className="flex flex-col gap-1 ">
                   <input
                     type="number"
                     step="0.01"
