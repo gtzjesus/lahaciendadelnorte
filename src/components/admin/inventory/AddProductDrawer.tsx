@@ -45,7 +45,7 @@ export default function AddProductDrawer({
       className={`
     fixed bottom-0 left-0 right-0 z-30 w-full max-w-xl md:max-w-4xl mx-auto
     transition-all duration-700 ease-in-out
-    ${isExpanded ? 'h-[80dvh]' : 'h-[50px]'}
+    ${isExpanded ? 'h-[90dvh]' : 'h-[50px]'}
     rounded-t-xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat
   `}
       style={{ backgroundImage: "url('/admin/summary.webp')" }}
@@ -64,8 +64,8 @@ export default function AddProductDrawer({
       {!isExpanded && (
         <div className="w-10 h-1 bg-black bg-opacity-30 rounded-full mx-auto my-2"></div>
       )}
-      <div className="flex justify-center uppercase text-xs font-semibold text-center text-black border-red-300 border-b pt-">
-        <h3 className="mb-2">add new item</h3>
+      <div className="flex justify-center  text-xs font-semibold text-center text-black border-red-300 border-b pt-">
+        <h3 className="mb-2 mt-1">Add new item</h3>
       </div>
 
       {/* Collapse Button */}

@@ -58,7 +58,10 @@ export default function ProductForm({
   return (
     <>
       <div className="grid grid-cols-1 gap-2 text-black mb-2">
-        <div className="flex justify-evenly">
+        <p className="text-xs text-center">
+          Please fill out all fields below to add a new item.
+        </p>
+        <div className="flex justify-center gap-2">
           <input
             name="itemNumber"
             type="text"
@@ -271,7 +274,7 @@ export default function ProductForm({
             : 'bg-green text-white'
         }`}
       >
-        {loading ? 'Adding product...' : 'Add Product'}
+        {loading ? 'Adding item...' : 'Add item'}
       </button>
       {message && <p className="mt-4">{message}</p>}
     </>
