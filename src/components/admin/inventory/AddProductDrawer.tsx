@@ -45,10 +45,10 @@ export default function AddProductDrawer({
       className={`
     fixed bottom-0 left-0 right-0 z-30 w-full max-w-xl md:max-w-4xl mx-auto
     transition-all duration-700 ease-in-out
-    ${isExpanded ? 'h-[90dvh]' : 'h-[50px]'}
-    rounded-t-xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat
+    ${isExpanded ? 'h-[92.5dvh]' : 'h-[50px]'}
+    rounded-t-2xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat
   `}
-      style={{ backgroundImage: "url('/admin/summary.webp')" }}
+      style={{ backgroundImage: "url('/admin/adding.webp')" }}
       onClick={() => {
         if (!isExpanded) setIsExpanded(true);
       }}
@@ -62,15 +62,16 @@ export default function AddProductDrawer({
 
       {/* Drag handle */}
       {!isExpanded && (
-        <div className="w-10 h-1 bg-black bg-opacity-30 rounded-full mx-auto my-2"></div>
+        <div className="w-10 h-1 bg-black bg-opacity-30  mx-auto my-2"></div>
       )}
-      <div className="flex justify-center  text-xs font-semibold text-center text-black border-red-300 border-b pt-">
+      <div className="flex justify-between mx-4  text-xs font-bold text-center text-white border-white border-b ">
         <h3 className="mb-2 mt-1">Add new item</h3>
+        <h3 className="mb-2 mt-1">Tap here</h3>
       </div>
 
       {/* Collapse Button */}
       {isExpanded && (
-        <div className="flex justify-center mt-2 mb-1 text-black">
+        <div className="flex justify-center mt-2 mb-1 text-black ">
           <button
             onClick={(e) => {
               e.stopPropagation();
