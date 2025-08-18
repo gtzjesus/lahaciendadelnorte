@@ -16,7 +16,8 @@ export default function SaleSuccessModal({
 
   return (
     <motion.div
-      className="fixed inset-0 z-20 flex flex-col items-center justify-center bg-flag-red text-black space-y-6 p-6"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-flag-red text-black space-y-6 p-6 font-bold  backdrop-blur-sm"
+      style={{ backgroundImage: "url('/admin/success.webp')" }}
       initial={{ y: '-100%', opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: '-100%', opacity: 0 }}
@@ -24,16 +25,25 @@ export default function SaleSuccessModal({
     >
       {/* Animated Success Message */}
       <motion.h2
-        className="text-xl font-semibold text-green uppercase"
+        className="text-xl font-bold text-green 
+        "
         initial={{ y: '-100%', opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: 'easeInOut' }}
       >
-        Order Created Successfully!
+        Order created successfully!
       </motion.h2>
 
-      <p className="text-md uppercase font-light">Order #{orderNumber}</p>
-      <p className="text-md font-light uppercase">
+      <p
+        className="text-md 
+       font-light"
+      >
+        Order #{orderNumber}
+      </p>
+      <p
+        className="text-md font-light 
+      "
+      >
         Stay here to create a new order or
       </p>
 
@@ -43,7 +53,8 @@ export default function SaleSuccessModal({
           router.push('/admin/orders');
           if (onClose) onClose();
         }}
-        className="py-2 px-6 rounded-full bg-white text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm z-50"
+        className="py-2 px-6 rounded-full bg-flag-red text-white text-xs font-semibold 
+         transition duration-200 ease-in-out shadow-sm z-50"
         whileHover={{ scale: 1.05 }} // Slight hover effect
       >
         View Order

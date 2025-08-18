@@ -66,8 +66,8 @@ export default function AddProductDrawer({
       )}
       {!isExpanded && (
         <div className="flex justify-between mx-4 text-xs font-bold text-center text-white ">
-          <h3 className="mb-2 mt-1">tap here to</h3>
           <h3 className="mb-2 mt-1">add new item</h3>
+          <h3 className="mb-2 mt-1">tap here</h3>
         </div>
       )}
 

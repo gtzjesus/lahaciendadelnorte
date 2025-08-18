@@ -96,7 +96,7 @@ export default function SaleSummary({
         </div>
       )}
       {!isExpanded && (
-        <div className="flex justify-between  text-xs font-bold text-center text-black border-red-300 border-b px-4">
+        <div className="flex justify-between  text-xs font-bold text-center text-black  px-4">
           <h3 className="mb-2">summary</h3>
           <p className="text-green font-bolightld pr-3">${total.toFixed(2)}</p>
           <p> items {totalItems}</p>

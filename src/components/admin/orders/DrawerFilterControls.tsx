@@ -44,8 +44,8 @@ export default function DrawerFilterControls({
 
       {!isExpanded && (
         <div className="flex justify-between mx-4 text-xs font-bold text-center text-black ">
-          <h3 className="mb-2 mt-1">show filters</h3>
           <h3 className="mb-2 mt-1">{filter}</h3>
+          <h3 className="mb-2 mt-1">orders </h3>
         </div>
       )}
 
