@@ -42,9 +42,12 @@ export default function DrawerFilterControls({
         <div className="w-10 h-1 bg-black bg-opacity-30 rounded-full mx-auto my-2"></div>
       )}
 
-      <div className="flex justify-center uppercase text-xs font-semibold text-center text-black border-red-300 border-b pt-1">
-        <h3 className="mb-2">{filter} orders</h3>
-      </div>
+      {!isExpanded && (
+        <div className="flex justify-between mx-4 text-xs font-bold text-center text-black ">
+          <h3 className="mb-2 mt-1">Tap for filters</h3>
+          <h3 className="mb-2 mt-1">{filter} orders</h3>
+        </div>
+      )}
 
       {isExpanded && (
         <>
@@ -60,7 +63,7 @@ export default function DrawerFilterControls({
             </button>
           </div>
 
-          <div className="px-4 pt-1 space-y-4 overflow-y-auto h-full pb-12">
+          <div className="px-4 pt-1 space-y-4 overflow-y-auto h-full  backdrop-blur-sm">
             {/* FILTER SELECT */}
             <div className="relative">
               <select

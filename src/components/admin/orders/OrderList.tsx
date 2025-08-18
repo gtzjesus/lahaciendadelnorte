@@ -66,7 +66,7 @@ export default function OrderList({ orders }: OrderListProps) {
           placeholder="Search order by name or #"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className={`uppercase text-center p-4 border-b border-red-300  text-sm focus:outline-none focus:ring-0 transition-all  ${
+          className={` text-center p-4 border-b border-red-300  text-sm focus:outline-none focus:ring-0 transition-all  ${
             isScrolled
               ? 'fixed border-none left-0 w-full bg-white  z-20' // Scroll down state
               : 'bg-transparent font-bold'
