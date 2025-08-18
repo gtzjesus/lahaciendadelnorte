@@ -21,7 +21,7 @@ const CustomerNameModal = ({
 }: CustomerNameModalProps) => {
   return (
     <motion.div
-      className="fixed inset-0 z-[2000]  flex justify-center items-center bg-flag-red min-h-screen py-20"
+      className="fixed inset-0 z-50  flex justify-center items-center bg-flag-red min-h-screen py-20"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -34,7 +34,7 @@ const CustomerNameModal = ({
         exit={{ y: -100 }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="text-xs font-semibold text-black uppercase">
+        <h2 className="text-sm font-bold text-black ">
           Under what name for this order?
         </h2>
 
@@ -43,12 +43,12 @@ const CustomerNameModal = ({
           value={customerName}
           onChange={(e) => setCustomerNameAction(e.target.value)}
           placeholder="Enter customer name"
-          className="w-full p-2 text-black uppercase text-xs border-none focus:outline-none focus:ring-0"
+          className="w-full p-2 text-black  text-sm border-none focus:outline-none focus:ring-0"
           onFocus={onInputFocus} // <-- use them here
           onBlur={onInputBlur}
         />
 
-        <p className="text-xs uppercase text-gray-700">
+        <p className="text-sm  text-gray-700">
           Are you sure you want to complete this sale for{' '}
           <span className="font-bold text-green">${total.toFixed(2)}</span>?
         </p>
