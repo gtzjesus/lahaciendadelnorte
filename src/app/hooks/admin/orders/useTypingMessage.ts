@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 export function useTypingMessage(
   messages: string[],
   shouldType: boolean,
-  delay = 2000,
+  delay = 500,
   speed = 50
 ) {
   const [currentMessage, setCurrentMessage] = useState('');
