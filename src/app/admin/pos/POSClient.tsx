@@ -178,7 +178,7 @@ export default function POSClient() {
       {saleSuccess && (
         <SaleSuccessModal
           orderNumber={saleSuccess}
-          onClose={() => setSaleSuccess(null)}
+          onCloseAction={() => setSaleSuccess(null)}
         />
       )}
     </div>
