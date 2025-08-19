@@ -53,3 +53,11 @@ export interface AddProductDrawerProps {
   isExpanded: boolean;
   setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+export enum ProductFormStep {
+  DETAILS = 0,
+  CATEGORY = 1,
+  VARIANTS = 2,
+  IMAGES = 3,
+  REVIEW = 4,
+}

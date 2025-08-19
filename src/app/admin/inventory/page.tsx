@@ -212,6 +212,7 @@ export default function InventoryPage() {
         isExpanded={isExpanded}
         setIsExpanded={setIsExpanded}
       />
+
       <div className="mt-20">
         <ProductList products={filteredProducts} />
       </div>
