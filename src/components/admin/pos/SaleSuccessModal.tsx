@@ -2,10 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
+import Loader from '@/components/common/Loader'; // import your loader here
 
 interface SaleSuccessModalProps {
   orderNumber: string;
-  onCloseAction: () => void; // Make onCloseAction required if you want to trigger modal hide
+  onCloseAction: () => void;
 }
 
 export default function SaleSuccessModal({
@@ -13,15 +15,21 @@ export default function SaleSuccessModal({
   onCloseAction,
 }: SaleSuccessModalProps) {
   const router = useRouter();
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const handleViewOrders = () => {
-    // First close modal (if needed), then route
-    onCloseAction(); // Ensure modal hides properly
-    // Small timeout to let modal close animation play out
+    setIsNavigating(true); // start loader
+    onCloseAction(); // optional if you want to remove modal visually
+
+    // Wait a bit to let modal animate out before routing
     setTimeout(() => {
       router.push('/admin/orders');
-    }, 100); // 100ms is usually enough, adjust if needed
+    }, 200);
   };
+
+  if (isNavigating) {
+    return <Loader />; // full-screen loader while transitioning
+  }
 
   return (
     <motion.div
@@ -37,7 +45,6 @@ export default function SaleSuccessModal({
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
-        {/* Confetti sparkles with pure CSS */}
         <div className="absolute inset-0 z-0 pointer-events-none bg-[url('/admin/confetti.png')] bg-cover opacity-20" />
 
         <motion.h2
@@ -50,7 +57,7 @@ export default function SaleSuccessModal({
         </motion.h2>
 
         <motion.p
-          className="text-md font-medium  mt-2 z-10 relative"
+          className="text-md font-medium mt-2 z-10 relative"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
@@ -58,12 +65,11 @@ export default function SaleSuccessModal({
           Order #{orderNumber}
         </motion.p>
 
-        <p className="text-sm font-light text-green mt-1 z-10 relative">
+        <p className="text-sm font-light mt-1 z-10 relative">
           All done! What now?
         </p>
 
         <div className="flex flex-col gap-3 mt-6 z-10 relative">
-          {/* Create Another Order */}
           <motion.button
             onClick={onCloseAction}
             className="w-full py-2 rounded-full bg-green text-white text-xs font-bold uppercase transition duration-200 ease-in-out shadow-sm"
@@ -73,7 +79,6 @@ export default function SaleSuccessModal({
             Start new order
           </motion.button>
 
-          {/* View Orders */}
           <motion.button
             onClick={handleViewOrders}
             className="w-full py-2 rounded-full bg-flag-blue text-black text-xs font-bold uppercase transition duration-200 ease-in-out shadow-sm"
