@@ -64,7 +64,7 @@ export default function SaleSummary({
     ${isExpanded ? 'h-[80dvh]' : 'h-[50px]'}
     rounded-t-xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat
   `}
-      style={{ backgroundImage: "url('/admin/summary.webp')" }}
+      style={{ backgroundImage: "url('/admin/summary.gif')" }}
       onClick={() => {
         if (!isExpanded) setIsExpanded(true);
       }}

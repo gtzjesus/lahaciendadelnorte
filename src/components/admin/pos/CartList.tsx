@@ -6,32 +6,30 @@ import type { CartListProps } from '@/types/admin/pos';
 
 const messages = [
   ' Start searching to add items to this sale',
-  ' Add an item and let the order begin!',
-  ' Search for products to get rolling',
-  ' This cart is lonely... give it some items!',
+  ' Add an item by searching and let the order begin!',
+  ' Search for products to get rolling!',
+  ' This cart is lonely... search & add some items!',
 ];
 
 export default function CartList({
-  cart = [], // default empty array
+  cart = [],
   updateQuantityAction,
   removeItemAction,
 }: CartListProps) {
   const [currentMessage, setCurrentMessage] = useState('');
   const [charIndex, setCharIndex] = useState(0);
   const [message] = useState(() => {
-    // Pick random message only once on mount
     const randIndex = Math.floor(Math.random() * messages.length);
     return messages[randIndex];
   });
-  const [isTyping, setIsTyping] = useState(false); // Added state to control the delay before typing
+  const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
-    // Start typing after a 1-2 second delay
-    if (!cart || cart.length > 0) return; // Only show message if cart is empty
+    if (!cart || cart.length > 0) return;
 
     const typingDelay = setTimeout(() => {
-      setIsTyping(true); // Set isTyping to true after delay
-    }, 2000); // Delay in milliseconds (2 seconds)
+      setIsTyping(true);
+    }, 2000);
 
     return () => clearTimeout(typingDelay);
   }, [cart]);
@@ -39,11 +37,10 @@ export default function CartList({
   useEffect(() => {
     if (!isTyping || charIndex >= message.length) return;
 
-    // Typing effect
     const timeout = setTimeout(() => {
       setCurrentMessage((prev) => prev + message[charIndex]);
       setCharIndex((prev) => prev + 1);
-    }, 50); // Adjust typing speed here (in ms)
+    }, 50);
 
     return () => clearTimeout(timeout);
   }, [charIndex, message, isTyping]);
@@ -51,65 +48,63 @@ export default function CartList({
   if (!cart || cart.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center flex-1 min-h-screen px-4 text-center">
-        <p className=" font-semibold text-lg select-none">
+        <Image
+          src="/icons/order.gif"
+          alt="Order Illustration"
+          width={150}
+          height={150}
+          className="mx-auto mb-4 object-contain"
+        />
+        <p className="font-light text-sm select-none">
           {currentMessage}
           <span> </span>
           <span className="animate-pulse">|</span>
         </p>
-
-        {/* Add the image below the message */}
-        <Image
-          src="/icons/order.webp" // Path to your image in the public folder
-          alt="Order Illustration"
-          width={100} // Smaller width for better scaling
-          height={100} // Smaller height for better scaling
-          className="mx-auto mt-6 object-contain" // Ensures the image doesn't get chopped off
-        />
       </div>
     );
   }
 
   return (
-    <div className="py-20 px-2 grid grid-cols-2 gap-1 ">
+    <div className="py-20 grid grid-cols-2  ">
       {cart.map((item, i) => (
         <div
           key={item._id}
-          className="bg-flag-red pt-2 flex flex-col items-center text-center border border-red-300"
+          className="h-[32vh] flex flex-col justify-between p-2 text-center border border-black border-opacity-5"
         >
-          <div className="w-full flex justify-between items-center px-2 text-xs">
+          {/* Top: Price and ❌ */}
+          <div className="flex justify-between items-center text-xs px-1">
             <div className="text-black font-semibold">
               ${item.price.toFixed(2)}
             </div>
             <button
-              className="text-red-500 text-xs px-1"
+              className="text-red-500 text-xs"
               onClick={() => removeItemAction(i)}
             >
               ❌
             </button>
           </div>
-          {item.imageUrl && (
-            <Image
-              src={item.imageUrl}
-              alt={item.name}
-              width={56}
-              height={56}
-              className="object-cover w-20 h-20 p-1"
-            />
-          )}
-          <div className="w-full  justify-between items-center py-1 text-xs text-center uppercase flex flex-col font-semibold">
-            <p>{item.name}</p>
-            <p className="font-light">{item.category}</p>
-          </div>
 
-          <div className="uppercase text-sm flex items-center justify-between gap-1">
-            <div className="flex items-center">
-              <div className="relative my-2">
+          {/* Middle: Image and Info */}
+          <div className="flex flex-col items-center justify-center flex-grow">
+            {item.imageUrl && (
+              <Image
+                src={item.imageUrl}
+                alt={item.name}
+                width={56}
+                height={56}
+                className="object-cover w-20 h-20 p-1"
+              />
+            )}
+            <div className="text-xs uppercase font-semibold mt-2">
+              <p>{item.name}</p>
+              <p className="font-light">{item.category}</p>
+              <div className="relative">
                 <select
                   value={item.cartQty}
                   onChange={(e) =>
                     updateQuantityAction(i, Number(e.target.value))
                   }
-                  className="appearance-none border border-none bg-white px-2 py-1 text-black text-xs uppercase w-[8vh] focus:outline-none"
+                  className="appearance-none border border-black border-opacity-10 my-2 bg-white p-2 text-black text-xs uppercase w-[8vh] focus:outline-none"
                 >
                   {Array.from({ length: item.stock }, (_, n) => (
                     <option key={n + 1} value={n + 1}>
@@ -117,16 +112,21 @@ export default function CartList({
                     </option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-black text-xs">
+                {/* <div className="pointer-events-none absolute right-10 top-1/2 -translate-y-1/2 text-black text-xs">
                   ▼
-                </div>
+                </div> */}
+              </div>
+              <div className="text-green font-bold">
+                ${(item.price * item.cartQty).toFixed(2)}
               </div>
             </div>
-            <div className="text-green font-bold">
-              ${(item.price * item.cartQty).toFixed(2)}
-            </div>
           </div>
-          <div className="text-xs font-light pb-1">{item.stock} available</div>
+
+          {/* Bottom: Quantity, Total, Stock */}
+          <div className="text-sm flex flex-col items-center gap-1">
+            <div className="flex items-center gap-2"></div>
+            <div className="text-xs font-light">{item.stock} available</div>
+          </div>
         </div>
       ))}
     </div>
