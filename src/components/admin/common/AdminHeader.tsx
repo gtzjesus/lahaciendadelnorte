@@ -29,16 +29,16 @@ export default function AdminHeader() {
     <motion.header
       initial={false}
       animate={{
-        height: menuOpen ? '100vh' : '6vh',
+        height: menuOpen ? '100vh' : '7vh',
       }}
       transition={{ duration: 0.5, ease: 'easeInOut' }}
       className={clsx(
-        'sticky top-0 z-50 bg-flag-red text-black px-4 py-2 w-full overflow-hidden flex flex-col items-center shadow-md',
+        'sticky top-0 z-50 bg-flag-red text-black p-4 w-full overflow-hidden flex flex-col items-center',
         menuOpen ? 'justify-start' : 'justify-between'
       )}
     >
-      {/* Top Row: Logo + Hamburger */}
-      <div className="w-full flex justify-between items-center">
+      {/* Top Row: Mobile Only */}
+      <div className="w-full flex justify-between items-center md:hidden">
         <Link href="/">
           <Image
             src="/icons/logo-black.webp"
@@ -46,6 +46,10 @@ export default function AdminHeader() {
             width={30}
             height={30}
             priority
+            className={clsx('transition-opacity duration-300', {
+              'opacity-0': menuOpen,
+              'opacity-100': !menuOpen,
+            })}
           />
         </Link>
 
@@ -85,7 +89,27 @@ export default function AdminHeader() {
         </button>
       </div>
 
-      {/* Animate the nav items in */}
+      {/* Top Row: Desktop Only */}
+      <div className="hidden md:flex w-full justify-center items-center">
+        <nav className="flex space-x-6">
+          {navItems.map(({ name, href }) => (
+            <Link
+              key={href}
+              href={href}
+              className={clsx(
+                'text-lg transition-colors',
+                pathname === href
+                  ? 'text-flag-blue'
+                  : 'text-black hover:text-flag-blue'
+              )}
+            >
+              {name}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      {/* Mobile Nav Items - Animated */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -94,7 +118,7 @@ export default function AdminHeader() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ delay: 0.2, duration: 0.4 }}
-            className="flex flex-col items-center justify-center flex-1 space-y-4 w-full"
+            className="flex flex-col items-center justify-center flex-1 space-y-4 w-full md:hidden"
           >
             <Image
               src="/icons/logo-black.webp"
@@ -114,7 +138,7 @@ export default function AdminHeader() {
                   href={href}
                   onClick={() => setMenuOpen(false)}
                   className={clsx(
-                    'text-2xl transition-colors',
+                    'text-xl transition-colors',
                     pathname === href
                       ? 'text-flag-blue'
                       : 'text-black hover:text-flag-blue'
