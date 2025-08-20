@@ -132,7 +132,7 @@ export default function AddProductDrawer({
         ${isExpanded ? 'h-[92.5dvh]' : 'h-[50px]'}
         rounded-t-2xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat 
       `}
-      style={{ backgroundImage: "url('/admin/adding.webp')" }}
+      style={{ backgroundImage: "url('/admin/adding.gif')" }}
       onClick={() => {
         if (!isExpanded) setIsExpanded(true);
       }}
@@ -149,7 +149,7 @@ export default function AddProductDrawer({
         <div className="w-10 h-1 bg-black bg-opacity-30 mx-auto my-2"></div>
       )}
       {!isExpanded && (
-        <div className="flex justify-between mx-4 text-xs font-bold text-center text-white ">
+        <div className="flex justify-between mx-4 text-xs font-bold text-center text-black ">
           <h3 className="mb-2 mt-1">add new item</h3>
           <h3 className="mb-2 mt-1">tap here</h3>
         </div>
@@ -165,7 +165,7 @@ export default function AddProductDrawer({
               setShowForm(false);
               setCurrentStep(1);
             }}
-            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-semibold uppercase mb-5"
+            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-bold uppercase mb-5 mt-2"
           >
             Hide Form ↓
           </button>

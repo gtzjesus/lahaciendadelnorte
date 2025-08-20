@@ -18,12 +18,12 @@ export default function ProductList({ products }: ProductListProps) {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-1">
+    <div className="grid grid-cols-2 ">
       {products.map((p) => (
         <Link
           key={p._id}
           href={`/admin/inventory/${p.itemNumber}`}
-          className="flex flex-col border border-red-300 bg-flag-red text-black transition px-4 py-4"
+          className="flex flex-col border border-black border-opacity-5 bg-flag-red text-black transition px-4 py-4"
         >
           <div className="flex flex-col justify-center items-center uppercase text-xs mb-1">
             <p className="text-sm">#{p.itemNumber}</p>
@@ -48,8 +48,8 @@ export default function ProductList({ products }: ProductListProps) {
           )}
 
           {(p.variants ?? []).length > 0 && (
-            <p className="text-xs uppercase text-center mb-1">
-              stock:{' '}
+            <p className="text-xs  text-center mb-1">
+              Stock:{' '}
               <span className="font-semibold">
                 {(p.variants ?? []).reduce(
                   (sum, v) => sum + Number(v.stock || 0),
@@ -60,7 +60,7 @@ export default function ProductList({ products }: ProductListProps) {
           )}
 
           {(p.variants ?? []).length > 0 && (
-            <div className="uppercase mt-2 border-t border-red-300 pt-2">
+            <div className="uppercase mt-2 border-t border-black border-opacity-5 pt-2">
               <ul className="text-xs space-y-1">
                 {p.variants.map((v, i) => (
                   <li key={i} className="flex justify-between">
