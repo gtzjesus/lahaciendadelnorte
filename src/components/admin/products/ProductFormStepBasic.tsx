@@ -23,7 +23,7 @@ export default function ProductFormStepBasic({
   onNext,
 }: ProductFormStepBasicProps) {
   return (
-    <div className="space-y-4 text-white">
+    <div className="space-y-4 text-black">
       <p className="text-xs text-center font-bold">Step 1: Basic Information</p>
 
       <div className="flex flex-col gap-2">
