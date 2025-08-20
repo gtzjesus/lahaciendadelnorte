@@ -69,7 +69,7 @@ export default function CartList({
       {cart.map((item, i) => (
         <div
           key={item._id}
-          className="h-[32vh] flex flex-col justify-between p-2 text-center border border-black border-opacity-5"
+          className=" flex flex-col justify-between p-2 text-center border border-black border-opacity-5"
         >
           {/* Top: Price and ❌ */}
           <div className="flex justify-between items-center text-xs px-1">
@@ -95,8 +95,8 @@ export default function CartList({
                 className="object-cover w-20 h-20 p-1"
               />
             )}
-            <div className="text-xs uppercase font-semibold mt-2">
-              <p>{item.name}</p>
+            <div className="text-xs  font-semibold mt-2">
+              <p className="uppercase">{item.name}</p>
               <p className="font-light">{item.category}</p>
               <div className="relative">
                 <select

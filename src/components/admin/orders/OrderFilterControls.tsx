@@ -67,10 +67,10 @@ export default function OrderFilterControls({
           <input
             type="text"
             id="search"
-            placeholder="Search order by name/number"
+            placeholder="Search order by name or #"
             value={searchTerm}
             onChange={(e) => setSearchTermAction(e.target.value)}
-            className="uppercase text-sm border-b border-red-300 p-4 w-full bg-white focus:outline-none focus:ring-0 "
+            className="uppercase text-sm border-b border-black border-opacity-5 p-4 w-full bg-white focus:outline-none focus:ring-0 "
           />
         </div>
       </div>

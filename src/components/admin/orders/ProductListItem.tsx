@@ -25,7 +25,7 @@ export default function ProductListItem({
       : 0;
 
   return (
-    <div className="flex flex-col justify-center items-center text-center border-b border-red-300 py-2">
+    <div className="flex flex-col justify-center items-center text-center border-b border-black border-opacity-5 py-2">
       {image && slug && (
         <Link href={`/product/${slug}`} className="relative h-12 w-12 shrink-0">
           <Image
