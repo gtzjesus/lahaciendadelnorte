@@ -1,5 +1,3 @@
-// /app/api/admin/delete-product/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import { backendClient } from '@/sanity/lib/backendClient';
 /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -8,46 +6,39 @@ export const runtime = 'nodejs';
 export async function DELETE(req: NextRequest) {
   try {
     const { productId } = await req.json();
-
     if (!productId) {
-      return NextResponse.json(
-        { error: 'Missing productId in request body' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing productId' }, { status: 400 });
     }
 
-    // Step 1: Find all orders that reference this product
+    // 1. Fetch referencing orders
     const referencingOrders = await backendClient.fetch(
       `*[_type == "order" && references($productId)]{_id, products}`,
       { productId }
     );
+    console.log('Orders referencing product:', referencingOrders);
 
-    // Step 2: Clean each order's products array
+    // 2. Clean each order
     for (const order of referencingOrders) {
-      const updatedProducts = order.products.map((item: any) => {
-        if (item.product?._ref === productId) {
-          return {
-            ...item,
-            product: null, // 🧼 nullify reference
-          };
-        }
-        return item;
-      });
+      const updatedProducts = order.products.map((item: any) =>
+        item.product?._ref === productId ? { ...item, product: null } : item
+      );
 
       await backendClient
         .patch(order._id)
         .set({ products: updatedProducts })
         .commit();
+      console.log(`Cleaned reference in order ${order._id}`);
     }
 
-    // Step 3: Now safely delete the product
+    // 3. Attempt deletion
     await backendClient.delete(productId);
+    console.log(`Deleted product ${productId}`);
 
-    return NextResponse.json({ message: 'Item deleted' });
+    return NextResponse.json({ message: 'Product deleted successfully' });
   } catch (error: any) {
-    console.error('Delete product error:', error);
+    console.error('Error during delete operation:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error.message || 'Could not delete product' },
       { status: 500 }
     );
   }

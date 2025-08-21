@@ -123,21 +123,26 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
   };
 
   const handleDelete = async () => {
-    setIsDeleting(true); // 🟢 start deletion indicator
+    setIsDeleting(true);
 
-    const res = await fetch('/api/admin/delete-product', {
-      method: 'DELETE',
-      body: JSON.stringify({ productId: product._id }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    try {
+      const res = await fetch('/api/admin/delete-product', {
+        method: 'DELETE',
+        body: JSON.stringify({ productId: product._id }),
+        headers: { 'Content-Type': 'application/json' },
+      });
 
-    if (res.ok) {
-      router.push('/admin/inventory'); // ✅ redirect on success
-    } else {
-      console.error('Failed to delete item');
-      setIsDeleting(false); // ❌ stop indicator on failure
+      const data = await res.json();
+
+      if (res.ok) {
+        router.push('/admin/inventory');
+      } else {
+        throw new Error(data.error || 'Unknown error deleting product');
+      }
+    } catch (err: any) {
+      console.error('Delete failed:', err);
+      alert(`Delete failed: ${err.message}`);
+      setIsDeleting(false);
     }
   };
 
@@ -319,7 +324,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         className={clsx(
           'w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm ',
           isSaving || !allSizesValid
-            ? 'bg-green cursor-not-allowed'
+            ? 'bg-green text-white cursor-not-allowed'
             : 'bg-green text-white '
         )}
       >
