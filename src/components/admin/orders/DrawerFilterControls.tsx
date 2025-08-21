@@ -44,8 +44,8 @@ export default function DrawerFilterControls({
 
       {!isExpanded && (
         <div className="flex justify-between mx-4 text-xs font-bold text-center text-black ">
-          <h3 className="mb-2 mt-1">{filter}</h3>
-          <h3 className="mb-2 mt-1">orders </h3>
+          <h3>filters </h3>
+          <h3>{filter} orders</h3>
         </div>
       )}
 
@@ -66,19 +66,19 @@ export default function DrawerFilterControls({
           <div className="px-4 pt-1 space-y-4 overflow-y-auto h-full  backdrop-blur-sm">
             {/* FILTER SELECT */}
             <div className="relative">
+              <p className="text-xs text-center font-bold mb-4">
+                Filter by order category below
+              </p>
               <select
                 id="filter"
                 value={filter}
                 onChange={(e) => setFilterAction(e.target.value as OrderFilter)}
-                className="appearance-none uppercase text-center p-2  border-red-300 text-xs focus:outline-none focus:ring-0 transition-all w-full"
+                className="appearance-none uppercase text-center w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-flag-red rounded shadow-xl"
               >
                 <option value="pending">Pending orders</option>
                 <option value="completed">Completed orders</option>
                 <option value="all">All orders</option>
               </select>
-              <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-flag-blue">
-                ▼
-              </div>
             </div>
           </div>
         </>

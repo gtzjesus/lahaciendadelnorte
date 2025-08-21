@@ -130,7 +130,7 @@ export default function AddProductDrawer({
       className={`
         fixed bottom-0 left-0 right-0 z-30 w-full max-w-xl md:max-w-4xl mx-auto
         transition-all duration-700 ease-in-out 
-        ${isExpanded ? 'h-[90dvh]' : 'h-[50px]'}
+            ${isExpanded ? 'h-[80dvh]' : 'h-[50px]'}
         rounded-t-2xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat z-40
       `}
       style={{ backgroundImage: "url('/admin/adding.webp')" }}
@@ -166,7 +166,7 @@ export default function AddProductDrawer({
               setShowForm(false);
               setCurrentStep(1);
             }}
-            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-bold uppercase mb-5"
+            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-bold uppercase mb-5 mt-1"
           >
             Hide Form ↓
           </button>

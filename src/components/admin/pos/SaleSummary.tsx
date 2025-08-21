@@ -122,7 +122,9 @@ export default function SaleSummary({
 
         {/* 🏦 Payment Method */}
         <div className="text-sm text-black  mt-4">
-          <p className="text-xs mb-1 ">Please select the payment method.</p>
+          <p className="text-xs mb-1 text-center ">
+            Please select a payment method
+          </p>
           <div className="relative w-full">
             <select
               value={paymentMethod}
@@ -132,7 +134,7 @@ export default function SaleSummary({
                 if (method === 'cash') setCardAmountAction(0);
                 if (method === 'card') setCashReceivedAction(0);
               }}
-              className="appearance-none w-full p-1 bg-white text-black text-md uppercase focus:outline-none focus:ring-0"
+              className="appearance-none uppercase w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-flag-red rounded shadow-xl"
               onFocus={() => {
                 setIsExpanded(true);
                 onInputFocus?.();
@@ -166,7 +168,7 @@ export default function SaleSummary({
                   onInputFocus?.();
                 }}
                 onBlur={onInputBlur}
-                className="w-full p-2 text-black focus:outline-none focus:ring-0"
+                className="appearance-none uppercase w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-flag-red rounded shadow-xl"
               />
               {cashReceived < total && cashReceived !== 0 && (
                 <p className="text-xs text-red-500 pt-1 font-bold">
@@ -201,7 +203,7 @@ export default function SaleSummary({
                     onInputFocus?.();
                   }}
                   onBlur={onInputBlur}
-                  className="w-full p-2 text-black focus:outline-none focus:ring-0"
+                  className="appearance-none uppercase w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-flag-red rounded shadow-xl"
                 />
               </div>
               <div>
@@ -220,7 +222,7 @@ export default function SaleSummary({
                     onInputFocus?.();
                   }}
                   onBlur={onInputBlur}
-                  className="w-full p-2 text-black focus:outline-none focus:ring-0"
+                  className="appearance-none uppercase w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-flag-red rounded shadow-xl"
                 />
               </div>
               {Math.abs(cashReceived + cardAmount - total) > 0.01 && (

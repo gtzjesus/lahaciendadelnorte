@@ -28,7 +28,7 @@ const CustomerNameModal = ({
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="bg-flag-red p-6  w-full h-[50%] max-w-xl text-center space-y-3  overflow-auto"
+        className="bg-flag-red p-6  w-full h-[70%] max-w-xl text-center space-y-3  overflow-auto"
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         exit={{ y: -100 }}
