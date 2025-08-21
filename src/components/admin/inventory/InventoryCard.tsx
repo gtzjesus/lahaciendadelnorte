@@ -38,6 +38,8 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
   const [extraFiles, setExtraFiles] = useState<File[]>([]);
   const [extraPreviews, setExtraPreviews] = useState<string[]>([]);
 
+  const [isDeleting, setIsDeleting] = useState(false);
+
   useEffect(() => {
     if (mainImageFile) {
       setMainPreview(URL.createObjectURL(mainImageFile));
@@ -103,7 +105,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
     if (mainImageFile) formData.append('mainImage', mainImageFile);
     extraFiles.forEach((f) => formData.append('extraImages', f));
 
-    const res = await fetch('/api/update-product', {
+    const res = await fetch('/api/admin/update-product', {
       method: 'PATCH',
       body: formData,
     });
@@ -115,6 +117,35 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       alert('Failed to save');
     }
     setIsSaving(false);
+  };
+
+  const handleDelete = async () => {
+    try {
+      setIsDeleting(true);
+      const res = await fetch('/api/admin/delete-product', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId: product._id }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(`Failed to delete: ${data.error}`);
+        return;
+      }
+
+      alert('Product deleted successfully');
+      // Optional: redirect user
+      window.location.href = '/admin/inventory'; // adjust to your actual inventory listing page
+    } catch (err) {
+      alert('An error occurred while deleting the product.');
+      console.error(err);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -174,7 +205,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                     arr[i].label = e.target.value;
                     setSizes(arr);
                   }}
-                  className="appearance-noneborder-black border-opacity-5 border uppercase p-2 pr-6 text-xs w-full bg-white rounded focus:outline-flag-blue"
+                  className="appearance-none border-black border-opacity-5 border uppercase p-2 pr-6 text-xs w-full bg-white rounded focus:outline-flag-blue"
                 >
                   <option value="">Select size</option>
                   {['Small', 'Medium', 'Large', 'Extra Large'].map((size) => (
@@ -217,7 +248,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                     setSizes(arr);
                   }}
                   placeholder="Stock"
-                  className="w-20 border rounded p-2 text-xs border-black border-opacity-5 focus:outline-flag-blue"
+                  className="w-20 border  p-2 text-xs border-black border-opacity-5 focus:outline-flag-blue"
                 />
               </div>
 
@@ -300,6 +331,15 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         )}
       >
         {isSaving ? 'Saving item' : 'Save Changes'}
+      </button>
+
+      <button
+        type="button"
+        onClick={handleDelete}
+        disabled={isDeleting}
+        className="w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm bg-red-500 text-white"
+      >
+        {isDeleting ? 'Deleting...' : 'Delete item'}
       </button>
 
       {/* Save Feedback */}
