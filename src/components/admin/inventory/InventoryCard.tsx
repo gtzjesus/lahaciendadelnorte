@@ -39,6 +39,8 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
   const [extraFiles, setExtraFiles] = useState<File[]>([]);
   const [extraPreviews, setExtraPreviews] = useState<string[]>([]);
 
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -121,6 +123,8 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
   };
 
   const handleDelete = async () => {
+    setIsDeleting(true); // 🟢 start deletion indicator
+
     const res = await fetch('/api/admin/delete-product', {
       method: 'DELETE',
       body: JSON.stringify({ productId: product._id }),
@@ -130,9 +134,10 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
     });
 
     if (res.ok) {
-      router.push('/admin/inventory'); // ✅ navigate away after delete
+      router.push('/admin/inventory'); // ✅ redirect on success
     } else {
       console.error('Failed to delete item');
+      setIsDeleting(false); // ❌ stop indicator on failure
     }
   };
 
@@ -314,7 +319,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         className={clsx(
           'w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm ',
           isSaving || !allSizesValid
-            ? 'bg-gray-400 cursor-not-allowed'
+            ? 'bg-green cursor-not-allowed'
             : 'bg-green text-white '
         )}
       >
@@ -323,9 +328,15 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
 
       <button
         onClick={handleDelete}
-        className="w-full py-2 rounded-full text-xs font-semibold uppercase bg-red-500 text-white transition duration-200 ease-in-out shadow-sm"
+        disabled={isDeleting}
+        className={clsx(
+          'w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm',
+          isDeleting
+            ? 'bg-red-200 text-white cursor-not-allowed'
+            : 'bg-red-500 text-white'
+        )}
       >
-        Delete item
+        {isDeleting ? 'Deleting item...' : 'Delete item'}
       </button>
 
       {/* Save Feedback */}

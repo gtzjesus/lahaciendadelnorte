@@ -11,8 +11,8 @@ type ProductListProps = {
 export default function ProductList({ products }: ProductListProps) {
   if (!products.length) {
     return (
-      <p className="text-center text-sm uppercase text-black font-medium mt-6">
-        No products found. Try again
+      <p className="text-center text-xs uppercase text-black font-medium mt-6">
+        no products found....
       </p>
     );
   }
