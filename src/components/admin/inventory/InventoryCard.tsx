@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useDropzone } from 'react-dropzone';
 import clsx from 'clsx';
 /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -38,7 +39,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
   const [extraFiles, setExtraFiles] = useState<File[]>([]);
   const [extraPreviews, setExtraPreviews] = useState<string[]>([]);
 
-  const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (mainImageFile) {
@@ -120,31 +121,18 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
   };
 
   const handleDelete = async () => {
-    try {
-      setIsDeleting(true);
-      const res = await fetch('/api/admin/delete-product', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ productId: product._id }),
-      });
+    const res = await fetch('/api/admin/delete-product', {
+      method: 'DELETE',
+      body: JSON.stringify({ productId: product._id }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(`Failed to delete: ${data.error}`);
-        return;
-      }
-
-      alert('Product deleted successfully');
-      // Optional: redirect user
-      window.location.href = '/admin/inventory'; // adjust to your actual inventory listing page
-    } catch (err) {
-      alert('An error occurred while deleting the product.');
-      console.error(err);
-    } finally {
-      setIsDeleting(false);
+    if (res.ok) {
+      router.push('/admin/inventory'); // ✅ navigate away after delete
+    } else {
+      console.error('Failed to delete item');
     }
   };
 
@@ -334,12 +322,10 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       </button>
 
       <button
-        type="button"
         onClick={handleDelete}
-        disabled={isDeleting}
-        className="w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm bg-red-500 text-white"
+        className="w-full py-2 rounded-full text-xs font-semibold uppercase bg-red-500 text-white transition duration-200 ease-in-out shadow-sm"
       >
-        {isDeleting ? 'Deleting...' : 'Delete item'}
+        Delete item
       </button>
 
       {/* Save Feedback */}

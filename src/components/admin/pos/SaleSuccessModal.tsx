@@ -45,7 +45,7 @@ export default function SaleSuccessModal({
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
-        <div className="absolute inset-0 z-0 pointer-events-none bg-[url('/admin/confetti.png')] bg-cover opacity-20" />
+        <div className="absolute inset-0 z-0 pointer-events-none bg-cover opacity-20" />
 
         <motion.h2
           className="text-2xl font-extrabold text-green z-10 relative"
