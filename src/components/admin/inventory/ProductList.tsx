@@ -25,42 +25,44 @@ export default function ProductList({ products }: ProductListProps) {
           href={`/admin/inventory/${p.itemNumber}`}
           className="flex flex-col border border-black border-opacity-5 bg-flag-red text-black transition px-4 py-4"
         >
-          <div className="flex flex-col justify-center items-center uppercase text-xs mb-1">
-            <p className="text-sm">#{p.itemNumber}</p>
-            <p className="text-sm font-semibold">{p.name}</p>
-          </div>
+          <p className="text-xs mx-auto">{p.itemNumber}</p>
 
           {p.imageUrl && (
-            <div className="w-full h-40 relative mb-2">
+            <div className="w-40 h-40 relative mb-2 mx-auto">
               <Image
                 src={p.imageUrl}
                 alt={p.name}
                 fill
-                className="object-cover"
+                className="object-cover w-20 h-20 p-1"
               />
             </div>
           )}
+          <div className="flex flex-col justify-center items-center  text-xs mb-1">
+            <p className="uppercase text-xs font-bold">{p.name}</p>
 
-          {p.category?.title && (
-            <p className="text-xs text-center uppercase">
-              <span className="font-semibold">{p.category.title}</span>
-            </p>
-          )}
+            {p.category?.title && (
+              <p className="text-xs text-center ">
+                <span className="font-light">{p.category.title}</span>
+              </p>
+            )}
+          </div>
 
-          {(p.variants ?? []).length > 0 && (
+          {/* {(p.variants ?? []).length > 0 && (
             <p className="text-xs  text-center mb-1">
               Stock:{' '}
-              <span className="font-semibold">
+              <span className="font-bold">
                 {(p.variants ?? []).reduce(
                   (sum, v) => sum + Number(v.stock || 0),
                   0
                 )}
               </span>
             </p>
-          )}
+          )} */}
 
           {(p.variants ?? []).length > 0 && (
-            <div className="uppercase mt-2 border-t border-black border-opacity-5 pt-2">
+            <div className=" mt-2 border-t border-black border-opacity-5 pt-2">
+              <p className="text-xs text-center ">Stock</p>
+
               <ul className="text-xs space-y-1">
                 {p.variants.map((v, i) => (
                   <li key={i} className="flex justify-between">
