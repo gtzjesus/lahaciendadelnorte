@@ -130,8 +130,8 @@ export default function AddProductDrawer({
       className={`
         fixed bottom-0 left-0 right-0 z-30 w-full max-w-xl md:max-w-4xl mx-auto
         transition-all duration-700 ease-in-out 
-        ${isExpanded ? 'h-[92.5dvh]' : 'h-[50px]'}
-        rounded-t-2xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat z-50
+        ${isExpanded ? 'h-[90dvh]' : 'h-[50px]'}
+        rounded-t-2xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat z-40
       `}
       style={{ backgroundImage: "url('/admin/adding.webp')" }}
       onClick={() => {
@@ -140,7 +140,7 @@ export default function AddProductDrawer({
     >
       {/* Loading overlay */}
       {loading && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 z-40 bg-flag-red bg-opacity-80 flex justify-center items-center">
           <LoaderOrder />
         </div>
       )}

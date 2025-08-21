@@ -125,7 +125,10 @@ export async function POST(request: Request) {
       _type: 'product',
       itemNumber,
       name,
-      slug,
+      slug: {
+        _type: 'slug',
+        current: slug,
+      },
       category: {
         _type: 'reference',
         _ref: category,

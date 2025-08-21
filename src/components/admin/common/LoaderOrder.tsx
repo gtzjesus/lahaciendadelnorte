@@ -5,7 +5,7 @@ import { useTypingMessage } from '@/app/hooks/admin/orders/useTypingMessage';
 const loadingMessages = [
   'loading! hang tight!',
   'getting it done for you...',
-  'warming up servers...',
+  'warming up the server for you...',
   'loading! ready in a second...',
   'just a moment...',
 ];
