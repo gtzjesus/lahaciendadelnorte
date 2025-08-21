@@ -118,7 +118,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
   };
 
   return (
-    <div className="max-w-lg mx-auto bg-flag-red border-red-300 border shadow-lg p-6 space-y-6">
+    <div className="max-w-lg mx-auto bg-flag-red border border-black border-opacity-5  shadow-lg p-6 space-y-6">
       {/* Main Image Upload */}
       <div
         {...gm()}
@@ -141,8 +141,8 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
 
       {/* Name & Item # */}
       <div className="grid grid-cols-1 gap-4">
-        <div className="flex">
-          <label className="block text-sm font-light uppercase">Item #</label>
+        <div className="flex mx-auto">
+          <label className="block text-sm font-light uppercase "></label>
           <p className="text-sm">{product.itemNumber || '—'}</p>
         </div>
         <div>
@@ -152,23 +152,21 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="uppercase w-full border px-2 py-2 border-red-300 text-xs focus:outline-flag-blue"
+            className="uppercase w-full border px-2 py-2 border-black border-opacity-5 text-xs focus:outline-flag-blue"
           />
         </div>
       </div>
 
       {/* Variants */}
       <div>
-        <p className="block text-xs font-light uppercase mb-2">
-          Sizes | pricing | stock
-        </p>
         <ul className="uppercase w-full px-2 py-2 text-xs focus:outline-flag-red-2">
           {sizes.map((s, i) => (
             <li
               key={i}
-              className="flex border-red-300 items-start sm:items-center gap-2 p-2 transition"
+              className="flex border-black border-opacity-5 items-start sm:items-center gap-2 p-2 transition"
             >
               <div className="relative w-full max-w-[120px]">
+                <p className="block text-xs font-light uppercase mb-2">Size</p>
                 <select
                   value={s.label}
                   onChange={(e) => {
@@ -176,7 +174,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                     arr[i].label = e.target.value;
                     setSizes(arr);
                   }}
-                  className="appearance-none border-red-300 border uppercase p-2 pr-6 text-xs w-full bg-white rounded focus:outline-flag-blue"
+                  className="appearance-noneborder-black border-opacity-5 border uppercase p-2 pr-6 text-xs w-full bg-white rounded focus:outline-flag-blue"
                 >
                   <option value="">Select size</option>
                   {['Small', 'Medium', 'Large', 'Extra Large'].map((size) => (
@@ -185,36 +183,44 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                     </option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-black text-[10px]">
+                {/* <div className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-black text-[10px]">
                   ▼
-                </div>
+                </div> */}
+              </div>
+              <div className="flex flex-col">
+                <p className="block text-xs font-light uppercase mb-2">Price</p>
+
+                <input
+                  type="number"
+                  step="0.01"
+                  value={s.price === '' ? '' : s.price}
+                  onChange={(e) => {
+                    const arr = [...sizes];
+                    const val = e.target.value;
+                    arr[i].price = val === '' ? '' : parseFloat(val);
+                    setSizes(arr);
+                  }}
+                  placeholder="Price"
+                  className="w-24 border border-black border-opacity-5 p-2 text-xs focus:outline-flag-blue"
+                />
+              </div>
+              <div className="flex flex-col">
+                <p className="block text-xs font-light uppercase mb-2">Stock</p>
+
+                <input
+                  type="number"
+                  value={s.stock === '' ? '' : s.stock}
+                  onChange={(e) => {
+                    const arr = [...sizes];
+                    const val = e.target.value;
+                    arr[i].stock = val === '' ? '' : parseInt(val);
+                    setSizes(arr);
+                  }}
+                  placeholder="Stock"
+                  className="w-20 border rounded p-2 text-xs border-black border-opacity-5 focus:outline-flag-blue"
+                />
               </div>
 
-              <input
-                type="number"
-                step="0.01"
-                value={s.price === '' ? '' : s.price}
-                onChange={(e) => {
-                  const arr = [...sizes];
-                  const val = e.target.value;
-                  arr[i].price = val === '' ? '' : parseFloat(val);
-                  setSizes(arr);
-                }}
-                placeholder="Price"
-                className="w-24 border border-red-300 p-2 text-xs focus:outline-flag-blue"
-              />
-              <input
-                type="number"
-                value={s.stock === '' ? '' : s.stock}
-                onChange={(e) => {
-                  const arr = [...sizes];
-                  const val = e.target.value;
-                  arr[i].stock = val === '' ? '' : parseInt(val);
-                  setSizes(arr);
-                }}
-                placeholder="Stock"
-                className="w-20 border rounded p-2 text-xs border-red-300 focus:outline-flag-blue"
-              />
               {sizes.length > 1 && (
                 <button
                   onClick={() => setSizes(sizes.filter((_, idx) => idx !== i))}
@@ -230,7 +236,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
           onClick={() =>
             setSizes([...sizes, { label: '', price: '', stock: '' }])
           }
-          className="block text-xs font-light uppercase"
+          className="w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm bg-flag-blue"
         >
           + Add Size
         </button>
@@ -243,7 +249,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
-            className="appearance-none uppercase w-full border border-red-300 px-2 py-2 pr-8 text-xs bg-white rounded focus:outline-flag-blue"
+            className="appearance-none uppercase w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-white rounded focus:outline-flag-blue"
           >
             <option value="">Select category</option>
             {allCategories.map((cat) => (
@@ -261,12 +267,10 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       {/* Extra Images Upload */}
       <div
         {...gx()}
-        className="border-dashed border-2 p-4 rounded-lg hover:border-red-300 transition cursor-pointer"
+        className="border border-black border-opacity-5 pt-2 transition cursor-pointer"
       >
         <input {...gix()} />
-        <p className="text-center uppercase text-sm">
-          click to add more images (up to 4)
-        </p>
+        <p className="text-center  text-xs">Tap to add more images (up to 5)</p>
         <div className="mt-2 flex flex-wrap gap-2">
           {extraPreviews.map((url, idx) => (
             <div

@@ -23,7 +23,7 @@ export default function ProductList({ products }: ProductListProps) {
         <Link
           key={p._id}
           href={`/admin/inventory/${p.itemNumber}`}
-          className="flex flex-col border border-black border-opacity-5 bg-flag-red text-black transition px-4 py-4"
+          className="flex flex-col border border-black border-opacity-5  text-black transition px-4 py-4"
         >
           <p className="text-xs mx-auto">{p.itemNumber}</p>
 
