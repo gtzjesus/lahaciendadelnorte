@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import type { AdminProductForm } from '@/types/admin/inventory';
 
 interface ProductFormStepSubmitProps {
@@ -9,6 +10,7 @@ interface ProductFormStepSubmitProps {
   message: string;
   isFormValidAction: () => boolean;
   onBack: () => void;
+  mainImageFile: File | null;
 }
 
 export default function ProductFormStepSubmit({
@@ -18,33 +20,69 @@ export default function ProductFormStepSubmit({
   message,
   isFormValidAction,
   onBack,
+  mainImageFile,
 }: ProductFormStepSubmitProps) {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (mainImageFile) {
+      const objectUrl = URL.createObjectURL(mainImageFile);
+      setPreviewUrl(objectUrl);
+
+      return () => {
+        URL.revokeObjectURL(objectUrl); // Clean up
+      };
+    }
+  }, [mainImageFile]);
+
   return (
-    <div className="space-y-4 text-white text-xs font-bold">
+    <div className="space-y-4 text-xs font-bold">
       <p className="text-center">
-        Review your product details and submit when ready.
+        Review your new item details and submit when ready.
       </p>
 
-      <div className="border border-white p-4 space-y-2">
+      <div className="text-center border border-white p-4 space-y-2">
         <p>
-          <strong>Item Number:</strong> {form.itemNumber}
+          <strong>Item</strong> {form.itemNumber}
         </p>
-        <p>
-          <strong>Name:</strong> {form.name}
-        </p>
-        <p>
-          <strong>Slug:</strong> {form.slug}
-        </p>
-        <p>
-          <strong>Variants:</strong> {form.variants.length}
-        </p>
+
+        {previewUrl && (
+          <div className="mt-4 flex justify-center">
+            <img
+              src={previewUrl}
+              alt="Preview"
+              className="w-32 h-32 object-cover border border-gray-200 rounded"
+            />
+          </div>
+        )}
+
+        <p>{form.name}</p>
+
+        {/* Variants Preview */}
+        {form.variants.length > 0 && (
+          <div className="mt-4">
+            <p className="uppercase text-center text-xs mb-2">Variants:</p>
+            <ul className="space-y-1 text-xs">
+              {form.variants.map((variant, index) => (
+                <li
+                  key={index}
+                  className="flex justify-between border border-black border-opacity-5 p-2 "
+                >
+                  <span>{variant.size}</span>
+                  <span>${variant.price}</span>
+                  <span>{variant.stock} Stock</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       <div className="flex gap-4">
         <button
           type="button"
           onClick={onBack}
-          className="flex-1 py-2 rounded-full bg-gray-700 text-white text-xs font-semibold"
+          className="uppercase flex-1 py-2 rounded-full bg-gray-400 text-white text-xs font-semibold"
           disabled={loading}
         >
           Back
@@ -54,13 +92,13 @@ export default function ProductFormStepSubmit({
           type="button"
           onClick={handleUploadAction}
           disabled={loading || !isFormValidAction()}
-          className={`flex-1 py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm ${
+          className={`uppercase flex-1 py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm ${
             loading || !isFormValidAction()
               ? 'bg-gray-400 cursor-not-allowed'
               : 'bg-green text-white'
           }`}
         >
-          {loading ? 'Adding item...' : 'Add item'}
+          {loading ? 'Adding item...' : 'Add new item'}
         </button>
       </div>
 

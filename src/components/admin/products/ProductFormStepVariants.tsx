@@ -51,20 +51,20 @@ export default function ProductFormStepVariants({
     form.variants.every((v) => v.size && v.price && v.stock);
 
   return (
-    <div className="space-y-4 text-white">
-      <p className="text-xs font-bold">
+    <div className="space-y-4 ">
+      <p className="text-xs text-center font-bold">
         Item sizes (must include at least 1 size)
       </p>
 
       {form.variants.map((v, i) => (
-        <div key={i} className="grid gap-1 mb-1 border border-white p-4">
-          <div className="flex justify-between items-center mb-2">
+        <div key={i} className="grid  mb-1 p-4 gap-4">
+          <div className="flex justify-between items-center">
             <select
               value={v.size}
               onChange={(e) => handleChange(i, 'size', e.target.value)}
-              className="appearance-none p-2 border-white text-xs focus:outline-none w-3/4"
+              className="p-2 border border-black border-opacity-5 bg-flag-red text-xs  focus:outline-none w-3/4"
             >
-              <option value="">Size</option>
+              <option value="">Select size</option>
               {sizeOptions
                 .filter(
                   (opt) =>
@@ -92,7 +92,7 @@ export default function ProductFormStepVariants({
             type="number"
             step="0.01"
             placeholder="Price"
-            className="p-2 border-white text-xs focus:outline-none mb-1"
+            className="p-2 border border-black border-opacity-5 bg-flag-red text-xs  focus:outline-none"
             value={v.price}
             onChange={(e) => handleChange(i, 'price', e.target.value)}
           />
@@ -100,7 +100,7 @@ export default function ProductFormStepVariants({
           <input
             type="number"
             placeholder="Stock"
-            className="p-2 border-white text-xs focus:outline-none"
+            className="p-2 border border-black border-opacity-5 bg-flag-red text-xs  focus:outline-none"
             value={v.stock}
             onChange={(e) => handleChange(i, 'stock', e.target.value)}
           />
@@ -124,7 +124,7 @@ export default function ProductFormStepVariants({
         <button
           type="button"
           onClick={onBack}
-          className="w-1/2 mr-2 py-2 bg-gray-500 text-white text-xs font-semibold rounded-full"
+          className=" uppercase w-1/2 mr-2 py-2 bg-gray-400 text-white text-xs font-semibold rounded-full"
         >
           Back
         </button>
@@ -133,13 +133,13 @@ export default function ProductFormStepVariants({
           type="button"
           onClick={onNext}
           disabled={!canProceed}
-          className={`w-1/2 py-2 text-xs font-semibold rounded-full transition ${
+          className={`uppercase w-1/2 py-2 text-xs font-semibold rounded-full transition ${
             canProceed
               ? 'bg-green text-white'
               : 'bg-gray-400 text-white cursor-not-allowed'
           }`}
         >
-          Next
+          Next step
         </button>
       </div>
     </div>

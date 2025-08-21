@@ -33,12 +33,10 @@ export default function ProductFormStepImages({
 
   return (
     <>
-      <div className="border border-white p-4 mb-6 space-y-4 font-bold">
-        <p className="flex justify-center text-xs text-white mb-1">
-          Add images
-        </p>
+      <div className=" p-4 mb-6 space-y-4 font-bold">
+        <p className="text-xs text-center font-bold">Add images to continue</p>
         {/* Main Image Upload */}
-        <div className="flex gap-5 w-full mt-4">
+        <div className="flex flex-col gap-5 w-full mt-4">
           <button
             type="button"
             onClick={() => mainImageRef.current?.click()}
@@ -93,7 +91,7 @@ export default function ProductFormStepImages({
         <button
           type="button"
           onClick={onBack}
-          className="w-full py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm bg-gray-600 text-white"
+          className="uppercase w-full py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm bg-gray-400 text-white"
         >
           Back
         </button>
@@ -101,13 +99,13 @@ export default function ProductFormStepImages({
           type="button"
           onClick={onNext}
           disabled={loading || !isFormValidAction()}
-          className={`w-full py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm ${
+          className={`uppercase w-full py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm ${
             loading || !isFormValidAction()
               ? 'bg-gray-400 text-white cursor-not-allowed'
               : 'bg-green text-white'
           }`}
         >
-          {loading ? 'Uploading...' : 'Next'}
+          {loading ? 'Uploading...' : 'Review'}
         </button>
       </div>
 

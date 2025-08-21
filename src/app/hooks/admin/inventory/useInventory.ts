@@ -44,9 +44,12 @@ export function useInventory({
       0
     );
 
+    const newItemNumber = String(maxItemNumber + 1);
+    console.log('Auto-generated itemNumber:', newItemNumber); // <-- DEBUG
+
     setForm((prev) => ({
       ...prev,
-      itemNumber: String(maxItemNumber + 1),
+      itemNumber: newItemNumber,
     }));
   }, [initialProducts]);
 

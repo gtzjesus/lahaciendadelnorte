@@ -116,6 +116,7 @@ export default function AddProductDrawer({
             message={message}
             isFormValidAction={isFormValidAction}
             onBack={() => setCurrentStep(3)}
+            mainImageFile={mainImageFile}
           />
         );
 
@@ -132,7 +133,7 @@ export default function AddProductDrawer({
         ${isExpanded ? 'h-[92.5dvh]' : 'h-[50px]'}
         rounded-t-2xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat 
       `}
-      style={{ backgroundImage: "url('/admin/adding.gif')" }}
+      style={{ backgroundImage: "url('/admin/adding.webp')" }}
       onClick={() => {
         if (!isExpanded) setIsExpanded(true);
       }}
@@ -165,7 +166,7 @@ export default function AddProductDrawer({
               setShowForm(false);
               setCurrentStep(1);
             }}
-            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-bold uppercase mb-5 mt-2"
+            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-bold uppercase mb-5 mt-10"
           >
             Hide Form ↓
           </button>
@@ -179,35 +180,6 @@ export default function AddProductDrawer({
           <div className="flex-grow">{renderStep()}</div>
 
           {/* Step navigation buttons */}
-          <div className="flex justify-between px-4 py-3">
-            {currentStep > 1 ? (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentStep(currentStep - 1);
-                }}
-                className="px-4 py-2 rounded bg-gray-300 text-black"
-              >
-                Back
-              </button>
-            ) : (
-              <div />
-            )}
-
-            {currentStep < 4 ? (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentStep(currentStep + 1);
-                }}
-                className="px-4 py-2 rounded bg-flag-blue text-black"
-              >
-                Next
-              </button>
-            ) : null}
-          </div>
         </div>
       )}
     </div>
