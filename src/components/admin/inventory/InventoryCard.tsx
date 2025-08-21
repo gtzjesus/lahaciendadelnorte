@@ -278,7 +278,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
-            className="appearance-none uppercase w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-white rounded focus:outline-flag-blue"
+            className="appearance-none uppercase w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-white rounded "
           >
             <option value="">Select category</option>
             {allCategories.map((cat) => (

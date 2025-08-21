@@ -131,7 +131,7 @@ export default function AddProductDrawer({
         fixed bottom-0 left-0 right-0 z-30 w-full max-w-xl md:max-w-4xl mx-auto
         transition-all duration-700 ease-in-out 
         ${isExpanded ? 'h-[92.5dvh]' : 'h-[50px]'}
-        rounded-t-2xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat 
+        rounded-t-2xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat z-50
       `}
       style={{ backgroundImage: "url('/admin/adding.webp')" }}
       onClick={() => {
@@ -166,7 +166,7 @@ export default function AddProductDrawer({
               setShowForm(false);
               setCurrentStep(1);
             }}
-            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-bold uppercase mb-5 mt-10"
+            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-bold uppercase mb-5"
           >
             Hide Form ↓
           </button>
@@ -175,7 +175,7 @@ export default function AddProductDrawer({
 
       {/* Product Form Content */}
       {isExpanded && (
-        <div className="backdrop-blur-sm overflow-y-scroll px-4 h-full pb-28 flex flex-col">
+        <div className="backdrop-blur-sm overflow-y-scroll px-4 h-full flex flex-col">
           {/* Step content */}
           <div className="flex-grow">{renderStep()}</div>
 

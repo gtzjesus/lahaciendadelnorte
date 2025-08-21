@@ -108,7 +108,7 @@ export default function ProductFormStepBasic({
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategoryAction(e.target.value)}
-          className="p-2 border border-black border-opacity-5 bg-flag-red text-xs  focus:outline-none"
+          className="appearance-none uppercase w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-white rounded "
         >
           <option value="">Select a category</option>
           {categories.map((category) => (
