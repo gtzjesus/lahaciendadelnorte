@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import type { SaleSummaryProps } from '@/types/admin/pos';
 import CustomerNameModal from './CustomerNameModal';
 import LoaderOrder from '../common/LoaderOrder';
+import ConfirmationModal from '../common/ConfirmationModal';
 
 export default function SaleSummary({
   totalItems,
@@ -33,6 +34,7 @@ export default function SaleSummary({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isClearModalOpen, setIsClearModalOpen] = useState(false);
 
   const isCashValid = cashReceived >= total;
 
@@ -237,17 +239,33 @@ export default function SaleSummary({
         {/* 🧾 Buttons */}
         <div className="flex gap-5 w-full mt-4">
           <button
-            onClick={clearCartAction}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsClearModalOpen(true);
+            }}
             disabled={cartEmpty || loading}
             className={`w-full py-2 rounded-full text-xs font-bold uppercase transition duration-200 ease-in-out shadow-sm 
-              ${
-                cartEmpty || loading
-                  ? 'bg-red-300 cursor-not-allowed text-white'
-                  : 'bg-red-500 active:bg-red-700 text-white'
-              }`}
+    ${
+      cartEmpty || loading
+        ? 'bg-red-300 cursor-not-allowed text-white'
+        : 'bg-red-500 active:bg-red-700 text-white'
+    }`}
           >
             Clear Sale
           </button>
+
+          {isClearModalOpen && (
+            <ConfirmationModal
+              title="Clear this sale?"
+              message="This action cannot be undone"
+              confirmText="Yes, Clear"
+              onClose={() => setIsClearModalOpen(false)}
+              onConfirm={() => {
+                clearCartAction();
+                setIsClearModalOpen(false);
+              }}
+            />
+          )}
 
           <button
             onClick={(e) => {
@@ -262,7 +280,7 @@ export default function SaleSummary({
                 loading ||
                 cartEmpty ||
                 (paymentMethod === 'cash' && !isCashValid)
-                  ? 'bg-gray-500 cursor-not-allowed text-white'
+                  ? 'bg-gray-400 cursor-not-allowed text-white'
                   : 'bg-green text-white active:scale-[0.98]'
               }`}
           >

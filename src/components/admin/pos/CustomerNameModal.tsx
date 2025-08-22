@@ -67,7 +67,7 @@ const CustomerNameModal = ({
             className={`w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm ${
               customerName.trim()
                 ? 'bg-green text-white active:scale-[0.98]'
-                : 'bg-gray-500 cursor-not-allowed text-white'
+                : 'bg-gray-400 cursor-not-allowed text-white'
             }`}
           >
             Yes, Complete Sale

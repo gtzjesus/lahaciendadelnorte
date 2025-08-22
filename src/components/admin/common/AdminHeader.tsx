@@ -29,7 +29,7 @@ export default function AdminHeader() {
     <motion.header
       initial={false}
       animate={{
-        height: menuOpen ? '100vh' : '10vh',
+        height: menuOpen ? '100vh' : '8vh',
       }}
       transition={{ duration: 0.5, ease: 'easeInOut' }}
       className={clsx(
