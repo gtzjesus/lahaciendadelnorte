@@ -14,7 +14,7 @@ export default function SettingsPage() {
         <button
           onClick={toggleDarkMode}
           className="px-6 uppercase  py-2 rounded-full font-light text-xs transition 
-          bg-flag-blue dark:bg-flag-red text-black dark:text-black shadow-md hs"
+          bg-gray-900 dark:bg-flag-red text-white dark:text-black shadow-md hs"
         >
           {isDark ? 'Light' : 'Dark'} Mode
         </button>

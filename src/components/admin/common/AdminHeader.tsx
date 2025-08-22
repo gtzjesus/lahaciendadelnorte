@@ -34,23 +34,41 @@ export default function AdminHeader() {
       }}
       transition={{ duration: 0.5, ease: 'easeInOut' }}
       className={clsx(
-        'sticky top-0 z-50 bg-flag-red text-black p-4 w-full overflow-hidden flex flex-col items-center',
+        'sticky top-0 z-50 dark:bg-gray-800 bg-flag-red text-black dark:text-flag-red p-4 w-full overflow-hidden flex flex-col items-center',
         menuOpen ? 'justify-start' : 'justify-between'
       )}
     >
       {/* Top Row: Mobile Only */}
       <div className="w-full flex justify-between items-center md:hidden">
-        <Link href="/">
+        <Link href="/" className="relative w-[30px] h-[30px]">
+          {/* 🌞 Light mode logo */}
           <Image
             src="/icons/logo-black.webp"
-            alt="worldhello"
-            width={30}
-            height={30}
+            alt="Logo Light"
+            fill
             priority
-            className={clsx('transition-opacity duration-300', {
-              'opacity-0': menuOpen,
-              'opacity-100': !menuOpen,
-            })}
+            className={clsx(
+              'dark:hidden object-contain transition-opacity duration-300',
+              {
+                'opacity-0': menuOpen,
+                'opacity-100': !menuOpen,
+              }
+            )}
+          />
+
+          {/* 🌚 Dark mode logo */}
+          <Image
+            src="/icons/logo-pink.webp"
+            alt="Logo Dark"
+            fill
+            priority
+            className={clsx(
+              'hidden dark:block object-contain transition-opacity duration-300',
+              {
+                'opacity-0': menuOpen,
+                'opacity-100': !menuOpen,
+              }
+            )}
           />
         </Link>
 
@@ -119,15 +137,28 @@ export default function AdminHeader() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ delay: 0.2, duration: 0.4 }}
-            className="flex flex-col items-center justify-center flex-1 space-y-4 w-full md:hidden"
+            className="flex flex-col items-center justify-center  flex-1 space-y-4 w-full md:hidden"
           >
-            <Image
-              src="/icons/logo-black.webp"
-              alt="worldhello"
-              width={30}
-              height={30}
-              priority
-            />
+            <div className="relative w-[30px] h-[30px]">
+              {/* 🌞 Light mode logo */}
+              <Image
+                src="/icons/logo-black.webp"
+                alt="Logo Light"
+                fill
+                priority
+                className="dark:hidden object-contain"
+              />
+
+              {/* 🌚 Dark mode logo */}
+              <Image
+                src="/icons/logo-pink.webp"
+                alt="Logo Dark"
+                fill
+                priority
+                className="hidden dark:block object-contain"
+              />
+            </div>
+
             {navItems.map(({ name, href }, i) => (
               <motion.div
                 key={href}
@@ -139,10 +170,10 @@ export default function AdminHeader() {
                   href={href}
                   onClick={() => setMenuOpen(false)}
                   className={clsx(
-                    'text-xl transition-colors',
+                    'text-xl transition-colors ',
                     pathname === href
                       ? 'text-flag-blue'
-                      : 'text-black hover:text-flag-blue'
+                      : 'text-black dark:text-flag-red '
                   )}
                 >
                   {name}
