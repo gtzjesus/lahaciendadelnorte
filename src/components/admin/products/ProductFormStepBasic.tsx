@@ -44,12 +44,16 @@ export default function ProductFormStepBasic({
   }, [form.name, setFormAction]);
 
   return (
-    <div className="space-y-4 text-black">
-      <p className="text-xs text-center font-bold">Enter item information</p>
+    <div className="space-y-4 text-black ">
+      <p className="text-xs text-center font-bold dark:text-flag-red">
+        Enter item information
+      </p>
 
       {/* Item Number */}
-      <div className="flex flex-col gap-2">
-        <label className="text-xs">Item number (auto-generated)</label>
+      <div className="flex flex-col gap-2 ">
+        <label className="text-xs dark:text-flag-red">
+          Item number (auto-generated)
+        </label>
         <input
           name="itemNumber"
           type="text"
@@ -68,7 +72,7 @@ export default function ProductFormStepBasic({
 
       {/* Item Name */}
       <div className="flex flex-col gap-2">
-        <label className="text-xs">Name</label>
+        <label className="text-xs dark:text-flag-red">Name</label>
         <input
           name="name"
           type="text"
@@ -91,7 +95,9 @@ export default function ProductFormStepBasic({
 
       {/* Slug (auto-filled) */}
       <div className="flex flex-col gap-2">
-        <label className="text-xs">Slug (auto-generated)</label>
+        <label className="text-xs dark:text-flag-red">
+          Slug (auto-generated)
+        </label>
         <input
           name="slug"
           type="text"
@@ -104,7 +110,7 @@ export default function ProductFormStepBasic({
 
       {/* Category */}
       <div className="flex flex-col gap-2">
-        <label className="text-xs">Category</label>
+        <label className="text-xs dark:text-flag-red">Category</label>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategoryAction(e.target.value)}

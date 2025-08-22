@@ -37,9 +37,11 @@ export default function ProductFormStepSubmit({
 
   return (
     <div className="space-y-4 text-xs font-bold">
-      <p className="text-center">Review details and add new item once ready</p>
+      <p className="text-center dark:text-flag-red">
+        Review details and add new item once ready
+      </p>
 
-      <div className="text-center border border-white p-4 space-y-2">
+      <div className="text-center border border-white p-4 space-y-2 dark:text-flag-red">
         <p>
           <strong>Item</strong> {form.itemNumber}
         </p>
@@ -59,12 +61,11 @@ export default function ProductFormStepSubmit({
         {/* Variants Preview */}
         {form.variants.length > 0 && (
           <div className="mt-4">
-            <p className="uppercase text-center text-xs mb-2">Variants:</p>
             <ul className="space-y-1 text-xs">
               {form.variants.map((variant, index) => (
                 <li
                   key={index}
-                  className="flex justify-between border border-black border-opacity-5 p-2 "
+                  className="flex justify-between border border-black dark:text-flag-red border-opacity-5 p-2 "
                 >
                   <span>{variant.size}</span>
                   <span>${variant.price}</span>

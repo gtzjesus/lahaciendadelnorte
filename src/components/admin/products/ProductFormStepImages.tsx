@@ -34,7 +34,9 @@ export default function ProductFormStepImages({
   return (
     <>
       <div className=" p-4 mb-6 space-y-4 font-bold">
-        <p className="text-xs text-center font-bold">Add images to continue</p>
+        <p className="text-xs text-center font-bold dark:text-flag-red">
+          Add images to continue
+        </p>
         {/* Main Image Upload */}
         <div className="flex flex-col gap-5 w-full mt-4">
           <button
@@ -54,8 +56,8 @@ export default function ProductFormStepImages({
             }
           />
           {mainImageFile && (
-            <p className="mt-2 text-xs text-black">
-              Selected: <strong>{mainImageFile.name}</strong>
+            <p className="mt-2 text-xs text-black dark:text-flag-red">
+              <strong>{mainImageFile.name}</strong>
             </p>
           )}
 

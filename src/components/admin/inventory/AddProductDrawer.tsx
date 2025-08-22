@@ -8,7 +8,8 @@ import ProductFormStepVariants from '../products/ProductFormStepVariants';
 import ProductFormStepImages from '../products/ProductFormStepImages';
 import ProductFormStepSubmit from '../products/ProductFormStepSubmit';
 
-// Import your step components instead of ProductForm
+// Your custom hook here (make sure it's imported or defined)
+import { useDarkMode } from '@/lib/useDarkMode'; // Adjust path if needed
 
 export default function AddProductDrawer({
   form,
@@ -35,6 +36,9 @@ export default function AddProductDrawer({
 }: AddProductDrawerProps) {
   // Manage current step internally here (optional: can lift state if you want)
   const [currentStep, setCurrentStep] = useState(1);
+
+  // Use your custom dark mode hook
+  const { isDark } = useDarkMode();
 
   // Reset step when drawer closes
   useEffect(() => {
@@ -97,12 +101,11 @@ export default function AddProductDrawer({
             loading={loading}
             isFormValidAction={isFormValidAction}
             message={message}
-            // REMOVE showForm and setShowForm here if not needed
-            isDuplicateSlugOrNameAction={isDuplicateSlugOrNameAction} // only if used inside
-            handleUploadAction={handleUploadAction} // only if used inside
-            isExpanded={isExpanded} // only if used inside
-            setIsExpanded={setIsExpanded} // only if used inside
-            showForm={showForm} // add this
+            isDuplicateSlugOrNameAction={isDuplicateSlugOrNameAction}
+            handleUploadAction={handleUploadAction}
+            isExpanded={isExpanded}
+            setIsExpanded={setIsExpanded}
+            showForm={showForm}
             setShowForm={setShowForm}
           />
         );
@@ -125,22 +128,27 @@ export default function AddProductDrawer({
     }
   };
 
+  // Set background based on your custom dark mode state
+  const backgroundUrl = isDark
+    ? "url('/admin/adding-dark.gif')"
+    : "url('/admin/adding.webp')";
+
   return (
     <div
       className={`
-        fixed bottom-0 left-0 right-0 z-30 w-full max-w-xl md:max-w-4xl mx-auto
-        transition-all duration-700 ease-in-out 
-            ${isExpanded ? 'h-[80dvh]' : 'h-[50px]'}
-        rounded-t-2xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat z-40
-      `}
-      style={{ backgroundImage: "url('/admin/adding.webp')" }}
+      fixed bottom-0 left-0 right-0 z-30 w-full max-w-xl md:max-w-4xl mx-auto
+      transition-all duration-700 ease-in-out 
+      ${isExpanded ? 'h-[80dvh]' : 'h-[50px]'}
+      rounded-t-2xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat z-40
+    `}
+      style={{ backgroundImage: backgroundUrl }}
       onClick={() => {
         if (!isExpanded) setIsExpanded(true);
       }}
     >
       {/* Loading overlay */}
       {loading && (
-        <div className="fixed inset-0 z-40 bg-flag-red bg-opacity-80 flex justify-center items-center">
+        <div className="fixed inset-0 z-40 bg-flag-red dark:bg-gray-900 bg-opacity-80 flex justify-center items-center">
           <LoaderOrder />
         </div>
       )}
@@ -150,7 +158,7 @@ export default function AddProductDrawer({
         <div className="w-10 h-1 bg-black bg-opacity-30 mx-auto my-2"></div>
       )}
       {!isExpanded && (
-        <div className="flex justify-between mx-4 text-xs font-bold text-center text-black ">
+        <div className="flex justify-between mx-4 text-xs font-bold text-center text-black dark:text-white ">
           <h3 className="mb-2 mt-1">add new item</h3>
           <h3 className="mb-2 mt-1">tap here</h3>
         </div>
@@ -158,7 +166,7 @@ export default function AddProductDrawer({
 
       {/* Collapse Button */}
       {isExpanded && (
-        <div className="flex justify-center mt-2 mb-1 text-black ">
+        <div className="flex justify-center mt-2 mb-1 text-black dark:text-white">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -178,8 +186,6 @@ export default function AddProductDrawer({
         <div className="backdrop-blur-sm overflow-y-scroll px-4 h-full flex flex-col">
           {/* Step content */}
           <div className="flex-grow">{renderStep()}</div>
-
-          {/* Step navigation buttons */}
         </div>
       )}
     </div>

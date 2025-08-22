@@ -52,7 +52,7 @@ export default function ProductFormStepVariants({
 
   return (
     <div className="space-y-4 ">
-      <p className="text-xs text-center font-bold">
+      <p className="dark:text-flag-red text-xs text-center font-bold">
         Item sizes (must include at least 1 size)
       </p>
 
