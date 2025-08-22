@@ -17,7 +17,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
   return (
     <div className=" min-h-screen py-6 px-2">
-      <p className="text-sm text-center mb-5">
+      <p className="text-sm text-center mb-5 dark:text-flag-red">
         Go ahead — make any changes or updates to this item
       </p>
       <InventoryCard product={product} allCategories={allCategories} />

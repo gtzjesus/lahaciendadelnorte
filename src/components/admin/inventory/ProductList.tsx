@@ -11,7 +11,7 @@ type ProductListProps = {
 export default function ProductList({ products }: ProductListProps) {
   if (!products.length) {
     return (
-      <p className="text-center text-xs uppercase text-black font-medium mt-6">
+      <p className="text-center text-xs uppercase text-black dark:text-flag-red font-medium mt-6">
         no products found....
       </p>
     );
@@ -23,7 +23,7 @@ export default function ProductList({ products }: ProductListProps) {
         <Link
           key={p._id}
           href={`/admin/inventory/${p.itemNumber}`}
-          className="flex flex-col border border-black border-opacity-5  text-black transition px-4 py-4"
+          className="flex flex-col border border-black dark:border-flag-red border-opacity-5 dark:text-flag-red  text-black transition px-4 py-4"
         >
           <p className="text-xs mx-auto">{p.itemNumber}</p>
 
@@ -60,7 +60,7 @@ export default function ProductList({ products }: ProductListProps) {
           )} */}
 
           {(p.variants ?? []).length > 0 && (
-            <div className=" mt-2 border-t border-black border-opacity-5 pt-2">
+            <div className=" mt-2 border-t border-black dark:border-flag-red  border-opacity-5 pt-2">
               <p className="text-xs text-center ">Stock</p>
 
               <ul className="text-xs space-y-1">

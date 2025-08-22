@@ -14,7 +14,7 @@ export default function AdminLayout({
   return (
     <ClerkProvider>
       <ErrorBoundary>
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen dark:bg-gray-900">
           <AdminHeader />
           <Toaster
             position="top-right"

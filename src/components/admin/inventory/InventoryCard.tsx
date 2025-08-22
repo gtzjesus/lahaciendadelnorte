@@ -147,7 +147,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
   };
 
   return (
-    <div className="max-w-lg mx-auto bg-flag-red border border-black border-opacity-5  shadow-lg p-6 space-y-6">
+    <div className="max-w-lg mx-auto bg-flag-red dark:bg-gray-800  border border-black border-opacity-5  shadow-lg p-6 space-y-6">
       {/* Main Image Upload */}
       <div
         {...gm()}
@@ -172,10 +172,12 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
       <div className="grid grid-cols-1 gap-4">
         <div className="flex mx-auto">
           <label className="block text-sm font-light uppercase "></label>
-          <p className="text-sm">{product.itemNumber || '—'}</p>
+          <p className="text-sm dark:text-flag-red">
+            {product.itemNumber || '—'}
+          </p>
         </div>
         <div>
-          <label className="block text-xs font-light uppercase mb-2">
+          <label className="block text-xs font-light uppercase mb-2 dark:text-flag-red">
             Name
           </label>
           <input
@@ -195,7 +197,9 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
               className="flex border-black border-opacity-5 items-start sm:items-center gap-2 p-2 transition"
             >
               <div className="relative w-full max-w-[120px]">
-                <p className="block text-xs font-light uppercase mb-2">Size</p>
+                <p className="block text-xs font-light uppercase mb-2 dark:text-flag-red">
+                  Size
+                </p>
                 <select
                   value={s.label}
                   onChange={(e) => {
@@ -217,7 +221,9 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                 </div> */}
               </div>
               <div className="flex flex-col">
-                <p className="block text-xs font-light uppercase mb-2">Price</p>
+                <p className="block text-xs font-light uppercase mb-2 dark:text-flag-red">
+                  Price
+                </p>
 
                 <input
                   type="number"
@@ -234,7 +240,9 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
                 />
               </div>
               <div className="flex flex-col">
-                <p className="block text-xs font-light uppercase mb-2">Stock</p>
+                <p className="block text-xs font-light uppercase mb-2 dark:text-flag-red">
+                  Stock
+                </p>
 
                 <input
                   type="number"
@@ -273,12 +281,14 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
 
       {/* Category */}
       <div>
-        <label className="uppercase p-2 text-xs">Category</label>
+        <label className="uppercase p-2 text-xs dark:text-flag-red">
+          Category
+        </label>
         <div className="relative w-full">
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
-            className="appearance-none uppercase w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-white rounded "
+            className="appearance-none uppercase w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-white rounded mt-1"
           >
             <option value="">Select category</option>
             {allCategories.map((cat) => (
@@ -299,7 +309,9 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
         className="border border-black border-opacity-5 pt-2 transition cursor-pointer"
       >
         <input {...gix()} />
-        <p className="text-center  text-xs">Tap to add more images (up to 5)</p>
+        <p className="text-center  text-xs dark:text-flag-red">
+          Tap to add more images (up to 5)
+        </p>
         <div className="mt-2 flex flex-wrap gap-2">
           {extraPreviews.map((url, idx) => (
             <div
