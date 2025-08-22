@@ -1,5 +1,6 @@
 'use client';
 
+import '@/app/globals.css';
 import AdminHeader from '@/components/admin/common/AdminHeader';
 import { ErrorBoundary } from '@/components/admin/common/ErrorBoundary';
 import { ClerkProvider } from '@clerk/nextjs';

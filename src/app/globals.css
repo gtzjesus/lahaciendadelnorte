@@ -20,6 +20,9 @@ body {
   padding: 0;
   width: 100%;
   height: 100%; /* 👈 IMPORTANT: add this */
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 * {

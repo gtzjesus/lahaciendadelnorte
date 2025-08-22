@@ -11,6 +11,7 @@ const navItems = [
   { name: 'Point of sale', href: '/admin/pos' },
   { name: 'Orders', href: '/admin/orders' },
   { name: 'Inventory', href: '/admin/inventory' },
+  { name: 'Settings', href: '/admin/settings' },
 ];
 
 export default function AdminHeader() {
