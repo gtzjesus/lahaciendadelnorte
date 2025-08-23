@@ -4,6 +4,7 @@
 
 import React, { useEffect } from 'react';
 import type { OrderFilter } from '@/types/admin/order';
+import { useDarkMode } from '@/lib/useDarkMode';
 
 interface DrawerFilterControlsProps {
   filter: OrderFilter;
@@ -25,6 +26,14 @@ export default function DrawerFilterControls({
     };
   }, [isExpanded]);
 
+  // Use your custom dark mode hook
+  const { isDark } = useDarkMode();
+
+  // Set background based on your custom dark mode state
+  const backgroundUrl = isDark
+    ? "url('/admin/orders-dark.gif')"
+    : "url('/admin/orders.gif')";
+
   return (
     <div
       className={`
@@ -33,7 +42,7 @@ export default function DrawerFilterControls({
         ${isExpanded ? 'h-[80dvh]' : 'h-[50px]'}
         rounded-t-xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat
       `}
-      style={{ backgroundImage: "url('/admin/orders.gif')" }}
+      style={{ backgroundImage: backgroundUrl }}
       onClick={() => {
         if (!isExpanded) setIsExpanded(true);
       }}
@@ -43,7 +52,7 @@ export default function DrawerFilterControls({
       )}
 
       {!isExpanded && (
-        <div className="flex justify-between mx-4 text-xs font-bold text-center text-black ">
+        <div className="flex justify-between mx-4 text-xs font-bold text-center text-black dark:text-flag-red ">
           <h3>filters </h3>
           <h3>{filter} orders</h3>
         </div>
@@ -73,7 +82,7 @@ export default function DrawerFilterControls({
                 id="filter"
                 value={filter}
                 onChange={(e) => setFilterAction(e.target.value as OrderFilter)}
-                className="appearance-none uppercase text-center w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-flag-red rounded shadow-xl"
+                className="appearance-none uppercase text-center w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-flag-red rounded shadow-xl dark:text-black"
               >
                 <option value="pending">Pending orders</option>
                 <option value="completed">Completed orders</option>

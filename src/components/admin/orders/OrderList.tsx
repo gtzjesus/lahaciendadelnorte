@@ -58,7 +58,7 @@ export default function OrderList({ orders }: OrderListProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   return (
-    <div className="relative z-10 max-w-xl mx-auto w-full ">
+    <div className="relative z-10 max-w-xl mx-auto w-full dark:text-flag-red">
       {/* Search bar at the top */}
       <div className="max-w-xl fixed w-full z-10 flex flex-col">
         <input

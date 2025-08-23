@@ -37,7 +37,7 @@ export default function ProductListItem({
         </Link>
       )}
 
-      <div className="flex flex-col text-xs py-2 font-light uppercase">
+      <div className="flex flex-col text-xs py-2 font-light uppercase dark:text-flag-red">
         <div className="flex justify-center items-center gap-1">
           <p className="font-semibold">{prod?.name}</p>
           <p>|</p>

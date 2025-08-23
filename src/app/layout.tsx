@@ -1,11 +1,10 @@
-// app/layout.tsx
-
 import React from 'react';
 import type { Metadata } from 'next';
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import { SanityLive } from '@/sanity/lib/live';
 import ErrorBoundary from '@/components/errors/ErrorBoundary';
+import HtmlWithTheme from '@/lib/HtmlWithTheme';
 
 export const metadata: Metadata = {
   title: {
@@ -39,7 +38,7 @@ export const metadata: Metadata = {
     siteName: 'La Dueña',
     images: [
       {
-        url: '/images/laduena-preview.webp', // Replace with your real image
+        url: '/images/laduena-preview.webp',
         width: 1200,
         height: 630,
         alt: 'La Dueña Shaved Ice & Snacks',
@@ -52,7 +51,7 @@ export const metadata: Metadata = {
     title: 'La Dueña | Shaved Ice, Ice Cream & Snacks – Canutillo, TX',
     description:
       'Craving something sweet or spicy? La Dueña has shaved ice, ice cream, and Mexican-style snacks in Canutillo!',
-    images: ['/images/laduena-preview.webp'], // Replace with your real image
+    images: ['/images/laduena-preview.webp'],
   },
 };
 
@@ -71,16 +70,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth antialiased">
+    <html lang="en">
       <head>
         <meta charSet="UTF-8" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="min-h-screen bg-custom-background">
-        <ClerkProvider>
-          <ErrorBoundary>{children}</ErrorBoundary>
-          <SanityLive />
-        </ClerkProvider>
+      <body className="min-h-screen bg-custom-background transition-colors duration-300">
+        <HtmlWithTheme>
+          <ClerkProvider>
+            <ErrorBoundary>{children}</ErrorBoundary>
+            <SanityLive />
+          </ClerkProvider>
+        </HtmlWithTheme>
       </body>
     </html>
   );

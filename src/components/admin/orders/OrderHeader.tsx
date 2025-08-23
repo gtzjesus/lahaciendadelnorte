@@ -7,16 +7,18 @@ interface OrderHeaderProps {
 }
 
 const Header: React.FC<OrderHeaderProps> = ({ order }) => (
-  <div className="flex flex-col items-center gap-1 justify-center border-b border-black border-opacity-5 py-1 text-xs  ">
+  <div className="flex flex-col items-center gap-1 justify-center border-b border-black dark:border-flag-red border-opacity-5 py-1 text-xs  ">
     <div>
-      <p className="uppercase font-bold">
+      <p className="uppercase font-bold dark:text-flag-red">
         Order #{order.orderNumber?.slice(-6)}{' '}
       </p>
     </div>
 
     <div>
       {order.customerName && (
-        <p className="uppercase font-semibold"> {order.customerName}</p>
+        <p className="uppercase font-semibold dark:text-flag-red">
+          {order.customerName}
+        </p>
       )}
     </div>
   </div>

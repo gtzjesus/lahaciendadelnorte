@@ -56,7 +56,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
   return (
     <div
-      className={`p-2 mb-4  overflow-hidden bg-flag-red  ${
+      className={`p-2 mb-4  overflow-hidden dark:bg-gray-800 bg-flag-red  ${
         pickupStatus === 'pending'
           ? 'border-black border-opacity-5 border'
           : 'border-green border border-opacity-30'
@@ -69,7 +69,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         <div className="flex justify-center py-2">
           <button
             onClick={() => setIsExpanded((prev) => !prev)}
-            className="text-xs uppercase text-black border p-2 bg-flag-blue border-none "
+            className="text-xs uppercase  text-black border p-2 bg-flag-blue border-none "
           >
             {isExpanded
               ? 'Hide items'
@@ -100,7 +100,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           </button>
         </div>
       )}
-      <div className="flex justify-center items-center w-full">
+      <div className="flex justify-center items-center w-full dark:text-flag-red">
         <p className="text-xs pb-1">
           {order.orderDate
             ? new Date(order.orderDate).toLocaleString(undefined, {

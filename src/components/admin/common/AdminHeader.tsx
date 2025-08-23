@@ -39,7 +39,7 @@ export default function AdminHeader() {
       )}
     >
       {/* Top Row: Mobile Only */}
-      <div className="w-full flex justify-between items-center md:hidden">
+      <div className="w-full flex justify-between items-center md:hidden ">
         <Link href="/" className="relative w-[30px] h-[30px]">
           {/* 🌞 Light mode logo */}
           <Image
@@ -109,7 +109,7 @@ export default function AdminHeader() {
       </div>
 
       {/* Top Row: Desktop Only */}
-      <div className="hidden md:flex w-full justify-center items-center">
+      <div className="hidden md:flex w-full justify-center items-center ">
         <nav className="flex space-x-6">
           {navItems.map(({ name, href }) => (
             <Link
@@ -137,7 +137,7 @@ export default function AdminHeader() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ delay: 0.2, duration: 0.4 }}
-            className="flex flex-col items-center justify-center  flex-1 space-y-4 w-full md:hidden"
+            className="flex flex-col items-center justify-center  flex-1 space-y-4 w-full md:hidden "
           >
             <div className="relative w-[30px] h-[30px]">
               {/* 🌞 Light mode logo */}
