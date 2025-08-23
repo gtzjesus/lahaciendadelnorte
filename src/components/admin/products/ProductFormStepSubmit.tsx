@@ -87,6 +87,20 @@ export default function ProductFormStepSubmit({
         >
           Back
         </button>
+        {/* 🐛 TEMP DEBUG UI - REMOVE LATER */}
+        <pre className="bg-yellow-100 text-black p-2 text-[10px] rounded overflow-x-auto">
+          {JSON.stringify(
+            {
+              loading,
+              isValid: isFormValidAction(),
+              message,
+              form,
+              hasImage: !!mainImageFile,
+            },
+            null,
+            2
+          )}
+        </pre>
 
         <button
           type="button"

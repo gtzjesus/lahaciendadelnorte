@@ -129,7 +129,6 @@ export default function InventoryPage() {
         extraImages: extraImageFiles,
       });
 
-      // Re-fetch products after upload
       const refreshedProducts = await fetchAdminProducts();
       setProducts(refreshedProducts);
       setSearchTerm('');
@@ -149,8 +148,19 @@ export default function InventoryPage() {
 
       setShowForm(false);
       setIsExpanded(false);
+
+      // ✅ SUCCESS MESSAGE (optional)
+      setMessage('Product successfully added!');
     } catch (err) {
       console.error('[Upload Error]', err);
+
+      // ✅ SET ERROR MESSAGE TO DISPLAY IN UI
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : 'Something went wrong while adding the product.';
+
+      setMessage(errorMessage);
     } finally {
       setLoading(false);
     }
