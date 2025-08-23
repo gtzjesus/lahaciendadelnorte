@@ -39,7 +39,7 @@ export default function AdminHeader() {
       )}
     >
       {/* Top Row: Mobile Only */}
-      <div className="w-full flex justify-between items-center md:hidden ">
+      <div className="w-full flex justify-between items-center md:hidden  ">
         <Link href="/" className="relative w-[30px] h-[30px]">
           {/* 🌞 Light mode logo */}
           <Image
@@ -110,7 +110,7 @@ export default function AdminHeader() {
 
       {/* Top Row: Desktop Only */}
       <div className="hidden md:flex w-full justify-center items-center ">
-        <nav className="flex space-x-6">
+        <nav className="flex space-x-6 ">
           {navItems.map(({ name, href }) => (
             <Link
               key={href}
@@ -119,7 +119,7 @@ export default function AdminHeader() {
                 'text-lg transition-colors',
                 pathname === href
                   ? 'text-flag-blue'
-                  : 'text-black hover:text-flag-blue'
+                  : 'text-black dark:text-flag-red hover:text-flag-blue'
               )}
             >
               {name}

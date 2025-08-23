@@ -237,7 +237,7 @@ export default function SaleSummary({
                 />
               </div>
               {Math.abs(cashReceived + cardAmount - total) > 0.01 && (
-                <p className="text-xs py-1 text-yellow-300 font-bold">
+                <p className="text-xs py-1 text-yellow-300 font-bold dark:text-flag-red">
                   Amount does not match total.
                 </p>
               )}

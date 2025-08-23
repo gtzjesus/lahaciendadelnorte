@@ -14,16 +14,16 @@ interface OrderListProps {
 }
 
 const completedMessages = [
-  'orders looking dry here!',
-  'no orders here!',
+  'Orders looking dry here!',
+  'No orders here!',
   'Nothing to see!',
-  'could not find anything!',
+  'Could not find anything!',
 ];
 
 const noOrdersMessages = [
   'No orders found!',
   'Try searching again!',
-  'looked but nothing!',
+  'Looked but nothing!',
 ];
 
 export default function OrderList({ orders }: OrderListProps) {
@@ -68,7 +68,7 @@ export default function OrderList({ orders }: OrderListProps) {
           onChange={(e) => setSearchTerm(e.target.value)}
           className={` text-center p-4 border-b border-black border-opacity-5  text-sm focus:outline-none focus:ring-0 transition-all  ${
             isScrolled
-              ? 'fixed border-none left-0 w-full bg-white  z-20' // Scroll down state
+              ? 'fixed border-none left-0 w-full bg-white dark:text-black  z-20' // Scroll down state
               : 'bg-transparent font-bold'
           }`}
         />
@@ -85,7 +85,7 @@ export default function OrderList({ orders }: OrderListProps) {
       {/* Orders list or message */}
       {filteredOrders.length === 0 ? (
         <div className=" flex flex-col items-center justify-center py-12 text-center">
-          <p className="uppercase font-semibold text-lg select-none">
+          <p className=" font-light text-md select-none">
             {typingMessage}
             <span className="animate-pulse">|</span>
           </p>

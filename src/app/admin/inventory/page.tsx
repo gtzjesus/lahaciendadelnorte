@@ -180,7 +180,7 @@ export default function InventoryPage() {
           className={` text-center p-4 border-black dark:border-flag-red border-opacity-5 border-b  text-sm focus:outline-none focus:ring-0 transition-all  ${
             isScrolled
               ? 'fixed border-none left-0 w-full bg-white  z-20' // Scroll down state
-              : 'bg-transparent font-bold'
+              : 'bg-transparent font-bold dark:text-flag-red'
           }`}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
