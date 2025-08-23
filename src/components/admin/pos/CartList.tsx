@@ -47,7 +47,7 @@ export default function CartList({
 
   if (!cart || cart.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center flex-1 min-h-screen px-4 text-center">
+      <div className="flex flex-col items-center justify-center flex-1 mt-40  px-4 text-center ">
         <Image
           src="/icons/order.gif"
           alt="Order Illustration"
@@ -55,7 +55,7 @@ export default function CartList({
           height={150}
           className="mx-auto mb-4 object-contain"
         />
-        <p className="font-light text-sm select-none">
+        <p className="font-light text-sm select-none dark:text-flag-red">
           {currentMessage}
           <span> </span>
           <span className="animate-pulse">|</span>
@@ -65,15 +65,15 @@ export default function CartList({
   }
 
   return (
-    <div className="py-20 grid grid-cols-2  ">
+    <div className="py-20 grid grid-cols-2  dark:text-flag-red">
       {cart.map((item, i) => (
         <div
           key={item._id}
-          className=" flex flex-col justify-between p-2 text-center border border-black border-opacity-5"
+          className=" flex flex-col justify-between p-2 text-center border border-black dark:border-flag-red border-opacity-5"
         >
           {/* Top: Price and ❌ */}
           <div className="flex justify-between items-center text-xs px-1">
-            <div className="text-black font-semibold">
+            <div className="text-black font-semibold dark:text-flag-red">
               ${item.price.toFixed(2)}
             </div>
             <button
@@ -85,7 +85,7 @@ export default function CartList({
           </div>
 
           {/* Middle: Image and Info */}
-          <div className="flex flex-col items-center justify-center flex-grow">
+          <div className="flex flex-col items-center justify-center flex-grow ">
             {item.imageUrl && (
               <Image
                 src={item.imageUrl}
@@ -95,8 +95,8 @@ export default function CartList({
                 className="object-cover w-20 h-20 p-1"
               />
             )}
-            <div className="text-xs  font-semibold mt-2">
-              <p className="uppercase">{item.name}</p>
+            <div className="text-xs  font-semibold mt-2 ">
+              <p className="uppercase ">{item.name}</p>
               <p className="font-light">{item.category}</p>
               <div className="relative">
                 <select
@@ -104,7 +104,7 @@ export default function CartList({
                   onChange={(e) =>
                     updateQuantityAction(i, Number(e.target.value))
                   }
-                  className="appearance-none border border-black border-opacity-10 my-2 bg-white p-2 text-black text-xs uppercase w-[8vh] focus:outline-none"
+                  className="appearance-none border dark:border-flag-red border-black  border-opacity-10 my-2 bg-white p-2 text-black text-xs uppercase w-[8vh] focus:outline-none "
                 >
                   {Array.from({ length: item.stock }, (_, n) => (
                     <option key={n + 1} value={n + 1}>

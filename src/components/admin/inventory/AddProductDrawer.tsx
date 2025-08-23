@@ -174,7 +174,7 @@ export default function AddProductDrawer({
               setShowForm(false);
               setCurrentStep(1);
             }}
-            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-bold uppercase mb-5 mt-1"
+            className="text-white bg-black dark:text-black dark:bg-flag-red  bg-opacity-20 px-3 py-1 rounded-full text-xs font-bold uppercase mb-5 mt-1"
           >
             Hide Form ↓
           </button>

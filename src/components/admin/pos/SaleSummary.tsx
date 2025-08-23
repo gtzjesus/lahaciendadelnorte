@@ -4,6 +4,7 @@ import type { SaleSummaryProps } from '@/types/admin/pos';
 import CustomerNameModal from './CustomerNameModal';
 import LoaderOrder from '../common/LoaderOrder';
 import ConfirmationModal from '../common/ConfirmationModal';
+import { useDarkMode } from '@/lib/useDarkMode';
 
 export default function SaleSummary({
   totalItems,
@@ -43,6 +44,9 @@ export default function SaleSummary({
     await handleSaleAction();
   };
 
+  // Use your custom dark mode hook
+  const { isDark } = useDarkMode();
+
   // 🔒 Prevent body scroll when expanded
   useEffect(() => {
     if (isExpanded) {
@@ -58,6 +62,11 @@ export default function SaleSummary({
 
   if (postSaleDelay) return null;
 
+  // Set background based on your custom dark mode state
+  const backgroundUrl = isDark
+    ? "url('/admin/summary-dark.gif')"
+    : "url('/admin/summary.webp')";
+
   return (
     <div
       className={`
@@ -66,7 +75,7 @@ export default function SaleSummary({
     ${isExpanded ? 'h-[80dvh]' : 'h-[50px]'}
     rounded-t-xl shadow-xl overflow-hidden bg-cover bg-center bg-no-repeat
   `}
-      style={{ backgroundImage: "url('/admin/summary.gif')" }}
+      style={{ backgroundImage: backgroundUrl }}
       onClick={() => {
         if (!isExpanded) setIsExpanded(true);
       }}
@@ -91,14 +100,14 @@ export default function SaleSummary({
               e.stopPropagation();
               setIsExpanded(false);
             }}
-            className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-bold uppercase mb-5"
+            className="text-white bg-black dark:bg-flag-red dark:text-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-bold uppercase mb-5"
           >
             hide summary ↓
           </button>
         </div>
       )}
       {!isExpanded && (
-        <div className="flex justify-between  text-xs font-bold text-center text-black  px-4">
+        <div className="flex justify-between  text-xs font-bold text-center text-black dark:text-flag-red  px-4">
           <h3 className="mb-2">summary</h3>
           <p className="text-green font-bolightld pr-3">${total.toFixed(2)}</p>
           <p> items {totalItems}</p>
@@ -106,7 +115,7 @@ export default function SaleSummary({
       )}
 
       {/* 💸 Summary Info */}
-      <div className="px-4 font-bold">
+      <div className="px-4 font-bold dark:text-flag-red">
         <div className="flex justify-between mt-2 text-md uppercase ">
           <p>Subtotal:</p>
           <p>${subtotal.toFixed(2)}</p>
@@ -123,8 +132,8 @@ export default function SaleSummary({
         </div>
 
         {/* 🏦 Payment Method */}
-        <div className="text-sm text-black  mt-4">
-          <p className="text-xs mb-1 text-center ">
+        <div className="text-sm text-black   mt-4">
+          <p className="text-xs mb-1 text-center dark:text-flag-red ">
             Please select a payment method
           </p>
           <div className="relative w-full">
@@ -155,7 +164,7 @@ export default function SaleSummary({
           {/* 💵 Cash Fields */}
           {paymentMethod === 'cash' && (
             <div className="uppercase">
-              <p className="text-xs py-1">Cash Received</p>
+              <p className="text-xs py-1 dark:text-flag-red">Cash Received</p>
               <input
                 type="number"
                 min="0"
@@ -178,7 +187,7 @@ export default function SaleSummary({
                 </p>
               )}
               {cashReceived >= total && (
-                <div className="text-xs flex justify-between py-1">
+                <div className="text-xs flex justify-between py-1 dark:text-flag-red">
                   <p className="">Change Due: </p>
                   <p className="font-bold text-md">${changeGiven.toFixed(2)}</p>
                 </div>
@@ -190,7 +199,7 @@ export default function SaleSummary({
           {paymentMethod === 'split' && (
             <div className="uppercase">
               <div>
-                <p className="text-xs py-1">Cash Portion</p>
+                <p className="text-xs py-1 dark:text-flag-red">Cash Portion</p>
                 <input
                   type="number"
                   min="0"
@@ -209,7 +218,7 @@ export default function SaleSummary({
                 />
               </div>
               <div>
-                <p className="text-xs py-1">Card Portion</p>
+                <p className="text-xs py-1 dark:text-flag-red">Card Portion</p>
                 <input
                   type="number"
                   min="0"

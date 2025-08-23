@@ -66,7 +66,7 @@ export default function DrawerFilterControls({
                 e.stopPropagation();
                 setIsExpanded(false);
               }}
-              className="text-white bg-black bg-opacity-20 px-3 py-1 rounded-full text-xs font-semibold uppercase mb-5"
+              className="text-white bg-black dark:text-black dark:bg-flag-red bg-opacity-20 px-3 py-1 rounded-full text-xs font-semibold uppercase mb-5"
             >
               Hide Filters ↓
             </button>

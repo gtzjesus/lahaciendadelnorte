@@ -49,10 +49,10 @@ export default function ProductSearch({
         placeholder="What are we selling today?"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className={` text-center p-4 border-b border-black border-opacity-5  text-sm focus:outline-none focus:ring-0 transition-all ${
+        className={` text-center p-4 border-b border-black border-opacity-5  text-sm focus:outline-none focus:ring-0 transition-all  ${
           isScrolled
-            ? 'fixed border-none left-0 w-full bg-white  z-20' // Scroll down state
-            : 'bg-transparent font-bold'
+            ? 'fixed border-none left-0 w-full dark:text-black bg-white  z-20' // Scroll down state
+            : 'bg-transparent font-bold dark:text-flag-red'
         }`}
       />
 
@@ -71,8 +71,10 @@ export default function ProductSearch({
                 setFilteredResults([]);
               }
             }}
-            className={`bg-white cursor-pointer flex items-center space-x-3 p-2 border-b transition ${
-              product.stock > 0 ? '' : ' cursor-not-allowed opacity-40'
+            className={`bg-white dark:bg-gray-800 cursor-pointer flex items-center space-x-3 p-2 border-b transition ${
+              product.stock > 0
+                ? ''
+                : ' cursor-not-allowed opacity-40 dark:opacity-80'
             }`}
           >
             {product.imageUrl && (
@@ -84,7 +86,7 @@ export default function ProductSearch({
                 className="object-cover w-12 h-12"
               />
             )}
-            <div className="flex flex-col text-sm uppercase">
+            <div className="flex flex-col text-sm uppercase dark:text-flag-red">
               <div className="font-semibold">
                 {product.name} <strong className="px-2">|</strong>
                 <strong className="text-green">${product.price}</strong>
