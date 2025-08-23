@@ -92,10 +92,10 @@ export default function ProductFormStepSubmit({
           type="button"
           onClick={handleUploadAction}
           disabled={loading || !isFormValidAction()}
-          className={`uppercase flex-1 py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm ${
+          className={`uppercase flex-1 py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm  ${
             loading || !isFormValidAction()
               ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-green text-white'
+              : 'bg-green text-white   cursor: pointer;'
           }`}
         >
           {loading ? 'Adding item...' : 'Add new item'}
