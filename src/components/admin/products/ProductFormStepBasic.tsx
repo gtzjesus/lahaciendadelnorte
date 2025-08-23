@@ -93,21 +93,6 @@ export default function ProductFormStepBasic({
         )}
       </div>
 
-      {/* Slug (auto-filled) */}
-      <div className="flex flex-col gap-2">
-        <label className="text-xs dark:text-flag-red">
-          Slug (auto-generated)
-        </label>
-        <input
-          name="slug"
-          type="text"
-          placeholder="Slug"
-          value={form.slug}
-          readOnly
-          className="p-2 border border-black border-opacity-5 bg-flag-red text-xs  focus:outline-none cursor-not-allowed"
-        />
-      </div>
-
       {/* Category */}
       <div className="flex flex-col gap-2">
         <label className="text-xs dark:text-flag-red">Category</label>
@@ -138,6 +123,19 @@ export default function ProductFormStepBasic({
       >
         Continue to next step
       </button>
+
+      {/* Slug (auto-filled) */}
+      <div className="flex flex-col gap-2 invisible">
+        <label className="text-xs bg-tra">Slug (auto-generated)</label>
+        <input
+          name="slug"
+          type="text"
+          placeholder="Slug"
+          value={form.slug}
+          readOnly
+          className="p-2 border border-black border-opacity-5 bg-flag-red text-xs  focus:outline-none cursor-not-allowed"
+        />
+      </div>
     </div>
   );
 }

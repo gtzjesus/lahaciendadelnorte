@@ -33,19 +33,19 @@ export default function SaleSuccessModal({
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-flag-red/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center  backdrop-blur-sm"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
       <motion.div
-        className="relative bg-flag-red rounded-2xl shadow-xl px-4 py-10 text-center w-full max-w-xs overflow-hidden"
+        className="relative bg-flag-red dark:bg-gray-800 rounded-2xl shadow-xl px-4 py-10 text-center w-full max-w-xs overflow-hidden"
         initial={{ scale: 0.6, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
-        <div className="absolute inset-0 z-0 pointer-events-none bg-cover opacity-20" />
+        <div className="absolute inset-0 z-0 pointer-events-none bg-cover opacity-20 " />
 
         <motion.h2
           className="text-2xl font-extrabold text-green z-10 relative"
@@ -57,7 +57,7 @@ export default function SaleSuccessModal({
         </motion.h2>
 
         <motion.p
-          className="text-md font-medium mt-2 z-10 relative"
+          className="text-md font-medium mt-2 z-10 relative dark:text-flag-red"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
@@ -65,8 +65,8 @@ export default function SaleSuccessModal({
           Order #{orderNumber}
         </motion.p>
 
-        <p className="text-sm font-light mt-1 z-10 relative">
-          All done! What now?
+        <p className="text-sm font-light mt-1 z-10 relative dark:text-flag-red">
+          Way to go! What now?
         </p>
 
         <div className="flex flex-col gap-3 mt-6 z-10 relative">

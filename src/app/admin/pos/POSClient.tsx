@@ -43,6 +43,15 @@ export default function POSClient() {
   const [, setShowSummary] = useState(true);
   const [isInputFocused, setIsInputFocused] = useState(false);
 
+  const resetSaleState = () => {
+    setCustomerName('');
+    setCashReceived(0);
+    setCardAmount(0);
+    setPaymentMethod('card');
+    setSaleSuccess(null);
+    clearCart();
+  };
+
   // Create a ref to the product list container for scrolling
   const productListRef = useRef<HTMLDivElement>(null);
 
@@ -178,7 +187,7 @@ export default function POSClient() {
       {saleSuccess && (
         <SaleSuccessModal
           orderNumber={saleSuccess}
-          onCloseAction={() => setSaleSuccess(null)}
+          onCloseAction={resetSaleState}
         />
       )}
     </div>
