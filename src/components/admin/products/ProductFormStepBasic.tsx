@@ -46,7 +46,8 @@ export default function ProductFormStepBasic({
   return (
     <div className="space-y-4 text-black ">
       <p className="text-xs text-center font-bold dark:text-flag-red">
-        Enter item information
+        Start creating your new item! <br />
+        Please enter item information below
       </p>
 
       {/* Item Number */}

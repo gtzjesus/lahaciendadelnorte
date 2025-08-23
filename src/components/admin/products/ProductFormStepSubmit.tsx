@@ -38,7 +38,8 @@ export default function ProductFormStepSubmit({
   return (
     <div className="space-y-4 text-xs font-bold">
       <p className="text-center dark:text-flag-red">
-        Review details and add new item once ready
+        Review details and add new item once ready <br />
+        Happy selling!
       </p>
 
       <div className="text-center border border-white p-4 space-y-2 dark:text-flag-red">

@@ -81,7 +81,10 @@ export default function DrawerFilterControls({
               <select
                 id="filter"
                 value={filter}
-                onChange={(e) => setFilterAction(e.target.value as OrderFilter)}
+                onChange={(e) => {
+                  setFilterAction(e.target.value as OrderFilter);
+                  setIsExpanded(false); // 👈 this auto-closes the drawer
+                }}
                 className="appearance-none uppercase text-center w-full border border-black border-opacity-5 px-2 py-2 pr-8 text-xs bg-flag-red rounded shadow-xl dark:text-black"
               >
                 <option value="pending">Pending orders</option>

@@ -13,8 +13,6 @@ interface OrderFilterControlsProps {
 export default function OrderFilterControls({
   filter,
   setFilterAction,
-  searchTerm,
-  setSearchTermAction,
 }: OrderFilterControlsProps) {
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -63,16 +61,6 @@ export default function OrderFilterControls({
         </div>
 
         {/* SEARCH */}
-        <div className="sticky top-0 z-30 flex-1 w-full">
-          <input
-            type="text"
-            id="search"
-            placeholder="Search order by name or #"
-            value={searchTerm}
-            onChange={(e) => setSearchTermAction(e.target.value)}
-            className="uppercase text-sm border-b border-black border-opacity-5 p-4 w-full bg-white focus:outline-none focus:ring-0 "
-          />
-        </div>
       </div>
     </div>
   );

@@ -340,7 +340,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
             : 'bg-green text-white '
         )}
       >
-        {isSaving ? 'Saving item' : 'Save Changes'}
+        {isSaving ? 'Saving Changes' : 'Save Changes'}
       </button>
 
       <button
@@ -353,7 +353,7 @@ const InventoryCard: React.FC<InventoryCardProps> = ({
             : 'bg-red-500 text-white'
         )}
       >
-        {isDeleting ? 'Deleting item...' : 'Delete item'}
+        {isDeleting ? 'Too late now! Deleting item...' : 'Delete item'}
       </button>
 
       {/* Save Feedback */}

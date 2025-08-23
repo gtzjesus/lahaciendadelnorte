@@ -53,7 +53,8 @@ export default function ProductFormStepVariants({
   return (
     <div className="space-y-4 ">
       <p className="dark:text-flag-red text-xs text-center font-bold">
-        Item sizes (must include at least 1 size)
+        Please enter the item sizes <br />
+        (make sure to include at least 1 size)
       </p>
 
       {form.variants.map((v, i) => (

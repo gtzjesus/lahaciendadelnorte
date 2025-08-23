@@ -35,7 +35,7 @@ export default function ProductFormStepImages({
     <>
       <div className=" p-4 mb-6 space-y-4 font-bold">
         <p className="text-xs text-center font-bold dark:text-flag-red">
-          Add images to continue
+          Lastly, add images to your new item!
         </p>
         {/* Main Image Upload */}
         <div className="flex flex-col gap-5 w-full mt-4">

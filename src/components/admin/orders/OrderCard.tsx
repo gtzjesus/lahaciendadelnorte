@@ -58,7 +58,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
     <div
       className={`p-2 mb-4  overflow-hidden dark:bg-gray-800 bg-flag-red  ${
         pickupStatus === 'pending'
-          ? 'border-black dark:border-flag-red border-opacity-5 border'
+          ? 'border-red-300 dark:border-red-300  border'
           : 'border-green border border-opacity-30'
       }`}
     >
@@ -94,9 +94,9 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           <button
             disabled={isLoading}
             onClick={finishPickup}
-            className="my-2 w-full bg-green text-white py-2 text-xs uppercase font-semibold disabled:opacity-25"
+            className="my-2 w-full bg-green text-white py-2 text-xs uppercase font-semibold disabled:opacity-60"
           >
-            {isLoading ? 'way to go! Finishing Pickup...' : 'Finish Pickup'}
+            {isLoading ? 'Good stuff! Finishing Pickup...' : 'Finish Pickup'}
           </button>
         </div>
       )}
