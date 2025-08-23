@@ -58,7 +58,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
     <div
       className={`p-2 mb-4  overflow-hidden dark:bg-gray-800 bg-flag-red  ${
         pickupStatus === 'pending'
-          ? 'border-black border-opacity-5 border'
+          ? 'border-black dark:border-flag-red border-opacity-5 border'
           : 'border-green border border-opacity-30'
       }`}
     >

@@ -65,7 +65,7 @@ export default function SaleSummary({
   // Set background based on your custom dark mode state
   const backgroundUrl = isDark
     ? "url('/admin/summary-dark.gif')"
-    : "url('/admin/summary.webp')";
+    : "url('/admin/summary.gif')";
 
   return (
     <div
@@ -82,7 +82,7 @@ export default function SaleSummary({
     >
       {/* ⏳ Fullscreen Loader */}
       {loading && (
-        <div className="fixed inset-0 z-40 bg-flag-red bg-opacity-80 flex justify-center items-center">
+        <div className="fixed inset-0 z-40 bg-flag-red dark:bg-gray-800 dark:bg-opacity-60 bg-opacity-80 flex justify-center items-center">
           <LoaderOrder />
         </div>
       )}

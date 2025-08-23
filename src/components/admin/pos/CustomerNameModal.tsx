@@ -21,20 +21,20 @@ const CustomerNameModal = ({
 }: CustomerNameModalProps) => {
   return (
     <motion.div
-      className="fixed inset-0 z-50  flex justify-center items-center bg-flag-red min-h-screen py-20"
+      className="fixed inset-0 z-50  flex justify-center items-center dark:bg-gray-800 bg-flag-red min-h-screen py-20"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="bg-flag-red p-6  w-full h-[70%] max-w-xl text-center space-y-3  overflow-auto"
+        className="bg-flag-red dark:bg-gray-800 p-6  w-full h-[70%] max-w-xl text-center space-y-3  overflow-auto"
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         exit={{ y: -100 }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="text-sm font-bold text-black ">
+        <h2 className="text-sm font-bold text-black dark:text-flag-red ">
           Under what name for this order?
         </h2>
 
@@ -49,7 +49,7 @@ const CustomerNameModal = ({
           autoFocus
         />
 
-        <p className="text-sm  text-gray-700">
+        <p className="text-sm  text-gray-700 dark:text-flag-red">
           Are you sure you want to complete this sale for{' '}
           <span className="font-bold text-green">${total.toFixed(2)}</span>?
         </p>
