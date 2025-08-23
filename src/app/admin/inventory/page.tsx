@@ -155,12 +155,13 @@ export default function InventoryPage() {
       console.error('[Upload Error]', err);
 
       // ✅ SET ERROR MESSAGE TO DISPLAY IN UI
-      const errorMessage =
-        err instanceof Error
-          ? err.message
-          : 'Something went wrong while adding the product.';
+      // const errorMessage =
+      //   err instanceof Error
+      //     ? err.message
+      //     : 'Something went wrong while adding the product.';
 
-      setMessage(errorMessage);
+      // setMessage(errorMessage);
+      setMessage('Upload failed. Image too large.');
     } finally {
       setLoading(false);
     }
