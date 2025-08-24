@@ -75,7 +75,7 @@ export default function RootLayout({
         <meta charSet="UTF-8" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="min-h-screen bg-custom-background transition-colors duration-300">
+      <body className="min-h-screen bg-flag-red text-black transition-colors duration-300">
         <HtmlWithTheme>
           <ClerkProvider>
             <ErrorBoundary>{children}</ErrorBoundary>
