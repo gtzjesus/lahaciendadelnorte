@@ -8,9 +8,16 @@ export type Dimensions = {
 
 export type CustomShedForm = {
   dimensions: Dimensions;
-  // Add more fields here as you build new steps
-  // material?: string;
-  // windows?: number;
-  // doors?: number;
-  // etc.
+  material?: string;
+  windows?: {
+    hasWindows: boolean;
+    quantity?: number;
+  };
+  doors?: {
+    count: number;
+  };
+  roof?: {
+    style: string;
+  };
+  addons?: string[];
 };

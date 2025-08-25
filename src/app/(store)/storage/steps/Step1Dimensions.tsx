@@ -61,13 +61,13 @@ export default function Step1Dimensions({
   return (
     <div className="space-y-4 text-white">
       <h1
-        className="uppercase font-bold text-4xl lg:text-8xl text-white leading-tight text-center px-1 
+        className="uppercase font-bold text-4xl lg:text-5xl text-white leading-tight text-center px-1 
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] mb-8"
       >
         Welcome to our Storage Builder
       </h1>
 
-      <p className="text-xs text-center font-bold ">
+      <p className="text-sm lg:text-xl text-center font-bold ">
         Let’s start with your shed’s dimensions!
       </p>
 
@@ -133,9 +133,9 @@ export default function Step1Dimensions({
         <select
           value={selectedPreset}
           onChange={(e) => setSelectedPreset(e.target.value)}
-          className="appearance-none p-2 border text-xs focus:outline-none text-black text-center"
+          className="uppercase appearance-none p-2 border text-xs focus:outline-none text-black text-center"
         >
-          <option value="">Select a preset</option>
+          <option value="text-center">Select a preset</option>
           {presetSheds.map((preset) => (
             <option key={preset.label} value={preset.label}>
               {preset.label}
@@ -155,7 +155,7 @@ export default function Step1Dimensions({
             : 'bg-green text-white'
         }`}
       >
-        Continue to next step
+        Continue to material
       </button>
     </div>
   );

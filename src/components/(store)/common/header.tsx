@@ -11,7 +11,7 @@ import AuthButtons from '../../auth/AuthButtons';
 
 const navItems = [
   { name: 'Home', href: '/' },
-  { name: 'Start Building', href: '/build-storage' },
+  { name: 'Start Building', href: '/storage' },
   { name: 'Qualify With Lender', href: '/qualify' },
 
   { name: 'Contact', href: '/contact' },

@@ -3,6 +3,12 @@
 import React, { useState } from 'react';
 import Step1Dimensions from './steps/Step1Dimensions';
 import { CustomShedForm } from '@/types/(store)/storage';
+import Step2Material from './steps/Step2Materials';
+import Step3Windows from './steps/Step3Windows';
+import Step4Doors from './steps/Step4Doors';
+import Step5Roof from './steps/Step5Roof';
+import Step6Addons from './steps/Step6Addons';
+import Step7Review from './steps/Step7Review';
 
 export default function StorageBuilderPage() {
   const [form, setForm] = useState<CustomShedForm>({
@@ -19,6 +25,16 @@ export default function StorageBuilderPage() {
     setCurrentStep((prev) => prev + 1);
   };
 
+  const handlePrevStep = () => {
+    setCurrentStep((prev) => (prev > 1 ? prev - 1 : prev));
+  };
+
+  const handleSubmit = () => {
+    console.log('Submitted Shed Design:', form);
+    // TODO: connect to backend, Firebase, Supabase, etc.
+    alert('Your custom shed design has been submitted!');
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case 1:
@@ -27,6 +43,59 @@ export default function StorageBuilderPage() {
             form={form}
             setFormAction={setForm}
             onNext={handleNextStep}
+          />
+        );
+      case 2:
+        return (
+          <Step2Material
+            form={form}
+            setFormAction={setForm}
+            onNext={handleNextStep}
+            onBack={handlePrevStep}
+          />
+        );
+      case 3:
+        return (
+          <Step3Windows
+            form={form}
+            setFormAction={setForm}
+            onNext={handleNextStep}
+            onBack={handlePrevStep}
+          />
+        );
+      case 4:
+        return (
+          <Step4Doors
+            form={form}
+            setFormAction={setForm}
+            onNext={handleNextStep}
+            onBack={handlePrevStep}
+          />
+        );
+      case 5:
+        return (
+          <Step5Roof
+            form={form}
+            setFormAction={setForm}
+            onNext={handleNextStep}
+            onBack={handlePrevStep}
+          />
+        );
+      case 6:
+        return (
+          <Step6Addons
+            form={form}
+            setFormAction={setForm}
+            onNext={handleNextStep}
+            onBack={handlePrevStep}
+          />
+        );
+      case 7:
+        return (
+          <Step7Review
+            form={form}
+            onBack={handlePrevStep}
+            onSubmit={handleSubmit}
           />
         );
       default:
