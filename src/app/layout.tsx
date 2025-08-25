@@ -74,6 +74,11 @@ export default function RootLayout({
       <head>
         <meta charSet="UTF-8" />
         <link rel="icon" href="/favicon.ico" />
+        {/* Load Rubik Distressed font globally */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Rubik+Distressed&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body className="min-h-screen bg-flag-red text-black transition-colors duration-300">
         <HtmlWithTheme>

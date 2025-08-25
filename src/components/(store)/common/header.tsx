@@ -94,7 +94,7 @@ const Header = () => {
           <div className="absolute left-1/2 transform -translate-x-1/2 ">
             <Link
               href="/"
-              className={`uppercase text-sm font-bold sm:mx-0 sm:hidden ${
+              className={` uppercase text-sm font-bold sm:mx-0 sm:hidden ${
                 scrolled ? 'text-black' : 'text-white'
               }`}
             >
