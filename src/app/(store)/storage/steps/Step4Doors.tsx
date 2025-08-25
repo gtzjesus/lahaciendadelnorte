@@ -42,7 +42,7 @@ export default function Step4Doors({
         <select
           value={doorCount}
           onChange={(e) => setDoorCount(Number(e.target.value))}
-          className="p-2 border text-xs text-black focus:outline-none"
+          className="uppercase appearance-none p-2 border text-xs focus:outline-none text-black text-center"
         >
           {doorOptions.map((num) => (
             <option key={num} value={num}>
