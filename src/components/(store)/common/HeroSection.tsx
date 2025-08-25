@@ -21,7 +21,7 @@ const HeroSection: FC<HeroSectionProps> = ({ className = '' }) => {
       </h1>
 
       <p
-        className="max-w-lg font-bold text-lg lg:text-2xl text-white leading-tight text-center px-2
+        className="max-w-lg font-bold text-lg lg:text-2xl text-white leading-tight text-center mt-20 px-2
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
       >
         We make it simple to create the custom storage you need — built with
