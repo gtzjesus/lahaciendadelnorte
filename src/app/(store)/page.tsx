@@ -1,16 +1,11 @@
 // app/(store)/page.tsx
 
-import { client } from '@/sanity/lib/client';
 import HeroSection from '@/components/(store)/common/HeroSection';
 import BlackFridayBanner from '@/components/(store)/common/BlackFridayBanner';
 import Footer from '@/components/(store)/common/Footer';
-import Categories from '@/components/categories/Categories';
 import Header from '@/components/(store)/common/header';
 import Background from '@/components/(store)/common/Background';
-import { Category } from '@/types';
-import Script from 'next/script';
 import type { Metadata } from 'next';
-import PickupLocation from '@/components/orders/PickupLocation';
 
 export const metadata: Metadata = {
   title: 'La Hacienda Del Norte - Custom Storage & More in El Paso, TX',
@@ -63,19 +58,6 @@ export const metadata: Metadata = {
 };
 
 const Home = async () => {
-  const categories: Category[] = await client.fetch('*[_type == "category"]');
-
-  const categorySchema = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    itemListElement: categories.map((cat, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: cat.title,
-      url: `https://laduena.store/categories/${cat.slug.current}`,
-    })),
-  };
-
   return (
     <div>
       <Header />
@@ -85,16 +67,7 @@ const Home = async () => {
       </div>
 
       <BlackFridayBanner />
-      <Categories categories={categories} />
-      <PickupLocation />
       <Footer />
-
-      <Script
-        id="category-jsonld"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(categorySchema) }}
-        strategy="afterInteractive"
-      />
     </div>
   );
 };

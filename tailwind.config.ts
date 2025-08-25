@@ -44,7 +44,7 @@ const config: Config = {
         'custom-gray': '#D5D5D5',
         pearl: '#F5F5F5',
         'flag-red': '#1F2937',
-        'flag-blue': '#6FDCDC',
+        'flag-blue': '#F5DEB3',
         'custom-background': '#FFFBFC',
 
         green: '#2E8B57',
