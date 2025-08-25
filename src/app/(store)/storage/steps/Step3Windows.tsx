@@ -19,16 +19,27 @@ export default function Step3Windows({
   const [hasWindows, setHasWindows] = useState<boolean>(
     form.windows?.hasWindows ?? false
   );
-  const [quantity, setQuantity] = useState<number>(form.windows?.quantity ?? 1);
 
-  const isValid = !hasWindows || (hasWindows && quantity > 0);
+  const [quantity, setQuantity] = useState<number | ''>(
+    form.windows?.hasWindows ? (form.windows?.quantity ?? '') : ''
+  );
 
+  const isValid = !hasWindows || (hasWindows && Number(quantity) > 0);
+
+  // Reset quantity when windows are disabled
+  useEffect(() => {
+    if (!hasWindows) {
+      setQuantity('');
+    }
+  }, [hasWindows]);
+
+  // Sync with parent state
   useEffect(() => {
     setFormAction((prev) => ({
       ...prev,
       windows: {
         hasWindows,
-        quantity: hasWindows ? quantity : 0,
+        quantity: hasWindows ? Number(quantity) : 0,
       },
     }));
   }, [hasWindows, quantity, setFormAction]);
@@ -59,21 +70,21 @@ export default function Step3Windows({
         </button>
       </div>
 
+      {/* Quantity Input */}
       {hasWindows && (
-        <>
-          {/* Quantity */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold">Number of windows</label>
-            <input
-              type="number"
-              min={1}
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              className="p-2 border text-xs text-black focus:outline-none"
-              placeholder="e.g. 2"
-            />
-          </div>
-        </>
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-semibold">Number of windows</label>
+          <input
+            type="number"
+            min={1}
+            value={quantity}
+            onChange={(e) =>
+              setQuantity(e.target.value === '' ? '' : Number(e.target.value))
+            }
+            className="p-2 border text-xs text-black focus:outline-none"
+            placeholder="e.g. 2"
+          />
+        </div>
       )}
 
       {/* Navigation Buttons */}
