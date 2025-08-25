@@ -55,6 +55,13 @@ const Header = () => {
           />
         </Link>
 
+        <h1
+          className="uppercase font-bold text-xs 4  text-white leading-tight text-center 
+          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
+        >
+          La Hacienda del norte
+        </h1>
+
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -130,15 +137,6 @@ const Header = () => {
             transition={{ delay: 0.2, duration: 0.4 }}
             className="flex flex-col items-center justify-center flex-1 space-y-6 w-full md:hidden mt-8"
           >
-            <div className="relative w-[100px] h-[50px]">
-              <h1
-                className="uppercase font-bold text-xs  text-white leading-tight text-center 
-          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
-              >
-                La Hacienda del norte
-              </h1>
-            </div>
-
             {navItems.map(({ name, href }, i) => (
               <motion.div
                 key={href}
@@ -151,7 +149,7 @@ const Header = () => {
                   onClick={() => setMenuOpen(false)}
                   className={clsx(
                     'text-xl font-semibold transition-colors',
-                    pathname === href ? 'text-white underline' : 'text-white'
+                    pathname === href ? 'text-flag-blue' : 'text-white'
                   )}
                 >
                   {name}
@@ -159,7 +157,7 @@ const Header = () => {
               </motion.div>
             ))}
 
-            <div className="font-bold">
+            <div className="font-semibold text-xl">
               <AuthButtons user={user ?? null} />
             </div>
           </motion.div>
