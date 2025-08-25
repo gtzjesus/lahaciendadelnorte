@@ -83,6 +83,7 @@ const Header = () => {
         <div className="flex items-center flex-1">
           <Link href="/" className="font-bold cursor-pointer sm:mx-0 sm:hidden">
             <Image
+              key={scrolled ? 'black' : 'normal'}
               src={scrolled ? '/icons/logo-blacked.webp' : '/icons/logo.webp'}
               alt="worldhello"
               width={50}

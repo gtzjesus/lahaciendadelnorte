@@ -9,16 +9,16 @@ interface HeroSectionProps {
 
 const HeroSection: FC<HeroSectionProps> = ({ className = '' }) => {
   return (
-    <div className={`relative ${className}`}>
+    <div className={`bg-flag-red relative ${className}`}>
       {/* Title near the top, centered */}
-      <div className="absolute bottom-[60vh] left-1/2 transform -translate-x-1/2 z-50 text-center px-4 max-w-[90vw]">
-        <h1 className="uppercase font-bold text-7xl lg:text-8xl text-white leading-tight mb-4">
-          Build your Custom Storage
+      <div className=" absolute bottom-[40vh] left-1/2 transform -translate-x-1/2 z-50 text-center px-4 w-full">
+        <h1 className="uppercase font-bold text-6xl lg:text-8xl text-white leading-tight mb-4">
+          Build your <br /> Custom Storage
         </h1>
       </div>
 
       {/* Buttons near the bottom, centered */}
-      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex gap-4 z-10">
+      <div className=" absolute w-full  bottom-20 left-1/2 transform -translate-x-1/2 flex justify-center gap-4 z-10">
         <Link
           href="/"
           className="border px-4 py-5 block text-center lg:text-lg rounded-3xl text-xs font-bold transition duration-200 ease-in-out shadow-sm text-white"
