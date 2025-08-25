@@ -25,6 +25,14 @@ body {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overscroll-behavior-y: contain;
+}
+
 /* ============================================================================
  🎨 THEME ROOT VARIABLES (Light / Dark Mode)
 ============================================================================ */
