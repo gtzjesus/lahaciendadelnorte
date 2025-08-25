@@ -1,7 +1,6 @@
 // app/(store)/page.tsx
 
 import HeroSection from '@/components/(store)/common/HeroSection';
-import BlackFridayBanner from '@/components/(store)/common/BlackFridayBanner';
 import Footer from '@/components/(store)/common/Footer';
 import Header from '@/components/(store)/common/header';
 import Background from '@/components/(store)/common/Background';
@@ -61,12 +60,10 @@ const Home = async () => {
   return (
     <div>
       <Header />
-      <div className="relative w-full h-screen">
+      <div className="relative w-full min-h-screen">
         <Background />
         <HeroSection />
       </div>
-
-      <BlackFridayBanner />
       <Footer />
     </div>
   );
