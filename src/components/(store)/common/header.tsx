@@ -62,7 +62,7 @@ const Header = () => {
         <div className="flex items-center flex-1">
           <Link href="/" className="font-bold cursor-pointer sm:mx-0 sm:hidden">
             <Image
-              src={'/icons/logo-blacked.webp'}
+              src={'/icons/logo.webp'}
               alt="worldhello"
               width={50}
               height={50}
@@ -70,10 +70,10 @@ const Header = () => {
               priority
             />
           </Link>
-          <div className="absolute left-1/2 transform -translate-x-1/2 ">
+          <div className="relative left-1/2 transform -translate-x-1/2 ">
             <Link
               href="/"
-              className={` uppercase text-sm font-bold sm:mx-0 sm:hidden`}
+              className={`text-white uppercase text-sm font-bold sm:mx-0 sm:hidden`}
             >
               Hacienda Del Norte
             </Link>
@@ -89,7 +89,7 @@ const Header = () => {
                 priority
               />
             </Link>
-            <Link href="/" className={`uppercase text-sm `}>
+            <Link href="/" className={`uppercase text-sm text-white `}>
               Hacienda del norte
             </Link>
           </div>
@@ -114,13 +114,13 @@ const Header = () => {
         >
           {/* Top Bar (first line) */}
           <div
-            className={`w-5 h-0.5 ${'bg-black'} transition-all duration-300 ease-in-out transform ${
+            className={`w-5 h-0.5 ${'bg-white'} transition-all duration-300 ease-in-out transform ${
               isMenuOpen ? 'rotate-45 translate-y-0.5' : ''
             }`}
           />
           {/* Bottom Bar (third line) */}
           <div
-            className={`w-5 h-0.5 ${'bg-black'} transition-all duration-300 ease-in-out transform ${
+            className={`w-5 h-0.5 ${'bg-white'} transition-all duration-300 ease-in-out transform ${
               isMenuOpen ? '-rotate-45 -translate-y-0.5' : ''
             }`}
           />
