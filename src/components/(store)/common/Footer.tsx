@@ -9,13 +9,13 @@
  */
 const Footer: React.FC = () => {
   return (
-    <footer className="pt-5 text-flag-blue">
+    <footer className="pt-5 text-flag-blue overflow-hidden">
       <div>
         <p className="uppercase text-center text-md tracking-very-wide font-light ">
           Serving El Paso and surrounding areas
         </p>
         <h1
-          className="uppercase font-bold text-8xl  text-white leading-tight text-center px-1 
+          className="uppercase font-bold text-9xl  text-white leading-tight text-center px-1 
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
         >
           Hacienda
