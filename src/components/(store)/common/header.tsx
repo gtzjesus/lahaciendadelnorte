@@ -80,10 +80,10 @@ const Header = () => {
     >
       <div className="flex w-full">
         {/* Left side: Logo and Company Name */}
-        <div className="flex items-center space-x-4 flex-1">
+        <div className="flex items-center flex-1">
           <Link href="/" className="font-bold cursor-pointer sm:mx-0 sm:hidden">
             <Image
-              src={scrolled ? '/icons/logo.webp' : '/icons/logo.webp'}
+              src={scrolled ? '/icons/logo-blacked.webp' : '/icons/logo.webp'}
               alt="worldhello"
               width={50}
               height={50}
@@ -98,7 +98,7 @@ const Header = () => {
                 scrolled ? 'text-black' : 'text-white'
               }`}
             >
-              La Hacienda Del Norte
+              Hacienda Del Norte
             </Link>
           </div>
 
@@ -118,7 +118,7 @@ const Header = () => {
                 scrolled ? 'text-black' : 'text-white'
               }`}
             >
-              La hacienda del norte
+              Hacienda del norte
             </Link>
           </div>
         </div>
@@ -144,13 +144,13 @@ const Header = () => {
         >
           {/* Top Bar (first line) */}
           <div
-            className={`w-5 h-0.5 ${scrolled ? 'bg-white' : 'bg-white'} transition-all duration-300 ease-in-out transform ${
+            className={`w-5 h-0.5 ${scrolled ? 'bg-black' : 'bg-white'} transition-all duration-300 ease-in-out transform ${
               isMenuOpen ? 'rotate-45 translate-y-0.5' : ''
             }`}
           />
           {/* Bottom Bar (third line) */}
           <div
-            className={`w-5 h-0.5 ${scrolled ? 'bg-white' : 'bg-white'} transition-all duration-300 ease-in-out transform ${
+            className={`w-5 h-0.5 ${scrolled ? 'bg-black' : 'bg-white'} transition-all duration-300 ease-in-out transform ${
               isMenuOpen ? '-rotate-45 -translate-y-0.5' : ''
             }`}
           />
@@ -177,7 +177,7 @@ const Header = () => {
           {isMenuOpen ? '' : <span className="text-white"></span>}
         </button>
         <div className="flex flex-col items-center  h-full p-20 space-y-6">
-          <div className="flex flex-col items-center space-y-4 text-white text-2xl">
+          <div className="flex flex-col items-center space-y-4 text-black text-2xl">
             <AuthButtons user={user ?? null} />
           </div>
         </div>
