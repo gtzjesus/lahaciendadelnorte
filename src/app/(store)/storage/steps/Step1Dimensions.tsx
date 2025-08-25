@@ -9,6 +9,20 @@ type Step1DimensionsProps = {
   onNext: () => void;
 };
 
+// Preset shed dimension options
+const presetSheds: { label: string; dimensions: Dimensions }[] = [
+  { label: 'Small (6x8x6)', dimensions: { width: 6, length: 8, height: 6 } },
+  { label: 'Medium (8x10x8)', dimensions: { width: 8, length: 10, height: 8 } },
+  {
+    label: 'Large (10x12x10)',
+    dimensions: { width: 10, length: 12, height: 10 },
+  },
+  {
+    label: 'Extra Large (12x16x12)',
+    dimensions: { width: 12, length: 16, height: 12 },
+  },
+];
+
 export default function Step1Dimensions({
   form,
   setFormAction,
@@ -19,6 +33,8 @@ export default function Step1Dimensions({
     length: form.dimensions?.length ?? '',
     height: form.dimensions?.height ?? '',
   });
+
+  const [selectedPreset, setSelectedPreset] = useState<string>('');
 
   const isValid =
     Number(localDimensions.width) > 0 &&
@@ -32,12 +48,20 @@ export default function Step1Dimensions({
     }));
   }, [localDimensions, setFormAction]);
 
+  // When preset changes, update dimensions
+  useEffect(() => {
+    if (!selectedPreset) return;
+
+    const preset = presetSheds.find((p) => p.label === selectedPreset);
+    if (preset) {
+      setLocalDimensions(preset.dimensions);
+    }
+  }, [selectedPreset]);
+
   return (
     <div className="space-y-4 text-white">
       <p className="text-xs text-center font-bold ">
         Let’s start with your shed’s dimensions!
-        <br />
-        Enter width, length and height in feet.
       </p>
 
       {/* Length */}
@@ -46,7 +70,7 @@ export default function Step1Dimensions({
         <input
           type="number"
           min="1"
-          placeholder="e.g. 12"
+          placeholder="e.g. 10"
           value={localDimensions.length}
           onChange={(e) =>
             setLocalDimensions((prev) => ({
@@ -54,7 +78,7 @@ export default function Step1Dimensions({
               length: Number(e.target.value),
             }))
           }
-          className="p-2 border  text-xs focus:outline-none text-black"
+          className="p-2 border text-xs focus:outline-none text-black"
         />
       </div>
 
@@ -64,7 +88,7 @@ export default function Step1Dimensions({
         <input
           type="number"
           min="1"
-          placeholder="e.g. 10"
+          placeholder="e.g. 8"
           value={localDimensions.width}
           onChange={(e) =>
             setLocalDimensions((prev) => ({
@@ -72,7 +96,7 @@ export default function Step1Dimensions({
               width: Number(e.target.value),
             }))
           }
-          className="p-2 border  text-xs focus:outline-none text-black"
+          className="p-2 border text-xs focus:outline-none text-black"
         />
       </div>
 
@@ -90,8 +114,27 @@ export default function Step1Dimensions({
               height: Number(e.target.value),
             }))
           }
-          className="p-2 border  text-xs focus:outline-none text-black"
+          className="p-2 border text-xs focus:outline-none text-black"
         />
+      </div>
+
+      {/* Preset dropdown */}
+      <div className="flex flex-col gap-2 mt-4">
+        <label className="text-xs font-semibold text-white text-center">
+          Or
+        </label>
+        <select
+          value={selectedPreset}
+          onChange={(e) => setSelectedPreset(e.target.value)}
+          className="p-2 border text-xs focus:outline-none text-black text-center"
+        >
+          <option value="">Select a preset</option>
+          {presetSheds.map((preset) => (
+            <option key={preset.label} value={preset.label}>
+              {preset.label}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Continue Button */}

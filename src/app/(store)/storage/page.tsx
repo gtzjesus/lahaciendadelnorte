@@ -51,8 +51,8 @@ export default function StorageBuilderPage() {
         className=" font-light text-md lg:text-8xl text-white leading-tight text-center px-1 
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] mb-8"
       >
-        Start building your custom shed by entering information below. Just
-        follow the prompts, and you’ll have your storage design in no time.
+        Start building your custom shed by entering information below and you’ll
+        have your storage design in no time.
       </p>
 
       {renderStep()}
