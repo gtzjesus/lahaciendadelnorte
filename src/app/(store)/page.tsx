@@ -79,8 +79,10 @@ const Home = async () => {
   return (
     <div>
       <Header />
-      <Background />
-      <HeroSection />
+      <div className="relative w-full h-full overflow-hidden">
+        <Background />
+        <HeroSection />
+      </div>
       <BlackFridayBanner />
       <Categories categories={categories} />
       <PickupLocation />

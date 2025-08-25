@@ -7,7 +7,7 @@ export default function Background() {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <div className="relative w-full h-screen">
+    <div className="relative w-full h-screen ">
       {/* Imagen móvil */}
       <div className="block absolute inset-0 z-10">
         <Image
