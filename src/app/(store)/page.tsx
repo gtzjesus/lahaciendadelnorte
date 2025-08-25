@@ -79,10 +79,11 @@ const Home = async () => {
   return (
     <div>
       <Header />
-      <div className="relative w-full h-screen ">
-        <Background className="absolute inset-0 z-0" />
-        <HeroSection className="absolute inset-0 z-10" />
+      <div className="relative w-full h-screen">
+        <Background />
+        <HeroSection />
       </div>
+
       <BlackFridayBanner />
       <Categories categories={categories} />
       <PickupLocation />

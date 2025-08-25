@@ -21,28 +21,11 @@ const Header = () => {
   // States for managing various UI features
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [windowWidth, setWindowWidth] = useState<number>(0);
+  const [windowWidth] = useState<number>(0);
 
   // Client-side mounting
   useEffect(() => {
     setIsMounted(true);
-  }, []);
-
-  // Scroll and resize event handling
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const handleScroll = () => setScrolled(window.scrollY > 50);
-      const handleResize = () => setWindowWidth(window.innerWidth);
-
-      window.addEventListener('scroll', handleScroll);
-      window.addEventListener('resize', handleResize);
-
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-        window.removeEventListener('resize', handleResize);
-      };
-    }
   }, []);
 
   // Close menu on desktop or when pathname changes
@@ -73,18 +56,13 @@ const Header = () => {
   if (!isMounted) return null; // Prevent rendering on server-side
 
   return (
-    <header
-      className={`${
-        scrolled ? 'bg-flag-red shadow-lg' : 'bg-transparent'
-      } fixed top-0 text-white z-20 flex items-center px-4 py-3 w-full transition-all duration-300 ease-in-out`}
-    >
+    <header className=" z-20 flex items-center px-4 py-3 w-full transition-all duration-300 ease-in-out">
       <div className="flex w-full">
         {/* Left side: Logo and Company Name */}
         <div className="flex items-center flex-1">
           <Link href="/" className="font-bold cursor-pointer sm:mx-0 sm:hidden">
             <Image
-              key={scrolled ? 'black' : 'normal'}
-              src={scrolled ? '/icons/logo-blacked.webp' : '/icons/logo.webp'}
+              src={'/icons/logo-blacked.webp'}
               alt="worldhello"
               width={50}
               height={50}
@@ -95,9 +73,7 @@ const Header = () => {
           <div className="absolute left-1/2 transform -translate-x-1/2 ">
             <Link
               href="/"
-              className={` uppercase text-sm font-bold sm:mx-0 sm:hidden ${
-                scrolled ? 'text-black' : 'text-white'
-              }`}
+              className={` uppercase text-sm font-bold sm:mx-0 sm:hidden`}
             >
               Hacienda Del Norte
             </Link>
@@ -106,19 +82,14 @@ const Header = () => {
           <div className="uppercase  hidden sm:flex items-center space-x-2">
             <Link href="/">
               <Image
-                src={scrolled ? '/icons/logo.webp' : '/icons/logo.webp'}
+                src={'/icons/logo.webp'}
                 alt="worldhello"
                 width={30}
                 height={30}
                 priority
               />
             </Link>
-            <Link
-              href="/"
-              className={`uppercase text-sm ${
-                scrolled ? 'text-black' : 'text-white'
-              }`}
-            >
+            <Link href="/" className={`uppercase text-sm `}>
               Hacienda del norte
             </Link>
           </div>
@@ -131,9 +102,7 @@ const Header = () => {
           {/* {pathname !== '/basket' && (
             <CartButton itemCount={itemCount} scrolled={scrolled} />
           )} */}
-          <div
-            className={`hidden sm:flex items-center ${scrolled ? 'text-white' : 'text-white'}`}
-          >
+          <div className={`hidden sm:flex items-center ${'text-white'}`}>
             <AuthButtons user={user ?? null} />
           </div>
         </div>
@@ -145,13 +114,13 @@ const Header = () => {
         >
           {/* Top Bar (first line) */}
           <div
-            className={`w-5 h-0.5 ${scrolled ? 'bg-black' : 'bg-white'} transition-all duration-300 ease-in-out transform ${
+            className={`w-5 h-0.5 ${'bg-black'} transition-all duration-300 ease-in-out transform ${
               isMenuOpen ? 'rotate-45 translate-y-0.5' : ''
             }`}
           />
           {/* Bottom Bar (third line) */}
           <div
-            className={`w-5 h-0.5 ${scrolled ? 'bg-black' : 'bg-white'} transition-all duration-300 ease-in-out transform ${
+            className={`w-5 h-0.5 ${'bg-black'} transition-all duration-300 ease-in-out transform ${
               isMenuOpen ? '-rotate-45 -translate-y-0.5' : ''
             }`}
           />
@@ -160,14 +129,14 @@ const Header = () => {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 bg-flag-red bg-opacity-100 z-10 transition-opacity duration-300 ${
-          isMenuOpen ? 'opacity-95' : 'opacity-0 pointer-events-none'
+        className={`absolute inset-0 bg-flag-red bg-opacity-100 z-10 transition-opacity duration-300 ${
+          isMenuOpen ? 'opacity-75 ' : 'opacity-0 pointer-events-none'
         }`}
         onClick={() => setIsMenuOpen(false)}
       />
       {/* Mobile Menu */}
       <div
-        className={`fixed right-0 top-0 h-full w-full shadow-xl z-20 transform transition-opacity duration-300 ease-in-out ${
+        className={`absolute right-0 top-0 h-full w-full shadow-xl z-20 transform transition-opacity duration-300 ease-in-out ${
           isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       >
@@ -178,7 +147,7 @@ const Header = () => {
           {isMenuOpen ? '' : <span className="text-white"></span>}
         </button>
         <div className="flex flex-col items-center  h-full p-20 space-y-6">
-          <div className="flex flex-col items-center space-y-4 text-black text-2xl">
+          <div className="flex flex-col items-center space-y-4 text-white text-xl">
             <AuthButtons user={user ?? null} />
           </div>
         </div>
