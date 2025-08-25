@@ -23,10 +23,6 @@ const config: Config = {
 
   theme: {
     extend: {
-      // Custom font families
-      fontFamily: {
-        anton: ['Anton', 'sans-serif'],
-      },
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
