@@ -10,18 +10,18 @@ interface HeroSectionProps {
 const HeroSection: FC<HeroSectionProps> = ({ className = '' }) => {
   return (
     <div
-      className={`absolute inset-0 flex flex-col justify-between items-center py-10 ${className} z-20`}
+      className={`absolute inset-0 flex flex-col justify-between items-center py-20 ${className} z-20`}
     >
       {/* Title near the top with text shadow */}
       <h1
-        className="uppercase font-bold text-5xl lg:text-8xl text-white leading-tight text-center px-1 
+        className="uppercase font-bold text-4xl lg:text-8xl text-white leading-tight text-center px-1 
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
       >
         Build your <br /> Custom Storage
       </h1>
 
       <p
-        className="max-w-lg font-bold text-xl lg:text-2xl text-white leading-tight text-center px-4
+        className="max-w-lg font-bold text-lg lg:text-2xl text-white leading-tight text-center px-2
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
       >
         We make it simple to create the custom storage you need — built with
