@@ -1,7 +1,5 @@
 // components/Footer.tsx
 
-import Image from 'next/image';
-
 /**
  * Footer component displays the site’s branding and copyright info.
  *
