@@ -8,7 +8,7 @@ import { draftMode } from 'next/headers';
 import { DisableDraftMode } from '@/components/auth/DisableDraftMode';
 import { VisualEditing } from 'next-sanity';
 import { SanityLive } from '@/sanity/lib/live';
-import ScrollToTop from '@/components/common/ScrollToTop';
+import ScrollToTop from '@/components/(store)/common/ScrollToTop';
 
 /**
  * 🍧 Store Layout – La Dueña

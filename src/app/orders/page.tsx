@@ -1,4 +1,4 @@
-import Header from '@/components/common/header';
+import Header from '@/components/(store)/common/header';
 import { getMyOrders } from '@/sanity/lib/orders/getMyOrders';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';

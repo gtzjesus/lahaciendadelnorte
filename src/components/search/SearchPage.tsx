@@ -4,7 +4,7 @@ import NoResults from '@/components/search/NoResults';
 import SearchResults from '@/components/search/SearchResults';
 import { searchProductsByName } from '@/sanity/lib/products/searchProductsByName';
 import { Product, SearchPageProps } from '@/types';
-import Header from '../common/header';
+import Header from '../(store)/common/header';
 
 /**
  * SearchPage Component

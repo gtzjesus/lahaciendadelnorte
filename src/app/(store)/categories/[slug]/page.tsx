@@ -4,7 +4,7 @@ import { getProductsByCategory } from '@/sanity/lib/products/getProductsByCatego
 import { getAllCategories } from '@/sanity/lib/products/getAllCategories';
 import ProductsView from '@/components/products/ProductsView';
 import { notFound } from 'next/navigation';
-import Header from '@/components/common/header';
+import Header from '@/components/(store)/common/header';
 import type { Metadata } from 'next';
 import { getCategoryBySlug } from '@/sanity/lib/products/getCategoryBySlug';
 

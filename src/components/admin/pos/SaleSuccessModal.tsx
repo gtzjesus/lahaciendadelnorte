@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import Loader from '@/components/common/Loader'; // import your loader here
+import Loader from '@/components/(store)/common/Loader'; // import your loader here
 
 interface SaleSuccessModalProps {
   orderNumber: string;

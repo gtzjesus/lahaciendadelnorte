@@ -1,60 +1,64 @@
 // app/(store)/page.tsx
 
 import { client } from '@/sanity/lib/client';
-import HeroSection from '@/components/common/HeroSection';
-import BlackFridayBanner from '@/components/common/BlackFridayBanner';
-import Footer from '@/components/common/Footer';
+import HeroSection from '@/components/(store)/common/HeroSection';
+import BlackFridayBanner from '@/components/(store)/common/BlackFridayBanner';
+import Footer from '@/components/(store)/common/Footer';
 import Categories from '@/components/categories/Categories';
-import Header from '@/components/common/header';
-import Background from '@/components/common/Background';
+import Header from '@/components/(store)/common/header';
+import Background from '@/components/(store)/common/Background';
 import { Category } from '@/types';
 import Script from 'next/script';
 import type { Metadata } from 'next';
 import PickupLocation from '@/components/orders/PickupLocation';
 
 export const metadata: Metadata = {
-  title: 'La Dueña - Shaved Ice, Ice Cream & Snacks in Canutillo, TX',
+  title: 'La Hacienda Del Norte - Custom Storage & More in El Paso, TX',
   description:
-    'La Dueña offers delicious shaved ice, creamy ice cream, and authentic Mexican snacks in Canutillo, Texas. Refresh yourself today!',
+    'La Hacienda Del Norte offers customizable storage solutions and more in El Paso, Texas. Explore our unique storage options or create your own!',
   keywords: [
-    'La Dueña',
-    'shaved ice Canutillo',
-    'raspas Canutillo',
-    'ice cream Canutillo',
-    'snacks Canutillo',
-    'Mexican snacks',
-    'Chamoy snacks',
+    'La Hacienda Del Norte',
+    'custom storage El Paso',
+    'storage solutions El Paso',
+    'El Paso storage units',
+    'build your own storage',
+    'modular storage El Paso',
   ],
-  authors: [{ name: 'La Dueña', url: 'https://laduena.store' }],
+  authors: [
+    {
+      name: 'La Hacienda Del Norte',
+      url: 'https://lahaciendadelnorte.vercel.app',
+    },
+  ],
   openGraph: {
-    title: 'La Dueña - Shaved Ice & Snacks in Canutillo, TX',
+    title: 'La Hacienda Del Norte - Custom Storage Solutions in El Paso, TX',
     description:
-      'Cool off with La Dueña’s shaved ice, ice cream, and tasty snacks in Canutillo, Texas.',
-    url: 'https://laduena.store',
-    siteName: 'La Dueña',
+      'Explore personalized and modular storage solutions at La Hacienda Del Norte in El Paso. Perfect for every need!',
+    url: 'https://lahaciendadelnorte.vercel.app',
+    siteName: 'La Hacienda Del Norte',
     type: 'website',
     images: [
       {
-        url: '/images/laduena-preview.webp', // Replace with your actual image
+        url: '/images/lahacienda-preview.webp', // Make sure this image exists in your public folder
         width: 1200,
         height: 630,
-        alt: 'La Dueña shaved ice and snacks',
+        alt: 'Custom storage solutions at La Hacienda Del Norte',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'La Dueña - Shaved Ice & Snacks in Canutillo, TX',
+    title: 'La Hacienda Del Norte - Storage Options in El Paso, TX',
     description:
-      'Enjoy the best shaved ice, ice cream, and snacks at La Dueña in Canutillo, Texas.',
-    images: ['/images/laduena-preview.webp'],
+      'Design your perfect storage space with La Hacienda Del Norte. Serving El Paso with custom and pre-built options.',
+    images: ['/images/lahacienda-preview.webp'],
   },
   robots: {
     index: true,
     follow: true,
   },
   alternates: {
-    canonical: 'https://laduena.store',
+    canonical: 'https://lahaciendadelnorte.com',
   },
 };
 

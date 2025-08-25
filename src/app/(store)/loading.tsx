@@ -1,6 +1,6 @@
 // app/(store)/search/loading.tsx
 
-import Loader from '@/components/common/Loader';
+import Loader from '@/components/(store)/common/Loader';
 
 /**
  * SearchPage Loading UI

@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import ReservationDetails from '../../../components/reservations/ReservationDetails'; // component
 import { useSuccessPage } from '@/app/hooks/reservation/useSucessPage';
 import { useEffect } from 'react';
-import ActionButtons from '@/components/common/ActionButtons';
+import ActionButtons from '@/components/(store)/common/ActionButtons';
 
 function SuccessPage() {
   const searchParams = useSearchParams();

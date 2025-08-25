@@ -1,5 +1,5 @@
-import Header from '@/components/common/header';
-import InfoDropdown from '@/components/common/InfoDropdown';
+import Header from '@/components/(store)/common/header';
+import InfoDropdown from '@/components/(store)/common/InfoDropdown';
 import ProductImages from '@/components/products/ProductImages';
 import ProductSummary from '@/components/products/ProductSummary';
 import { getProductBySlug } from '@/sanity/lib/products/getProductBySlug';

@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useAuth, useUser } from '@clerk/nextjs';
 
-import Loader from '@/components/common/Loader';
-import Header from '@/components/common/header';
+import Loader from '@/components/(store)/common/Loader';
+import Header from '@/components/(store)/common/header';
 import EmptyBasket from '@/components/basket/EmptyBasket';
 import OrderSummary from '@/components/basket/OrderSummary';
 

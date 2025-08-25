@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { debounce } from 'lodash';
-import Loader from '../common/Loader';
+import Loader from '../(store)/common/Loader';
 import Image from 'next/image';
 
 /**
