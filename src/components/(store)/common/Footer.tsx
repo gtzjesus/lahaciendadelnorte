@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
     <footer className="flex flex-col pt-5 text-flag-blue overflow-hidden">
       <div>
         <p
-          className="uppercase font-bold text-sm leading-tight text-center my-2 px-1 
+          className="uppercase font-bold text-xs leading-tight text-center my-2 px-1 
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] "
         >
           Serving El Paso <br /> and surrounding areas

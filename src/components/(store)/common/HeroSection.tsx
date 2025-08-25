@@ -20,6 +20,14 @@ const HeroSection: FC<HeroSectionProps> = ({ className = '' }) => {
         Build your <br /> Custom Storage
       </h1>
 
+      <p
+        className="max-w-lg font-bold text-xl lg:text-2xl text-white leading-tight text-center px-4 pt-80
+          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
+      >
+        We make it simple to create the custom storage you need — built with
+        trusted craftsmanship and tailored to your lifestyle
+      </p>
+
       {/* Buttons near the bottom with solid background & shadow */}
       <div className="flex justify-center gap-2 w-full max-w-lg px-1 mb-20 ">
         <Link

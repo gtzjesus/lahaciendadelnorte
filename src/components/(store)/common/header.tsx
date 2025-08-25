@@ -69,9 +69,10 @@ const Header = () => {
           <div className="relative left-1/2 transform -translate-x-1/2 ">
             <Link
               href="/"
-              className={`text-white uppercase text-sm font-bold sm:mx-0 sm:hidden`}
+              className={`text-white  sm:mx-0 sm:hidden uppercase font-bold text-xs leading-tight text-center my-2 px-1 
+          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] `}
             >
-              Hacienda Del Norte
+              La Hacienda Del Norte
             </Link>
           </div>
 
