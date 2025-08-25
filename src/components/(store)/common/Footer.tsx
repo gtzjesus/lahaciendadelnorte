@@ -11,27 +11,23 @@ import Image from 'next/image';
  */
 const Footer: React.FC = () => {
   return (
-    <footer className="pt-10 text-flag-blue">
-      <div className="max-w-7xl mx-auto text-center py-1 px-4">
-        {/* Logo */}
-        <div className="flex justify-center mb-10 lg:mb-24">
-          <Image
-            src="/icons/logo.webp"
-            alt="laduena"
-            width={50}
-            height={50}
-            priority
-          />
-        </div>
-        <p className=" barlow-condensed-regular text-sm tracking-very-wide font-light mb-4 ">
-          Serving El Paso with custom storage options
+    <footer className="pt-5 text-flag-blue">
+      <div>
+        <p className="uppercase text-center text-md tracking-very-wide font-light ">
+          Serving El Paso and surrounding areas
         </p>
-
-        {/* Copyright */}
-        <p className="uppercase barlow-condensed-regular text-xs tracking-very-wide font-light ">
-          &copy; la hacienda del norte {new Date().getFullYear()}.
-        </p>
+        <h1
+          className="uppercase font-bold text-8xl  text-white leading-tight text-center px-1 
+          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
+        >
+          Hacienda
+        </h1>
       </div>
+
+      {/* Copyright */}
+      <p className="uppercase text-center text-xs tracking-very-wide font-light mb-5 ">
+        &copy; la hacienda del norte {new Date().getFullYear()}.
+      </p>
     </footer>
   );
 };
