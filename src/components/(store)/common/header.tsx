@@ -1,20 +1,20 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-import useBasketStore from '../../../../store/store'; // Import custom store for basket items
+// import useBasketStore from '../../../../store/store'; // Import custom store for basket items
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import AuthButtons from '../../auth/AuthButtons'; // Import the AuthButtons component
-import CartButton from '../../basket/CartButton'; // Import CartButton
-import SearchButton from '../../search/SearchButton';
+// import CartButton from '../../basket/CartButton'; // Import CartButton
+// import SearchButton from '../../search/SearchButton';
 
 const Header = () => {
   const { user } = useUser();
-  const itemCount = useBasketStore((state) =>
-    state.items.reduce((total, item) => total + item.quantity, 0)
-  );
+  // const itemCount = useBasketStore((state) =>
+  //   state.items.reduce((total, item) => total + item.quantity, 0)
+  // );
 
   const pathname = usePathname();
 
@@ -76,9 +76,9 @@ const Header = () => {
     <header
       className={`${
         scrolled ? 'bg-flag-red shadow-lg' : 'bg-transparent'
-      } fixed top-0 z-20 flex items-center px-4 py-3 w-full transition-all duration-300 ease-in-out`}
+      } fixed top-0 text-white z-20 flex items-center px-4 py-3 w-full transition-all duration-300 ease-in-out`}
     >
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full">
         {/* Left side: Logo and Company Name */}
         <div className="flex items-center space-x-4 flex-1">
           <Link href="/" className="font-bold cursor-pointer sm:mx-0 sm:hidden">
@@ -91,7 +91,18 @@ const Header = () => {
               priority
             />
           </Link>
-          <div className="hidden sm:flex items-center space-x-2">
+          <div className="absolute left-1/2 transform -translate-x-1/2 ">
+            <Link
+              href="/"
+              className={`uppercase text-sm font-bold sm:mx-0 sm:hidden ${
+                scrolled ? 'text-black' : 'text-white'
+              }`}
+            >
+              La Hacienda Del Norte
+            </Link>
+          </div>
+
+          <div className="uppercase  hidden sm:flex items-center space-x-2">
             <Link href="/">
               <Image
                 src={scrolled ? '/icons/logo.webp' : '/icons/logo.webp'}
@@ -103,22 +114,22 @@ const Header = () => {
             </Link>
             <Link
               href="/"
-              className={`uppercase barlow-condensed-regular text-sm ${
-                scrolled ? 'text-white' : 'text-white'
+              className={`uppercase text-sm ${
+                scrolled ? 'text-black' : 'text-white'
               }`}
             >
-              laduena
+              La hacienda del norte
             </Link>
           </div>
         </div>
 
         {/* Right side: Search, Cart, and Auth Buttons */}
         <div className="flex items-center space-x-5 font-bold px-5">
-          <SearchButton scrolled={scrolled} />
+          {/* <SearchButton scrolled={scrolled} /> */}
           {/* Conditionally render CartButton only if the pathname is not '/basket' */}
-          {pathname !== '/basket' && (
+          {/* {pathname !== '/basket' && (
             <CartButton itemCount={itemCount} scrolled={scrolled} />
-          )}
+          )} */}
           <div
             className={`hidden sm:flex items-center ${scrolled ? 'text-white' : 'text-white'}`}
           >

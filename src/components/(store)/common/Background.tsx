@@ -9,7 +9,7 @@ export default function Background() {
   return (
     <div className="relative w-full h-screen">
       {/* Imagen móvil */}
-      <div className="block md:hidden absolute inset-0 z-10">
+      <div className="block absolute inset-0 z-10">
         <Image
           src="/(store)/lahacienda-preview.webp"
           alt="Background mobile"
@@ -22,7 +22,7 @@ export default function Background() {
       </div>
 
       {/* Imagen desktop */}
-      <div className="hidden md:block absolute inset-0 z-10">
+      <div className="hidden  absolute inset-0 z-10">
         <Image
           src="/(store)/lahacienda-preview.webp"
           alt="Background desktop"
