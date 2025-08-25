@@ -21,7 +21,7 @@ const HeroSection: FC<HeroSectionProps> = ({ className = '' }) => {
       </h1>
 
       {/* Buttons near the bottom with solid background & shadow */}
-      <div className=" gap-2 w-full max-w-lg px-1 mb-20">
+      <div className=" w-full max-w-lg px-1 mb-20">
         <p
           className="max-w-lg font-bold text-md mb-10 lg:text-2xl text-white leading-tight text-center px-2
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
@@ -29,7 +29,7 @@ const HeroSection: FC<HeroSectionProps> = ({ className = '' }) => {
           We make it simple to create the custom storage you need — built with
           trusted craftsmanship
         </p>
-        <div className="flex justify-center">
+        <div className="gap-2 flex justify-center">
           <Link
             href="/"
             className=" bg-opacity-90 border border-white px-6 py-5 text-center lg:text-lg rounded-3xl text-xs font-bold transition duration-200 ease-in-out shadow-lg text-white w-full max-w-[180px] hover:bg-opacity-100  drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"

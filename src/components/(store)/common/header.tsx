@@ -1,155 +1,171 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-// import useBasketStore from '../../../../store/store'; // Import custom store for basket items
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import clsx from 'clsx';
 import Image from 'next/image';
-import AuthButtons from '../../auth/AuthButtons'; // Import the AuthButtons component
-// import CartButton from '../../basket/CartButton'; // Import CartButton
-// import SearchButton from '../../search/SearchButton';
+import AuthButtons from '../../auth/AuthButtons';
+
+const navItems = [
+  { name: 'Home', href: '/' },
+  { name: 'Start Building', href: '/build-storage' },
+  { name: 'Qualify With Lender', href: '/qualify' },
+
+  { name: 'Contact', href: '/contact' },
+];
 
 const Header = () => {
   const { user } = useUser();
-  // const itemCount = useBasketStore((state) =>
-  //   state.items.reduce((total, item) => total + item.quantity, 0)
-  // );
-
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // States for managing various UI features
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const [windowWidth] = useState<number>(0);
-
-  // Client-side mounting
+  // Escape key closes menu
   useEffect(() => {
-    setIsMounted(true);
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
   }, []);
 
-  // Close menu on desktop or when pathname changes
-  useEffect(() => {
-    if (windowWidth >= 648) setIsMenuOpen(false);
-  }, [windowWidth]);
-
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [pathname]);
-
-  // Disable body scrolling when the mobile menu is open
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isMenuOpen]);
-
-  if (!isMounted) return null; // Prevent rendering on server-side
-
   return (
-    <header className=" z-20 flex items-center px-4 py-3 w-full transition-all duration-300 ease-in-out">
-      <div className="flex w-full">
-        {/* Left side: Logo and Company Name */}
-        <div className="flex items-center flex-1">
-          <Link href="/" className="font-bold cursor-pointer sm:mx-0 sm:hidden">
-            <Image
-              src={'/icons/logo.webp'}
-              alt="worldhello"
-              width={50}
-              height={50}
-              className="w-7 h-7"
-              priority
-            />
-          </Link>
-          <div className="relative left-1/2 transform -translate-x-1/2 ">
-            <Link
-              href="/"
-              className={`text-white  sm:mx-0 sm:hidden uppercase font-bold text-xs leading-tight text-center my-2 px-1 
-          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] `}
+    <motion.header
+      initial={false}
+      animate={{
+        height: menuOpen ? '100vh' : '64px',
+      }}
+      transition={{ duration: 0.4 }}
+      className={clsx(
+        'sticky top-0 z-50 bg-flag-red text-white p-4 w-full overflow-hidden flex flex-col items-center',
+        menuOpen ? 'justify-start' : 'justify-between'
+      )}
+    >
+      {/* Top Row - Logo & Menu Button */}
+      <div className="w-full flex justify-between items-center md:hidden">
+        <Link href="/" className="relative w-[30px] h-[30px]">
+          <Image
+            src="/icons/logo.webp"
+            alt="Logo"
+            fill
+            priority
+            className="object-contain"
+          />
+        </Link>
+
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        >
+          {menuOpen ? (
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              La Hacienda Del Norte
-            </Link>
-          </div>
-
-          <div className="uppercase  hidden sm:flex items-center space-x-2">
-            <Link href="/">
-              <Image
-                src={'/icons/logo.webp'}
-                alt="worldhello"
-                width={30}
-                height={30}
-                priority
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
               />
-            </Link>
-            <Link href="/" className={`uppercase text-sm text-white `}>
-              Hacienda del norte
-            </Link>
-          </div>
-        </div>
-
-        {/* Right side: Search, Cart, and Auth Buttons */}
-        <div className="flex items-center space-x-5 font-bold px-5">
-          {/* <SearchButton scrolled={scrolled} /> */}
-          {/* Conditionally render CartButton only if the pathname is not '/basket' */}
-          {/* {pathname !== '/basket' && (
-            <CartButton itemCount={itemCount} scrolled={scrolled} />
-          )} */}
-          <div className={`hidden sm:flex items-center ${'text-white'}`}>
-            <AuthButtons user={user ?? null} />
-          </div>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="sm:hidden flex flex-col justify-center items-center space-y-1 z-30 relative group"
-        >
-          {/* Top Bar (first line) */}
-          <div
-            className={`w-5 h-0.5 ${'bg-white'} transition-all duration-300 ease-in-out transform ${
-              isMenuOpen ? 'rotate-45 translate-y-0.5' : ''
-            }`}
-          />
-          {/* Bottom Bar (third line) */}
-          <div
-            className={`w-5 h-0.5 ${'bg-white'} transition-all duration-300 ease-in-out transform ${
-              isMenuOpen ? '-rotate-45 -translate-y-0.5' : ''
-            }`}
-          />
+            </svg>
+          ) : (
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          )}
         </button>
       </div>
 
-      {/* Mobile Menu Overlay */}
-      <div
-        className={`absolute inset-0 bg-flag-red bg-opacity-100 z-10 transition-opacity duration-300 ${
-          isMenuOpen ? 'opacity-75 ' : 'opacity-0 pointer-events-none'
-        }`}
-        onClick={() => setIsMenuOpen(false)}
-      />
-      {/* Mobile Menu */}
-      <div
-        className={`absolute right-0 top-0 h-full w-full shadow-xl z-20 transform transition-opacity duration-300 ease-in-out ${
-          isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-      >
-        <button
-          onClick={() => setIsMenuOpen(false)}
-          className="absolute top-3.5 right-8 text-lg text-white"
-        >
-          {isMenuOpen ? '' : <span className="text-white"></span>}
-        </button>
-        <div className="flex flex-col items-center  h-full p-20 space-y-6">
-          <div className="flex flex-col items-center space-y-4 text-white text-xl">
-            <AuthButtons user={user ?? null} />
-          </div>
+      {/* Desktop Nav (optional future use) */}
+      <div className="hidden md:flex items-center justify-between w-full px-10">
+        <div className="flex items-center space-x-4">
+          <Link href="/">
+            <Image src="/icons/logo.webp" alt="Logo" width={30} height={30} />
+          </Link>
+          <span className="text-white uppercase font-bold text-sm tracking-wide">
+            La Hacienda Del Norte
+          </span>
+        </div>
+
+        <div className="flex space-x-6 text-sm">
+          {navItems.map(({ name, href }) => (
+            <Link
+              key={href}
+              href={href}
+              className={clsx(
+                'hover:text-gray-200 transition-colors',
+                pathname === href ? 'text-white underline' : ''
+              )}
+            >
+              {name}
+            </Link>
+          ))}
+          <AuthButtons user={user ?? null} />
         </div>
       </div>
-    </header>
+
+      {/* Mobile Nav Items - Animated */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+            className="flex flex-col items-center justify-center flex-1 space-y-6 w-full md:hidden mt-8"
+          >
+            <div className="relative w-[100px] h-[50px]">
+              <h1
+                className="uppercase font-bold text-xs  text-white leading-tight text-center 
+          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
+              >
+                La Hacienda del norte
+              </h1>
+            </div>
+
+            {navItems.map(({ name, href }, i) => (
+              <motion.div
+                key={href}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + i * 0.1 }}
+              >
+                <Link
+                  href={href}
+                  onClick={() => setMenuOpen(false)}
+                  className={clsx(
+                    'text-xl font-semibold transition-colors',
+                    pathname === href ? 'text-white underline' : 'text-white'
+                  )}
+                >
+                  {name}
+                </Link>
+              </motion.div>
+            ))}
+
+            <div className="font-bold">
+              <AuthButtons user={user ?? null} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 };
 
