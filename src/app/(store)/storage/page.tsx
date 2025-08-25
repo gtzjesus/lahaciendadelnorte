@@ -2,15 +2,7 @@
 
 import React, { useState } from 'react';
 import Step1Dimensions from './steps/Step1Dimensions';
-
-type CustomShedForm = {
-  dimensions: {
-    width: number | '';
-    length: number | '';
-    height: number | '';
-  };
-  // other steps coming soon!
-};
+import { CustomShedForm } from '@/types/(store)/storage';
 
 export default function StorageBuilderPage() {
   const [form, setForm] = useState<CustomShedForm>({
@@ -37,12 +29,10 @@ export default function StorageBuilderPage() {
             onNext={handleNextStep}
           />
         );
-      // case 2:
-      //   return <Step2Material ... />;
       default:
         return (
           <div className="text-center text-black">
-            <p>Youre done with step {currentStep}, more coming soon!</p>
+            <p>You’re done with step {currentStep}, more coming soon!</p>
           </div>
         );
     }
@@ -52,17 +42,19 @@ export default function StorageBuilderPage() {
     <div className="max-w-md mx-auto py-10 px-4">
       <h1
         className="uppercase font-bold text-4xl lg:text-8xl text-white leading-tight text-center px-1 
-          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
+          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] mb-8"
       >
         Welcome to our Storage Builder
       </h1>
 
-      <h1
-        className="uppercase font-bold text-md lg:text-8xl text-white leading-tight text-center px-1 
-          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] mt-8"
+      <p
+        className=" font-light text-md lg:text-8xl text-white leading-tight text-center px-1 
+          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] mb-8"
       >
-        Start Building by adding information below about your storage!
-      </h1>
+        Start building your custom shed by entering information below. Just
+        follow the prompts, and you’ll have your storage design in no time.
+      </p>
+
       {renderStep()}
     </div>
   );
