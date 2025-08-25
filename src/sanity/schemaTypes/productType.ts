@@ -51,43 +51,31 @@ export const productType = defineType({
     // Variants Array without flavor
     defineField({
       name: 'variants',
-      title: 'Variants',
+      title: 'Shed Configuration',
       type: 'array',
       of: [
         defineField({
           type: 'object',
-          name: 'variant',
-          title: 'Variant',
+          name: 'shedVariant',
+          title: 'Custom Shed',
           fields: [
+            { name: 'dimensions', title: 'Dimensions', type: 'string' },
+            { name: 'material', title: 'Material', type: 'string' },
+            { name: 'windows', title: 'Windows', type: 'number' },
+            { name: 'doors', title: 'Doors', type: 'number' },
+            { name: 'roof', title: 'Roof Type', type: 'string' },
+            { name: 'garage', title: 'Garage Included', type: 'boolean' },
             {
-              name: 'size',
-              title: 'Size',
-              type: 'string',
-              options: {
-                list: ['Small', 'Medium', 'Large', 'Extra Large'],
-                layout: 'dropdown',
-              },
-              validation: (Rule) => Rule.required(),
+              name: 'addons',
+              title: 'Add-ons',
+              type: 'array',
+              of: [{ type: 'string' }],
             },
-            {
-              name: 'price',
-              title: 'Price',
-              type: 'number',
-              validation: (Rule) => Rule.required().min(0),
-            },
-            {
-              name: 'stock',
-              title: 'Stock',
-              type: 'number',
-              validation: (Rule) => Rule.required().min(0),
-            },
+            { name: 'price', title: 'Price', type: 'number' },
+            { name: 'stock', title: 'Stock', type: 'number' },
           ],
         }),
       ],
-      description:
-        'Each variant corresponds to a unique size with its own price and stock.',
-      validation: (Rule) =>
-        Rule.min(1).error('You must add at least one variant'),
     }),
 
     defineField({

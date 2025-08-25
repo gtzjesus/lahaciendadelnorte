@@ -37,7 +37,7 @@ const HeroSection: FC<HeroSectionProps> = ({ className = '' }) => {
             Qualify Here
           </Link>
           <Link
-            href="/"
+            href="/storage"
             className=" bg-opacity-90 border border-white px-6 py-5 text-center lg:text-lg rounded-3xl text-xs font-bold transition duration-200 ease-in-out shadow-lg text-white w-full max-w-[180px] hover:bg-opacity-100  drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
           >
             Build Storage
