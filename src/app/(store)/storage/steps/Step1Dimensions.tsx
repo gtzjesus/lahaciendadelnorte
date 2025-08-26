@@ -21,7 +21,7 @@ const presetSheds: {
     dimensions: { width: 6, length: 8, height: 6 },
     image: '/(store)/storage/tool-shed.webp',
     description:
-      'Perfect for tools, bikes, and seasonal storage. This compact shed fits in most backyards and provides just enough space to organize lawn equipment, hand tools, gardening supplies, or even one adult bike. With a small footprint and efficient layout, it’s ideal for homeowners with basic storage needs or tight yard space.',
+      'Perfect for tools, bikes, and seasonal storage. This compact shed fits in most backyards and provides just enough space to organize lawn equipment, hand tools, or even gardening supplies. With a small footprint and efficient layout.',
   },
   {
     label: 'Yard',
@@ -104,7 +104,7 @@ export default function Step1Dimensions({
                   onClick={() => handlePresetSelect(label, dimensions)}
                   className={`block text-left px-4 py-3 transition-all border rounded-md cursor-pointer ${
                     isSelected
-                      ? 'border-flag-red bg-flag-red/50'
+                      ? 'border-flag-blue bg-flag-red/80 text-flag-blue'
                       : 'border-white'
                   }`}
                 >
@@ -128,7 +128,7 @@ export default function Step1Dimensions({
                         alt={`${label} Shed`}
                         width={300}
                         height={200}
-                        className="rounded-md border border-white"
+                        className=" border border-flag-red"
                       />
                       <p className="text-xs text-center italic">
                         {selectedShed?.description}
