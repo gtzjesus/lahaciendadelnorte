@@ -10,7 +10,7 @@ interface HeroSectionProps {
 const HeroSection: FC<HeroSectionProps> = ({ className = '' }) => {
   return (
     <div
-      className={`absolute inset-0 flex flex-col justify-between items-center pt-20 pb-10 ${className} z-20`}
+      className={`absolute inset-0 flex flex-col justify-between items-center pt-20 pb-10 md:pt-40 ${className} z-20`}
     >
       {/* Title near the top with text shadow */}
       <h1

@@ -56,8 +56,8 @@ const Header = () => {
         menuOpen
           ? 'bg-flag-red text-white'
           : scrolled
-            ? 'bg-flag-red text-flag-blue shadow-md'
-            : 'bg-transparent text-white',
+            ? 'bg-flag-red text-flag-blue shadow-md '
+            : 'bg-transparent text-white ',
         menuOpen ? 'justify-start' : 'justify-between'
       )}
     >
@@ -119,22 +119,23 @@ const Header = () => {
       </div>
 
       {/* Desktop Nav (optional future use) */}
-      <div className="hidden md:flex items-center justify-between w-full px-10">
+      <div className="hidden md:flex items-center justify-between w-full px-5">
         <div className="flex items-center space-x-4">
           <Link href="/">
-            <Image
-              src="/icons/logo-blacked.webp"
-              alt="Logo"
-              width={30}
-              height={30}
-            />
+            <Image src={logoSrc} alt="Logo" width={30} height={30} />
           </Link>
-          <span className="text-white uppercase font-bold text-sm tracking-wide">
-            La Hacienda Del Norte
-          </span>
+          <h1
+            className={clsx(
+              '   uppercase font-bold text-xs leading-tight text-center',
+              scrolled ? ' text-flag-blue' : ' text-white',
+              menuOpen ? 'invisible' : 'justify-between'
+            )}
+          >
+            La Hacienda del norte
+          </h1>
         </div>
 
-        <div className="flex space-x-6 text-sm">
+        <div className="flex space-x-6 text-sm ">
           {navItems.map(({ name, href }) => (
             <Link
               key={href}
