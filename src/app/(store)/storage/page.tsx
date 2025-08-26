@@ -11,6 +11,16 @@ import Step6Addons from './steps/Step6Addons';
 import Step7Review from './steps/Step7Review';
 import Background from '@/components/(store)/common/Background';
 
+const backgroundImages: Record<number, string> = {
+  1: '/(store)/steps/dimensions.webp',
+  2: '/(store)/steps/materials.webp',
+  3: '/(store)/steps/windows.webp',
+  4: '/(store)/steps/doors.webp',
+  5: '/(store)/steps/roof.webp',
+  6: '/(store)/steps/addons.webp',
+  7: '/(store)/steps/review.webp',
+};
+
 export default function StorageBuilderPage() {
   const [form, setForm] = useState<CustomShedForm>({
     dimensions: {
@@ -111,13 +121,11 @@ export default function StorageBuilderPage() {
   };
 
   return (
-    <div className="relative min-h-screen">
-      {/* Stack background absolutely */}
-      <div className="absolute inset-0 z-0">
-        <Background />
-      </div>
+    <div className="relative min-h-screen overflow-hidden">
+      <Background
+        imageSrc={backgroundImages[currentStep] || '/(store)/fallback.webp'}
+      />
 
-      {/* Content on top */}
       <div className="relative z-10 flex justify-center items-center min-h-screen px-4">
         {renderStep()}
       </div>
