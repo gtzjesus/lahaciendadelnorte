@@ -45,9 +45,7 @@ const AuthButtons = ({ user }: AuthButtonsProps) => (
         </div>
       </>
     ) : (
-      <div className="opacity-60 lowercase">
-        <SignInButton mode="modal" />
-      </div>
+      <SignInButton mode="modal" />
     )}
   </ClerkLoaded>
 );
