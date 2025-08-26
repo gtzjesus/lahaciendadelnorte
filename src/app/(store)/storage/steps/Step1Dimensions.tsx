@@ -2,6 +2,7 @@
 
 import { CustomShedForm, Dimensions } from '@/types/(store)/storage';
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 type Step1DimensionsProps = {
   form: CustomShedForm;
@@ -9,18 +10,29 @@ type Step1DimensionsProps = {
   onNext: () => void;
 };
 
-const presetSheds: { label: string; dimensions: Dimensions }[] = [
-  { label: 'Small', dimensions: { width: 6, length: 8, height: 6 } },
-  { label: 'Medium', dimensions: { width: 8, length: 10, height: 8 } },
-  {
-    label: 'Large',
-    dimensions: { width: 10, length: 12, height: 10 },
-  },
-  {
-    label: 'Extra Large',
-    dimensions: { width: 12, length: 16, height: 12 },
-  },
-];
+const presetSheds: { label: string; dimensions: Dimensions; image: string }[] =
+  [
+    {
+      label: 'Tool',
+      dimensions: { width: 6, length: 8, height: 6 },
+      image: '/(store)/storage/tool-shed.webp',
+    },
+    {
+      label: 'Yard',
+      dimensions: { width: 8, length: 10, height: 8 },
+      image: '/(store)/storage/tool-shed.webp',
+    },
+    {
+      label: 'Workshop',
+      dimensions: { width: 10, length: 12, height: 10 },
+      image: '/(store)/storage/tool-shed.webp',
+    },
+    {
+      label: 'Utility',
+      dimensions: { width: 12, length: 16, height: 12 },
+      image: '/(store)/storage/tool-shed.webp',
+    },
+  ];
 
 export default function Step1Dimensions({
   form,
@@ -41,7 +53,6 @@ export default function Step1Dimensions({
     Number(localDimensions.length) > 0 &&
     Number(localDimensions.height) > 0;
 
-  // Sync form state on local change
   useEffect(() => {
     setFormAction((prev) => ({
       ...prev,
@@ -49,7 +60,6 @@ export default function Step1Dimensions({
     }));
   }, [localDimensions, setFormAction]);
 
-  // Update dimensions when a preset is selected
   const handlePresetSelect = (label: string, dims: Dimensions) => {
     setSelectedPresetLabel(label);
     setLocalDimensions(dims);
@@ -68,57 +78,74 @@ export default function Step1Dimensions({
             Start by choosing a shed size
           </p>
 
-          <div className="grid gap-2">
-            {presetSheds.map(({ label, dimensions }) => (
-              <button
-                key={label}
-                onClick={() => handlePresetSelect(label, dimensions)}
-                className={`block border text-left px-4 py-2 cursor-pointer transition-all ${
-                  selectedPresetLabel === label
-                    ? 'border-flag-red bg-flag-red/80 text-flag-blue'
-                    : 'border-white'
-                }`}
-              >
-                <span className="uppercase text-lg font-semibold">{label}</span>
+          <div className="grid gap-3">
+            {presetSheds.map(({ label, dimensions, image }) => {
+              const isSelected = selectedPresetLabel === label;
 
-                <p
-                  className={`text-sm transition-all ${
-                    selectedPresetLabel === label
-                      ? ' text-flag-blue'
+              return (
+                <button
+                  key={label}
+                  onClick={() => handlePresetSelect(label, dimensions)}
+                  className={`block text-left px-4 py-3 transition-all border rounded-md cursor-pointer ${
+                    isSelected
+                      ? 'border-flag-red bg-flag-red/20'
                       : 'border-white'
                   }`}
                 >
-                  {dimensions.length}ft Long{' '}
-                  <strong className="text-flag-red">x</strong>{' '}
-                  {dimensions.width}ft Wide{' '}
-                  <strong className="text-flag-red">x</strong>{' '}
-                  {dimensions.height}ft High
-                </p>
-              </button>
-            ))}
+                  <div className="flex items-center justify-between">
+                    <span className="uppercase text-lg font-semibold">
+                      {label} shed
+                    </span>
+                    <p className="text-sm">
+                      {dimensions.length}ft L{' '}
+                      <strong className="text-flag-red">x</strong>{' '}
+                      {dimensions.width}ft W{' '}
+                      <strong className="text-flag-red">x</strong>{' '}
+                      {dimensions.height}ft H
+                    </p>
+                  </div>
+
+                  {isSelected && (
+                    <div className="mt-4 flex flex-col items-center gap-2">
+                      <Image
+                        src={image}
+                        alt={`${label} Shed`}
+                        width={300}
+                        height={200}
+                        className="rounded-md border border-white"
+                      />
+                      <p className="text-xs text-center italic">
+                        <strong>{label}</strong> shed:
+                        <br />
+                        {dimensions.length}ft Long × {dimensions.width}ft Wide ×{' '}
+                        {dimensions.height}ft High
+                      </p>
+                    </div>
+                  )}
+                </button>
+              );
+            })}
           </div>
-          <p className="text-sm text-center">or</p>
+
+          <p className="text-sm text-center mt-2">or</p>
+
+          <div className="text-center mt-2">
+            <button
+              type="button"
+              onClick={() => {
+                setCustomMode(true);
+                setSelectedPresetLabel('');
+                setLocalDimensions({ width: '', length: '', height: '' });
+              }}
+              className="text-xs uppercase font-bold underline text-white"
+            >
+              enter custom dimensions
+            </button>
+          </div>
         </>
       )}
 
-      {/* Toggle custom input */}
-      {!customMode && (
-        <div className="text-center mt-4">
-          <button
-            type="button"
-            onClick={() => {
-              setCustomMode(true);
-              setSelectedPresetLabel('');
-              setLocalDimensions({ width: '', length: '', height: '' });
-            }}
-            className="text-xs uppercase font-bold underline text-white"
-          >
-            enter custom dimensions
-          </button>
-        </div>
-      )}
-
-      {/* Custom dimensions input */}
+      {/* Custom Input Mode */}
       {customMode && (
         <div className="mt-4 space-y-4">
           <p className="text-sm font-bold text-center">
@@ -175,6 +202,7 @@ export default function Step1Dimensions({
               placeholder="e.g. 6"
             />
           </div>
+
           <div className="text-center mt-3">
             <button
               type="button"
@@ -189,7 +217,7 @@ export default function Step1Dimensions({
         </div>
       )}
 
-      {/* Continue Button */}
+      {/* Continue */}
       <button
         type="button"
         onClick={onNext}
