@@ -14,7 +14,7 @@ const HeroSection: FC<HeroSectionProps> = ({ className = '' }) => {
     >
       {/* Title near the top with text shadow */}
       <h1
-        className="uppercase font-bold text-4xl lg:text-8xl text-white leading-tight text-center px-1 
+        className="uppercase font-bold text-6xl lg:text-8xl text-white leading-tight text-center px-1 
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
       >
         Build your <br /> Custom Storage
@@ -32,13 +32,13 @@ const HeroSection: FC<HeroSectionProps> = ({ className = '' }) => {
         <div className="gap-2 flex justify-center">
           <Link
             href="/"
-            className=" bg-opacity-90 border border-white px-6 py-5 text-center lg:text-lg rounded-3xl text-xs font-bold transition duration-200 ease-in-out shadow-lg text-white w-full max-w-[180px] hover:bg-opacity-100  drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
+            className=" bg-opacity-90 border border-white px-5 py-4 text-center lg:text-lg rounded-3xl text-xs font-bold transition duration-200 ease-in-out shadow-lg text-white w-full max-w-[180px] hover:bg-opacity-100  drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
           >
             Qualify Here
           </Link>
           <Link
             href="/storage"
-            className=" bg-opacity-90 border border-white px-6 py-5 text-center lg:text-lg rounded-3xl text-xs font-bold transition duration-200 ease-in-out shadow-lg text-white w-full max-w-[180px] hover:bg-opacity-100  drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
+            className=" bg-opacity-90 border border-white px-5 py-4 text-center lg:text-lg rounded-3xl text-xs font-bold transition duration-200 ease-in-out shadow-lg text-white w-full max-w-[180px] hover:bg-opacity-100  drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
           >
             Build Storage
           </Link>

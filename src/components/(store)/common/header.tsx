@@ -22,6 +22,19 @@ const Header = () => {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const [scrolled, setScrolled] = useState(false);
+
+  const logoSrc = scrolled ? '/icons/logo-blacked.webp' : '/icons/logo.webp';
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Escape key closes menu
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -39,7 +52,10 @@ const Header = () => {
       }}
       transition={{ duration: 0.4 }}
       className={clsx(
-        'sticky top-0 z-50 bg-flag-red text-white p-4 w-full overflow-hidden flex flex-col items-center',
+        'fixed top-0 z-50 p-4 w-full overflow-hidden flex flex-col items-center transition-colors duration-300',
+        scrolled
+          ? 'bg-flag-red text-flag-blue shadow-md'
+          : 'bg-transparent text-white',
         menuOpen ? 'justify-start' : 'justify-between'
       )}
     >
@@ -47,17 +63,19 @@ const Header = () => {
       <div className="w-full flex justify-between items-center md:hidden">
         <Link href="/" className="relative w-[30px] h-[30px]">
           <Image
-            src="/icons/logo.webp"
+            src={logoSrc}
             alt="Logo"
             fill
             priority
             className="object-contain"
           />
         </Link>
-
         <h1
-          className="uppercase font-bold text-xs 4  text-white leading-tight text-center 
-          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
+          className={clsx(
+            '   uppercase font-bold text-xs leading-tight text-center drop-shadow-[0_4px_6px_rgba(0,0,0,0.5)]',
+            scrolled ? ' text-flag-blue' : ' text-white',
+            menuOpen ? 'invisible' : 'justify-between'
+          )}
         >
           La Hacienda del norte
         </h1>
@@ -102,7 +120,12 @@ const Header = () => {
       <div className="hidden md:flex items-center justify-between w-full px-10">
         <div className="flex items-center space-x-4">
           <Link href="/">
-            <Image src="/icons/logo.webp" alt="Logo" width={30} height={30} />
+            <Image
+              src="/icons/logo-blacked.webp"
+              alt="Logo"
+              width={30}
+              height={30}
+            />
           </Link>
           <span className="text-white uppercase font-bold text-sm tracking-wide">
             La Hacienda Del Norte
@@ -133,8 +156,8 @@ const Header = () => {
             key="mobile-menu"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ delay: 0.2, duration: 0.4 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ delay: 0.1, duration: 0.1 }}
             className="flex flex-col items-center justify-center flex-1 space-y-6 w-full md:hidden mt-8"
           >
             {navItems.map(({ name, href }, i) => (
@@ -142,14 +165,15 @@ const Header = () => {
                 key={href}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + i * 0.1 }}
+                transition={{ delay: 0.1 + i * 0.1 }}
               >
                 <Link
                   href={href}
                   onClick={() => setMenuOpen(false)}
                   className={clsx(
                     'text-xl font-semibold transition-colors',
-                    pathname === href ? 'text-flag-blue' : 'text-white'
+                    pathname === href ? 'text-flag-red' : 'text-black',
+                    scrolled ? ' text-flag-blue' : ' text-white'
                   )}
                 >
                   {name}
