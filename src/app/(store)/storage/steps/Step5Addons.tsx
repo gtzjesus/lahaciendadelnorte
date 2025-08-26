@@ -3,7 +3,7 @@
 import { CustomShedForm } from '@/types/(store)/storage';
 import React, { useEffect, useState } from 'react';
 
-type Step6AddonsProps = {
+type Step5AddonsProps = {
   form: CustomShedForm;
   setFormAction: React.Dispatch<React.SetStateAction<CustomShedForm>>;
   onNext: () => void;
@@ -38,12 +38,12 @@ const addons = [
   },
 ];
 
-export default function Step6Addons({
+export default function Step5Addons({
   form,
   setFormAction,
   onNext,
   onBack,
-}: Step6AddonsProps) {
+}: Step5AddonsProps) {
   const [selectedAddons, setSelectedAddons] = useState<string[]>(
     form.addons ?? []
   );
@@ -63,7 +63,7 @@ export default function Step6Addons({
 
   return (
     <div className="space-y-6 text-white">
-      <p className="text-md lg:text-xl text-center font-bold ">
+      <p className="text-md lg:text-xl text-center font-bold">
         Pick any optional add-ons for your storage
       </p>
 
@@ -71,9 +71,9 @@ export default function Step6Addons({
         {addons.map(({ id, name, description }) => (
           <label
             key={id}
-            className={`block cursor-pointer border p-6 transition-all text-center ${
+            className={`block border text-left px-4 py-2 cursor-pointer transition-all ${
               selectedAddons.includes(id)
-                ? 'border-flag-red bg-flag-red/60 text-flag-blue'
+                ? 'border-flag-red bg-flag-red/80 text-flag-blue'
                 : 'border-white'
             }`}
           >
