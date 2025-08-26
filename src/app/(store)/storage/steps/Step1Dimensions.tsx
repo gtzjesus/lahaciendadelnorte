@@ -21,7 +21,7 @@ const presetSheds: {
     dimensions: { width: 6, length: 8, height: 6 },
     image: '/(store)/storage/tool-shed.webp',
     description:
-      'This compact shed fits in most backyards and provides just enough space to organize lawn equipment, hand tools, or even gardening supplies. A small footprint and efficient layout.',
+      'Fits in most backyards and provides just enough space to organize lawn equipment, hand tools, or even gardening supplies. A small footprint and efficient layout.',
   },
   {
     label: 'Yard',
@@ -35,7 +35,7 @@ const presetSheds: {
     dimensions: { width: 10, length: 12, height: 10 },
     image: '/(store)/storage/work-shed.webp',
     description:
-      'Ideal for anyone needing a functional workshop. This shed can hold large equipment, a workbench, power tools, and storage units. With generous interior space and plenty of headroom',
+      'Ideal for anyone needing a functional workshop. This shed can hold large equipment, a workbench, power tools, and storage units. With generous interior space and plenty of headroom.',
   },
   {
     label: 'Utility',
@@ -104,7 +104,7 @@ export default function Step1Dimensions({
                   onClick={() => handlePresetSelect(label, dimensions)}
                   className={`block text-left px-4 py-3 transition-all border rounded-md cursor-pointer ${
                     isSelected
-                      ? 'border-flag-blue bg-flag-red/80 text-flag-blue'
+                      ? 'border-flag-blue bg-flag-red/90 text-flag-blue'
                       : 'border-white'
                   }`}
                 >
