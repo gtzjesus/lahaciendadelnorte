@@ -10,14 +10,14 @@ type Step1DimensionsProps = {
 };
 
 const presetSheds: { label: string; dimensions: Dimensions }[] = [
-  { label: 'Small (6x8x6)', dimensions: { width: 6, length: 8, height: 6 } },
-  { label: 'Medium (8x10x8)', dimensions: { width: 8, length: 10, height: 8 } },
+  { label: 'Small', dimensions: { width: 6, length: 8, height: 6 } },
+  { label: 'Medium', dimensions: { width: 8, length: 10, height: 8 } },
   {
-    label: 'Large (10x12x10)',
+    label: 'Large',
     dimensions: { width: 10, length: 12, height: 10 },
   },
   {
-    label: 'Extra Large (12x16x12)',
+    label: 'Extra Large',
     dimensions: { width: 12, length: 16, height: 12 },
   },
 ];
@@ -65,28 +65,47 @@ export default function Step1Dimensions({
       {!customMode && (
         <>
           <p className="text-md lg:text-xl text-center font-bold">
-            Choose a standard shed size
+            Start by choosing a shed size
           </p>
 
-          <div className="grid gap-4">
+          <div className="grid gap-1">
             {presetSheds.map(({ label, dimensions }) => (
               <button
                 key={label}
                 onClick={() => handlePresetSelect(label, dimensions)}
-                className={`block border text-left p-6 cursor-pointer transition-all ${
+                className={`block border text-left px-4 py-2 cursor-pointer transition-all ${
                   selectedPresetLabel === label
-                    ? 'border-flag-red bg-flag-red/60 text-flag-blue'
+                    ? 'border-flag-blue bg-flag-red/80 text-flag-blue'
                     : 'border-white'
                 }`}
               >
-                <span className="text-lg font-semibold uppercase">{label}</span>
-                <p className="text-sm mt-2 text-white">
-                  {dimensions.width}ft wide × {dimensions.length}ft long ×{' '}
-                  {dimensions.height}ft high
+                <span
+                  className={`text-lg font-semibold uppercase text-flag-red ${
+                    selectedPresetLabel === label
+                      ? 'border-flag-blue bg-flag-blue/80 p-1 text-flag-blue'
+                      : 'border-white'
+                  }`}
+                >
+                  {label}
+                </span>
+
+                <p
+                  className={`text-sm transition-all ${
+                    selectedPresetLabel === label
+                      ? ' text-flag-blue'
+                      : 'border-white'
+                  }`}
+                >
+                  {dimensions.length}ft Long{' '}
+                  <strong className="text-flag-red">x</strong>{' '}
+                  {dimensions.width}ft Wide{' '}
+                  <strong className="text-flag-red">x</strong>{' '}
+                  {dimensions.height}ft High
                 </p>
               </button>
             ))}
           </div>
+          <p className="text-sm text-center">or</p>
         </>
       )}
 
@@ -102,7 +121,7 @@ export default function Step1Dimensions({
             }}
             className="text-xs uppercase font-bold underline text-white"
           >
-            Or enter custom dimensions
+            enter custom dimensions
           </button>
         </div>
       )}
@@ -111,7 +130,7 @@ export default function Step1Dimensions({
       {customMode && (
         <div className="mt-4 space-y-4">
           <p className="text-sm font-bold text-center">
-            Custom Dimensions (ft)
+            Enter your custom dimensions (ft)
           </p>
 
           <div className="flex flex-col gap-2">
