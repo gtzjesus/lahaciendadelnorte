@@ -19,8 +19,7 @@ const materials = [
   {
     id: 'sheeting',
     name: 'Sheet Metal',
-    description:
-      'Lightweight corrugated metal, great for cost and ventilation.',
+    description: 'Lightweight corrugated metal, great for ventilation.',
   },
   {
     id: 'steel',
@@ -53,7 +52,7 @@ export default function Step2Material({
   return (
     <div className="space-y-6 text-white">
       <p className="text-md lg:text-xl text-center font-bold">
-        Choose your outside material
+        Choose the outside material for your shed
       </p>
 
       {/* Preset options */}
@@ -101,7 +100,7 @@ export default function Step2Material({
               : 'bg-flag-red text-flag-blue'
           }`}
         >
-          Continue to windows
+          Continue
         </button>
       </div>
     </div>

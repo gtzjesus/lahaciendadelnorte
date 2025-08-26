@@ -4,21 +4,19 @@ import React, { useState } from 'react';
 import Step1Dimensions from './steps/Step1Dimensions';
 import { CustomShedForm } from '@/types/(store)/storage';
 import Step2Material from './steps/Step2Materials';
-import Step3Windows from './steps/Step3Windows';
-import Step4Doors from './steps/Step4Doors';
 import Step5Roof from './steps/Step5Roof';
 import Step6Addons from './steps/Step6Addons';
 import Step7Review from './steps/Step7Review';
 import Background from '@/components/(store)/common/Background';
+import Step3WindowsAndDoors from './steps/Step3WindowsAndDoors';
 
 const backgroundImages: Record<number, string> = {
   1: '/(store)/steps/dimensions.webp',
   2: '/(store)/steps/materials.webp',
-  3: '/(store)/steps/windows.webp',
-  4: '/(store)/steps/doors.webp',
-  5: '/(store)/steps/roof.webp',
-  6: '/(store)/steps/addons.webp',
-  7: '/(store)/steps/review.webp',
+  3: '/(store)/steps/windows.webp', // still works, since it's windows + doors
+  4: '/(store)/steps/roof.webp',
+  5: '/(store)/steps/addons.webp',
+  6: '/(store)/steps/review.webp',
 };
 
 export default function StorageBuilderPage() {
@@ -69,7 +67,7 @@ export default function StorageBuilderPage() {
         );
       case 3:
         return (
-          <Step3Windows
+          <Step3WindowsAndDoors
             form={form}
             setFormAction={setForm}
             onNext={handleNextStep}
@@ -78,7 +76,7 @@ export default function StorageBuilderPage() {
         );
       case 4:
         return (
-          <Step4Doors
+          <Step5Roof
             form={form}
             setFormAction={setForm}
             onNext={handleNextStep}
@@ -87,7 +85,7 @@ export default function StorageBuilderPage() {
         );
       case 5:
         return (
-          <Step5Roof
+          <Step6Addons
             form={form}
             setFormAction={setForm}
             onNext={handleNextStep}
@@ -96,13 +94,13 @@ export default function StorageBuilderPage() {
         );
       case 6:
         return (
-          <Step6Addons
+          <Step7Review
             form={form}
-            setFormAction={setForm}
-            onNext={handleNextStep}
             onBack={handlePrevStep}
+            onSubmit={handleSubmit}
           />
         );
+
       case 7:
         return (
           <Step7Review
