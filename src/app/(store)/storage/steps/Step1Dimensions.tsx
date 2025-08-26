@@ -68,26 +68,18 @@ export default function Step1Dimensions({
             Start by choosing a shed size
           </p>
 
-          <div className="grid gap-1">
+          <div className="grid gap-2">
             {presetSheds.map(({ label, dimensions }) => (
               <button
                 key={label}
                 onClick={() => handlePresetSelect(label, dimensions)}
                 className={`block border text-left px-4 py-2 cursor-pointer transition-all ${
                   selectedPresetLabel === label
-                    ? 'border-flag-blue bg-flag-red/80 text-flag-blue'
+                    ? 'border-flag-red bg-flag-red/80 text-flag-blue'
                     : 'border-white'
                 }`}
               >
-                <span
-                  className={`text-lg font-semibold uppercase text-flag-red ${
-                    selectedPresetLabel === label
-                      ? 'border-flag-blue bg-flag-blue/80 p-1 text-flag-blue'
-                      : 'border-white'
-                  }`}
-                >
-                  {label}
-                </span>
+                <span className="uppercase text-lg font-semibold">{label}</span>
 
                 <p
                   className={`text-sm transition-all ${
@@ -182,6 +174,17 @@ export default function Step1Dimensions({
               className="p-2 border text-xs text-black"
               placeholder="e.g. 6"
             />
+          </div>
+          <div className="text-center mt-3">
+            <button
+              type="button"
+              onClick={() => {
+                setCustomMode(false);
+              }}
+              className="text-xs uppercase font-bold underline text-white"
+            >
+              back to presets
+            </button>
           </div>
         </div>
       )}
