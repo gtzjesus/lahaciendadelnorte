@@ -53,15 +53,17 @@ const Header = () => {
       transition={{ duration: 0.4 }}
       className={clsx(
         'fixed top-0 z-50 p-4 w-full overflow-hidden flex flex-col items-center transition-colors duration-300',
-        scrolled
-          ? 'bg-flag-red text-flag-blue shadow-md'
-          : 'bg-transparent text-white',
+        menuOpen
+          ? 'bg-flag-red text-white'
+          : scrolled
+            ? 'bg-flag-red text-flag-blue shadow-md'
+            : 'bg-transparent text-white',
         menuOpen ? 'justify-start' : 'justify-between'
       )}
     >
       {/* Top Row - Logo & Menu Button */}
       <div className="w-full flex justify-between items-center md:hidden">
-        <Link href="/" className="relative w-[30px] h-[30px]">
+        <Link href="/" className="relative w-[25px] h-[25px]">
           <Image
             src={logoSrc}
             alt="Logo"
@@ -72,7 +74,7 @@ const Header = () => {
         </Link>
         <h1
           className={clsx(
-            '   uppercase font-bold text-xs leading-tight text-center drop-shadow-[0_4px_6px_rgba(0,0,0,0.5)]',
+            '   uppercase font-bold text-xs leading-tight text-center',
             scrolled ? ' text-flag-blue' : ' text-white',
             menuOpen ? 'invisible' : 'justify-between'
           )}
@@ -173,7 +175,7 @@ const Header = () => {
                   className={clsx(
                     'text-xl font-semibold transition-colors',
                     pathname === href ? 'text-flag-red' : 'text-black',
-                    scrolled ? ' text-flag-blue' : ' text-white'
+                    scrolled ? ' text-flag-blue' : ' text-black'
                   )}
                 >
                   {name}
@@ -181,7 +183,7 @@ const Header = () => {
               </motion.div>
             ))}
 
-            <div className="font-semibold text-xl">
+            <div className="font-semibold text-xl text-black">
               <AuthButtons user={user ?? null} />
             </div>
           </motion.div>

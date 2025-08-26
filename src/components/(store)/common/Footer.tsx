@@ -13,9 +13,15 @@ const Footer: React.FC = () => {
   return (
     <footer className="flex flex-col pt-5 text-flag-blue overflow-hidden">
       <div>
+        <h1
+          className="uppercase font-bold text-2xl  text-flag-blue leading-tight text-center my-4 px-1 
+          drop-shadow-[0_4px_6px_rgba(0,0,0,0.5)]"
+        >
+          La Hacienda del norte
+        </h1>
         <div className="flex justify-center">
           <Image
-            src="/icons/logo.webp"
+            src="/icons/logo-blacked.webp"
             alt="lahacienda"
             width={25}
             height={25}
@@ -23,15 +29,9 @@ const Footer: React.FC = () => {
             className="my-3"
           />
         </div>
-        <h1
-          className="uppercase font-bold text-3xl  text-white leading-tight text-center mb-4 px-1 
-          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
-        >
-          Hacienda del norte
-        </h1>
         <p
-          className="uppercase font-bold text-xs leading-tight text-center my-2 px-1 
-          drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] "
+          className="uppercase font-bold text-xs leading-tight text-center my-4 px-1 
+          drop-shadow-[0_4px_6px_rgba(0,0,0,0.5)] "
         >
           Serving El Paso <br /> and surrounding areas
         </p>
