@@ -3,7 +3,7 @@
 import { CustomShedForm } from '@/types/(store)/storage';
 import React, { useState, useEffect } from 'react';
 
-type Step5RoofProps = {
+type Step4RoofProps = {
   form: CustomShedForm;
   setFormAction: React.Dispatch<React.SetStateAction<CustomShedForm>>;
   onNext: () => void;
@@ -33,12 +33,12 @@ const roofStyles = [
   },
 ];
 
-export default function Step5Roof({
+export default function Step4Roof({
   form,
   setFormAction,
   onNext,
   onBack,
-}: Step5RoofProps) {
+}: Step4RoofProps) {
   const [selectedRoof, setSelectedRoof] = useState<string>(
     form.roof?.style ?? ''
   );
@@ -56,17 +56,17 @@ export default function Step5Roof({
 
   return (
     <div className="space-y-6 text-white">
-      <p className="text-md lg:text-xl text-center font-bold ">
-        Go ahead and choose your roof style
+      <p className="text-md lg:text-xl text-center font-bold">
+        Go ahead and choose the roof style that fits
       </p>
 
-      <div className="grid gap-4">
+      <div className="grid gap-2 ">
         {roofStyles.map(({ id, name, description }) => (
           <label
             key={id}
-            className={`block cursor-pointer border p-6 transition-all text-center ${
+            className={` block border text-left px-4 py-2 cursor-pointer transition-all ${
               selectedRoof === id
-                ? 'border-flag-red bg-flag-red/60 text-flag-blue'
+                ? 'border-flag-red bg-flag-red/80 text-flag-blue'
                 : 'border-white'
             }`}
           >
@@ -76,7 +76,7 @@ export default function Step5Roof({
               value={id}
               checked={selectedRoof === id}
               onChange={() => setSelectedRoof(id)}
-              className="hidden"
+              className="hidden "
             />
             <span className="font-semibold">{name}</span>
             <p className="text-sm ">{description}</p>
@@ -91,7 +91,7 @@ export default function Step5Roof({
           onClick={onBack}
           className="w-1/2 py-2 rounded-full text-xs font-semibold bg-gray-500 text-white uppercase"
         >
-          Back to doors
+          Back
         </button>
 
         <button
@@ -104,7 +104,7 @@ export default function Step5Roof({
               : 'bg-flag-red text-flag-blue'
           }`}
         >
-          Continue to add-ons
+          last step
         </button>
       </div>
     </div>

@@ -55,7 +55,7 @@ export default function Step3WindowsAndDoors({
   return (
     <div className="space-y-6 text-white">
       <p className="text-md lg:text-xl text-center font-bold">
-        Choose how many windows and doors for your storage
+        How many windows and doors for this storage?
       </p>
 
       {/* Window options */}

@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import Step1Dimensions from './steps/Step1Dimensions';
 import { CustomShedForm } from '@/types/(store)/storage';
 import Step2Material from './steps/Step2Materials';
-import Step5Roof from './steps/Step5Roof';
 import Step6Addons from './steps/Step6Addons';
 import Step7Review from './steps/Step7Review';
 import Background from '@/components/(store)/common/Background';
 import Step3WindowsAndDoors from './steps/Step3WindowsAndDoors';
+import Step4Roof from './steps/Step4Roof';
 
 const backgroundImages: Record<number, string> = {
   1: '/(store)/steps/dimensions.webp',
@@ -76,7 +76,7 @@ export default function StorageBuilderPage() {
         );
       case 4:
         return (
-          <Step5Roof
+          <Step4Roof
             form={form}
             setFormAction={setForm}
             onNext={handleNextStep}

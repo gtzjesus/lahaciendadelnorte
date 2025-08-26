@@ -12,15 +12,16 @@ type Step2MaterialProps = {
 
 const materials = [
   {
+    id: 'sheeting',
+    name: 'Sheet Metal',
+    description: 'Lightweight corrugated metal, good ventilation.',
+  },
+  {
     id: 'wood',
     name: 'Wood',
     description: 'Classic natural material with a warm, rustic feel.',
   },
-  {
-    id: 'sheeting',
-    name: 'Sheet Metal',
-    description: 'Lightweight corrugated metal, great for ventilation.',
-  },
+
   {
     id: 'steel',
     name: 'Steel',
