@@ -64,9 +64,8 @@ export default function Step1Dimensions({
         className="uppercase font-bold text-3xl lg:text-5xl text-white leading-tight text-center px-1 
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] mb-8"
       >
-        Welcome to our Storage Builder
+        Submit your storage idea in seconds
       </h1>
-
       <p className="text-md lg:text-xl text-center font-bold ">
         Let’s start with your shed’s dimensions!
       </p>
