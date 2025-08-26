@@ -10,29 +10,41 @@ type Step1DimensionsProps = {
   onNext: () => void;
 };
 
-const presetSheds: { label: string; dimensions: Dimensions; image: string }[] =
-  [
-    {
-      label: 'Tool',
-      dimensions: { width: 6, length: 8, height: 6 },
-      image: '/(store)/storage/tool-shed.webp',
-    },
-    {
-      label: 'Yard',
-      dimensions: { width: 8, length: 10, height: 8 },
-      image: '/(store)/storage/tool-shed.webp',
-    },
-    {
-      label: 'Workshop',
-      dimensions: { width: 10, length: 12, height: 10 },
-      image: '/(store)/storage/tool-shed.webp',
-    },
-    {
-      label: 'Utility',
-      dimensions: { width: 12, length: 16, height: 12 },
-      image: '/(store)/storage/tool-shed.webp',
-    },
-  ];
+const presetSheds: {
+  label: string;
+  dimensions: Dimensions;
+  image: string;
+  description: string;
+}[] = [
+  {
+    label: 'Tool',
+    dimensions: { width: 6, length: 8, height: 6 },
+    image: '/(store)/storage/tool-shed.webp',
+    description:
+      'Perfect for tools, bikes, and seasonal storage. This compact shed fits in most backyards and provides just enough space to organize lawn equipment, hand tools, gardening supplies, or even one adult bike. With a small footprint and efficient layout, it’s ideal for homeowners with basic storage needs or tight yard space.',
+  },
+  {
+    label: 'Yard',
+    dimensions: { width: 8, length: 10, height: 8 },
+    image: '/(store)/storage/tool-shed.webp',
+    description:
+      'Great for storing lawnmowers, garden tools, bins, and small outdoor furniture. The Yard Shed offers extra walking room and vertical space for shelves, hooks, or a small workspace while still being compact enough for suburban lots.',
+  },
+  {
+    label: 'Workshop',
+    dimensions: { width: 10, length: 12, height: 10 },
+    image: '/(store)/storage/tool-shed.webp',
+    description:
+      'Ideal for DIYers, hobbyists, or anyone needing a functional workshop. This shed can hold large equipment, a workbench, power tools, and storage units. With generous interior space and headroom, it’s perfect for weekend projects or year-round hobbies.',
+  },
+  {
+    label: 'Utility',
+    dimensions: { width: 12, length: 16, height: 12 },
+    image: '/(store)/storage/tool-shed.webp',
+    description:
+      'A large multi-purpose shed with room for everything — from ATVs to seasonal décor, gardening gear, or even a deep freezer. Designed for serious storage or light commercial use, the Utility Shed can double as a mini garage or secondary workspace.',
+  },
+];
 
 export default function Step1Dimensions({
   form,
@@ -66,6 +78,10 @@ export default function Step1Dimensions({
     setCustomMode(false);
   };
 
+  const selectedShed = presetSheds.find(
+    (shed) => shed.label === selectedPresetLabel
+  );
+
   return (
     <div className="space-y-6 text-white">
       <h1 className="uppercase font-bold text-3xl lg:text-5xl text-white text-center leading-tight drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] mb-4">
@@ -88,15 +104,15 @@ export default function Step1Dimensions({
                   onClick={() => handlePresetSelect(label, dimensions)}
                   className={`block text-left px-4 py-3 transition-all border rounded-md cursor-pointer ${
                     isSelected
-                      ? 'border-flag-red bg-flag-red/20'
+                      ? 'border-flag-red bg-flag-red/50'
                       : 'border-white'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="uppercase text-lg font-semibold">
-                      {label} shed
+                    <span className="uppercase text-md font-semibold">
+                      {label} Shed
                     </span>
-                    <p className="text-sm">
+                    <p className="text-xs">
                       {dimensions.length}ft L{' '}
                       <strong className="text-flag-red">x</strong>{' '}
                       {dimensions.width}ft W{' '}
@@ -115,10 +131,7 @@ export default function Step1Dimensions({
                         className="rounded-md border border-white"
                       />
                       <p className="text-xs text-center italic">
-                        <strong>{label}</strong> shed:
-                        <br />
-                        {dimensions.length}ft Long × {dimensions.width}ft Wide ×{' '}
-                        {dimensions.height}ft High
+                        {selectedShed?.description}
                       </p>
                     </div>
                   )}
