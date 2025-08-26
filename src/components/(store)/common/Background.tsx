@@ -19,7 +19,7 @@ export default function Background({ className = '' }: BackgroundProps) {
           alt="Background mobile"
           fill
           sizes="100vw"
-          className={`object-cover transition-opacity duration-700 ${loaded ? 'opacity-60' : 'opacity-0'}`}
+          className={`object-cover transition-opacity duration-700 ${loaded ? 'opacity-50' : 'opacity-0'}`}
           onLoadingComplete={() => setLoaded(true)}
           priority
         />
@@ -32,7 +32,7 @@ export default function Background({ className = '' }: BackgroundProps) {
           alt="Background desktop"
           fill
           sizes="100vw"
-          className={`object-cover transition-opacity duration-700 ${loaded ? 'opacity-60' : 'opacity-0'}`}
+          className={`object-cover transition-opacity duration-700 ${loaded ? 'opacity-50' : 'opacity-0'}`}
           onLoadingComplete={() => setLoaded(true)}
           priority
         />

@@ -13,22 +13,22 @@ const Footer: React.FC = () => {
   return (
     <footer className="flex flex-col pt-5 text-flag-blue overflow-hidden">
       <div>
+        <div className="flex justify-center">
+          <Image
+            src="/icons/logo-blacked.webp"
+            alt="lahacienda"
+            width={30}
+            height={30}
+            priority
+            className="my-3"
+          />
+        </div>
         <h1
           className="uppercase font-bold text-2xl  text-flag-blue leading-tight text-center my-4 px-1 
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.5)]"
         >
           La Hacienda del norte
         </h1>
-        <div className="flex justify-center">
-          <Image
-            src="/icons/logo-blacked.webp"
-            alt="lahacienda"
-            width={25}
-            height={25}
-            priority
-            className="my-3"
-          />
-        </div>
         <p
           className="uppercase font-bold text-xs leading-tight text-center my-4 px-1 
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.5)] "
