@@ -61,7 +61,7 @@ export default function Step2Material({
         Select the material you want your outside shed built from
       </p>
 
-      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-2  lg:grid-cols-3 lg:gap-4">
         {materials.map(({ id, name, description, image }) => {
           const isSelected = selectedMaterial === id;
 
@@ -69,7 +69,7 @@ export default function Step2Material({
             <button
               key={id}
               onClick={() => setSelectedMaterial(id)}
-              className={`relative border rounded-md overflow-hidden text-left transition-all cursor-pointer h-48 flex items-end group ${
+              className={`relative border rounded-md overflow-hidden text-left transition-all cursor-pointer flex items-end group ${
                 isSelected ? ' ring-4 ring-flag-red ' : 'border-white'
               }`}
             >
