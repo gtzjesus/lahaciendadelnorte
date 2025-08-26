@@ -21,28 +21,28 @@ const presetSheds: {
     dimensions: { width: 6, length: 8, height: 6 },
     image: '/(store)/storage/tool-shed.webp',
     description:
-      'Perfect for tools, bikes, and seasonal storage. This compact shed fits in most backyards and provides just enough space to organize lawn equipment, hand tools, or even gardening supplies. With a small footprint and efficient layout.',
+      'This compact shed fits in most backyards and provides just enough space to organize lawn equipment, hand tools, or even gardening supplies. A small footprint and efficient layout.',
   },
   {
     label: 'Yard',
     dimensions: { width: 8, length: 10, height: 8 },
-    image: '/(store)/storage/tool-shed.webp',
+    image: '/(store)/storage/yard-shed.webp',
     description:
-      'Great for storing lawnmowers, garden tools, bins, and small outdoor furniture. The Yard Shed offers extra walking room and vertical space for shelves, hooks, or a small workspace while still being compact enough for suburban lots.',
+      'Offers extra walking room and vertical space for shelves, hooks, or a small workspace while still being compact enough for suburban lots and tight spaces.',
   },
   {
-    label: 'Workshop',
+    label: 'Work',
     dimensions: { width: 10, length: 12, height: 10 },
-    image: '/(store)/storage/tool-shed.webp',
+    image: '/(store)/storage/work-shed.webp',
     description:
-      'Ideal for DIYers, hobbyists, or anyone needing a functional workshop. This shed can hold large equipment, a workbench, power tools, and storage units. With generous interior space and headroom, it’s perfect for weekend projects or year-round hobbies.',
+      'Ideal for anyone needing a functional workshop. This shed can hold large equipment, a workbench, power tools, and storage units. With generous interior space and plenty of headroom',
   },
   {
     label: 'Utility',
     dimensions: { width: 12, length: 16, height: 12 },
-    image: '/(store)/storage/tool-shed.webp',
+    image: '/(store)/storage/utility-shed.webp',
     description:
-      'A large multi-purpose shed with room for everything — from ATVs to seasonal décor, gardening gear, or even a deep freezer. Designed for serious storage or light commercial use, the Utility Shed can double as a mini garage or secondary workspace.',
+      'A large multi-purpose shed with room for everything — from ATVs to seasonal décor. Designed for serious storage or light commercial use and can double as a mini garage or secondary workspace.',
   },
 ];
 
