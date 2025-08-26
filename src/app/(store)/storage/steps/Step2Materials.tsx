@@ -14,22 +14,18 @@ const materials = [
   {
     id: 'wood',
     name: 'Wood',
-    description: 'Classic, natural look with great insulation.',
+    description: 'Classic natural material with a warm, rustic feel.',
   },
   {
-    id: 'metal',
-    name: 'Metal',
-    description: 'Durable and low maintenance.',
+    id: 'sheeting',
+    name: 'Sheet Metal',
+    description:
+      'Lightweight corrugated metal, great for cost and ventilation.',
   },
   {
-    id: 'vinyl',
-    name: 'Vinyl',
-    description: 'Resistant to rot and insects, easy to clean.',
-  },
-  {
-    id: 'composite',
-    name: 'Composite',
-    description: 'Modern, strong, and environmentally friendly.',
+    id: 'steel',
+    name: 'Steel',
+    description: 'Heavy-duty metal option, strong and long-lasting.',
   },
 ];
 
@@ -54,30 +50,32 @@ export default function Step2Material({
 
   return (
     <div className="space-y-6 text-white">
-      <p className="text-sm lg:text-xl text-center font-bold ">
+      <p className="text-md lg:text-xl text-center font-bold ">
         Choose your material
       </p>
 
-      <div className="grid gap-4">
+      <div className="grid gap-4 ">
         {materials.map(({ id, name, description }) => (
           <label
             key={id}
-            className={`block cursor-pointer rounded-lg border p-4 ${
+            onClick={() => setSelectedMaterial(id)}
+            className={`block cursor-pointer border p-6 transition-all text-center ${
               selectedMaterial === id
-                ? 'border-green bg-green/20'
-                : 'border-gray-600 '
+                ? 'border-flag-red bg-flag-red/60 text-flag-blue'
+                : 'border-white'
             }`}
           >
+            {/* Hidden radio input */}
             <input
               type="radio"
               name="material"
               value={id}
               checked={selectedMaterial === id}
               onChange={() => setSelectedMaterial(id)}
-              className="mr-2"
+              className="hidden"
             />
             <span className="font-semibold">{name}</span>
-            <p className="text-sm opacity-70">{description}</p>
+            <p className="text-sm">{description}</p>
           </label>
         ))}
       </div>
@@ -86,7 +84,7 @@ export default function Step2Material({
         <button
           type="button"
           onClick={onBack}
-          className="w-1/2 py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm uppercase bg-gray-700 text-white "
+          className="w-1/2 py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm uppercase bg-gray-500 text-white "
         >
           Back to dimensions
         </button>
@@ -98,7 +96,7 @@ export default function Step2Material({
           className={`w-1/2 py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm uppercase ${
             !isValid
               ? 'bg-gray-400 text-white cursor-not-allowed'
-              : 'bg-green text-white'
+              : 'bg-flag-red text-flag-blue'
           }`}
         >
           Continue to windows

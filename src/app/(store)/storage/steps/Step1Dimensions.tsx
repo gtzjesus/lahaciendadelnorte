@@ -67,7 +67,7 @@ export default function Step1Dimensions({
         Welcome to our Storage Builder
       </h1>
 
-      <p className="text-sm lg:text-xl text-center font-bold ">
+      <p className="text-md lg:text-xl text-center font-bold ">
         Let’s start with your shed’s dimensions!
       </p>
 
@@ -135,7 +135,7 @@ export default function Step1Dimensions({
           onChange={(e) => setSelectedPreset(e.target.value)}
           className="uppercase appearance-none p-2 border text-xs focus:outline-none text-black text-center"
         >
-          <option value="text-center">Select a preset</option>
+          <option value="text-center">Select a standard size</option>
           {presetSheds.map((preset) => (
             <option key={preset.label} value={preset.label}>
               {preset.label}
@@ -152,7 +152,7 @@ export default function Step1Dimensions({
         className={`w-full py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm uppercase ${
           !isValid
             ? 'bg-gray-400 text-white cursor-not-allowed'
-            : 'bg-green text-white'
+            : 'bg-flag-red text-flag-blue'
         }`}
       >
         Continue to material
