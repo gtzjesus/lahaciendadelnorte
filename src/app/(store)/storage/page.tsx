@@ -9,6 +9,7 @@ import Step4Doors from './steps/Step4Doors';
 import Step5Roof from './steps/Step5Roof';
 import Step6Addons from './steps/Step6Addons';
 import Step7Review from './steps/Step7Review';
+import Background from '@/components/(store)/common/Background';
 
 export default function StorageBuilderPage() {
   const [form, setForm] = useState<CustomShedForm>({
@@ -39,11 +40,13 @@ export default function StorageBuilderPage() {
     switch (currentStep) {
       case 1:
         return (
-          <Step1Dimensions
-            form={form}
-            setFormAction={setForm}
-            onNext={handleNextStep}
-          />
+          <div className="relative z-20 max-w-md mx-auto py-10 px-4">
+            <Step1Dimensions
+              form={form}
+              setFormAction={setForm}
+              onNext={handleNextStep}
+            />
+          </div>
         );
       case 2:
         return (
@@ -107,5 +110,17 @@ export default function StorageBuilderPage() {
     }
   };
 
-  return <div className="max-w-md mx-auto py-10 px-4">{renderStep()}</div>;
+  return (
+    <div className="relative min-h-screen">
+      {/* Stack background absolutely */}
+      <div className="absolute inset-0 z-0">
+        <Background />
+      </div>
+
+      {/* Content on top */}
+      <div className="relative z-10 flex justify-center items-center min-h-screen px-4">
+        {renderStep()}
+      </div>
+    </div>
+  );
 }

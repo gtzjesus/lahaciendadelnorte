@@ -39,7 +39,7 @@ const Footer: React.FC = () => {
 
       {/* Copyright */}
       <p className="uppercase text-center text-xs tracking-very-wide font-light mb-4 ">
-        &copy; la hacienda del norte {new Date().getFullYear()}.
+        &copy; la hacienda del norte {new Date().getFullYear()}
       </p>
     </footer>
   );
