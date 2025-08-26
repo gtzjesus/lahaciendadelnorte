@@ -51,7 +51,7 @@ export default function Step2Material({
   return (
     <div className="space-y-6 text-white">
       <p className="text-md lg:text-xl text-center font-bold ">
-        Choose your material
+        Choose your outside material
       </p>
 
       <div className="grid gap-4 ">
@@ -74,8 +74,8 @@ export default function Step2Material({
               onChange={() => setSelectedMaterial(id)}
               className="hidden"
             />
-            <span className="font-semibold">{name}</span>
-            <p className="text-sm">{description}</p>
+            <span className="uppercase  text-lg font-semibold">{name}</span>
+            <p className="text-sm mt-3">{description}</p>
           </label>
         ))}
       </div>

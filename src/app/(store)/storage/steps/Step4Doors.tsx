@@ -33,7 +33,7 @@ export default function Step4Doors({
 
   return (
     <div className="space-y-6 text-white">
-      <p className="text-sm lg:text-xl text-center font-bold">
+      <p className="text-lg text-center font-semibold">
         Select how many doors your shed needs
       </p>
 
@@ -57,7 +57,7 @@ export default function Step4Doors({
         <button
           type="button"
           onClick={onBack}
-          className="w-1/2 py-2 rounded-full text-xs font-semibold bg-gray-700 text-white uppercase"
+          className="w-1/2 py-2 rounded-full text-xs font-semibold bg-gray-500 text-white uppercase"
         >
           Back to windows
         </button>
@@ -69,7 +69,7 @@ export default function Step4Doors({
           className={`w-1/2 py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm ${
             !isValid
               ? 'bg-gray-400 text-white cursor-not-allowed'
-              : 'bg-green text-white'
+              : 'bg-flag-red text-flag-blue'
           }`}
         >
           Continue to roof

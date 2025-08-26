@@ -56,18 +56,18 @@ export default function Step5Roof({
 
   return (
     <div className="space-y-6 text-white">
-      <p className="text-sm lg:text-xl text-center font-bold">
-        Choose your roof style
+      <p className="text-md lg:text-xl text-center font-bold ">
+        Go ahead and choose your roof style
       </p>
 
       <div className="grid gap-4">
         {roofStyles.map(({ id, name, description }) => (
           <label
             key={id}
-            className={`block cursor-pointer rounded-lg border p-4 ${
+            className={`block cursor-pointer border p-6 transition-all text-center ${
               selectedRoof === id
-                ? 'border-green bg-green/20'
-                : 'border-gray-600'
+                ? 'border-flag-red bg-flag-red/60 text-flag-blue'
+                : 'border-white'
             }`}
           >
             <input
@@ -76,10 +76,10 @@ export default function Step5Roof({
               value={id}
               checked={selectedRoof === id}
               onChange={() => setSelectedRoof(id)}
-              className="mr-2"
+              className="hidden"
             />
             <span className="font-semibold">{name}</span>
-            <p className="text-sm opacity-70">{description}</p>
+            <p className="text-sm ">{description}</p>
           </label>
         ))}
       </div>
@@ -89,7 +89,7 @@ export default function Step5Roof({
         <button
           type="button"
           onClick={onBack}
-          className="w-1/2 py-2 rounded-full text-xs font-semibold bg-gray-700 text-white uppercase"
+          className="w-1/2 py-2 rounded-full text-xs font-semibold bg-gray-500 text-white uppercase"
         >
           Back to doors
         </button>
@@ -101,7 +101,7 @@ export default function Step5Roof({
           className={`w-1/2 py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm ${
             !isValid
               ? 'bg-gray-400 text-white cursor-not-allowed'
-              : 'bg-green text-white'
+              : 'bg-flag-red text-flag-blue'
           }`}
         >
           Continue to add-ons

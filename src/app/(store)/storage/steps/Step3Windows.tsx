@@ -16,83 +16,51 @@ export default function Step3Windows({
   onNext,
   onBack,
 }: Step3WindowsProps) {
-  const [hasWindows, setHasWindows] = useState<boolean>(
-    form.windows?.hasWindows ?? false
-  );
-
   const [quantity, setQuantity] = useState<number | ''>(
-    form.windows?.hasWindows ? (form.windows?.quantity ?? '') : ''
+    form.windows?.quantity ?? ''
   );
 
-  const isValid = !hasWindows || (hasWindows && Number(quantity) > 0);
+  const isValid = quantity !== '' && Number(quantity) >= 0;
 
-  // Reset quantity when windows are disabled
-  useEffect(() => {
-    if (!hasWindows) {
-      setQuantity('');
-    }
-  }, [hasWindows]);
-
-  // Sync with parent state
   useEffect(() => {
     setFormAction((prev) => ({
       ...prev,
       windows: {
-        hasWindows,
-        quantity: hasWindows ? Number(quantity) : 0,
+        hasWindows: Number(quantity) > 0,
+        quantity: Number(quantity),
       },
     }));
-  }, [hasWindows, quantity, setFormAction]);
+  }, [quantity, setFormAction]);
 
   return (
     <div className="space-y-6 text-white">
-      <p className="text-sm lg:text-xl text-center font-bold">Any windows?</p>
+      <p className="text-lg text-center font-semibold">
+        How many windows for your storage?
+      </p>
 
-      {/* Toggle Yes/No */}
-      <div className="flex justify-center gap-4">
-        <button
-          type="button"
-          className={`px-4 py-2 rounded-full text-xs font-semibold uppercase ${
-            hasWindows ? 'bg-green text-white' : 'bg-gray-600'
-          }`}
-          onClick={() => setHasWindows(true)}
-        >
-          Yes windows
-        </button>
-        <button
-          type="button"
-          className={`px-4 py-2 rounded-full text-xs font-semibold uppercase ${
-            !hasWindows ? 'bg-green text-white' : 'bg-gray-600'
-          }`}
-          onClick={() => setHasWindows(false)}
-        >
-          No windows
-        </button>
+      <div className="flex flex-col gap-2">
+        <label className="text-xs font-semibold">Number of windows</label>
+        <input
+          type="number"
+          min={0}
+          value={quantity}
+          onChange={(e) =>
+            setQuantity(e.target.value === '' ? '' : Number(e.target.value))
+          }
+          className="p-2 border text-xs text-black focus:outline-none"
+          placeholder="e.g. 2"
+        />
       </div>
 
-      {/* Quantity Input */}
-      {hasWindows && (
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-semibold">Number of windows</label>
-          <input
-            type="number"
-            min={1}
-            value={quantity}
-            onChange={(e) =>
-              setQuantity(e.target.value === '' ? '' : Number(e.target.value))
-            }
-            className="p-2 border text-xs text-black focus:outline-none"
-            placeholder="e.g. 2"
-          />
-        </div>
-      )}
+      <p className="text-sm text-center italic opacity-70">
+        Enter <strong>0</strong> if you don’t want any windows
+      </p>
 
-      {/* Navigation Buttons */}
       <div className="flex justify-between gap-4 pt-4">
         <button
           type="button"
           onClick={onBack}
-          className="w-1/2 py-2 rounded-full text-xs font-semibold bg-gray-700 text-white uppercase"
+          className="w-full py-2 rounded-full text-xs font-semibold bg-gray-500 text-white uppercase"
         >
           Back to material
         </button>
@@ -101,10 +69,10 @@ export default function Step3Windows({
           type="button"
           onClick={onNext}
           disabled={!isValid}
-          className={`w-1/2 py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm ${
+          className={`w-full py-2 rounded-full text-xs font-semibold uppercase transition duration-200 ease-in-out shadow-sm ${
             !isValid
               ? 'bg-gray-400 text-white cursor-not-allowed'
-              : 'bg-green text-white'
+              : 'bg-flag-red text-flag-blue'
           }`}
         >
           Continue to doors

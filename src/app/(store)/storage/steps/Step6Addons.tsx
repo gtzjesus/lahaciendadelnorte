@@ -47,7 +47,7 @@ export default function Step6Addons({
   const [selectedAddons, setSelectedAddons] = useState<string[]>(
     form.addons ?? []
   );
-
+  const isValid = selectedAddons.length > 0;
   const toggleAddon = (id: string) => {
     setSelectedAddons((prev) =>
       prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]
@@ -63,18 +63,18 @@ export default function Step6Addons({
 
   return (
     <div className="space-y-6 text-white">
-      <p className="text-sm lg:text-xl text-center font-bold">
-        Pick any optional add-ons
+      <p className="text-md lg:text-xl text-center font-bold ">
+        Pick any optional add-ons for your storage
       </p>
 
       <div className="grid gap-4">
         {addons.map(({ id, name, description }) => (
           <label
             key={id}
-            className={`block cursor-pointer rounded-lg border p-4 ${
+            className={`block cursor-pointer border p-6 transition-all text-center ${
               selectedAddons.includes(id)
-                ? 'border-green bg-green/20'
-                : 'border-gray-600'
+                ? 'border-flag-red bg-flag-red/60 text-flag-blue'
+                : 'border-white'
             }`}
           >
             <input
@@ -83,10 +83,10 @@ export default function Step6Addons({
               value={id}
               checked={selectedAddons.includes(id)}
               onChange={() => toggleAddon(id)}
-              className="mr-2"
+              className="hidden"
             />
             <span className="font-semibold">{name}</span>
-            <p className="text-sm opacity-70">{description}</p>
+            <p className="text-sm ">{description}</p>
           </label>
         ))}
       </div>
@@ -96,7 +96,7 @@ export default function Step6Addons({
         <button
           type="button"
           onClick={onBack}
-          className="w-1/2 py-2 rounded-full text-xs font-semibold uppercase bg-gray-700 text-white"
+          className="w-1/2 py-2 rounded-full text-xs font-semibold uppercase bg-gray-500 text-white"
         >
           Back to roof
         </button>
@@ -104,7 +104,11 @@ export default function Step6Addons({
         <button
           type="button"
           onClick={onNext}
-          className="w-1/2 py-2 rounded-full text-xs font-semibold uppercase bg-green text-white"
+          className={`w-1/2 py-2 rounded-full text-xs font-semibold transition duration-200 ease-in-out shadow-sm uppercase ${
+            !isValid
+              ? 'bg-gray-400 text-white cursor-not-allowed'
+              : 'bg-flag-red text-flag-blue'
+          }`}
         >
           review my shed
         </button>
