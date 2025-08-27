@@ -10,7 +10,7 @@ export default async function StorageInventoryPage() {
   return (
     <div className="relative w-full min-h-screen overflow-hidden">
       {/* Custom background image */}
-      <Background imageSrc="/(store)/inventory.webp" overlayOpacity={70} />
+      <Background imageSrc="/(store)/inventory.webp" overlayOpacity={90} />
 
       {/* Content sits on top of background */}
       <div className="relative z-10">

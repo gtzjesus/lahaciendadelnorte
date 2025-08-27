@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-t from-[#f9fafb to-flag-red  text-flag-blue  px-6 pt-10 pb-6">
+    <footer className="relative overflow-hidden bg-gradient-to-t from-flag-red to-[#f9fafb]  text-flag-blue  px-6 pt-10 pb-6">
       {/* Decorative lines or background */}
       <div className="absolute inset-0 opacity-5 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-flag-blue via-transparent to-white "></div>
 
@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Center callout (only on md+) */}
-        <div className="hidden md:flex flex-col items-center justify-center text-center text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div className="hidden md:flex flex-col items-center justify-center text-center text-sm font-medium">
           <p className="uppercase">Submit a quote today</p>
           <p className="text-xs mt-1 opacity-80">
             Storage solutions built for your lifestyle.
