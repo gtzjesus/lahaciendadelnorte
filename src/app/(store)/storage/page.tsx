@@ -1,6 +1,5 @@
 // app/(store)/storage/page.tsx
 
-import Background from '@/components/(store)/common/Background';
 import ProductGrid from '@/components/products/ProductGrid';
 import { getAllProducts } from '@/sanity/lib/products/getAllProducts';
 
@@ -9,13 +8,7 @@ export default async function StorageInventoryPage() {
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden">
-      {/* Custom background image */}
-      <Background imageSrc="/(store)/inventory.webp" overlayOpacity={90} />
-
-      {/* Content sits on top of background */}
-      <div className="relative z-10">
-        <ProductGrid products={products} />
-      </div>
+      <ProductGrid products={products} />
     </div>
   );
 }

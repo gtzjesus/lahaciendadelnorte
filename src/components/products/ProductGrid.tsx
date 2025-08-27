@@ -29,7 +29,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
             <div
               key={product._id}
               onClick={() => handleSelect(product._id)}
-              className="cursor-pointer flex flex-col border border-flag-red border-opacity-25 text-white transition px-4 py-4 hover:shadow-md hover:border-opacity-50"
+              className="cursor-pointer flex flex-col border border-flag-blue border-opacity-25 text-flag-blue transition px-2 py-4 "
             >
               <div className="flex flex-col items-center">
                 {product.imageUrl && (
@@ -43,7 +43,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
                   </div>
                 )}
 
-                <div className="text-center mb-2">
+                <div className="text-center">
                   <p className="font-semibold uppercase text-sm">
                     {product.name}
                   </p>
@@ -64,11 +64,11 @@ export default function ProductGrid({ products }: ProductGridProps) {
             transition={{ duration: 0.3, ease: 'easeOut' }}
             className="fixed inset-0 bg-flag-red bg-opacity-90 backdrop-blur-md z-50 text-flag-blue overflow-y-auto"
           >
-            <div className="relative max-w-2xl mx-auto px-4 py-6 mt-20 flex flex-col items-center">
+            <div className="relative max-w-2xl mx-auto mt-5 flex flex-col items-center">
               {/* Close button */}
               <button
                 onClick={closeModal}
-                className="absolute right-4 top-1 z-50 text-white  text-sm uppercase  transition underline"
+                className="absolute right-4 z-50 text-flag-blue  text-sm uppercase  transition underline"
               >
                 close
               </button>
