@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import type { Product } from '@/types';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -10,13 +11,41 @@ type ProductModalProps = {
 };
 
 export default function ProductModal({ product, onClose }: ProductModalProps) {
+  const [showFullDesc, setShowFullDesc] = useState(false);
+  const [mainImage, setMainImage] = useState<string | null>(
+    product.imageUrl ?? null
+  );
+
+  const wordLimit = 10;
+
+  // Disable scroll when modal is open
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
+  const getShortDescription = (desc: string) => {
+    const words = desc.split(' ');
+    return (
+      words.slice(0, wordLimit).join(' ') +
+      (words.length > wordLimit ? '...' : '')
+    );
+  };
+
+  const handleImageClick = (url: string) => {
+    setMainImage(url);
+  };
+
   return (
     <motion.div
       initial={{ y: '-100%', opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: '-100%', opacity: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="fixed inset-0 bg-flag-red bg-opacity-90 backdrop-blur-md z-50 text-white overflow-y-auto"
+      className="fixed inset-0 bg-flag-red bg-opacity-80 backdrop-blur-md z-50 text-white overflow-y-auto"
     >
       <div className="relative max-w-2xl mx-auto mt-5 flex flex-col items-center">
         {/* Close button */}
@@ -27,55 +56,77 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
           close
         </button>
 
-        {/* Main Product Image */}
-        <h2 className="text-xl font-bold uppercase mt-10">{product.name}</h2>
-        {product.imageUrl && (
-          <div className="w-64 h-64 relative mb-2 overflow-hidden">
+        {/* Product Title */}
+        <h2 className="text-xl font-bold uppercase">{product.name}</h2>
+
+        {/* Main Image */}
+        {mainImage && (
+          <div className="w-40 h-40 relative overflow-hidden mt-2 mb-4">
             <Image
-              src={product.imageUrl}
+              src={mainImage}
               alt={product.name}
               fill
-              className="object-cover"
+              className="object-cover rounded"
             />
           </div>
         )}
 
-        {/* Extra Images Gallery */}
+        {/* Thumbnails */}
         {product.extraImageUrls && product.extraImageUrls.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto mt-4">
-            {product.extraImageUrls.map((url, index) => (
-              <div
-                key={index}
-                className="w-20 h-20 relative flex-shrink-0 rounded-sm overflow-hidden border border-gray-700"
-              >
-                <Image
-                  src={url}
-                  alt={`${product.name} extra image ${index + 1}`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            ))}
+          <div className="flex gap-2 overflow-x-auto mb-4">
+            {[product.imageUrl, ...product.extraImageUrls]
+              .filter(Boolean)
+              .map((url, index) => (
+                <div
+                  key={index}
+                  className={`w-16 h-16 relative flex-shrink-0 border rounded overflow-hidden cursor-pointer ${
+                    mainImage === url
+                      ? 'border-2 border-white'
+                      : 'border-gray-700'
+                  }`}
+                  onClick={() => handleImageClick(url!)}
+                >
+                  <Image
+                    src={url!}
+                    alt={`${product.name} thumbnail ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ))}
           </div>
         )}
 
-        {/* Product Info */}
-        <div className="text-center">
+        {/* Description & Category */}
+        <div className="text-center px-6">
           {product.category?.title && (
-            <p className="text-sm uppercase mb-2">{product.category.title}</p>
+            <p className="text-xs uppercase my-2 text-gray-400">
+              {product.category.title}
+            </p>
           )}
+
           {product.description && (
-            <p className="text-sm ">{product.description}</p>
+            <div className="text-sm">
+              <p>
+                {showFullDesc
+                  ? product.description
+                  : getShortDescription(product.description)}
+              </p>
+              {product.description.split(' ').length > wordLimit && (
+                <button
+                  onClick={() => setShowFullDesc(!showFullDesc)}
+                  className="  z-50 text-white text-xs  transition underline"
+                >
+                  {showFullDesc ? 'Show less' : 'Learn more'}
+                </button>
+              )}
+            </div>
           )}
         </div>
 
-        {/* Variants */}
+        {/* Product Variants */}
         {(product.variants ?? []).length > 0 && (
-          <div className="w-full mt-4">
-            <p className="text-[10px] text-center uppercase font-light tracking-wider mb-4">
-              Additional Information
-            </p>
-
+          <div className="w-full mt-6 px-4">
             <ul className="space-y-4">
               {product.variants?.map((v, i) => (
                 <li
