@@ -12,7 +12,7 @@ interface BackgroundProps {
 export default function Background({
   className = '',
   imageSrc = '/(store)/lahacienda-preview.webp',
-  overlayOpacity = 80,
+  overlayOpacity = 70,
 }: BackgroundProps) {
   const [loaded, setLoaded] = useState(false);
 

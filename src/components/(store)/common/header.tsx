@@ -11,8 +11,8 @@ import AuthButtons from '../../auth/AuthButtons';
 
 const navItems = [
   { name: 'Home', href: '/' },
-  { name: 'Start Building', href: '/storage' },
-  { name: 'Qualify With Lender', href: '/qualify' },
+  { name: 'Storages', href: '/storage' },
+  { name: 'Qualify', href: '/qualify' },
 
   { name: 'Contact', href: '/contact' },
 ];
@@ -175,7 +175,7 @@ const Header = () => {
                   onClick={() => setMenuOpen(false)}
                   className={clsx(
                     'text-xl font-semibold transition-colors',
-                    pathname === href ? 'text-flag-red' : 'text-black',
+                    pathname === href ? 'text-flag-blue' : 'text-black',
                     scrolled ? ' text-flag-blue' : ' text-black'
                   )}
                 >

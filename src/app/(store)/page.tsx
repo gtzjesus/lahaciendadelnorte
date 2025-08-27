@@ -1,8 +1,6 @@
 // app/(store)/page.tsx
 
 import HeroSection from '@/components/(store)/common/HeroSection';
-import Footer from '@/components/(store)/common/Footer';
-import Header from '@/components/(store)/common/header';
 import Background from '@/components/(store)/common/Background';
 import type { Metadata } from 'next';
 
@@ -59,12 +57,10 @@ export const metadata: Metadata = {
 const Home = async () => {
   return (
     <div>
-      <Header />
       <div className="relative w-full min-h-screen">
         <Background />
         <HeroSection />
       </div>
-      <Footer />
     </div>
   );
 };

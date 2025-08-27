@@ -35,23 +35,35 @@ export interface Category extends SanityDocument {
 
 // 🛍️ Product
 export interface Product extends SanityDocument {
+  itemNumber: string;
   name: string;
   slug: SanitySlug;
   price: number;
   stock?: number;
+
   image?: SanityImage;
-  description?: string;
+  imageUrl?: string; // ✅ manually resolved from GROQ query
   extraImages?: SanityImage[];
+  extraImageUrls?: string[]; // ✅ manually resolved from GROQ query
+
+  description?: string;
 
   variants?: {
-    size: string;
-    price: number;
-    stock: number;
+    size?: string;
+    dimensions?: string;
+    material?: string;
+    roof?: string;
+    price?: number;
+    stock?: number;
+    windows?: number;
+    doors?: number;
+    garage?: boolean;
+    addons?: string[];
   }[];
 
-  flavors?: string[];
-  categories?: Category[];
-  category?: Category; // you use singular `category` in your schema
+  category?: Category;
+  categories?: Category[]; // optional if you use both singular/plural
+  flavors?: string[]; // if unused, you can remove
 }
 
 // 🧠 Basket Item
