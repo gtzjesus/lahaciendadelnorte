@@ -73,7 +73,7 @@ const Header = () => {
 
         <h1
           className={clsx(
-            '   uppercase font-light text-xs leading-tight text-center',
+            '   uppercase font-light text-sm leading-tight text-center',
             scrolled ? ' text-white ' : ' text-white invisible',
             menuOpen ? 'invisible' : 'justify-between'
           )}
