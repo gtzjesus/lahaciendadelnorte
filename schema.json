@@ -725,28 +725,115 @@
           "of": {
             "type": "object",
             "attributes": {
-              "size": {
+              "dimensions": {
                 "type": "objectAttribute",
                 "value": {
                   "type": "union",
                   "of": [
                     {
                       "type": "string",
-                      "value": "Small"
+                      "value": "8x6x6"
                     },
                     {
                       "type": "string",
-                      "value": "Medium"
+                      "value": "10x8x8"
                     },
                     {
                       "type": "string",
-                      "value": "Large"
+                      "value": "12x10x10"
                     },
                     {
                       "type": "string",
-                      "value": "Extra Large"
+                      "value": "16x12x12"
                     }
                   ]
+                },
+                "optional": true
+              },
+              "material": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "union",
+                  "of": [
+                    {
+                      "type": "string",
+                      "value": "wood"
+                    },
+                    {
+                      "type": "string",
+                      "value": "sheet"
+                    }
+                  ]
+                },
+                "optional": true
+              },
+              "windows": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "number"
+                },
+                "optional": true
+              },
+              "doors": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "number"
+                },
+                "optional": true
+              },
+              "roof": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "union",
+                  "of": [
+                    {
+                      "type": "string",
+                      "value": "gable"
+                    },
+                    {
+                      "type": "string",
+                      "value": "gambrel"
+                    },
+                    {
+                      "type": "string",
+                      "value": "flat"
+                    },
+                    {
+                      "type": "string",
+                      "value": "skillion"
+                    }
+                  ]
+                },
+                "optional": true
+              },
+              "garage": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "boolean"
+                },
+                "optional": true
+              },
+              "addons": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "array",
+                  "of": {
+                    "type": "union",
+                    "of": [
+                      {
+                        "type": "string",
+                        "value": "workbench"
+                      },
+                      {
+                        "type": "string",
+                        "value": "loft"
+                      },
+                      {
+                        "type": "string",
+                        "value": "shelving"
+                      }
+                    ]
+                  }
                 },
                 "optional": true
               },
@@ -768,7 +855,7 @@
                 "type": "objectAttribute",
                 "value": {
                   "type": "string",
-                  "value": "variant"
+                  "value": "shedVariant"
                 }
               }
             },
