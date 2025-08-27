@@ -40,14 +40,12 @@ const Footer: React.FC = () => {
           <p className="uppercase text-xs font-light tracking-wider">
             &copy; {new Date().getFullYear()} La Hacienda Del Norte
           </p>
-          <p className="text-xs mt-1 text-gray-500 dark:text-gray-400">
-            All rights reserved
-          </p>
+          <p className="text-xs mt-1 font-light ">All rights reserved</p>
         </div>
       </div>
 
       {/* Optional decorative border */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-flag-blue to-transparent dark:via-flag-red my-6 opacity-50" />
+      <div className="h-px w-full bg-gradient-to-r from-transparent via-flag-blue to-transparent dark:via-flag-red my-1 opacity-50" />
     </footer>
   );
 };
