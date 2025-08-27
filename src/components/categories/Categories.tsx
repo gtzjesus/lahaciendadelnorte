@@ -47,7 +47,7 @@ interface CategoriesProps {
  */
 const Categories: React.FC<CategoriesProps> = ({ categories }) => {
   return (
-    <div className="w-full mx-auto bg-gradient-to-br from-flag-red to-[#F5DEB3] pb-10 ">
+    <div className="w-full mx-auto bg-gradient-to-br bg-flag-red from-flag-red via-transparent pb-10 ">
       <h2 className="uppercase barlow-condensed-regular text-2xl tracking-very-wide lg:text-3xl font-semibold text-center text-white py-6">
         Explore sizes
       </h2>
