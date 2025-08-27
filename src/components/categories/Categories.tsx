@@ -47,13 +47,13 @@ interface CategoriesProps {
  */
 const Categories: React.FC<CategoriesProps> = ({ categories }) => {
   return (
-    <div className="w-full mx-auto bg-gradient-to-br from-flag-red to-[#f9fafb] pb-10 ">
+    <div className="w-full mx-auto bg-gradient-to-br from-flag-red to-[#F5DEB3] pb-10 ">
       <h2 className="uppercase barlow-condensed-regular text-2xl tracking-very-wide lg:text-3xl font-semibold text-center text-white py-6">
         Explore sizes
       </h2>
 
-      <div className="px-4 lg:px-0 lg:max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="px-2 lg:px-0 lg:max-w-7xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1">
           {categories.map((category) => (
             <Link
               key={category._id}
@@ -69,12 +69,12 @@ const Categories: React.FC<CategoriesProps> = ({ categories }) => {
                     }
                     alt={category.title}
                     fill
-                    className="object-cover"
+                    className="object-cover p-6"
                     sizes="(max-width: 768px) 100vw, 25vw"
                     priority
                   />
                 </div>
-                <h3 className="barlow-condensed-regular text-sm tracking-very-wide font-light text-center text-black py-2">
+                <h3 className="barlow-condensed-regular text-sm tracking-very-wide font-light text-center shadow-md text-white py-2">
                   {capitalizeFirstWord(category.title)}
                 </h3>
               </div>

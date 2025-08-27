@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-t from-flag-red to-[#f9fafb]  text-white  px-6 pt-10 pb-6">
+    <footer className="relative overflow-hidden bg-gradient-to-t from-flag-red to-[#F5DEB3]  text-white  px-6 pt-10 pb-6">
       {/* Decorative lines or background */}
       <div className="absolute inset-0 opacity-5 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-flag-blue via-transparent to-white "></div>
 
