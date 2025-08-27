@@ -9,6 +9,7 @@ export const getAllProducts = async (): Promise<Product[]> => {
       name,
       itemNumber,
       slug,
+      description, 
       "imageUrl": image.asset->url,
       "extraImageUrls": extraImages[].asset->url,
       category->{_id, title},

@@ -62,7 +62,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: '-100%', opacity: 0 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="fixed inset-0 bg-flag-red bg-opacity-90 backdrop-blur-md z-50 text-white overflow-y-auto"
+            className="fixed inset-0 bg-flag-red bg-opacity-90 backdrop-blur-md z-50 text-flag-blue overflow-y-auto"
           >
             <div className="relative max-w-2xl mx-auto px-4 py-6 mt-20 flex flex-col items-center">
               {/* Close button */}
@@ -73,9 +73,9 @@ export default function ProductGrid({ products }: ProductGridProps) {
                 close
               </button>
 
-              {/* Product Image */}
+              {/* Main Product Image */}
               {selectedProduct.imageUrl && (
-                <div className="w-full h-64 relative mb-4 rounded-md overflow-hidden">
+                <div className="w-64 h-64 relative mb-2 overflow-hidden">
                   <Image
                     src={selectedProduct.imageUrl}
                     alt={selectedProduct.name}
@@ -85,27 +85,44 @@ export default function ProductGrid({ products }: ProductGridProps) {
                 </div>
               )}
 
+              {/* Extra Images Gallery */}
+              {selectedProduct.extraImageUrls &&
+                selectedProduct.extraImageUrls.length > 0 && (
+                  <div className="flex gap-2 overflow-x-auto mt-4">
+                    {selectedProduct.extraImageUrls.map((url, index) => (
+                      <div
+                        key={index}
+                        className="w-20 h-20 relative flex-shrink-0 rounded-sm overflow-hidden border border-gray-700"
+                      >
+                        <Image
+                          src={url}
+                          alt={`${selectedProduct.name} extra image ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
               {/* Product Info */}
-              <div className="text-center mb-4">
-                <h2 className="text-lg font-bold uppercase mb-1">
+              <div className="text-center">
+                <h2 className="text-xl font-bold uppercase">
                   {selectedProduct.name}
                 </h2>
                 {selectedProduct.category?.title && (
-                  <p className="text-xs uppercase text-gray-300 mb-2">
+                  <p className="text-sm uppercase  mb-2">
                     {selectedProduct.category.title}
                   </p>
                 )}
                 {selectedProduct.description && (
-                  <p className="text-sm text-gray-300">
-                    {selectedProduct.description}
-                  </p>
+                  <p className="text-sm ">{selectedProduct.description}</p>
                 )}
               </div>
 
               {/* Variants */}
               {(selectedProduct.variants ?? []).length > 0 && (
                 <div className="w-full mt-4">
-                  <p className="text-[10px] text-center uppercase font-light tracking-wider text-gray-400 mb-4">
+                  <p className="text-[10px] text-center uppercase font-light tracking-wider  mb-4">
                     Additional Information
                   </p>
 
