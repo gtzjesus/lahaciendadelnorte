@@ -69,9 +69,10 @@ const Header = () => {
             alt="Logo"
             fill
             priority
-            className="object-contain"
+            className={clsx('object-contain', menuOpen && 'invisible')}
           />
         </Link>
+
         <h1
           className={clsx(
             '   uppercase font-bold text-xs leading-tight text-center',
@@ -163,13 +164,8 @@ const Header = () => {
             transition={{ delay: 0.1, duration: 0.1 }}
             className="flex flex-col items-center justify-center flex-1 space-y-6 w-full md:hidden mt-8"
           >
-            {navItems.map(({ name, href }, i) => (
-              <motion.div
-                key={href}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.1 }}
-              >
+            {navItems.map(({ name, href }) => (
+              <div key={href}>
                 <Link
                   href={href}
                   onClick={() => setMenuOpen(false)}
@@ -181,7 +177,7 @@ const Header = () => {
                 >
                   {name}
                 </Link>
-              </motion.div>
+              </div>
             ))}
 
             <div className="font-semibold text-xl text-black">
