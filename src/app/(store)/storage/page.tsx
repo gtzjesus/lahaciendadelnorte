@@ -1,7 +1,7 @@
 // app/(store)/storage/page.tsx
 
 import Background from '@/components/(store)/common/Background';
-import ProductGrid from '@/components/(store)/products/ProductGrid';
+import ProductGrid from '@/components/products/ProductGrid';
 import { getAllProducts } from '@/sanity/lib/products/getAllProducts';
 
 export default async function StorageInventoryPage() {
