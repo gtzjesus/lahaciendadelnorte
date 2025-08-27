@@ -13,8 +13,6 @@ const navItems = [
   { name: 'Home', href: '/' },
   { name: 'Storages', href: '/storage' },
   { name: 'Qualify', href: '/qualify' },
-
-  { name: 'Contact', href: '/contact' },
 ];
 
 const Header = () => {
@@ -24,7 +22,7 @@ const Header = () => {
 
   const [scrolled, setScrolled] = useState(false);
 
-  const logoSrc = scrolled ? '/icons/logo-blacked.webp' : '/icons/logo.webp';
+  const logoSrc = scrolled ? '/icons/logo.webp' : '/icons/logo.webp';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,7 +54,7 @@ const Header = () => {
         menuOpen
           ? 'bg-flag-red text-white'
           : scrolled
-            ? 'bg-flag-red text-flag-blue shadow-md '
+            ? 'bg-flag-red text-white shadow-md '
             : 'bg-transparent text-white ',
         menuOpen ? 'justify-start' : 'justify-between'
       )}
@@ -75,8 +73,8 @@ const Header = () => {
 
         <h1
           className={clsx(
-            '   uppercase font-bold text-xs leading-tight text-center',
-            scrolled ? ' text-flag-blue' : ' text-white',
+            '   uppercase font-light text-xs leading-tight text-center',
+            scrolled ? ' text-white ' : ' text-white invisible',
             menuOpen ? 'invisible' : 'justify-between'
           )}
         >
@@ -128,7 +126,7 @@ const Header = () => {
           <h1
             className={clsx(
               '   uppercase font-bold text-xs leading-tight text-center',
-              scrolled ? ' text-flag-blue' : ' text-white',
+              scrolled ? ' text-white' : ' text-white',
               menuOpen ? 'invisible' : 'justify-between'
             )}
           >
@@ -136,7 +134,7 @@ const Header = () => {
           </h1>
         </div>
 
-        <div className="flex space-x-6 text-sm ">
+        <div className="flex space-x-6 text-md ">
           {navItems.map(({ name, href }) => (
             <Link
               key={href}
@@ -171,8 +169,8 @@ const Header = () => {
                   onClick={() => setMenuOpen(false)}
                   className={clsx(
                     'text-xl font-semibold transition-colors',
-                    pathname === href ? 'text-flag-blue' : 'text-black',
-                    scrolled ? ' text-flag-blue' : ' text-black'
+                    pathname === href ? 'text-white' : 'text-black',
+                    scrolled ? 'text-white ' : '  text-white'
                   )}
                 >
                   {name}
@@ -180,7 +178,7 @@ const Header = () => {
               </div>
             ))}
 
-            <div className="font-semibold text-xl text-black">
+            <div className="font-semibold text-xl text-white">
               <AuthButtons user={user ?? null} />
             </div>
           </motion.div>
