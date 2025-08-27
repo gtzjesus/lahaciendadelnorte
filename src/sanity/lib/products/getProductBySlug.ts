@@ -9,18 +9,26 @@ export const getProductBySlug = async (
   const PRODUCT_BY_SLUG_QUERY = defineQuery(`
     *[_type == 'product' && slug.current == $slug][0]{
       _id,
+      _type,
+      _createdAt,
+      _updatedAt,
+      _rev,
       itemNumber,
       name,
       slug,
-      price,
-      stock,
       "imageUrl": image.asset->url,
       "extraImageUrls": extraImages[].asset->url,
       category->{_id, title},
       variants[]{
-        size,
+        dimensions,
+        material,
+        roof,
         price,
-        stock
+        stock,
+        windows,
+        doors,
+        garage,
+        addons
       }
     }
   `);
@@ -31,8 +39,7 @@ export const getProductBySlug = async (
       params: { slug },
     });
 
-    const product = result.data as Product;
-    return product ?? null;
+    return result.data as Product;
   } catch (error) {
     console.error('Error fetching product by slug:', error);
     return null;
