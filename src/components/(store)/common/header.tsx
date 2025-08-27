@@ -52,7 +52,7 @@ const Header = () => {
       }}
       transition={{ duration: 0.4 }}
       className={clsx(
-        'fixed top-0 z-50 p-4 w-full overflow-hidden flex flex-col items-center transition-colors duration-300',
+        'fixed top-0 z-30 p-4 w-full overflow-hidden flex flex-col items-center transition-colors duration-300',
         menuOpen
           ? 'bg-flag-red text-white'
           : scrolled

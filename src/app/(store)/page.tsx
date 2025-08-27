@@ -3,6 +3,9 @@
 import HeroSection from '@/components/(store)/common/HeroSection';
 import Background from '@/components/(store)/common/Background';
 import type { Metadata } from 'next';
+import Categories from '@/components/categories/Categories';
+import { Category } from '@/types';
+import { client } from '@/sanity/lib/client';
 
 export const metadata: Metadata = {
   title: 'La Hacienda Del Norte - Custom Storage & More in El Paso, TX',
@@ -55,11 +58,13 @@ export const metadata: Metadata = {
 };
 
 const Home = async () => {
+  const categories: Category[] = await client.fetch('*[_type == "category"]');
   return (
     <div>
       <div className="relative w-full min-h-screen">
         <Background />
         <HeroSection />
+        <Categories categories={categories} />
       </div>
     </div>
   );
