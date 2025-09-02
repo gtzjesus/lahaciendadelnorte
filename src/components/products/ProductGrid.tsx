@@ -36,8 +36,9 @@ export default function ProductGrid({ products }: ProductGridProps) {
                   </div>
                 )}
                 <div className="text-center">
-                  <p className="font-semibold uppercase text-sm">
-                    {product.name}
+                  <p className="font-semibold text-sm">
+                    {product.name.charAt(0).toUpperCase() +
+                      product.name.slice(1)}
                   </p>
                 </div>
               </div>
