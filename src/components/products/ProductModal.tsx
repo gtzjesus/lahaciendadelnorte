@@ -184,15 +184,13 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                   {selectedVariant.garage ? 'Included' : 'Not included'}
                 </span>
 
-                {Array.isArray(selectedVariant.addons) &&
-                  selectedVariant.addons.length > 0 && (
-                    <>
-                      <span className="font-light text-gray-500">Add-ons:</span>
-                      <span className="text-right">
-                        {selectedVariant.addons.join(', ')}
-                      </span>
-                    </>
-                  )}
+                <span className="font-light text-gray-500">Add-ons:</span>
+                <span className="text-right">
+                  {Array.isArray(selectedVariant.addons) &&
+                  selectedVariant.addons.length > 0
+                    ? selectedVariant.addons.join(', ')
+                    : 'None'}
+                </span>
 
                 <span className="font-light text-gray-500">
                   Estimated Price:
