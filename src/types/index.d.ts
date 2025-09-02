@@ -35,7 +35,6 @@ export interface Category extends SanityDocument {
 
 // 🛍️ Product
 export interface Product extends SanityDocument {
-  itemNumber: string;
   name: string;
   slug: SanitySlug;
   price: number;

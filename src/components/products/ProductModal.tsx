@@ -20,9 +20,11 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
   const selectedVariant = variants[selectedVariantIndex] ?? {};
 
   const [selectedMaterial, setSelectedMaterial] = useState(
-    selectedVariant.material || ''
+    selectedVariant.material || 'sheet' // default to 'sheet' if undefined
   );
-  const [selectedRoof, setSelectedRoof] = useState(selectedVariant.roof || '');
+  const [selectedRoof, setSelectedRoof] = useState(
+    selectedVariant.roof || 'flat' // default to 'flat' if undefined
+  );
   const [selectedDoors, setSelectedDoors] = useState<number>(
     selectedVariant.doors ?? 1
   );
@@ -136,53 +138,82 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
             {/* Material */}
             <div className="flex justify-between items-center">
               <label className="text-sm text-gray-400">Material</label>
-              <select
-                className="bg-gray-900 text-white text-right"
-                value={selectedMaterial}
-                onChange={(e) => setSelectedMaterial(e.target.value)}
-              >
-                <option value="wood">Wood</option>
-                <option value="sheet">Sheet metal</option>
-              </select>
+              <div className="flex gap-2">
+                {['wood', 'sheet'].map((mat) => (
+                  <button
+                    key={mat}
+                    onClick={() => setSelectedMaterial(mat)}
+                    className={`px-3 py-1 rounded-full border text-xs uppercase ${
+                      selectedMaterial === mat
+                        ? 'bg-flag-light-blue text-white border-white'
+                        : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
+                    }`}
+                  >
+                    {capitalize(mat)}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Roof */}
             <div className="flex justify-between items-center">
               <label className="text-sm text-gray-400">Roof</label>
-              <select
-                className="bg-gray-900 text-white text-right"
-                value={selectedRoof}
-                onChange={(e) => setSelectedRoof(e.target.value)}
-              >
-                <option value="gable">Gable</option>
-                <option value="gambrel">Gambrel</option>
-                <option value="flat">Flat</option>
-                <option value="skillion">Skillion</option>
-              </select>
+              <div className="flex gap-2">
+                {['gable', 'gambrel', 'flat', 'skillion'].map((roofType) => (
+                  <button
+                    key={roofType}
+                    onClick={() => setSelectedRoof(roofType)}
+                    className={`px-3 py-1 rounded-full border text-xs uppercase ${
+                      selectedRoof === roofType
+                        ? 'bg-flag-light-blue text-white border-white'
+                        : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
+                    }`}
+                  >
+                    {capitalize(roofType)}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Doors */}
+            {/* Doors */}
             <div className="flex justify-between items-center">
               <label className="text-sm text-gray-400">Doors</label>
-              <input
-                type="number"
-                min={1}
-                className="bg-gray-900 text-white text-right w-16"
-                value={selectedDoors}
-                onChange={(e) => setSelectedDoors(Number(e.target.value))}
-              />
+              <div className="flex gap-2">
+                {[1, 2, 3, 4].map((num) => (
+                  <button
+                    key={num}
+                    onClick={() => setSelectedDoors(num)}
+                    className={`px-3 py-1 rounded-full border text-xs ${
+                      selectedDoors === num
+                        ? 'bg-flag-light-blue text-white border-white'
+                        : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
+                    }`}
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Windows */}
             <div className="flex justify-between items-center">
               <label className="text-sm text-gray-400">Windows</label>
-              <input
-                type="number"
-                min={0}
-                className="bg-gray-900 text-white text-right w-16"
-                value={selectedWindows}
-                onChange={(e) => setSelectedWindows(Number(e.target.value))}
-              />
+              <div className="flex gap-2">
+                {[0, 1, 2, 3, 4].map((num) => (
+                  <button
+                    key={num}
+                    onClick={() => setSelectedWindows(num)}
+                    className={`px-3 py-1 rounded-full border text-xs ${
+                      selectedWindows === num
+                        ? 'bg-flag-light-blue text-white border-white'
+                        : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
+                    }`}
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Garage */}
@@ -228,7 +259,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
           className="bg-flag-light-blue text-white font-semibold px-6 py-3 rounded-full shadow-lg text-sm uppercase transition"
           onClick={() => alert(`Quote request submitted for ${product.name}`)}
         >
-          Get a Quote
+          submit for a Quote
         </button>
       </div>
     </motion.div>
