@@ -32,7 +32,6 @@ export const productType = defineType({
       title: 'Main Image',
       type: 'image',
       options: { hotspot: true },
-      description: 'Thumbnail or main display image.',
     }),
     defineField({
       name: 'extraImages',
@@ -48,108 +47,116 @@ export const productType = defineType({
       type: 'text',
     }),
 
-    // Define shed variants
+    // Base Dimensions / Sizes
     defineField({
-      name: 'variants',
-      title: 'Shed Variants',
+      name: 'baseVariants',
+      title: 'Base Dimensions',
       type: 'array',
       of: [
         defineField({
           type: 'object',
-          name: 'shedVariant',
-          title: 'Shed Variant',
+          name: 'baseVariant',
           fields: [
             defineField({
               name: 'dimensions',
               title: 'Dimensions',
               type: 'string',
-              options: {
-                list: [
-                  { title: '8x6x6', value: '8x6x6' },
-                  { title: '10x8x8', value: '10x8x8' },
-                  { title: '12x10x10', value: '12x10x10' },
-                  { title: '16x12x12', value: '16x12x12' },
-                ],
-              },
               validation: (Rule) => Rule.required(),
             }),
             defineField({
-              name: 'material',
-              title: 'Material',
-              type: 'string',
-              options: {
-                list: [
-                  { title: 'Wood', value: 'wood' },
-                  { title: 'Sheet metal', value: 'sheet' },
-                ],
-              },
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'windows',
-              title: 'Windows',
-              type: 'number',
-              initialValue: 0,
-            }),
-            defineField({
-              name: 'doors',
-              title: 'Doors',
-              type: 'number',
-              initialValue: 1,
-            }),
-            defineField({
-              name: 'roof',
-              title: 'Roof Type',
-              type: 'string',
-              options: {
-                list: [
-                  { title: 'Gable', value: 'gable' },
-                  { title: 'Gambrel', value: 'gambrel' },
-                  { title: 'Flat', value: 'flat' },
-                  { title: 'Skillion', value: 'skillion' },
-                ],
-              },
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'garage',
-              title: 'Garage Included',
-              type: 'boolean',
-              initialValue: false,
-            }),
-            defineField({
-              name: 'addons',
-              title: 'Add-ons',
-              type: 'array',
-              of: [
-                {
-                  type: 'string',
-                  options: {
-                    list: [
-                      { title: 'Workbench', value: 'workbench' },
-                      { title: 'Loft', value: 'loft' },
-                      { title: 'Shelving', value: 'shelving' },
-                    ],
-                  },
-                },
-              ],
-            }),
-            defineField({
-              name: 'price',
-              title: 'Price',
+              name: 'basePrice',
+              title: 'Base Price',
               type: 'number',
               validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'stock',
-              title: 'Stock',
-              type: 'number',
-              initialValue: 0,
-              validation: (Rule) => Rule.min(0),
             }),
           ],
         }),
       ],
+    }),
+
+    // Material options
+    defineField({
+      name: 'materials',
+      title: 'Material Options',
+      type: 'array',
+      of: [
+        defineField({
+          type: 'object',
+          name: 'materialOption',
+          fields: [
+            defineField({ name: 'name', title: 'Material', type: 'string' }),
+            defineField({
+              name: 'price',
+              title: 'Additional Price',
+              type: 'number',
+            }),
+          ],
+        }),
+      ],
+    }),
+
+    // Roof options
+    defineField({
+      name: 'roofTypes',
+      title: 'Roof Options',
+      type: 'array',
+      of: [
+        defineField({
+          type: 'object',
+          name: 'roofOption',
+          fields: [
+            defineField({ name: 'name', title: 'Roof Type', type: 'string' }),
+            defineField({
+              name: 'price',
+              title: 'Additional Price',
+              type: 'number',
+            }),
+          ],
+        }),
+      ],
+    }),
+
+    // Add-ons
+    defineField({
+      name: 'addons',
+      title: 'Add-ons',
+      type: 'array',
+      of: [
+        defineField({
+          type: 'object',
+          name: 'addonOption',
+          fields: [
+            defineField({ name: 'name', title: 'Add-on', type: 'string' }),
+            defineField({
+              name: 'price',
+              title: 'Additional Price',
+              type: 'number',
+            }),
+          ],
+        }),
+      ],
+    }),
+
+    // Garage option
+    defineField({
+      name: 'garagePrice',
+      title: 'Garage Add-on Price',
+      type: 'number',
+      initialValue: 0,
+    }),
+
+    // Per-door and per-window pricing
+    defineField({
+      name: 'doorPrice',
+      title: 'Price per Door',
+      type: 'number',
+      initialValue: 0,
+    }),
+    defineField({
+      name: 'windowPrice',
+      title: 'Price per Window',
+      type: 'number',
+      initialValue: 0,
     }),
 
     defineField({
@@ -169,7 +176,7 @@ export const productType = defineType({
     prepare({ title, media, itemNumber }) {
       return {
         title: `${title} (${itemNumber})`,
-        subtitle: 'Product with predefined variants',
+        subtitle: 'Customizable Shed Product',
         media,
       };
     },
