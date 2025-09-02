@@ -15,17 +15,31 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
   const [mainImage, setMainImage] = useState<string | null>(
     product.imageUrl ?? null
   );
+  const [selectedMaterial, setSelectedMaterial] = useState<string | null>(null);
+
+  // Extract unique normalized (lowercase) materials from variants
+  const materials = Array.from(
+    new Set(
+      product.variants
+        ?.flatMap((v) =>
+          Array.isArray(v.material) ? v.material : [v.material]
+        )
+        .filter(Boolean)
+        .map((m) => m.toLowerCase())
+    )
+  ) as string[];
 
   const wordLimit = 3;
 
-  // Disable scroll when modal is open
-  useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = originalOverflow;
-    };
-  }, []);
+  // Find variant matching selectedMaterial (case insensitive)
+  const selectedVariant = product.variants?.find((v) => {
+    if (Array.isArray(v.material)) {
+      return v.material.some(
+        (m) => m.toLowerCase() === selectedMaterial?.toLowerCase()
+      );
+    }
+    return v.material?.toLowerCase() === selectedMaterial?.toLowerCase();
+  });
 
   const getShortDescription = (desc: string) => {
     const words = desc.split(' ');
@@ -38,6 +52,45 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
   const handleImageClick = (url: string) => {
     setMainImage(url);
   };
+
+  const handleMaterialToggle = () => {
+    if (!selectedMaterial || materials.length === 0) return;
+
+    // Find current index by comparing lowercase versions
+    const currentIndex = materials.findIndex(
+      (m) => m.toLowerCase() === selectedMaterial.toLowerCase()
+    );
+    const nextIndex = (currentIndex + 1) % materials.length;
+    console.log(
+      `Toggling material from '${selectedMaterial}' to '${materials[nextIndex]}'`
+    );
+    setSelectedMaterial(materials[nextIndex]);
+  };
+
+  // Disable scroll when modal is open
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
+  // Initialize selectedMaterial on mount or when materials update
+  useEffect(() => {
+    if (materials.length > 0 && selectedMaterial === null) {
+      setSelectedMaterial(materials[0]);
+    }
+  }, [materials, selectedMaterial]);
+
+  // Capitalize first letter helper
+  const capitalize = (str: string) =>
+    str.charAt(0).toUpperCase() + str.slice(1);
+
+  // Debug logs
+  console.log('Variants:', product.variants);
+  console.log('Extracted materials:', materials);
+  console.log('Selected material:', selectedMaterial);
 
   return (
     <motion.div
@@ -57,13 +110,11 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
         </button>
 
         {/* Product Title */}
-        <p className="font-semibold text-md">
-          {product.name.charAt(0).toUpperCase() + product.name.slice(1)}
-        </p>
+        <p className="font-semibold text-md">{capitalize(product.name)}</p>
 
         {/* Main Image */}
         {mainImage && (
-          <div className="w-56 h-56 relative overflow-hidden">
+          <div className="w-40 h-40 my-2 relative overflow-hidden">
             <Image
               src={mainImage}
               alt={product.name}
@@ -75,7 +126,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
 
         {/* Thumbnails */}
         {product.extraImageUrls && product.extraImageUrls.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto mb-4">
+          <div className="flex gap-1 overflow-x-auto">
             {[product.imageUrl, ...product.extraImageUrls]
               .filter(Boolean)
               .map((url, index) => (
@@ -99,73 +150,58 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
           </div>
         )}
 
-        {/* Category */}
-        <div className="text-center px-6">
-          {product.category?.title && (
-            <p className="text-xs uppercase my-2 text-gray-400">
-              {product.category.title}
-            </p>
-          )}
-        </div>
         {/* Product Variants */}
-        {(product.variants ?? []).length > 0 && (
+        {materials.length > 0 && selectedVariant && (
           <div className="w-full mt-6 px-4">
-            <ul className="space-y-6">
-              {product.variants?.map((v, i) => (
-                <li
-                  key={i}
-                  className="border border-gray-500 bg-gray-800/30 p-4  text-xs text-white"
+            <div className="border border-gray-500 bg-gray-800/30 p-4 text-xs text-white rounded">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                <span className="font-light text-gray-500">Dimensions:</span>
+                <span className="text-right">{selectedVariant.dimensions}</span>
+
+                <span className="font-light text-gray-500">Material:</span>
+                <button
+                  onClick={handleMaterialToggle}
+                  className="text-right font-medium hover:underline transition"
                 >
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                    <span className="font-light text-gray-500">
-                      Dimensions:
-                    </span>
-                    <span className="text-right">{v.dimensions}</span>
-                    <span className="font-light text-gray-500">
-                      Outside Material:
-                    </span>
-                    <span className="text-right">{v.material}</span>
+                  {selectedMaterial
+                    ? capitalize(selectedMaterial.trim())
+                    : 'Unknown'}
+                </button>
 
-                    <span className="font-light text-gray-500"> Roof:</span>
-                    <span className="text-right">{v.roof}</span>
+                <span className="font-light text-gray-500">Roof:</span>
+                <span className="text-right">{selectedVariant.roof}</span>
 
-                    <span className="font-light text-gray-500">Doors:</span>
-                    <span className="text-right">{v.doors ?? 1}</span>
+                <span className="font-light text-gray-500">Doors:</span>
+                <span className="text-right">{selectedVariant.doors ?? 1}</span>
 
-                    <span className="font-light text-gray-500">Windows:</span>
-                    <span className="text-right">{v.windows ?? 0}</span>
+                <span className="font-light text-gray-500">Windows:</span>
+                <span className="text-right">
+                  {selectedVariant.windows ?? 0}
+                </span>
 
-                    <span className="font-light text-gray-500">Garage:</span>
-                    <span className="text-right">
-                      {v.garage ? 'Included' : 'Not included'}
-                    </span>
+                <span className="font-light text-gray-500">Garage:</span>
+                <span className="text-right">
+                  {selectedVariant.garage ? 'Included' : 'Not included'}
+                </span>
 
-                    {Array.isArray(v.addons) &&
-                      v.addons.filter(Boolean).length > 0 && (
-                        <>
-                          <span className="font-light text-gray-500">
-                            Add-ons:
-                          </span>
-                          <span className="text-right">
-                            {v.addons.filter(Boolean).join(', ')}
-                          </span>
-                        </>
-                      )}
+                {Array.isArray(selectedVariant.addons) &&
+                  selectedVariant.addons.length > 0 && (
+                    <>
+                      <span className="font-light text-gray-500">Add-ons:</span>
+                      <span className="text-right">
+                        {selectedVariant.addons.join(', ')}
+                      </span>
+                    </>
+                  )}
 
-                    <span className="font-light text-gray-500">
-                      {' '}
-                      Estimated Price:
-                    </span>
-                    <span className="text-right">
-                      ${v.price?.toFixed(2) ?? '0.00'}
-                    </span>
-
-                    {/* <span className="font-light text-gray-500"> Stock:</span>
-                    <span>{v.stock ?? 0} available</span> */}
-                  </div>
-                </li>
-              ))}
-            </ul>
+                <span className="font-light text-gray-500">
+                  Estimated Price:
+                </span>
+                <span className="text-right">
+                  ${selectedVariant.price?.toFixed(2) ?? '0.00'}
+                </span>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -181,7 +217,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
               {product.description.split(' ').length > wordLimit && (
                 <button
                   onClick={() => setShowFullDesc(!showFullDesc)}
-                  className="  z-50 text-white text-xs  transition underline"
+                  className="z-50 text-white text-xs transition underline"
                 >
                   {showFullDesc ? 'Show less' : 'Learn more'}
                 </button>
