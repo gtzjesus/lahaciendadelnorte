@@ -37,7 +37,7 @@ const ProductSummary = ({ product, isOutOfStock }: ProductSummaryProps) => {
           |
         </h1>
         <h1 className="uppercase text-md font-light text-center text-white">
-          ${product.price?.toFixed(0)}
+          {/* ${product.price?.toFixed(0)} */}
         </h1>
       </div>
 

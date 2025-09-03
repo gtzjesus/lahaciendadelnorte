@@ -39,8 +39,8 @@ function ProductThumb({ product }: { product: Product }) {
   // Safely extract product properties
   const productName = product.name || 'Unnamed Product';
   const productSlug = product.slug?.current || '';
-  const productPrice = product.price || 0;
-  const isOutOfStock = product.stock != null && product.stock <= 0;
+  // const productPrice = product.price || 0;
+  // const isOutOfStock = product.stock != null && product.stock <= 0;
 
   // Safely generate image URL
   let imageUrlString = '';
@@ -60,7 +60,7 @@ function ProductThumb({ product }: { product: Product }) {
   return (
     <Link
       href={`/product/${productSlug}`}
-      className={`group flex flex-col overflow-hidden ${isOutOfStock ? 'opacity-50' : ''}`}
+      className={`group flex flex-col overflow-hidden `}
       prefetch={false}
     >
       {/* Product Image Container */}
@@ -85,11 +85,9 @@ function ProductThumb({ product }: { product: Product }) {
         )}
 
         {/* Out of Stock Overlay */}
-        {isOutOfStock && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <span className="text-white font-light text-xs">Out of Stock</span>
-          </div>
-        )}
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <span className="text-white font-light text-xs">Out of Stock</span>
+        </div>
       </div>
 
       {/* Product Details */}
@@ -99,7 +97,7 @@ function ProductThumb({ product }: { product: Product }) {
         </h2>
 
         <p className="uppercase text-xs font-light text-center text-gray-800">
-          ${productPrice.toFixed(0)}
+          {/* ${productPrice.toFixed(0)} */}
         </p>
       </div>
     </Link>
