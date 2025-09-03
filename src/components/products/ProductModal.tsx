@@ -252,7 +252,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
             {product.addons && (
               <>
                 <div className="text-sm text-gray-400">Add-ons</div>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex flex-row gap-2 flex-wrap">
                   {product.addons.map((addon) => (
                     <button
                       key={addon.name}
