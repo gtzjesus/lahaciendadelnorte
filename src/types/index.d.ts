@@ -37,32 +37,44 @@ export interface Category extends SanityDocument {
 export interface Product extends SanityDocument {
   name: string;
   slug: SanitySlug;
-  price: number;
-  stock?: number;
-
-  image?: SanityImage;
-  imageUrl?: string; // ✅ manually resolved from GROQ query
-  extraImages?: SanityImage[];
-  extraImageUrls?: string[]; // ✅ manually resolved from GROQ query
-
   description?: string;
 
-  variants?: {
-    size?: string;
-    dimensions?: string;
-    material?: string;
-    roof?: string;
-    price?: number;
-    stock?: number;
-    windows?: number;
-    doors?: number;
-    garage?: boolean;
-    addons?: string[];
+  image?: SanityImage;
+  imageUrl?: string;
+  extraImages?: SanityImage[];
+  extraImageUrls?: string[];
+
+  // 🧱 Dimensions/Variants
+  baseVariants?: {
+    dimensions: string;
+    basePrice: number;
   }[];
 
+  // 🧱 Material Options
+  materials?: {
+    name: string;
+    price: number;
+  }[];
+
+  // 🏠 Roof Types
+  roofTypes?: {
+    name: string;
+    price: number;
+  }[];
+
+  // 🔌 Add-ons
+  addons?: {
+    name: string;
+    price: number;
+  }[];
+
+  // 💰 Pricing Rules
+  garagePrice?: number;
+  doorPrice?: number;
+  windowPrice?: number;
+
+  // 🔗 Category
   category?: Category;
-  categories?: Category[]; // optional if you use both singular/plural
-  flavors?: string[]; // if unused, you can remove
 }
 
 // 🧠 Basket Item

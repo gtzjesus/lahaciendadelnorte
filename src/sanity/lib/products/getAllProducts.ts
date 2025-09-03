@@ -1,37 +1,53 @@
-import { defineQuery } from 'next-sanity';
-import { sanityFetch } from '../live';
+// sanity/lib/products/getAllProducts.ts
+
+import { groq } from 'next-sanity';
+import { client } from '@/sanity/lib/client';
 import { Product } from '@/types';
 
-export const getAllProducts = async (): Promise<Product[]> => {
-  const query = defineQuery(`
-    *[_type == 'product'] | order(name asc){
+const query = groq`
+  *[_type == "product"]{
+    _id,
+    _createdAt,
+    _updatedAt,
+    _rev,
+    _type,
+    name,
+    slug,
+    description,
+    "imageUrl": image.asset->url,
+    "extraImageUrls": extraImages[].asset->url,
+    image,
+    extraImages,
+    category->{
       _id,
-      name,
-      itemNumber,
+      title,
       slug,
-      description, 
-      "imageUrl": image.asset->url,
-      "extraImageUrls": extraImages[].asset->url,
-      category->{_id, title},
-      variants[]{
-        dimensions,
-        material,
-        roof,
-        price,
-        stock,
-        windows,
-        doors,
-        garage,
-        addons
-      }
-    }
-  `);
-
-  try {
-    const result = await sanityFetch({ query });
-    return (result.data as Product[]) || [];
-  } catch (error) {
-    console.error('Error fetching all products:', error);
-    return [];
+      description,
+      image
+    },
+    baseVariants[] {
+      dimensions,
+      basePrice
+    },
+    materials[] {
+      name,
+      price
+    },
+    roofTypes[] {
+      name,
+      price
+    },
+    addons[] {
+      name,
+      price
+    },
+    garagePrice,
+    doorPrice,
+    windowPrice
   }
-};
+`;
+
+export async function getAllProducts(): Promise<Product[]> {
+  const products = await client.fetch(query);
+  return products;
+}

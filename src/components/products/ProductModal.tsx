@@ -11,49 +11,59 @@ type ProductModalProps = {
 };
 
 export default function ProductModal({ product, onClose }: ProductModalProps) {
-  const variants = product.variants ?? [];
   const [mainImage, setMainImage] = useState<string | null>(
     product.imageUrl ?? null
   );
-  const [selectedVariantIndex] = useState(0);
 
-  const selectedVariant = variants[selectedVariantIndex] ?? {};
+  const [selectedVariantIndex] = useState(0);
+  const selectedVariant = product.baseVariants?.[selectedVariantIndex];
 
   const [selectedMaterial, setSelectedMaterial] = useState(
-    selectedVariant.material || 'sheet' // default to 'sheet' if undefined
+    product.materials?.[0]?.name || ''
   );
   const [selectedRoof, setSelectedRoof] = useState(
-    selectedVariant.roof || 'flat' // default to 'flat' if undefined
+    product.roofTypes?.[0]?.name || ''
   );
-  const [selectedDoors, setSelectedDoors] = useState<number>(
-    selectedVariant.doors ?? 1
-  );
-  const [selectedWindows, setSelectedWindows] = useState<number>(
-    selectedVariant.windows ?? 0
-  );
-  const [includeGarage, setIncludeGarage] = useState<boolean>(
-    selectedVariant.garage ?? false
-  );
-  const [selectedAddons, setSelectedAddons] = useState<string[]>(
-    selectedVariant.addons ?? []
-  );
+  const [selectedDoors, setSelectedDoors] = useState<number>(1);
+  const [selectedWindows, setSelectedWindows] = useState<number>(0);
+  const [includeGarage, setIncludeGarage] = useState<boolean>(false);
+  const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
 
-  const basePrice = selectedVariant.price ?? 0;
+  const basePrice = selectedVariant?.basePrice ?? 0;
 
-  // Simple price rules
   const price = useMemo(() => {
     let total = basePrice;
-    total += selectedDoors * 50;
-    total += selectedWindows * 75;
-    if (includeGarage) total += 400;
-    total += selectedAddons.length * 120;
+
+    const materialPrice =
+      product.materials?.find((m) => m.name === selectedMaterial)?.price ?? 0;
+    const roofPrice =
+      product.roofTypes?.find((r) => r.name === selectedRoof)?.price ?? 0;
+
+    total += materialPrice;
+    total += roofPrice;
+
+    total += selectedDoors * (product.doorPrice ?? 0);
+    total += selectedWindows * (product.windowPrice ?? 0);
+
+    if (includeGarage) {
+      total += product.garagePrice ?? 0;
+    }
+
+    selectedAddons.forEach((addonName) => {
+      const addon = product.addons?.find((a) => a.name === addonName);
+      if (addon) total += addon.price;
+    });
+
     return total;
   }, [
     basePrice,
+    selectedMaterial,
+    selectedRoof,
     selectedDoors,
     selectedWindows,
     includeGarage,
     selectedAddons,
+    product,
   ]);
 
   const toggleAddon = (addon: string) => {
@@ -65,7 +75,6 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
   const capitalize = (str: string) =>
     str.charAt(0).toUpperCase() + str.slice(1);
 
-  // Disable scroll when modal is open
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -135,47 +144,60 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
         {/* Variant Details */}
         <div className="w-full mt-6 px-4">
           <div className="border border-gray-500 bg-gray-800/30 p-4 text-xs text-white rounded space-y-3">
-            {/* Material */}
-            <div className="flex justify-between items-center">
-              <label className="text-sm text-gray-400">Material</label>
-              <div className="flex gap-2">
-                {['wood', 'sheet'].map((mat) => (
-                  <button
-                    key={mat}
-                    onClick={() => setSelectedMaterial(mat)}
-                    className={`px-3 py-1 rounded-full border text-xs uppercase ${
-                      selectedMaterial === mat
-                        ? 'bg-flag-light-blue text-white border-white'
-                        : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
-                    }`}
-                  >
-                    {capitalize(mat)}
-                  </button>
-                ))}
+            {/* Dimensions */}
+            {selectedVariant?.dimensions && (
+              <div className="flex justify-between items-center">
+                <label className="text-sm text-gray-400">Dimensions</label>
+                <p className="text-sm font-semibold text-white">
+                  {selectedVariant.dimensions}
+                </p>
               </div>
-            </div>
+            )}
+
+            {/* Material */}
+            {product.materials && (
+              <div className="flex justify-between items-center">
+                <label className="text-sm text-gray-400">Material</label>
+                <div className="flex gap-2">
+                  {product.materials.map((mat) => (
+                    <button
+                      key={mat.name}
+                      onClick={() => setSelectedMaterial(mat.name)}
+                      className={`px-3 py-1 rounded-full border text-xs uppercase ${
+                        selectedMaterial === mat.name
+                          ? 'bg-flag-light-blue text-white border-white'
+                          : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
+                      }`}
+                    >
+                      {capitalize(mat.name)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Roof */}
-            <div className="flex justify-between items-center">
-              <label className="text-sm text-gray-400">Roof</label>
-              <div className="flex gap-2">
-                {['gable', 'gambrel', 'flat', 'skillion'].map((roofType) => (
-                  <button
-                    key={roofType}
-                    onClick={() => setSelectedRoof(roofType)}
-                    className={`px-3 py-1 rounded-full border text-xs uppercase ${
-                      selectedRoof === roofType
-                        ? 'bg-flag-light-blue text-white border-white'
-                        : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
-                    }`}
-                  >
-                    {capitalize(roofType)}
-                  </button>
-                ))}
+            {product.roofTypes && (
+              <div className="flex justify-between items-center">
+                <label className="text-sm text-gray-400">Roof</label>
+                <div className="flex gap-2">
+                  {product.roofTypes.map((roof) => (
+                    <button
+                      key={roof.name}
+                      onClick={() => setSelectedRoof(roof.name)}
+                      className={`px-3 py-1 rounded-full border text-xs uppercase ${
+                        selectedRoof === roof.name
+                          ? 'bg-flag-light-blue text-white border-white'
+                          : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
+                      }`}
+                    >
+                      {capitalize(roof.name)}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Doors */}
             {/* Doors */}
             <div className="flex justify-between items-center">
               <label className="text-sm text-gray-400">Doors</label>
@@ -227,25 +249,29 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
             </div>
 
             {/* Addons */}
-            <div className="text-sm text-gray-400">Add-ons</div>
-            <div className="flex gap-2 flex-wrap">
-              {['workbench', 'loft', 'shelving'].map((addon) => (
-                <button
-                  key={addon}
-                  onClick={() => toggleAddon(addon)}
-                  className={`px-3 py-1 rounded-full border text-xs ${
-                    selectedAddons.includes(addon)
-                      ? 'bg-flag-light-blue text-white border-white'
-                      : 'border-white/30 text-white/70'
-                  }`}
-                >
-                  {capitalize(addon)}
-                </button>
-              ))}
-            </div>
+            {product.addons && (
+              <>
+                <div className="text-sm text-gray-400">Add-ons</div>
+                <div className="flex gap-2 flex-wrap">
+                  {product.addons.map((addon) => (
+                    <button
+                      key={addon.name}
+                      onClick={() => toggleAddon(addon.name)}
+                      className={`px-3 py-1 rounded-full border text-xs ${
+                        selectedAddons.includes(addon.name)
+                          ? 'bg-flag-light-blue text-white border-white'
+                          : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
+                      }`}
+                    >
+                      {capitalize(addon.name)}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
 
             {/* Price */}
-            <div className="flex justify-between text-sm font-bold pt-2 border-t border-gray-600">
+            <div className="flex justify-between text-xs font-bold pt-2 border-t border-gray-500">
               <span>Estimated cost</span>
               <span>${price.toFixed(2)}</span>
             </div>
@@ -256,10 +282,10 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
       {/* CTA */}
       <div className="fixed bottom-4 left-0 right-0 flex justify-center">
         <button
-          className="bg-flag-light-blue text-white font-semibold px-6 py-3 rounded-full shadow-lg text-sm uppercase transition"
+          className="bg-flag-light-blue text-white font-semibold px-6 py-3 rounded-full shadow-lg text-xs uppercase transition"
           onClick={() => alert(`Quote request submitted for ${product.name}`)}
         >
-          submit for a Quote
+          submit for a free consultation
         </button>
       </div>
     </motion.div>
