@@ -30,7 +30,7 @@ const HeroSection: FC<HeroSectionProps> = ({ className = '' }) => {
         </p>
         <div className="gap-2 flex justify-center">
           <Link
-            href="/"
+            href="/qualify"
             className=" bg-opacity-90 border border-white px-5 py-4 text-center lg:text-lg rounded-3xl text-xs font-bold transition duration-200 ease-in-out shadow-lg text-white w-full max-w-[180px] hover:bg-opacity-100  drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
           >
             Qualify Here

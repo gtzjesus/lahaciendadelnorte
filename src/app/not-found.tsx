@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-flag-red text-black px-6 py-12 text-center dark:bg-gray-800 dark:text-flag-red">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-flag-red text-white px-6 py-12 text-center">
       <Image
         src="/admin/notfound.gif"
         alt="La Dueña Logo"
@@ -19,7 +19,7 @@ export default function NotFound() {
         className="mb-6 "
       />
 
-      <h1 className="text-2xl font-bold mb-4">404 - Page Not Found!å</h1>
+      <h1 className="text-2xl font-bold mb-4">404 - Page Not Found</h1>
 
       <p className="text-sm max-w-md mb-6">
         Oops! Looks like you took a wrong turn!
@@ -29,10 +29,10 @@ export default function NotFound() {
       </p>
 
       <Link
-        href="/admin/pos"
-        className=" py-2 rounded-full text-xs font-bold uppercase transition duration-200 ease-in-out shadow-sm bg-black text-white dark:bg-flag-red dark:text-black w-[50vh]"
+        href="/storage"
+        className=" py-2 rounded-full text-xs font-bold uppercase transition duration-200 ease-in-out shadow-sm bg-black text-white  w-[50vh]"
       >
-        Go Back Home
+        Go Back to see storages
       </Link>
     </div>
   );
