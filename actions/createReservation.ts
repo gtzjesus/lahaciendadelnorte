@@ -18,14 +18,22 @@ type ProductRevision = {
   stock: number;
 };
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+// Quick type guard to check if product has a price property
+function hasPrice(product: any): product is { price: number } {
+  return product && typeof product.price === 'number';
+}
+
 export async function createReservation(
   items: GroupedBasketItem[],
   metadata: Metadata
 ) {
-  const subtotal = items.reduce(
-    (sum, item) => sum + (item.product.price || 0) * item.quantity,
-    0
-  );
+  const subtotal = items.reduce((sum, item) => {
+    if (hasPrice(item.product)) {
+      return sum + item.product.price * item.quantity;
+    }
+    return sum; // if no price, count 0
+  }, 0);
   const tax = subtotal * 0.0825;
 
   try {
