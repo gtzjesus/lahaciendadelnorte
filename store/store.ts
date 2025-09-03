@@ -15,7 +15,6 @@ interface BasketState {
   getTotalPrice: () => number;
   getItemCount: (productId: string) => number;
   getGroupedItems: () => BasketItem[];
-  updateStockLevels: (latestStocks: { _id: string; stock: number }[]) => void;
 }
 
 const useBasketStore = create<BasketState>()(
@@ -79,10 +78,10 @@ const useBasketStore = create<BasketState>()(
       },
 
       getTotalPrice: () =>
-        get().items.reduce(
-          (total, item) => total + (item.product.price ?? 0) * item.quantity,
-          0
-        ),
+        get().items.reduce((total, item) => {
+          const basePrice = item.product.baseVariants?.[0]?.basePrice ?? 0;
+          return total + basePrice * item.quantity;
+        }, 0),
 
       getItemCount: (productId) => {
         const item = get().items.find((item) => item.product._id === productId);
@@ -90,28 +89,6 @@ const useBasketStore = create<BasketState>()(
       },
 
       getGroupedItems: () => get().items,
-
-      updateStockLevels: (latestStocks) =>
-        set((state) => ({
-          items: state.items.map((item) => {
-            const updatedStock = latestStocks.find(
-              (prod) => prod._id === item.product._id
-            )?.stock;
-
-            if (updatedStock !== undefined) {
-              return {
-                ...item,
-                product: {
-                  ...item.product,
-                  stock: updatedStock,
-                },
-                quantity: Math.min(item.quantity, updatedStock),
-              };
-            }
-
-            return item;
-          }),
-        })),
     }),
     {
       name: 'basket-store',
