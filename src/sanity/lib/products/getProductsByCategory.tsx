@@ -42,14 +42,19 @@ export const getProductsByCategory = async (
       },
 
       // 🏷️ Resolved Category
-      category->{
-        _id,
-        title,
-        slug,
-        description,
-        image,
-        "imageUrl": image.asset->url
-      }
+    // 👇 category-> now includes required system fields
+category->{
+  _id,
+  _type,
+  _createdAt,
+  _updatedAt,
+  _rev,
+  title,
+  slug,
+  description,
+  image,
+  "imageUrl": image.asset->url
+}
     }
   `);
 
