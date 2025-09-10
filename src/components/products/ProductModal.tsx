@@ -95,7 +95,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute right-4 z-50 text-white text-sm uppercase transition underline"
+          className="absolute right-5  z-50 text-white text-xs uppercase transition underline"
         >
           close
         </button>
@@ -142,7 +142,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
         )}
 
         {/* Variant Details */}
-        <div className="w-full mt-2 px-2">
+        <div className="w-full mt-4 px-2">
           <div className="border border-gray-500 bg-gray-800/30 p-4 text-xs text-white rounded space-y-3">
             {/* Dimensions */}
             {selectedVariant?.dimensions && (
@@ -271,7 +271,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
             )}
 
             {/* Price */}
-            <div className="flex justify-between text-xs font-bold pt-4 border-t border-gray-500">
+            <div className="flex justify-between text-xs font-bold pt-4 border-t border-gray-500 italic">
               <span>Estimated cost</span>
               <span>${price.toFixed(2)}</span>
             </div>
@@ -280,7 +280,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
       </div>
 
       {/* CTA */}
-      <div className="mt-5 flex justify-center">
+      <div className="my-5 flex justify-center">
         <button
           className="bg-flag-light-blue text-white font-semibold px-6 py-3 rounded-full shadow-lg text-xs uppercase transition"
           onClick={() => alert(`Quote request submitted for ${product.name}`)}
