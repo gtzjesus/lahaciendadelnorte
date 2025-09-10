@@ -66,13 +66,17 @@ export type Order = {
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "product";
     };
+    customizations?: {
+      dimensions?: string;
+      material?: string;
+      roofType?: string;
+      doors?: number;
+      windows?: number;
+      garage?: boolean;
+      addons?: Array<string>;
+    };
     price?: number;
     quantity?: number;
-    variant?: {
-      size?: string;
-      price?: number;
-      stock?: number;
-    };
     _key: string;
   }>;
   totalPrice?: number;
@@ -124,19 +128,33 @@ export type Product = {
     _key: string;
   }>;
   description?: string;
-  variants?: Array<{
-    dimensions?: "8x6x6" | "10x8x8" | "12x10x10" | "16x12x12";
-    material?: "wood" | "sheet";
-    windows?: number;
-    doors?: number;
-    roof?: "gable" | "gambrel" | "flat" | "skillion";
-    garage?: boolean;
-    addons?: Array<"workbench" | "loft" | "shelving">;
-    price?: number;
-    stock?: number;
-    _type: "shedVariant";
+  baseVariants?: Array<{
+    dimensions?: string;
+    basePrice?: number;
+    _type: "baseVariant";
     _key: string;
   }>;
+  materials?: Array<{
+    name?: string;
+    price?: number;
+    _type: "materialOption";
+    _key: string;
+  }>;
+  roofTypes?: Array<{
+    name?: string;
+    price?: number;
+    _type: "roofOption";
+    _key: string;
+  }>;
+  addons?: Array<{
+    name?: string;
+    price?: number;
+    _type: "addonOption";
+    _key: string;
+  }>;
+  garagePrice?: number;
+  doorPrice?: number;
+  windowPrice?: number;
   category?: {
     _ref: string;
     _type: "reference";
@@ -334,11 +352,7 @@ export type QueryResult = {
     quantity: number | null;
     itemNumber: null;
     price: number | null;
-    variant: {
-      size?: string;
-      price?: number;
-      stock?: number;
-    } | null;
+    variant: null;
     product: {
       _id: string;
       name: string | null;
@@ -360,12 +374,7 @@ export type QueryResult = {
       category: {
         title: string | null;
       } | null;
-      variants: Array<{
-        _key: string;
-        name: null;
-        price: number | null;
-        stock: number | null;
-      }> | null;
+      variants: null;
     } | null;
   }> | null;
   totalPrice: number | null;
@@ -431,19 +440,33 @@ export type MY_ORDERS_QUERYResult = Array<{
         _key: string;
       }>;
       description?: string;
-      variants?: Array<{
-        dimensions?: "10x8x8" | "12x10x10" | "16x12x12" | "8x6x6";
-        material?: "sheet" | "wood";
-        windows?: number;
-        doors?: number;
-        roof?: "flat" | "gable" | "gambrel" | "skillion";
-        garage?: boolean;
-        addons?: Array<"loft" | "shelving" | "workbench">;
-        price?: number;
-        stock?: number;
-        _type: "shedVariant";
+      baseVariants?: Array<{
+        dimensions?: string;
+        basePrice?: number;
+        _type: "baseVariant";
         _key: string;
       }>;
+      materials?: Array<{
+        name?: string;
+        price?: number;
+        _type: "materialOption";
+        _key: string;
+      }>;
+      roofTypes?: Array<{
+        name?: string;
+        price?: number;
+        _type: "roofOption";
+        _key: string;
+      }>;
+      addons?: Array<{
+        name?: string;
+        price?: number;
+        _type: "addonOption";
+        _key: string;
+      }>;
+      garagePrice?: number;
+      doorPrice?: number;
+      windowPrice?: number;
       category?: {
         _ref: string;
         _type: "reference";
@@ -451,13 +474,17 @@ export type MY_ORDERS_QUERYResult = Array<{
         [internalGroqTypeReferenceTo]?: "category";
       };
     } | null;
+    customizations?: {
+      dimensions?: string;
+      material?: string;
+      roofType?: string;
+      doors?: number;
+      windows?: number;
+      garage?: boolean;
+      addons?: Array<string>;
+    };
     price?: number;
     quantity?: number;
-    variant?: {
-      size?: string;
-      price?: number;
-      stock?: number;
-    };
     _key: string;
   }> | null;
   totalPrice?: number;
@@ -500,101 +527,22 @@ export type ALL_CATEGORIES_QUERYResult = Array<{
   } | null;
 }>;
 
-// Source: ./src/sanity/lib/products/getAllProducts.ts
-// Variable: ALL_PRODUCTS_QUERY
-// Query: *[_type == 'product'] | order(name asc)
-export type ALL_PRODUCTS_QUERYResult = Array<{
-  _id: string;
-  _type: "product";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  itemNumber?: string;
-  name?: string;
-  slug?: Slug;
-  image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  extraImages?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
-  description?: string;
-  variants?: Array<{
-    dimensions?: "10x8x8" | "12x10x10" | "16x12x12" | "8x6x6";
-    material?: "sheet" | "wood";
-    windows?: number;
-    doors?: number;
-    roof?: "flat" | "gable" | "gambrel" | "skillion";
-    garage?: boolean;
-    addons?: Array<"loft" | "shelving" | "workbench">;
-    price?: number;
-    stock?: number;
-    _type: "shedVariant";
-    _key: string;
-  }>;
-  category?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "category";
-  };
-}>;
-
-// Source: ./src/sanity/lib/products/getProductBySlug.ts
-// Variable: PRODUCT_BY_SLUG_QUERY
-// Query: *[_type == 'product' && slug.current == $slug][0]{      _id,      itemNumber,      name,      slug,      price,      stock,      "imageUrl": image.asset->url,      "extraImageUrls": extraImages[].asset->url,      category->{_id, title},      variants[]{        size,        price,        stock      }    }
-export type PRODUCT_BY_SLUG_QUERYResult = {
-  _id: string;
-  itemNumber: string | null;
-  name: string | null;
-  slug: Slug | null;
-  price: null;
-  stock: null;
-  imageUrl: string | null;
-  extraImageUrls: Array<string | null> | null;
-  category: {
-    _id: string;
-    title: string | null;
-  } | null;
-  variants: Array<{
-    size: null;
-    price: number | null;
-    stock: number | null;
-  }> | null;
-} | null;
-
 // Source: ./src/sanity/lib/products/getProductsByCategory.tsx
 // Variable: PRODUCTS_BY_CATEGORY_QUERY
-// Query: *[_type == 'product' && references(*[_type == 'category' && slug.current == $categorySlug]._id)] | order(name asc)
+// Query: *[_type == 'product' && references(*[_type == 'category' && slug.current == $categorySlug]._id)] | order(name asc) {      _id,      _type,      _createdAt,      _updatedAt,      _rev,      itemNumber,      name,      slug,      price,      stock,      description,      // 🖼️ Resolve main image to URL      image,      "imageUrl": image.asset->url,      // 🖼️ Resolve extra images to URLs      extraImages,      "extraImageUrls": extraImages[].asset->url,      // 📦 Variants      variants[] {        size,        dimensions,        material,        roof,        price,        stock,        windows,        doors,        garage,        addons      },      // 🏷️ Resolved Category      category->{        _id,        title,        slug,        description,        image,        "imageUrl": image.asset->url      }    }
 export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
   _id: string;
   _type: "product";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  itemNumber?: string;
-  name?: string;
-  slug?: Slug;
-  image?: {
+  itemNumber: string | null;
+  name: string | null;
+  slug: Slug | null;
+  price: null;
+  stock: null;
+  description: string | null;
+  image: {
     asset?: {
       _ref: string;
       _type: "reference";
@@ -605,8 +553,9 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
-  };
-  extraImages?: Array<{
+  } | null;
+  imageUrl: string | null;
+  extraImages: Array<{
     asset?: {
       _ref: string;
       _type: "reference";
@@ -618,27 +567,28 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
     crop?: SanityImageCrop;
     _type: "image";
     _key: string;
-  }>;
-  description?: string;
-  variants?: Array<{
-    dimensions?: "10x8x8" | "12x10x10" | "16x12x12" | "8x6x6";
-    material?: "sheet" | "wood";
-    windows?: number;
-    doors?: number;
-    roof?: "flat" | "gable" | "gambrel" | "skillion";
-    garage?: boolean;
-    addons?: Array<"loft" | "shelving" | "workbench">;
-    price?: number;
-    stock?: number;
-    _type: "shedVariant";
-    _key: string;
-  }>;
-  category?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "category";
-  };
+  }> | null;
+  extraImageUrls: Array<string | null> | null;
+  variants: null;
+  category: {
+    _id: string;
+    title: string | null;
+    slug: Slug | null;
+    description: string | null;
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    } | null;
+    imageUrl: string | null;
+  } | null;
 }>;
 
 // Source: ./src/sanity/lib/sales/getActiveSaleByCouponCode.ts
@@ -666,9 +616,7 @@ declare module "@sanity/client" {
     "\n      *[_type == \"order\" && orderNumber == $orderNumber][0]{\n        _id,\n        orderNumber,\n        clerkUserId,\n        customerName,\n        email,\n        products[] {\n          _key,\n          quantity,\n          itemNumber,\n          price,\n          variant,\n          product->{\n            _id,\n            name,\n            slug,\n            image,\n            itemNumber,\n            stock,\n            category->{\n              title\n            },\n            variants[] {\n              _key,\n              name,\n              price,\n              stock\n            }\n          }\n        },\n        totalPrice,\n        tax,\n        currency,\n        amountDiscount,\n        orderType,\n        paymentStatus,\n        pickupStatus,\n        orderDate,\n        paymentMethod,\n        cashReceived,\n        cardAmount,\n        changeGiven\n      }\n    ": QueryResult;
     "\n    *[_type == 'order' && clerkUserId == $userId] | order(orderDate desc) {\n        ...,\n        products[]{\n            ...,\n            product->\n        }\n    }\n  ": MY_ORDERS_QUERYResult;
     "\n  *[_type == 'category'] | order(title asc) {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    slug,\n    description,\n    image\n  }\n": ALL_CATEGORIES_QUERYResult;
-    "\n  *[_type == 'product'] | order(name asc)\n  ": ALL_PRODUCTS_QUERYResult;
-    "\n    *[_type == 'product' && slug.current == $slug][0]{\n      _id,\n      itemNumber,\n      name,\n      slug,\n      price,\n      stock,\n      \"imageUrl\": image.asset->url,\n      \"extraImageUrls\": extraImages[].asset->url,\n      category->{_id, title},\n      variants[]{\n        size,\n        price,\n        stock\n      }\n    }\n  ": PRODUCT_BY_SLUG_QUERYResult;
-    "\n    *[_type == 'product' && references(*[_type == 'category' && slug.current == $categorySlug]._id)] | order(name asc)\n  ": PRODUCTS_BY_CATEGORY_QUERYResult;
+    "\n    *[_type == 'product' && references(*[_type == 'category' && slug.current == $categorySlug]._id)] | order(name asc) {\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      itemNumber,\n      name,\n      slug,\n      price,\n      stock,\n      description,\n\n      // \uD83D\uDDBC\uFE0F Resolve main image to URL\n      image,\n      \"imageUrl\": image.asset->url,\n\n      // \uD83D\uDDBC\uFE0F Resolve extra images to URLs\n      extraImages,\n      \"extraImageUrls\": extraImages[].asset->url,\n\n      // \uD83D\uDCE6 Variants\n      variants[] {\n        size,\n        dimensions,\n        material,\n        roof,\n        price,\n        stock,\n        windows,\n        doors,\n        garage,\n        addons\n      },\n\n      // \uD83C\uDFF7\uFE0F Resolved Category\n      category->{\n        _id,\n        title,\n        slug,\n        description,\n        image,\n        \"imageUrl\": image.asset->url\n      }\n    }\n  ": PRODUCTS_BY_CATEGORY_QUERYResult;
     "\n    *[\n        _type == 'sale'\n        && isActive == true \n        && couponCode == $couponCode\n    ] | order(validFfrom desc)[0]\n    ": ACTIVE_SALE_BY_COUPON_QUERYResult;
   }
 }

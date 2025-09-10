@@ -283,7 +283,42 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
       <div className="my-5 flex justify-center">
         <button
           className="bg-flag-light-blue text-white font-semibold px-6 py-3 rounded-full shadow-lg text-xs uppercase transition"
-          onClick={() => alert(`Quote request submitted for ${product.name}`)}
+          onClick={async () => {
+            try {
+              const response = await fetch('/api/create-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  clerkUserId: 'some-user-id', // Get from auth
+                  customerName: 'John Doe', // Ask for it in a form or user info
+                  email: 'john@example.com', // Same here
+                  productId: product._id,
+                  totalPrice: price,
+                  customizations: {
+                    dimensions: selectedVariant?.dimensions,
+                    material: selectedMaterial,
+                    roofType: selectedRoof,
+                    doors: selectedDoors,
+                    windows: selectedWindows,
+                    garage: includeGarage,
+                    addons: selectedAddons,
+                  },
+                }),
+              });
+
+              const result = await response.json();
+
+              if (result.success) {
+                alert('Order submitted! Your order ID is: ' + result.orderId);
+                onClose();
+              } else {
+                alert('Failed to submit order.');
+              }
+            } catch (err) {
+              console.error(err);
+              alert('Error submitting order');
+            }
+          }}
         >
           submit for a free consultation
         </button>

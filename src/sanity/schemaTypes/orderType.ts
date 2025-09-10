@@ -47,47 +47,40 @@ export const orderType = defineType({
               validation: (Rule) => Rule.required(),
             }),
             defineField({
+              name: 'customizations',
+              title: 'Customizations',
+              type: 'object',
+              fields: [
+                defineField({ name: 'dimensions', type: 'string' }),
+                defineField({ name: 'material', type: 'string' }),
+                defineField({ name: 'roofType', type: 'string' }),
+                defineField({ name: 'doors', type: 'number' }),
+                defineField({ name: 'windows', type: 'number' }),
+                defineField({ name: 'garage', type: 'boolean' }),
+                defineField({
+                  name: 'addons',
+                  type: 'array',
+                  of: [{ type: 'string' }],
+                }),
+              ],
+            }),
+            defineField({
               name: 'price',
-              title: 'Unit Price',
+              title: 'Total Price',
               type: 'number',
-              description: 'The price of the product at time of purchase.',
             }),
             defineField({
               name: 'quantity',
               title: 'Quantity',
               type: 'number',
+              initialValue: 1,
               validation: (Rule) => Rule.required().min(1),
             }),
-            defineField({
-              name: 'variant',
-              title: 'Variant Details',
-              type: 'object',
-              fields: [
-                defineField({ name: 'size', title: 'Size', type: 'string' }),
-                defineField({ name: 'price', title: 'Price', type: 'number' }),
-                defineField({ name: 'stock', title: 'Stock', type: 'number' }),
-              ],
-            }),
           ],
-          preview: {
-            select: {
-              product: 'product.name',
-              quantity: 'quantity',
-              image: 'product.image',
-              price: 'price',
-              variantSize: 'variant.size',
-            },
-            prepare({ product, quantity, image, price, variantSize }) {
-              return {
-                title: `${product} (${variantSize}) x ${quantity}`,
-                subtitle: `$${(price || 0) * quantity}`,
-                media: image,
-              };
-            },
-          },
         }),
       ],
     }),
+
     defineField({
       name: 'totalPrice',
       title: 'Total Price',
