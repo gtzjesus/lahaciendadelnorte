@@ -285,7 +285,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
           className="bg-flag-light-blue text-white font-semibold px-6 py-3 rounded-full shadow-lg text-xs uppercase transition"
           onClick={async () => {
             try {
-              const response = await fetch('/api/create-order', {
+              const response = await fetch('/api/(store)/create-order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
