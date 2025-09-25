@@ -5,6 +5,7 @@ import type { Product } from '@/types';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 type ProductModalProps = {
   product: Product;
   onClose: () => void;
@@ -28,6 +29,9 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
   const [selectedWindows, setSelectedWindows] = useState<number>(0);
   const [includeGarage, setIncludeGarage] = useState<boolean>(false);
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+
+  const [guestName, setGuestName] = useState('');
+  const [guestPhone, setGuestPhone] = useState('');
 
   const basePrice = selectedVariant?.basePrice ?? 0;
 
@@ -281,17 +285,38 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
 
       {/* CTA */}
       <div className="my-5 flex justify-center">
+        <div className="my-4 space-y-2 w-full max-w-md px-4">
+          <input
+            type="text"
+            placeholder="Your Name"
+            value={guestName}
+            onChange={(e) => setGuestName(e.target.value)}
+            className="w-full p-2 rounded bg-white text-black placeholder-gray-500"
+          />
+          <input
+            type="tel"
+            placeholder="Phone Number"
+            value={guestPhone}
+            onChange={(e) => setGuestPhone(e.target.value)}
+            className="w-full p-2 rounded bg-white text-black placeholder-gray-500"
+          />
+        </div>
+
         <button
           className="bg-flag-light-blue text-white font-semibold px-6 py-3 rounded-full shadow-lg text-xs uppercase transition"
           onClick={async () => {
+            if (!guestName || !guestPhone) {
+              alert('Please enter your name and phone number.');
+              return;
+            }
+
             try {
               const response = await fetch('/api/(store)/create-order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  clerkUserId: 'some-user-id', // Get from auth
-                  customerName: 'John Doe', // Ask for it in a form or user info
-                  email: 'john@example.com', // Same here
+                  customerName: guestName,
+                  phone: guestPhone,
                   productId: product._id,
                   totalPrice: price,
                   customizations: {
@@ -308,15 +333,17 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
 
               const result = await response.json();
 
-              if (result.success) {
-                alert('Order submitted! Your order ID is: ' + result.orderId);
-                onClose();
-              } else {
-                alert('Failed to submit order.');
+              if (!response.ok) {
+                console.error('Order submission failed:', result);
+                alert(result?.message || 'Something went wrong.');
+                return;
               }
+
+              alert('Order submitted! Your order ID is: ' + result.orderId);
+              onClose();
             } catch (err) {
-              console.error(err);
-              alert('Error submitting order');
+              console.error('Unexpected error:', err);
+              alert('An error occurred.');
             }
           }}
         >

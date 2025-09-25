@@ -8,21 +8,14 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const {
-      clerkUserId,
-      customerName,
-      email,
-      productId,
-      customizations,
-      totalPrice,
-    } = body;
+    const { customerName, phone, productId, customizations, totalPrice } = body;
 
     const order = {
       _type: 'order',
       orderNumber: uuidv4(),
-      clerkUserId,
       customerName,
-      email,
+      phone,
+      email: '', // Empty for guest orders
       totalPrice,
       tax: 0,
       currency: 'usd',
