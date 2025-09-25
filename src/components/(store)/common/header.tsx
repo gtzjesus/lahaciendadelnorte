@@ -18,7 +18,9 @@ const Header = () => {
 
   const [scrolled, setScrolled] = useState(false);
 
-  const logoSrc = scrolled ? '/icons/logo-blacked.webp' : '/icons/logo.webp';
+  const logoSrc = scrolled
+    ? '/icons/logo-blacked.webp'
+    : '/icons/logo-blacked.webp';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,7 +84,7 @@ const Header = () => {
             <svg
               className={clsx(
                 'h-6 w-6',
-                scrolled ? 'text-black' : 'text-white'
+                scrolled ? 'text-black' : 'text-black'
               )}
               fill="none"
               stroke="currentColor"
@@ -99,7 +101,7 @@ const Header = () => {
             <svg
               className={clsx(
                 'h-6 w-6',
-                scrolled ? 'text-black' : 'text-white'
+                scrolled ? 'text-black' : 'text-black'
               )}
               fill="none"
               stroke="currentColor"
@@ -125,7 +127,7 @@ const Header = () => {
           <h1
             className={clsx(
               '   mt-1 uppercase font-light text-xs leading-tight text-center',
-              scrolled ? ' text-black' : ' text-white',
+              scrolled ? ' text-black' : ' text-black',
               menuOpen ? 'invisible' : 'justify-between'
             )}
           >
@@ -141,7 +143,7 @@ const Header = () => {
               className={clsx(
                 'hover:text-gray-200 transition-colors',
                 pathname === href ? 'text-black underline' : '',
-                scrolled ? ' text-black' : ' text-white'
+                scrolled ? ' text-black' : ' text-black'
               )}
             >
               {name}
