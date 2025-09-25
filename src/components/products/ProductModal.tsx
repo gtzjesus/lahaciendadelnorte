@@ -284,26 +284,30 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
       </div>
 
       {/* CTA */}
-      <div className="my-5 flex justify-center">
-        <div className="my-4 space-y-2 w-full max-w-md px-4">
-          <input
-            type="text"
-            placeholder="Your Name"
-            value={guestName}
-            onChange={(e) => setGuestName(e.target.value)}
-            className="w-full p-2 rounded bg-white text-black placeholder-gray-500"
-          />
-          <input
-            type="tel"
-            placeholder="Phone Number"
-            value={guestPhone}
-            onChange={(e) => setGuestPhone(e.target.value)}
-            className="w-full p-2 rounded bg-white text-black placeholder-gray-500"
-          />
+      <div className="flex justify-center">
+        <div className="my-1 flex flex-col">
+          <div className="my-1 space-y-4 w-full  px-2">
+            <input
+              type="text"
+              placeholder="please enter Your full name"
+              value={guestName}
+              onChange={(e) => setGuestName(e.target.value)}
+              className="text-xs uppercase w-full p-1 border-b border-flag-light-blue text-center bg-flag-red text-white "
+            />
+            <input
+              type="tel"
+              placeholder="best Phone Number to reach you"
+              value={guestPhone}
+              onChange={(e) => setGuestPhone(e.target.value)}
+              className="text-xs uppercase w-full p-1 border-b border-flag-light-blue text-center  bg-flag-red text-white "
+            />
+          </div>
         </div>
+      </div>
 
+      <div className="flex justify-center">
         <button
-          className="bg-flag-light-blue text-white font-semibold px-6 py-3 rounded-full shadow-lg text-xs uppercase transition"
+          className="bg-flag-light-blue text-white max-w-sm font-semibold px-6 py-3 mt-2 rounded-full shadow-lg text-xs uppercase transition"
           onClick={async () => {
             if (!guestName || !guestPhone) {
               alert('Please enter your name and phone number.');
@@ -311,12 +315,13 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
             }
 
             try {
-              const response = await fetch('/api/(store)/create-order', {
+              const response = await fetch('/api/create-order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                   customerName: guestName,
                   phone: guestPhone,
+                  email: 'guest@example.com', // optional, or remove if not used
                   productId: product._id,
                   totalPrice: price,
                   customizations: {
@@ -331,15 +336,27 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                 }),
               });
 
-              const result = await response.json();
+              const clonedResponse = response.clone();
 
-              if (!response.ok) {
-                console.error('Order submission failed:', result);
-                alert(result?.message || 'Something went wrong.');
+              let result;
+              try {
+                result = await response.json();
+              } catch (jsonError) {
+                const text = await clonedResponse.text(); // ✅ now this works
+                console.error('❌ Failed to parse JSON. Raw response:', text);
+                alert(
+                  `Server returned invalid response. Check console. ${jsonError}`
+                );
                 return;
               }
 
-              alert('Order submitted! Your order ID is: ' + result.orderId);
+              if (!response.ok) {
+                console.error('❌ Server responded with error:', result);
+                alert(result?.message || 'Order creation failed.');
+                return;
+              }
+
+              alert('Order submitted! Order ID: ' + result.orderId);
               onClose();
             } catch (err) {
               console.error('Unexpected error:', err);

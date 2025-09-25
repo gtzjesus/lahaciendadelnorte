@@ -1,5 +1,3 @@
-// app/api/create-order/route.ts backend
-
 import { backendClient } from '@/sanity/lib/backendClient';
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,14 +7,23 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { customerName, phone, productId, customizations, totalPrice } = body;
+    console.log('[ORDER BODY]', body); // 👈 Add this
+
+    const {
+      customerName,
+      phone,
+      email,
+      productId,
+      customizations,
+      totalPrice,
+    } = body;
 
     const order = {
       _type: 'order',
       orderNumber: uuidv4(),
       customerName,
       phone,
-      email: '', // Empty for guest orders
+      email,
       totalPrice,
       tax: 0,
       currency: 'usd',
@@ -39,11 +46,14 @@ export async function POST(req: Request) {
 
     const created = await backendClient.create(order);
 
+    console.log('[ORDER CREATED]', created); // 👈 Add this
+
     return NextResponse.json({ success: true, orderId: created._id });
   } catch (err: any) {
-    console.error('Create Order Error:', err);
+    console.error('❌ Create Order Error:', err);
+
     return NextResponse.json(
-      { success: false, error: err.message },
+      { success: false, message: 'Server error', error: err.message },
       { status: 500 }
     );
   }
