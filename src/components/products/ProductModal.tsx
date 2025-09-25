@@ -16,6 +16,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
   const [mainImage, setMainImage] = useState<string | null>(
     product.imageUrl ?? null
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [selectedVariantIndex] = useState(0);
   const selectedVariant = product.baseVariants?.[selectedVariantIndex];
@@ -326,18 +327,24 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
 
       <div className="flex justify-center">
         <button
-          className="bg-flag-light-blue text-white max-w-sm font-semibold px-6 py-3 my-2 rounded-full shadow-lg text-xs uppercase transition"
+          className={`bg-flag-light-blue text-white max-w-sm font-semibold px-6 py-3 my-2 rounded-full shadow-lg text-xs uppercase transition ${
+            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
           onClick={async () => {
-            // Clear previous error
+            if (isSubmitting) return;
+
             setFormError(null);
+            setIsSubmitting(true);
 
             if (!guestName || !guestPhone) {
               setFormError('Please fill out all fields above.');
+              setIsSubmitting(false);
               return;
             }
 
             if (!isValidPhone(guestPhone)) {
               setFormError('Please enter a valid phone number.');
+              setIsSubmitting(false);
               return;
             }
 
@@ -372,17 +379,17 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                 const text = await clonedResponse.text();
                 console.error('❌ Failed to parse JSON. Raw response:', text);
                 setFormError(`Server returned invalid response.${jsonError}`);
+                setIsSubmitting(false);
                 return;
               }
 
               if (!response.ok) {
                 console.error('❌ Server responded with error:', result);
                 setFormError(result?.message || 'Order creation failed.');
+                setIsSubmitting(false);
                 return;
               }
 
-              // ✅ Success
-              // ✅ Save to localStorage for success page
               const timestamp = new Date().toISOString();
               localStorage.setItem(
                 `order-${result.orderId}`,
@@ -403,15 +410,17 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                 })
               );
 
-              // ✅ Redirect to success page
+              // ✅ Redirect
               window.location.href = `/success?order=${result.orderId}&email=guest@example.com`;
             } catch (err) {
               console.error('Unexpected error:', err);
               setFormError('An unexpected error occurred.');
+              setIsSubmitting(false);
             }
           }}
+          disabled={isSubmitting}
         >
-          submit for a free consultation
+          {isSubmitting ? 'Submitting...' : 'Submit for a free consultation'}
         </button>
       </div>
     </motion.div>
