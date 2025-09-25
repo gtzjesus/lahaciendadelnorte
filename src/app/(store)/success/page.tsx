@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 // import ReservationDetails from '../../../components/reservations/ReservationDetails';
 // import { useSuccessPage } from '@/app/hooks/reservation/useSucessPage';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 // import ActionButtons from '@/components/(store)/common/ActionButtons';
 
 function SuccessPage() {
@@ -17,13 +17,13 @@ function SuccessPage() {
 
   // const { countdown } = useSuccessPage(orderNumber, clearBasket);
 
-  const [orderData, setOrderData] = useState<any>(null);
+  // const [orderData, setOrderData] = useState<any>(null);
 
   useEffect(() => {
     if (orderNumber) {
       const stored = localStorage.getItem(`order-${orderNumber}`);
       if (stored) {
-        setOrderData(JSON.parse(stored));
+        // setOrderData(JSON.parse(stored));
       }
     }
   }, [orderNumber]);
