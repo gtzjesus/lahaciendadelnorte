@@ -145,6 +145,10 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
           </div>
         )}
 
+        {/* Instructions */}
+        <div className="flex justify-between text-xs font-bold pt-4  italic">
+          <span>Select available options for your storage</span>
+        </div>
         {/* Variant Details */}
         <div className="w-full mt-4 px-2">
           <div className="border border-gray-500 bg-gray-800/30 p-4 text-xs text-white rounded space-y-3">
@@ -282,7 +286,10 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
           </div>
         </div>
       </div>
-
+      {/* Submit Message */}
+      <div className="flex justify-center text-xs font-bold pt-4  italic">
+        <span>We can follow up</span>
+      </div>
       {/* CTA */}
       <div className="flex justify-center">
         <div className="my-1 flex flex-col">
