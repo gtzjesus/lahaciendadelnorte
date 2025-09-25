@@ -16,13 +16,13 @@ export default function ProductGrid({ products }: ProductGridProps) {
 
   return (
     <main className="flex flex-col min-h-screen mx-auto max-w-4xl">
-      <div className="max-w-4xl w-full z-10 flex flex-col mt-20">
+      <div className="max-w-4xl w-full z-10 flex flex-col mt-10">
         <div className="grid grid-cols-2">
           {products.map((product) => (
             <div
               key={product._id}
               onClick={() => setSelectedId(product._id)}
-              className="cursor-pointer flex flex-col border border-white border-opacity-25 text-white transition px-2 py-4"
+              className="cursor-pointer flex flex-col border border-black border-opacity-25 text-black transition px-2 py-4"
             >
               <div className="flex flex-col items-center">
                 {product.imageUrl && (

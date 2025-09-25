@@ -93,13 +93,13 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: '-100%', opacity: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="fixed inset-0 bg-flag-red bg-opacity-80 backdrop-blur-md z-50 text-white overflow-y-auto"
+      className="fixed inset-0 bg-flag-red bg-opacity-80 backdrop-blur-md z-50 text-black overflow-y-auto"
     >
       <div className="relative max-w-2xl mx-auto mt-5 flex flex-col items-center">
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute right-5  z-50 text-white text-xs uppercase transition underline"
+          className="absolute right-5  z-50 text-black text-xs uppercase transition underline"
         >
           close
         </button>
@@ -129,7 +129,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                   key={index}
                   className={`w-12 h-12 relative flex-shrink-0 border overflow-hidden cursor-pointer ${
                     mainImage === url
-                      ? 'border-2 border-white'
+                      ? 'border-2 border-black'
                       : 'border-white/30'
                   }`}
                   onClick={() => setMainImage(url!)}
@@ -151,12 +151,12 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
         </div>
         {/* Variant Details */}
         <div className="w-full mt-4 px-2">
-          <div className="border border-gray-500 bg-gray-800/30 p-4 text-xs text-white rounded space-y-3">
+          <div className="border border-black bg-flag-red/20 px-3 py-2 text-xs text-black  space-y-2">
             {/* Dimensions */}
             {selectedVariant?.dimensions && (
               <div className="flex justify-between items-center">
-                <label className="text-sm text-gray-400">Dimensions</label>
-                <p className="text-sm font-semibold text-white">
+                <label className="text-sm text-black">Dimensions</label>
+                <p className="text-sm font-semibold text-black">
                   {selectedVariant.dimensions}
                 </p>
               </div>
@@ -165,7 +165,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
             {/* Material */}
             {product.materials && (
               <div className="flex justify-between items-center">
-                <label className="text-sm text-gray-400">Material</label>
+                <label className="text-sm text-black">Material</label>
                 <div className="flex gap-2">
                   {product.materials.map((mat) => (
                     <button
@@ -173,8 +173,8 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                       onClick={() => setSelectedMaterial(mat.name)}
                       className={`px-3 py-1 rounded-full border text-xs uppercase ${
                         selectedMaterial === mat.name
-                          ? 'bg-flag-light-blue text-white border-white'
-                          : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
+                          ? 'bg-flag-light-blue text-white border-black'
+                          : 'border-black/30 text-black/70 hover:border-black hover:text-black transition'
                       }`}
                     >
                       {capitalize(mat.name)}
@@ -187,7 +187,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
             {/* Roof */}
             {product.roofTypes && (
               <div className="flex justify-between items-center">
-                <label className="text-sm text-gray-400">Roof</label>
+                <label className="text-sm text-black">Roof</label>
                 <div className="flex gap-2">
                   {product.roofTypes.map((roof) => (
                     <button
@@ -195,8 +195,8 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                       onClick={() => setSelectedRoof(roof.name)}
                       className={`px-3 py-1 rounded-full border text-xs uppercase ${
                         selectedRoof === roof.name
-                          ? 'bg-flag-light-blue text-white border-white'
-                          : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
+                          ? 'bg-flag-light-blue text-white border-black'
+                          : 'border-black/30 text-black/70 hover:border-black hover:text-black transition'
                       }`}
                     >
                       {capitalize(roof.name)}
@@ -208,7 +208,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
 
             {/* Doors */}
             <div className="flex justify-between items-center">
-              <label className="text-sm text-gray-400">Doors</label>
+              <label className="text-sm text-black">Doors</label>
               <div className="flex gap-2">
                 {[1, 2, 3, 4].map((num) => (
                   <button
@@ -216,8 +216,8 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                     onClick={() => setSelectedDoors(num)}
                     className={`px-3 py-1 rounded-full border text-xs ${
                       selectedDoors === num
-                        ? 'bg-flag-light-blue text-white border-white'
-                        : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
+                        ? 'bg-flag-light-blue text-white border-black'
+                        : 'border-black/30 text-black/70 hover:border-black hover:text-black transition'
                     }`}
                   >
                     {num}
@@ -228,7 +228,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
 
             {/* Windows */}
             <div className="flex justify-between items-center">
-              <label className="text-sm text-gray-400">Windows</label>
+              <label className="text-sm text-black">Windows</label>
               <div className="flex gap-2">
                 {[0, 1, 2, 3, 4].map((num) => (
                   <button
@@ -236,8 +236,8 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                     onClick={() => setSelectedWindows(num)}
                     className={`px-3 py-1 rounded-full border text-xs ${
                       selectedWindows === num
-                        ? 'bg-flag-light-blue text-white border-white'
-                        : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
+                        ? 'bg-flag-light-blue text-white border-black'
+                        : 'border-black/30 text-black/70 hover:border-black hover:text-black transition'
                     }`}
                   >
                     {num}
@@ -248,7 +248,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
 
             {/* Garage */}
             <div className="flex justify-between items-center">
-              <label className="text-sm text-gray-400">Garage</label>
+              <label className="text-sm text-black">Garage</label>
               <input
                 type="checkbox"
                 checked={includeGarage}
@@ -259,7 +259,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
             {/* Addons */}
             {product.addons && (
               <>
-                <div className="text-sm text-gray-400">Add-ons</div>
+                <div className="text-sm text-black">Add-ons</div>
                 <div className="flex flex-row gap-2 flex-wrap">
                   {product.addons.map((addon) => (
                     <button
@@ -267,8 +267,8 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                       onClick={() => toggleAddon(addon.name)}
                       className={`px-3 py-1 rounded-full border text-xs ${
                         selectedAddons.includes(addon.name)
-                          ? 'bg-flag-light-blue text-white border-white'
-                          : 'border-white/30 text-white/70 hover:border-white hover:text-white transition'
+                          ? 'bg-flag-light-blue text-white border-black'
+                          : 'border-black/30 text-black/70 hover:border-black hover:text-black transition'
                       }`}
                     >
                       {capitalize(addon.name)}
@@ -279,7 +279,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
             )}
 
             {/* Price */}
-            <div className="flex justify-between text-xs font-bold pt-4 border-t border-gray-500 italic">
+            <div className="flex justify-between text-xs font-bold pt-2 border-t border-gray-500 italic">
               <span>Estimated cost</span>
               <span>${price.toFixed(2)}</span>
             </div>

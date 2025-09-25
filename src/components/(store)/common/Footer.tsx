@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
         {/* Copyright */}
         <div className="flex flex-col items-center md:items-end">
           <p className=" text-xs font-light tracking-wider">
-            &copy; {new Date().getFullYear()} La Hacienda Del Norte, All rights
+            &copy; {new Date().getFullYear()} La Hacienda Del Norte, all rights
             reserved
           </p>
         </div>
