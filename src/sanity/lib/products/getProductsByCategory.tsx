@@ -1,3 +1,5 @@
+// getProductsByCategory.ts
+
 import { defineQuery } from 'next-sanity';
 import { sanityFetch } from '../live';
 import { Product } from '@/types';
@@ -12,49 +14,45 @@ export const getProductsByCategory = async (
       _createdAt,
       _updatedAt,
       _rev,
-      itemNumber,
       name,
       slug,
-      price,
-      stock,
       description,
-
-      // 🖼️ Resolve main image to URL
+      
+      // Main and extra images
       image,
       "imageUrl": image.asset->url,
-
-      // 🖼️ Resolve extra images to URLs
       extraImages,
       "extraImageUrls": extraImages[].asset->url,
 
-      // 📦 Variants
-      variants[] {
-        size,
-        dimensions,
-        material,
-        roof,
-        price,
-        stock,
-        windows,
-        doors,
-        garage,
-        addons
+      // Fully resolved category
+      category->{
+        _id,
+        title,
+        slug,
+        description,
+        image
       },
 
-      // 🏷️ Resolved Category
-    // 👇 category-> now includes required system fields
-category->{
-  _id,
-  _type,
-  _createdAt,
-  _updatedAt,
-  _rev,
-  title,
-  slug,
-  description,
-  image,
-  "imageUrl": image.asset->url
-}
+      // Match the same structure as getAllProducts.ts
+      baseVariants[] {
+        dimensions,
+        basePrice
+      },
+      materials[] {
+        name,
+        price
+      },
+      roofTypes[] {
+        name,
+        price
+      },
+      addons[] {
+        name,
+        price
+      },
+      garagePrice,
+      doorPrice,
+      windowPrice
     }
   `);
 
@@ -64,7 +62,7 @@ category->{
       params: { categorySlug },
     });
 
-    return (result.data ?? []) as Product[];
+    return Array.isArray(result.data) ? result.data : [];
   } catch (error) {
     console.error('Error fetching products by category', error);
     return [];
