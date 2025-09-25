@@ -59,6 +59,7 @@ export type Order = {
   clerkUserId?: string;
   customerName?: string;
   email?: string;
+  phone?: string;
   products?: Array<{
     product?: {
       _ref: string;
@@ -404,6 +405,7 @@ export type MY_ORDERS_QUERYResult = Array<{
   clerkUserId?: string;
   customerName?: string;
   email?: string;
+  phone?: string;
   products: Array<{
     product: {
       _id: string;
@@ -529,7 +531,7 @@ export type ALL_CATEGORIES_QUERYResult = Array<{
 
 // Source: ./src/sanity/lib/products/getProductsByCategory.tsx
 // Variable: PRODUCTS_BY_CATEGORY_QUERY
-// Query: *[_type == 'product' && references(*[_type == 'category' && slug.current == $categorySlug]._id)] | order(name asc) {      _id,      _type,      _createdAt,      _updatedAt,      _rev,      itemNumber,      name,      slug,      price,      stock,      description,      // 🖼️ Resolve main image to URL      image,      "imageUrl": image.asset->url,      // 🖼️ Resolve extra images to URLs      extraImages,      "extraImageUrls": extraImages[].asset->url,      // 📦 Variants      variants[] {        size,        dimensions,        material,        roof,        price,        stock,        windows,        doors,        garage,        addons      },      // 🏷️ Resolved Category      category->{        _id,        title,        slug,        description,        image,        "imageUrl": image.asset->url      }    }
+// Query: *[_type == 'product' && references(*[_type == 'category' && slug.current == $categorySlug]._id)] | order(name asc) {      _id,      _type,      _createdAt,      _updatedAt,      _rev,      itemNumber,      name,      slug,      price,      stock,      description,      // 🖼️ Resolve main image to URL      image,      "imageUrl": image.asset->url,      // 🖼️ Resolve extra images to URLs      extraImages,      "extraImageUrls": extraImages[].asset->url,      // 📦 Variants      variants[] {        size,        dimensions,        material,        roof,        price,        stock,        windows,        doors,        garage,        addons      },      // 🏷️ Resolved Category    // 👇 category-> now includes required system fieldscategory->{  _id,  _type,  _createdAt,  _updatedAt,  _rev,  title,  slug,  description,  image,  "imageUrl": image.asset->url}    }
 export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
   _id: string;
   _type: "product";
@@ -572,6 +574,10 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
   variants: null;
   category: {
     _id: string;
+    _type: "category";
+    _createdAt: string;
+    _updatedAt: string;
+    _rev: string;
     title: string | null;
     slug: Slug | null;
     description: string | null;
@@ -616,7 +622,7 @@ declare module "@sanity/client" {
     "\n      *[_type == \"order\" && orderNumber == $orderNumber][0]{\n        _id,\n        orderNumber,\n        clerkUserId,\n        customerName,\n        email,\n        products[] {\n          _key,\n          quantity,\n          itemNumber,\n          price,\n          variant,\n          product->{\n            _id,\n            name,\n            slug,\n            image,\n            itemNumber,\n            stock,\n            category->{\n              title\n            },\n            variants[] {\n              _key,\n              name,\n              price,\n              stock\n            }\n          }\n        },\n        totalPrice,\n        tax,\n        currency,\n        amountDiscount,\n        orderType,\n        paymentStatus,\n        pickupStatus,\n        orderDate,\n        paymentMethod,\n        cashReceived,\n        cardAmount,\n        changeGiven\n      }\n    ": QueryResult;
     "\n    *[_type == 'order' && clerkUserId == $userId] | order(orderDate desc) {\n        ...,\n        products[]{\n            ...,\n            product->\n        }\n    }\n  ": MY_ORDERS_QUERYResult;
     "\n  *[_type == 'category'] | order(title asc) {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    title,\n    slug,\n    description,\n    image\n  }\n": ALL_CATEGORIES_QUERYResult;
-    "\n    *[_type == 'product' && references(*[_type == 'category' && slug.current == $categorySlug]._id)] | order(name asc) {\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      itemNumber,\n      name,\n      slug,\n      price,\n      stock,\n      description,\n\n      // \uD83D\uDDBC\uFE0F Resolve main image to URL\n      image,\n      \"imageUrl\": image.asset->url,\n\n      // \uD83D\uDDBC\uFE0F Resolve extra images to URLs\n      extraImages,\n      \"extraImageUrls\": extraImages[].asset->url,\n\n      // \uD83D\uDCE6 Variants\n      variants[] {\n        size,\n        dimensions,\n        material,\n        roof,\n        price,\n        stock,\n        windows,\n        doors,\n        garage,\n        addons\n      },\n\n      // \uD83C\uDFF7\uFE0F Resolved Category\n      category->{\n        _id,\n        title,\n        slug,\n        description,\n        image,\n        \"imageUrl\": image.asset->url\n      }\n    }\n  ": PRODUCTS_BY_CATEGORY_QUERYResult;
+    "\n    *[_type == 'product' && references(*[_type == 'category' && slug.current == $categorySlug]._id)] | order(name asc) {\n      _id,\n      _type,\n      _createdAt,\n      _updatedAt,\n      _rev,\n      itemNumber,\n      name,\n      slug,\n      price,\n      stock,\n      description,\n\n      // \uD83D\uDDBC\uFE0F Resolve main image to URL\n      image,\n      \"imageUrl\": image.asset->url,\n\n      // \uD83D\uDDBC\uFE0F Resolve extra images to URLs\n      extraImages,\n      \"extraImageUrls\": extraImages[].asset->url,\n\n      // \uD83D\uDCE6 Variants\n      variants[] {\n        size,\n        dimensions,\n        material,\n        roof,\n        price,\n        stock,\n        windows,\n        doors,\n        garage,\n        addons\n      },\n\n      // \uD83C\uDFF7\uFE0F Resolved Category\n    // \uD83D\uDC47 category-> now includes required system fields\ncategory->{\n  _id,\n  _type,\n  _createdAt,\n  _updatedAt,\n  _rev,\n  title,\n  slug,\n  description,\n  image,\n  \"imageUrl\": image.asset->url\n}\n    }\n  ": PRODUCTS_BY_CATEGORY_QUERYResult;
     "\n    *[\n        _type == 'sale'\n        && isActive == true \n        && couponCode == $couponCode\n    ] | order(validFfrom desc)[0]\n    ": ACTIVE_SALE_BY_COUPON_QUERYResult;
   }
 }
