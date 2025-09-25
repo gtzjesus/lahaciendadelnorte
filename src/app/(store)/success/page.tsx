@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 // import ReservationDetails from '../../../components/reservations/ReservationDetails';
 // import { useSuccessPage } from '@/app/hooks/reservation/useSucessPage';
 import { useEffect } from 'react';
-// import ActionButtons from '@/components/(store)/common/ActionButtons';
+import ActionButtons from '@/components/(store)/common/ActionButtons';
 
 function SuccessPage() {
   const searchParams = useSearchParams();
@@ -62,9 +62,13 @@ function SuccessPage() {
 
         {/* Instructions */}
         <p className="text-xs text-black text-center mb-6">
-          Your information has been successfully submitted.
+          Your information has been submitted.
           <br />
-          We will call you shortly.
+          <br />
+          Thank you! We will call you shortly.
+          <br />
+          <br />
+          In the meantime...
         </p>
 
         {/* Reservation Details Component */}
@@ -131,9 +135,9 @@ function SuccessPage() {
         )} */}
 
         {/* Action Buttons */}
-        {/* <div className="mt-6">
+        <div className="mt-6">
           <ActionButtons />
-        </div> */}
+        </div>
       </motion.div>
     </div>
   );

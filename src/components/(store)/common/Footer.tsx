@@ -29,7 +29,6 @@ const Footer: React.FC = () => {
 
         {/* Center callout (only on md+) */}
         <div className="hidden md:flex flex-col items-center justify-center text-center text-sm font-medium">
-          <p className="uppercase">Submit a quote today</p>
           <p className="text-xs mt-1 opacity-80">
             Storage solutions built for your lifestyle.
           </p>
