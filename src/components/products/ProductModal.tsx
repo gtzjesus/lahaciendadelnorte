@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Product } from '@/types';
 import Image from 'next/image';
+
 import { motion } from 'framer-motion';
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -18,6 +19,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
 
   const [selectedVariantIndex] = useState(0);
   const selectedVariant = product.baseVariants?.[selectedVariantIndex];
+  const [formError, setFormError] = useState<string | null>(null);
 
   const [selectedMaterial, setSelectedMaterial] = useState(
     product.materials?.[0]?.name || ''
@@ -69,6 +71,11 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
     selectedAddons,
     product,
   ]);
+
+  const isValidPhone = (phone: string): boolean => {
+    const cleaned = phone.replace(/\D/g, ''); // remove non-digits
+    return cleaned.length >= 10 && cleaned.length <= 15;
+  };
 
   const toggleAddon = (addon: string) => {
     setSelectedAddons((prev) =>
@@ -299,16 +306,21 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
               placeholder="please enter Your full name"
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
-              className="text-xs uppercase w-full p-1 border-b border-flag-light-blue text-center bg-flag-red text-white "
+              className="text-xs uppercase w-full p-1 border-b border-flag-light-blue text-center bg-flag-red text-black "
             />
             <input
               type="tel"
               placeholder="best Phone Number to reach you"
               value={guestPhone}
               onChange={(e) => setGuestPhone(e.target.value)}
-              className="text-xs uppercase w-full p-1 border-b border-flag-light-blue text-center  bg-flag-red text-white "
+              className="text-xs uppercase w-full p-1 border-b border-flag-light-blue text-center  bg-flag-red text-black "
             />
           </div>
+          {formError && (
+            <div className="text-red-600 text-xs font-semibold text-center mt-2">
+              {formError}
+            </div>
+          )}
         </div>
       </div>
 
@@ -316,8 +328,16 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
         <button
           className="bg-flag-light-blue text-white max-w-sm font-semibold px-6 py-3 my-2 rounded-full shadow-lg text-xs uppercase transition"
           onClick={async () => {
+            // Clear previous error
+            setFormError(null);
+
             if (!guestName || !guestPhone) {
-              alert('Please enter your name and phone number.');
+              setFormError('Please fill out all fields above.');
+              return;
+            }
+
+            if (!isValidPhone(guestPhone)) {
+              setFormError('Please enter a valid phone number.');
               return;
             }
 
@@ -328,7 +348,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
                 body: JSON.stringify({
                   customerName: guestName,
                   phone: guestPhone,
-                  email: 'guest@example.com', // optional, or remove if not used
+                  email: 'guest@example.com',
                   productId: product._id,
                   totalPrice: price,
                   customizations: {
@@ -344,30 +364,50 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
               });
 
               const clonedResponse = response.clone();
-
               let result;
+
               try {
                 result = await response.json();
               } catch (jsonError) {
-                const text = await clonedResponse.text(); // ✅ now this works
+                const text = await clonedResponse.text();
                 console.error('❌ Failed to parse JSON. Raw response:', text);
-                alert(
-                  `Server returned invalid response. Check console. ${jsonError}`
-                );
+                setFormError(`Server returned invalid response.${jsonError}`);
                 return;
               }
 
               if (!response.ok) {
                 console.error('❌ Server responded with error:', result);
-                alert(result?.message || 'Order creation failed.');
+                setFormError(result?.message || 'Order creation failed.');
                 return;
               }
 
-              alert('Order submitted! Order ID: ' + result.orderId);
-              onClose();
+              // ✅ Success
+              // ✅ Save to localStorage for success page
+              const timestamp = new Date().toISOString();
+              localStorage.setItem(
+                `order-${result.orderId}`,
+                JSON.stringify({
+                  customerName: guestName,
+                  phone: guestPhone,
+                  totalPrice: price,
+                  timestamp,
+                  customizations: {
+                    dimensions: selectedVariant?.dimensions,
+                    material: selectedMaterial,
+                    roofType: selectedRoof,
+                    doors: selectedDoors,
+                    windows: selectedWindows,
+                    garage: includeGarage,
+                    addons: selectedAddons,
+                  },
+                })
+              );
+
+              // ✅ Redirect to success page
+              window.location.href = `/success?order=${result.orderId}&email=guest@example.com`;
             } catch (err) {
               console.error('Unexpected error:', err);
-              alert('An error occurred.');
+              setFormError('An unexpected error occurred.');
             }
           }}
         >

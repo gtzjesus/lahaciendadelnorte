@@ -19,7 +19,7 @@ export default async function CategoryPage({
 
   return (
     <>
-      <h1 className="uppercase text-sm font-light text-center p-5 text-white">
+      <h1 className="uppercase text-sm font-light text-center p-5 text-black">
         {formattedTitle}
       </h1>
 
