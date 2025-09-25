@@ -26,20 +26,20 @@ const HeroSection: FC<HeroSectionProps> = ({ className = '' }) => {
           className="max-w-lg font-bold text-lg mb-10 lg:text-2xl text-white leading-tight text-center px-2
           drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
         >
-          The storage you need — built with trusted craftsmanship
+          The storage you need — built with craftsmanship
         </p>
         <div className="gap-2 flex justify-center">
+          <Link
+            href="/storage"
+            className=" bg-opacity-90 border border-flag-red bg-flag-red text-black px-5 py-4 text-center lg:text-lg rounded-3xl text-xs font-bold transition duration-200 ease-in-out shadow-lg w-full max-w-[180px] hover:bg-opacity-100  drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
+          >
+            View Sheds
+          </Link>
           <Link
             href="/qualify"
             className=" bg-opacity-90 border border-white px-5 py-4 text-center lg:text-lg rounded-3xl text-xs font-bold transition duration-200 ease-in-out shadow-lg text-white w-full max-w-[180px] hover:bg-opacity-100  drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
           >
             Qualify Here
-          </Link>
-          <Link
-            href="/storage"
-            className=" bg-opacity-90 border border-white px-5 py-4 text-center lg:text-lg rounded-3xl text-xs font-bold transition duration-200 ease-in-out shadow-lg text-white w-full max-w-[180px] hover:bg-opacity-100  drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]"
-          >
-            View Sheds
           </Link>
         </div>
       </div>

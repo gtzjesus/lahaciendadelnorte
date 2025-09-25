@@ -4,25 +4,25 @@ import Image from 'next/image';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-t bg-flag-red  text-white  px-6 pt-10 pb-6">
+    <footer className="relative overflow-hidden bg-gradient-to-t bg-flag-red  text-white  px-4 pt-5 pb-3">
       {/* Decorative lines or background */}
       <div className="absolute inset-0 opacity-5  "></div>
 
-      <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+      <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-center text-black">
         {/* Logo + Branding */}
         <div className="flex flex-col items-center md:items-start">
           <Image
-            src="/icons/logo.webp"
+            src="/icons/logo-blacked.webp"
             alt="La Hacienda Logo"
-            width={40}
-            height={40}
+            width={25}
+            height={25}
             className="mb-2"
             priority
           />
-          <h1 className="uppercase font-bold text-lg lg:text-2xl text-center md:text-left drop-shadow">
+          <h1 className=" font-light text-md lg:text-xl text-center md:text-left drop-shadow">
             La Hacienda del Norte
           </h1>
-          <p className="uppercase text-xs font-semibold tracking-wide text-center md:text-left mt-2">
+          <p className="uppercase text-xs font-semibold tracking-wide text-center md:text-left mt-1">
             Serving El Paso & surrounding areas
           </p>
         </div>
@@ -37,10 +37,10 @@ const Footer: React.FC = () => {
 
         {/* Copyright */}
         <div className="flex flex-col items-center md:items-end">
-          <p className="uppercase text-xs font-light tracking-wider">
-            &copy; {new Date().getFullYear()} La Hacienda Del Norte
+          <p className=" text-xs font-light tracking-wider">
+            &copy; {new Date().getFullYear()} La Hacienda Del Norte, All rights
+            reserved
           </p>
-          <p className="text-xs mt-1 font-light ">All rights reserved</p>
         </div>
       </div>
 

@@ -314,7 +314,7 @@ export default function ProductModal({ product, onClose }: ProductModalProps) {
 
       <div className="flex justify-center">
         <button
-          className="bg-flag-light-blue text-white max-w-sm font-semibold px-6 py-3 mt-2 rounded-full shadow-lg text-xs uppercase transition"
+          className="bg-flag-light-blue text-white max-w-sm font-semibold px-6 py-3 my-2 rounded-full shadow-lg text-xs uppercase transition"
           onClick={async () => {
             if (!guestName || !guestPhone) {
               alert('Please enter your name and phone number.');
